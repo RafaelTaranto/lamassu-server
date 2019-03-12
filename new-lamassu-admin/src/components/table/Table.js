@@ -6,7 +6,7 @@ import { tableHeaderColor } from '../../styling/variables'
 
 const useStyles = makeStyles({
   table: {
-    backgroundColor: tableHeaderColor,
+    // backgroundColor: tableHeaderColor,
     tableLayout: 'fixed',
     borderCollapse: 'separate',
     borderSpacing: '0 0'

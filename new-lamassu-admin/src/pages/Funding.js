@@ -10,10 +10,9 @@ import Title from '../components/Title'
 import Sidebar from '../components/Sidebar'
 import { primaryColor } from '../styling/variables'
 
-const styles = {}
-const useStyles = makeStyles({
+import styles from './Funding.styles'
 
-})
+const useStyles = makeStyles(styles)
 
 const formatAddress = (address = '') => {
   return address.replace(/(.{4})/g, '$1 ')
@@ -62,7 +61,7 @@ const Funding = () => {
   return (
     <>
       <Title>Funding</Title>
-      <div className={styles.wrapper}>
+      <div className={classes.wrapper}>
         <Sidebar
           data={data}
           isSelected={isSelected}
@@ -70,9 +69,9 @@ const Funding = () => {
           displayName={it => it.display}
         >
           {data && data.length && (
-            <div className={styles.total}>
-              <Info3 className={styles.totalTitle}>Total Crypto Balance</Info3>
-              <Info1 className={styles.noMargin}>
+            <div className={classes.total}>
+              <Info3 className={classes.totalTitle}>Total Crypto Balance</Info3>
+              <Info1 className={classes.noMargin}>
                 {getConfirmedTotal(data)} {data[0].fiatCode}
               </Info1>
               <Info4>(+{getPendingTotal(data)} pending)</Info4>
@@ -80,36 +79,36 @@ const Funding = () => {
           )}
         </Sidebar>
         {selected && (
-          <div className={styles.main}>
-            <div className={styles.firstSide}>
+          <div className={classes.main}>
+            <div className={classes.firstSide}>
               <H3>Balance ({selected.display})</H3>
-              <div className={styles.coinTotal}>
+              <div className={classes.coinTotal}>
                 <span className='info1'>
                   {`${selected.confirmedBalance} ${selected.cryptoCode}`}
                 </span>
-                <span className={classnames('tl2', styles.leftSpacer)}>
+                <span className={classnames('tl2', classes.leftSpacer)}>
                   {` (+ ${selected.pending} pending)`}
                 </span>
               </div>
 
-              <div className={styles.coinTotal}>
-                <span className={classnames('info3', styles.noMarginTop)}>
+              <div className={classes.coinTotal}>
+                <span className={classnames('info3', classes.noMarginTop)}>
                   {`= ${formatNumber(selected.fiatConfirmedBalance)} ${selected.fiatCode}`}
                 </span>
-                <span className={classnames('info4', styles.leftSpacer)}>
+                <span className={classnames('info4', classes.leftSpacer)}>
                   {`(+${formatNumber(selected.fiatPending)} pending)`}
                 </span>
               </div>
 
-              <H3 className={styles.topSpacer}>Address</H3>
-              <div className={styles.addressWrapper}>
-                <Mono className={styles.address}>
+              <H3 className={classes.topSpacer}>Address</H3>
+              <div className={classes.addressWrapper}>
+                <Mono className={classes.address}>
                   <strong>{formatAddress(selected.fundingAddress)}</strong>
                 </Mono>
               </div>
             </div>
 
-            <div className={styles.secondSide}>
+            <div className={classes.secondSide}>
               <Info3>Scan to send {selected.display}</Info3>
               <QRCode size={240} fgColor={primaryColor} value={selected.fundingAddressUrl} />
             </div>

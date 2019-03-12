@@ -7,7 +7,6 @@ import { H1, H3, Info1, TL2 } from '../components/typography'
 import { Link } from '../components/buttons'
 import { TextInput } from '../components/inputs'
 import {
-  // EditableRow,
   Table,
   TableHead,
   TableRow,
@@ -189,15 +188,13 @@ const Commissions = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {dataset.map((it, idx) => (
-              <EditableRow
-                key={idx}
-                data={it}
-                commitValues={value => commitValues(value, idx)}
-                EditRow={EditRow}
-                ViewRow={ViewRow}
-              />
-            ))} */}
+            {/* // <EditableRow
+            //   key={idx}
+            //   data={it}
+            //   commitValues={value => commitValues(value, idx)}
+            //   EditRow={EditRow}
+            //   ViewRow={ViewRow}
+            // /> */}
           </TableBody>
         </Table>
       </form>

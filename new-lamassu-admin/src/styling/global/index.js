@@ -38,9 +38,6 @@ export default {
     a:active,
     a:hover`]: {
       outline: '0 none'
-    },
-    'button::-moz-focus-inner': {
-      border: 0
     }
   }
 }

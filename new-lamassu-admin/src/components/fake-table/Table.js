@@ -16,7 +16,7 @@ import {
 
 import typographyStyles from '../typography/styles'
 
-const { label2 } = typographyStyles
+const { label2, p, info2 } = typographyStyles
 
 const useStyles = makeStyles({
   body: {
@@ -44,6 +44,7 @@ const useStyles = makeStyles({
   },
   // mui-overrides
   panelRoot: {
+    extend: p,
     display: 'table-row',
     '&:before': {
       height: 0

@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   }
 })
 
-const TableRow = memo(({ className, children, header, error, success, size = 'md', ...props }) => {
+const TableRow = memo(({ className, children, header, error, success, size = 'sm', ...props }) => {
   const classes = useStyles()
   const classnamesObj = {
     [classes.tr]: !header,

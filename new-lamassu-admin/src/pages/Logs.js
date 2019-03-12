@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import _ from 'lodash/fp'
 import moment from 'moment'
 import useAxios from '@use-hooks/axios'
+import { makeStyles } from '@material-ui/core/styles'
 import FileSaver from 'file-saver'
 
 import { Info3 } from '../components/typography'
@@ -10,8 +11,9 @@ import { SimpleButton } from '../components/buttons'
 import Sidebar from '../components/Sidebar'
 import Title from '../components/Title'
 
-// import styles from './Logs.module.scss'
-const styles = {}
+import styles from './Logs.styles.js'
+
+const useStyles = makeStyles(styles)
 
 const formatDate = date => {
   return moment(date).format('YYYY-MM-DD HH:mm')
@@ -25,6 +27,7 @@ const Logs = () => {
   const [machines, setMachines] = useState(null)
   const [selected, setSelected] = useState(null)
   const [saveMessage, setSaveMessage] = useState(null)
+  const classes = useStyles()
 
   useAxios({
     url: 'http://localhost:8070/api/machines',
@@ -67,13 +70,13 @@ const Logs = () => {
 
   return (
     <>
-      <div className={styles.titleWrapper}>
+      <div className={classes.titleWrapper}>
         <Title>Machine Logs</Title>
         {logsResponse && (
-          <div className={styles.buttonsWrapper}>
+          <div className={classes.buttonsWrapper}>
             <Info3>{saveMessage}</Info3>
             <SimpleButton
-              className={styles.button}
+              className={classes.button}
               onClick={() => {
                 const text = logsResponse.data.logs.map(it => JSON.stringify(it)).join('\n')
                 const blob = new window.Blob([text], {
@@ -84,26 +87,26 @@ const Logs = () => {
             >
               DL
             </SimpleButton>
-            <SimpleButton className={styles.button} disabled={loading} onClick={sendSnapshot}>
+            <SimpleButton className={classes.button} disabled={loading} onClick={sendSnapshot}>
               Share with Lamassu
             </SimpleButton>
           </div>
         )}
       </div>
-      <div className={styles.wrapper}>
+      <div className={classes.wrapper}>
         <Sidebar
           displayName={it => it.name}
           data={machines}
           isSelected={isSelected}
           onClick={setSelected}
         />
-        <div className={styles.tableWrapper}>
-          <Table className={styles.table}>
+        <div className={classes.tableWrapper}>
+          <Table className={classes.table}>
             <TableHead>
               <TableRow header>
-                <TableHeader className={styles.dateColumn}>Date</TableHeader>
-                <TableHeader className={styles.levelColumn}>Level</TableHeader>
-                <TableHeader className={styles.fillColumn} />
+                <TableHeader className={classes.dateColumn}>Date</TableHeader>
+                <TableHeader className={classes.levelColumn}>Level</TableHeader>
+                <TableHeader className={classes.fillColumn} />
               </TableRow>
             </TableHead>
             <TableBody>
