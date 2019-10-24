@@ -111,6 +111,7 @@ export {
   white,
   zircon,
   zircon2,
+  comet,
 
   primaryColor,
   secondaryColor,
