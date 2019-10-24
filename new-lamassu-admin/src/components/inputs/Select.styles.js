@@ -1,26 +1,21 @@
-import { zircon, comet, white, fontSecondary } from '../../styling/variables'
-import typographyStyles from '../typography/styles'
-
-const { select, regularLabel, label, label2 } = typographyStyles
+import { zircon, comet, white } from '../../styling/variables'
 
 const WIDTH = 152
 
 export default {
   select: {
-    width: WIDTH,
-    '& label': {
-      extend: regularLabel,
-      color: comet,
-      paddingLeft: 10
-    },
+    width: `${WIDTH}px`,
+    marginBottom: '20px',
     '& button': {
-      extend: select,
       position: 'relative',
       border: 0,
       backgroundColor: zircon,
-      width: WIDTH,
+      width: `${WIDTH}px`,
       padding: '6px 0 6px 12px',
-      borderRadius: 20,
+      borderRadius: '20px',
+      fontFamily: 'MuseoSans',
+      fontSize: '18px',
+      fontWeight: 500,
       lineHeight: '1.14',
       textAlign: 'left',
       color: comet,
@@ -29,7 +24,7 @@ export default {
     },
     '& ul': {
       maxHeight: '200px',
-      width: WIDTH,
+      width: `${WIDTH}px`,
       overflowY: 'auto',
       position: 'absolute',
       margin: 0,
@@ -50,8 +45,8 @@ export default {
     },
     '& svg': {
       position: 'absolute',
-      top: 12,
-      right: 14,
+      top: '12px',
+      right: '14px',
       fill: comet
     }
   },
@@ -72,11 +67,6 @@ export default {
     },
     '& svg': {
       fill: `${white} !important`
-    }
-  },
-  open: {
-    '& button': {
-      borderRadius: '16px 16px 0 0'
     }
   }
 }

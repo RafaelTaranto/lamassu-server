@@ -1,41 +1,17 @@
 import React, { useState } from 'react'
-import { get, concat, uniq } from 'lodash/fp'
+import _ from 'lodash/fp'
 import moment from 'moment'
 import useAxios from '@use-hooks/axios'
+import FileSaver from 'file-saver'
 
+import { Info3 } from '../components/typography'
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '../components/table'
+import { SimpleButton } from '../components/buttons'
 import { Select } from '../components/inputs'
-import Uptime from '../components/Uptime'
-import LogPageHeader from '../components/LogPageHeader'
-import { makeStyles } from '@material-ui/core'
-import typographyStyles from '../components/typography/styles'
+import Title from '../components/Title'
 
-import { zircon, comet, white, fontSecondary } from '../styling/variables'
-
-const { regularLabel } = typographyStyles
-
-const styles = {
-  titleWrapper: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  serverVersion: {
-    extend: regularLabel,
-    color: comet,
-    margin: 'auto 0 auto 0'
-  },
-  headerLine2: {
-    height: 60,
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: 24
-  },
-  uptimeContainer: {
-    margin: 'auto 0 auto 0'
-  }
-}
-
-const useStyles = makeStyles(styles)
+// import styles from './Logs.module.scss'
+const styles = {}
 
 const SHOW_ALL = 'Show all'
 
@@ -43,40 +19,15 @@ const formatDate = date => {
   return moment(date).format('YYYY-MM-DD HH:mm')
 }
 
+const formatDateFile = date => {
+  return moment(date).format('YYYY-MM-DD_HH-mm')
+}
+
 const Logs = () => {
   const [machines, setMachines] = useState(null)
   const [selected, setSelected] = useState(null)
   const [saveMessage, setSaveMessage] = useState(null)
   const [logLevel, setLogLevel] = useState(SHOW_ALL)
-  const [version, setVersion] = useState(null)
-  const [processStates, setProcessStates] = useState(null)
-
-  const classes = useStyles()
-
-  useAxios({
-    url: 'http://localhost:8070/api/version',
-    method: 'GET',
-    trigger: [],
-    customHandler: (err, res) => {
-      if (err) return
-      if (res) {
-        setVersion(res.data)
-      }
-    }
-  })
-
-  useAxios({
-    url: 'http://localhost:8070/api/uptimes',
-    method: 'GET',
-    trigger: [],
-    customHandler: (err, res) => {
-      if (err) return
-      if (res) {
-        setProcessStates(res.data)
-        console.log(res.data)
-      }
-    }
-  })
 
   useAxios({
     url: 'http://localhost:8070/api/machines',
@@ -86,13 +37,13 @@ const Logs = () => {
       if (err) return
       if (res) {
         setMachines(res.data.machines)
-        setSelected(get('data.machines[0]')(res))
+        setSelected(_.get('data.machines[0]')(res))
       }
     }
   })
 
   const { response: logsResponse } = useAxios({
-    url: `http://localhost:8070/api/logs/${get('deviceId', selected)}`,
+    url: `http://localhost:8070/api/logs/${_.get('deviceId', selected)}`,
     method: 'GET',
     trigger: selected,
     forceDispatchEffect: () => !!selected,
@@ -102,7 +53,7 @@ const Logs = () => {
   })
 
   const { loading, reFetch: sendSnapshot } = useAxios({
-    url: `http://localhost:8070/api/support_logs?deviceId=${get('deviceId')(selected)}`,
+    url: `http://localhost:8070/api/support_logs?deviceId=${_.get('deviceId')(selected)}`,
     method: 'POST',
     customHandler: (err, res) => {
       if (err) {
@@ -117,40 +68,38 @@ const Logs = () => {
 
   return (
     <>
-      <div className={classes.titleWrapper}>
-        <LogPageHeader
-          logsResponse={logsResponse}
-          saveMessage={saveMessage}
-          loading={loading}
-          sendSnapshot={sendSnapshot}
-          selected={selected}
-        >
-          Server
-        </LogPageHeader>
-        <div className={classes.serverVersion}>
-          {version && (
-            <span>Server version: v{version}</span>
-          )}
-        </div>
+      <div className={styles.titleWrapper}>
+        <Title>Server</Title>
+        {logsResponse && (
+          <div className={styles.buttonsWrapper}>
+            <Info3>{saveMessage}</Info3>
+            <SimpleButton
+              className={styles.button}
+              onClick={() => {
+                const text = logsResponse.data.logs.map(it => JSON.stringify(it)).join('\n')
+                const blob = new window.Blob([text], {
+                  type: 'text/plain;charset=utf-8'
+                })
+                FileSaver.saveAs(blob, `${formatDateFile(new Date())}_${selected.name}`)
+              }}
+            >
+              DL
+            </SimpleButton>
+            <SimpleButton className={styles.button} disabled={loading} onClick={sendSnapshot}>
+              Share with Lamassu
+            </SimpleButton>
+          </div>
+        )}
       </div>
-      <div className={classes.headerLine2}>
+      <div className={styles.wrapper}>
         {logsResponse && (
           <Select
             onSelectedItemChange={handleLogLevelChange}
-            label='Level'
-            items={concat([SHOW_ALL], uniq(logsResponse.data.logs.map(log => log.logLevel)))}
+            items={_.concat([SHOW_ALL], _.uniq(logsResponse.data.logs.map(log => log.logLevel)))}
             default={SHOW_ALL}
             selectedItem={logLevel}
           />
         )}
-        <div className={classes.uptimeContainer}>
-          {processStates &&
-            processStates.map((process, idx) => (
-              <Uptime key={idx} process={process} />
-            ))}
-        </div>
-      </div>
-      <div className={styles.wrapper}>
         <div className={styles.tableWrapper}>
           <Table className={styles.table}>
             <TableHead>

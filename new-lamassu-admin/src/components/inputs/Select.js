@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelect } from 'downshift'
-import { startCase } from 'lodash/fp'
+import _ from 'lodash/fp'
 import classnames from 'classnames'
 
 import { ReactComponent as Arrowdown } from '../../styling/icons/action/arrow/regular.svg'
@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(styles)
 
-function Select ({ label, items, ...props }) {
+function Select ({ items, ...props }) {
   const classes = useStyles()
 
   const {
@@ -30,17 +30,17 @@ function Select ({ label, items, ...props }) {
 
   const selectClassNames = {
     [classes.select]: true,
-    [classes.selectFiltered]: selectedItem !== props.default,
-    [classes.open]: isOpen
+    [classes.selectFiltered]: selectedItem !== props.default
   }
 
   return (
     <div className={classnames(selectClassNames)}>
-      <label {...getLabelProps()}>{startCase(label)}</label>
+      <label {...getLabelProps()}>Level</label>
       <button
         {...getToggleButtonProps()}
+        style={isOpen ? { borderRadius: '16px 16px 0 0' } : {}}
       >
-        {startCase(selectedItem)} <Arrowdown />
+        {_.capitalize(selectedItem)} <Arrowdown />
       </button>
       <ul {...getMenuProps()}>
         {isOpen &&
@@ -49,7 +49,7 @@ function Select ({ label, items, ...props }) {
               key={`${item}${index}`}
               {...getItemProps({ item, index })}
             >
-              {startCase(item)}
+              {_.capitalize(item)}
             </li>
           ))}
       </ul>
