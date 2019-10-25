@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import _ from 'lodash/fp'
+import { get, concat, uniq } from 'lodash/fp'
 import moment from 'moment'
 import useAxios from '@use-hooks/axios'
 import FileSaver from 'file-saver'
@@ -37,13 +37,13 @@ const Logs = () => {
       if (err) return
       if (res) {
         setMachines(res.data.machines)
-        setSelected(_.get('data.machines[0]')(res))
+        setSelected(get('data.machines[0]')(res))
       }
     }
   })
 
   const { response: logsResponse } = useAxios({
-    url: `http://localhost:8070/api/logs/${_.get('deviceId', selected)}`,
+    url: `http://localhost:8070/api/logs/${get('deviceId', selected)}`,
     method: 'GET',
     trigger: selected,
     forceDispatchEffect: () => !!selected,
@@ -53,7 +53,7 @@ const Logs = () => {
   })
 
   const { loading, reFetch: sendSnapshot } = useAxios({
-    url: `http://localhost:8070/api/support_logs?deviceId=${_.get('deviceId')(selected)}`,
+    url: `http://localhost:8070/api/support_logs?deviceId=${get('deviceId')(selected)}`,
     method: 'POST',
     customHandler: (err, res) => {
       if (err) {
@@ -95,7 +95,8 @@ const Logs = () => {
         {logsResponse && (
           <Select
             onSelectedItemChange={handleLogLevelChange}
-            items={_.concat([SHOW_ALL], _.uniq(logsResponse.data.logs.map(log => log.logLevel)))}
+            label='Level'
+            items={concat([SHOW_ALL], uniq(logsResponse.data.logs.map(log => log.logLevel)))}
             default={SHOW_ALL}
             selectedItem={logLevel}
           />
