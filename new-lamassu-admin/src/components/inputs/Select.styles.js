@@ -1,20 +1,20 @@
-import { zircon, comet, white } from '../../styling/variables'
+import { zircon, comet, white, fontSecondary } from '../../styling/variables'
 
 const WIDTH = 152
 
 export default {
   select: {
-    width: `${WIDTH}px`,
-    marginBottom: '20px',
+    width: WIDTH,
+    marginBottom: 20,
     '& button': {
       position: 'relative',
       border: 0,
       backgroundColor: zircon,
-      width: `${WIDTH}px`,
+      width: WIDTH,
       padding: '6px 0 6px 12px',
-      borderRadius: '20px',
-      fontFamily: 'MuseoSans',
-      fontSize: '18px',
+      borderRadius: 20,
+      fontFamily: fontSecondary,
+      fontSize: 18,
       fontWeight: 500,
       lineHeight: '1.14',
       textAlign: 'left',
@@ -24,7 +24,7 @@ export default {
     },
     '& ul': {
       maxHeight: '200px',
-      width: `${WIDTH}px`,
+      width: WIDTH,
       overflowY: 'auto',
       position: 'absolute',
       margin: 0,
@@ -45,8 +45,8 @@ export default {
     },
     '& svg': {
       position: 'absolute',
-      top: '12px',
-      right: '14px',
+      top: 12,
+      right: 14,
       fill: comet
     }
   },
@@ -67,6 +67,11 @@ export default {
     },
     '& svg': {
       fill: `${white} !important`
+    }
+  },
+  open: {
+    '& button': {
+      borderRadius: '16px 16px 0 0'
     }
   }
 }
