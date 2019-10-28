@@ -1,4 +1,7 @@
 import { zircon, comet, white, fontSecondary } from '../../styling/variables'
+import typographyStyles from '../typography/styles'
+
+const { select } = typographyStyles
 
 const WIDTH = 152
 
@@ -7,15 +10,13 @@ export default {
     width: WIDTH,
     marginBottom: 20,
     '& button': {
+      extend: select,
       position: 'relative',
       border: 0,
       backgroundColor: zircon,
       width: WIDTH,
       padding: '6px 0 6px 12px',
       borderRadius: 20,
-      fontFamily: fontSecondary,
-      fontSize: 18,
-      fontWeight: 500,
       lineHeight: '1.14',
       textAlign: 'left',
       color: comet,
