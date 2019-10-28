@@ -9,9 +9,17 @@ import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '.
 import { SimpleButton } from '../components/buttons'
 import { Select } from '../components/inputs'
 import Title from '../components/Title'
+import { makeStyles } from '@material-ui/core'
+
+import { zircon, comet, white, fontSecondary } from '../styling/variables'
 
 // import styles from './Logs.module.scss'
-const styles = {}
+const styles = {
+  serverVersion: {
+    color: comet
+  }
+}
+const useStyles = makeStyles(styles)
 
 const SHOW_ALL = 'Show all'
 
@@ -22,12 +30,26 @@ const formatDate = date => {
 const formatDateFile = date => {
   return moment(date).format('YYYY-MM-DD_HH-mm')
 }
-
 const Logs = () => {
   const [machines, setMachines] = useState(null)
   const [selected, setSelected] = useState(null)
   const [saveMessage, setSaveMessage] = useState(null)
   const [logLevel, setLogLevel] = useState(SHOW_ALL)
+  const [version, setVersion] = useState(null)
+
+  const classes = useStyles()
+
+  useAxios({
+    url: 'http://localhost:8070/api/version',
+    method: 'GET',
+    trigger: [],
+    customHandler: (err, res) => {
+      if (err) return
+      if (res) {
+        setVersion(res.data)
+      }
+    }
+  })
 
   useAxios({
     url: 'http://localhost:8070/api/machines',
@@ -90,6 +112,11 @@ const Logs = () => {
             </SimpleButton>
           </div>
         )}
+        <div className={classes.serverVersion}>
+          {version && (
+            <span>Server version: v{version}</span>
+          )}
+        </div>
       </div>
       <div className={styles.wrapper}>
         {logsResponse && (
