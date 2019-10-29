@@ -1,14 +1,18 @@
 import { zircon, comet, white, fontSecondary } from '../../styling/variables'
 import typographyStyles from '../typography/styles'
 
-const { select } = typographyStyles
+const { select, regularLabel, label, label2 } = typographyStyles
 
 const WIDTH = 152
 
 export default {
   select: {
     width: WIDTH,
-    marginBottom: 20,
+    '& label': {
+      extend: regularLabel,
+      color: comet,
+      paddingLeft: 10
+    },
     '& button': {
       extend: select,
       position: 'relative',
