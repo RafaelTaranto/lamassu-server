@@ -8,17 +8,40 @@ import { Info3 } from '../components/typography'
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '../components/table'
 import { SimpleButton } from '../components/buttons'
 import { Select } from '../components/inputs'
+import Uptime from '../components/Uptime'
 import Title from '../components/Title'
 import { makeStyles } from '@material-ui/core'
+import typographyStyles from '../components/typography/styles'
 
 import { zircon, comet, white, fontSecondary } from '../styling/variables'
 
+const { regularLabel } = typographyStyles
+
 // import styles from './Logs.module.scss'
 const styles = {
+  titleWrapper: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
+  titleAndButtonsContainer: {
+    display: 'flex'
+  },
   serverVersion: {
-    color: comet
+    extend: regularLabel,
+    color: comet,
+    margin: 'auto 0 auto 0'
+  },
+  headerLine2: {
+    height: 60,
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: 24
+  },
+  uptimeContainer: {
+    margin: 'auto 0 auto 0'
   }
 }
+
 const useStyles = makeStyles(styles)
 
 const SHOW_ALL = 'Show all'
@@ -36,6 +59,7 @@ const Logs = () => {
   const [saveMessage, setSaveMessage] = useState(null)
   const [logLevel, setLogLevel] = useState(SHOW_ALL)
   const [version, setVersion] = useState(null)
+  const [processStates, setProcessStates] = useState(null)
 
   const classes = useStyles()
 
@@ -47,6 +71,19 @@ const Logs = () => {
       if (err) return
       if (res) {
         setVersion(res.data)
+      }
+    }
+  })
+
+  useAxios({
+    url: 'http://localhost:8070/api/uptimes',
+    method: 'GET',
+    trigger: [],
+    customHandler: (err, res) => {
+      if (err) return
+      if (res) {
+        setProcessStates(res.data)
+        console.log(res.data)
       }
     }
   })
@@ -90,35 +127,37 @@ const Logs = () => {
 
   return (
     <>
-      <div className={styles.titleWrapper}>
-        <Title>Server</Title>
-        {logsResponse && (
-          <div className={styles.buttonsWrapper}>
-            <Info3>{saveMessage}</Info3>
-            <SimpleButton
-              className={styles.button}
-              onClick={() => {
-                const text = logsResponse.data.logs.map(it => JSON.stringify(it)).join('\n')
-                const blob = new window.Blob([text], {
-                  type: 'text/plain;charset=utf-8'
-                })
-                FileSaver.saveAs(blob, `${formatDateFile(new Date())}_${selected.name}`)
-              }}
-            >
-              DL
-            </SimpleButton>
-            <SimpleButton className={styles.button} disabled={loading} onClick={sendSnapshot}>
-              Share with Lamassu
-            </SimpleButton>
-          </div>
-        )}
+      <div className={classes.titleWrapper}>
+        <div className={classes.titleAndButtonsContainer}>
+          <Title>Server</Title>
+          {logsResponse && (
+            <div className={styles.buttonsWrapper}>
+              <Info3>{saveMessage}</Info3>
+              <SimpleButton
+                className={styles.button}
+                onClick={() => {
+                  const text = logsResponse.data.logs.map(it => JSON.stringify(it)).join('\n')
+                  const blob = new window.Blob([text], {
+                    type: 'text/plain;charset=utf-8'
+                  })
+                  FileSaver.saveAs(blob, `${formatDateFile(new Date())}_${selected.name}`)
+                }}
+              >
+                DL
+              </SimpleButton>
+              <SimpleButton className={styles.button} disabled={loading} onClick={sendSnapshot}>
+                Share with Lamassu
+              </SimpleButton>
+            </div>
+          )}
+        </div>
         <div className={classes.serverVersion}>
           {version && (
             <span>Server version: v{version}</span>
           )}
         </div>
       </div>
-      <div className={styles.wrapper}>
+      <div className={classes.headerLine2}>
         {logsResponse && (
           <Select
             onSelectedItemChange={handleLogLevelChange}
@@ -128,6 +167,14 @@ const Logs = () => {
             selectedItem={logLevel}
           />
         )}
+        <div className={classes.uptimeContainer}>
+          {processStates &&
+            processStates.map((process, idx) => (
+              <Uptime key={idx} process={process} />
+            ))}
+        </div>
+      </div>
+      <div className={styles.wrapper}>
         <div className={styles.tableWrapper}>
           <Table className={styles.table}>
             <TableHead>

@@ -112,6 +112,10 @@ export {
   zircon,
   zircon2,
   comet,
+  spring2,
+  spring3,
+  tomato,
+  mistyRose,
 
   primaryColor,
   secondaryColor,
