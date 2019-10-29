@@ -2,14 +2,11 @@ import React, { useState } from 'react'
 import { get, concat, uniq } from 'lodash/fp'
 import moment from 'moment'
 import useAxios from '@use-hooks/axios'
-import FileSaver from 'file-saver'
 
-import { Info3 } from '../components/typography'
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '../components/table'
-import { SimpleButton } from '../components/buttons'
 import { Select } from '../components/inputs'
 import Uptime from '../components/Uptime'
-import Title from '../components/Title'
+import LogPageHeader from '../components/LogPageHeader'
 import { makeStyles } from '@material-ui/core'
 import typographyStyles from '../components/typography/styles'
 
@@ -22,9 +19,6 @@ const styles = {
   titleWrapper: {
     display: 'flex',
     justifyContent: 'space-between'
-  },
-  titleAndButtonsContainer: {
-    display: 'flex'
   },
   serverVersion: {
     extend: regularLabel,
@@ -50,9 +44,6 @@ const formatDate = date => {
   return moment(date).format('YYYY-MM-DD HH:mm')
 }
 
-const formatDateFile = date => {
-  return moment(date).format('YYYY-MM-DD_HH-mm')
-}
 const Logs = () => {
   const [machines, setMachines] = useState(null)
   const [selected, setSelected] = useState(null)
@@ -128,29 +119,15 @@ const Logs = () => {
   return (
     <>
       <div className={classes.titleWrapper}>
-        <div className={classes.titleAndButtonsContainer}>
-          <Title>Server</Title>
-          {logsResponse && (
-            <div className={styles.buttonsWrapper}>
-              <Info3>{saveMessage}</Info3>
-              <SimpleButton
-                className={styles.button}
-                onClick={() => {
-                  const text = logsResponse.data.logs.map(it => JSON.stringify(it)).join('\n')
-                  const blob = new window.Blob([text], {
-                    type: 'text/plain;charset=utf-8'
-                  })
-                  FileSaver.saveAs(blob, `${formatDateFile(new Date())}_${selected.name}`)
-                }}
-              >
-                DL
-              </SimpleButton>
-              <SimpleButton className={styles.button} disabled={loading} onClick={sendSnapshot}>
-                Share with Lamassu
-              </SimpleButton>
-            </div>
-          )}
-        </div>
+        <LogPageHeader
+          logsResponse={logsResponse}
+          saveMessage={saveMessage}
+          loading={loading}
+          sendSnapshot={sendSnapshot}
+          selected={selected}
+        >
+          Server
+        </LogPageHeader>
         <div className={classes.serverVersion}>
           {version && (
             <span>Server version: v{version}</span>
