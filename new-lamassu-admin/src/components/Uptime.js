@@ -7,7 +7,6 @@ import { spring3, spring2, mistyRose, tomato, zircon, comet, white, fontSecondar
 import typographyStyles from './typography/styles'
 const { label } = typographyStyles
 
-// import styles from './Uptime.styles'
 const styles = {
   uptimeContainer: {
     display: 'inline-block',
