@@ -7,10 +7,6 @@ import {
   offDarkColor
 } from '../../styling/variables'
 
-import typographyStyles from '../typography/styles'
-
-const { label } = typographyStyles
-
 const colors = (color1, color2, color3) => {
   return {
     backgroundColor: color1,
@@ -23,31 +19,32 @@ const colors = (color1, color2, color3) => {
   }
 }
 
-const size = 45
-const svgSize = 25
+const buttonHeight = 45
 
 export default {
-  featureButton: {
+  baseButton: {
+    extend: colors(subheaderColor, subheaderDarkColor, offColor),
     cursor: 'pointer',
     border: 'none',
-    height: size,
-    width: size,
     outline: 0,
-    borderRadius: size / 2,
-    display: 'flex'
+    height: buttonHeight,
+    color: fontColor,
+    '&:active': {
+      color: white
+    }
   },
   primary: {
     extend: colors(subheaderColor, subheaderDarkColor, offColor),
     '&:active': {
       color: white,
-      '& $actionButtonIcon': {
+      '& $buttonIcon': {
         display: 'none'
       },
-      '& $actionButtonIconActive': {
-        display: 'flex'
+      '& $buttonIconActive': {
+        display: 'block'
       }
     },
-    '& $actionButtonIconActive': {
+    '& $buttonIconActive': {
       display: 'none'
     }
   },
@@ -56,26 +53,18 @@ export default {
     color: white,
     '&:active': {
       color: fontColor,
-      '& $actionButtonIcon': {
+      '& $buttonIcon': {
         display: 'flex'
       },
-      '& $actionButtonIconActive': {
+      '& $buttonIconActive': {
         display: 'none'
       }
     },
-    '& $actionButtonIcon': {
+    '& $buttonIcon': {
       display: 'none'
     },
-    '& $actionButtonIconActive': {
+    '& $buttonIconActive': {
       display: 'flex'
     }
-  },
-  actionButtonIcon: {
-    margin: 'auto',
-    '& svg': {
-      width: svgSize,
-      height: svgSize
-    }
-  },
-  actionButtonIconActive: {}
+  }
 }

@@ -29,8 +29,6 @@ const colors = (color1, color2, color3) => {
   }
 }
 
-const simpleButtonHeight = 45
-
 const styles = {
   titleAndButtonsContainer: {
     display: 'flex'
@@ -40,28 +38,6 @@ const styles = {
     marginLeft: 10,
     '& > *': {
       margin: 'auto 10px'
-    }
-  },
-  button: {
-    extend: colors(subheaderColor, subheaderDarkColor, offColor),
-    cursor: 'pointer',
-    border: 'none',
-    borderRadius: simpleButtonHeight / 2,
-    outline: 0,
-    height: simpleButtonHeight,
-    padding: '0 20px',
-    color: fontColor,
-    '&:active': {
-      color: white,
-      '& $actionButtonIcon': {
-        display: 'none'
-      },
-      '& $actionButtonIconActive': {
-        display: 'flex'
-      }
-    },
-    '& $actionButtonIconActive': {
-      display: 'none'
     }
   }
 }
