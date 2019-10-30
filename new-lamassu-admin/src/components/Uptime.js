@@ -45,15 +45,10 @@ const Uptime = ({ process, ...props }) => {
   }
 
   const uptime = (time) => {
-    if (time < 60) {
-      return `${time}s`
-    } else if (time < 3600) {
-      return `${floor(time / 60, 0)}m`
-    } else if (time < 86400) {
-      return `${floor(time / 60 / 60, 0)}h`
-    } else {
-      return `${floor(time / 60 / 60 / 24, 0)}d`
-    }
+    if (time < 60) return `${time}s`
+    if (time < 3600) return `${floor(time / 60, 0)}m`
+    if (time < 86400) return `${floor(time / 60 / 60, 0)}h`
+    return `${floor(time / 60 / 60 / 24, 0)}d`
   }
 
   return (
