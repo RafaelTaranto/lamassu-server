@@ -14,7 +14,6 @@ import { zircon, comet, white, fontSecondary } from '../styling/variables'
 
 const { regularLabel } = typographyStyles
 
-// import styles from './Logs.module.scss'
 const styles = {
   titleWrapper: {
     display: 'flex',
