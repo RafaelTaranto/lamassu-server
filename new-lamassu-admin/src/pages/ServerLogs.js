@@ -44,8 +44,6 @@ const formatDate = date => {
 }
 
 const Logs = () => {
-  const [machines, setMachines] = useState(null)
-  const [selected, setSelected] = useState(null)
   const [saveMessage, setSaveMessage] = useState(null)
   const [logLevel, setLogLevel] = useState(SHOW_ALL)
   const [version, setVersion] = useState(null)
@@ -78,31 +76,17 @@ const Logs = () => {
     }
   })
 
-  useAxios({
-    url: 'http://localhost:8070/api/machines',
+  const { response: logsResponse } = useAxios({
+    url: 'http://localhost:8070/api/server_logs/',
     method: 'GET',
     trigger: [],
-    customHandler: (err, res) => {
-      if (err) return
-      if (res) {
-        setMachines(res.data.machines)
-        setSelected(get('data.machines[0]')(res))
-      }
-    }
-  })
-
-  const { response: logsResponse } = useAxios({
-    url: `http://localhost:8070/api/logs/${get('deviceId', selected)}`,
-    method: 'GET',
-    trigger: selected,
-    forceDispatchEffect: () => !!selected,
     customHandler: () => {
       setSaveMessage('')
     }
   })
 
   const { loading, reFetch: sendSnapshot } = useAxios({
-    url: `http://localhost:8070/api/support_logs?deviceId=${get('deviceId')(selected)}`,
+    url: 'http://localhost:8070/api/server_support_logs',
     method: 'POST',
     customHandler: (err, res) => {
       if (err) {
@@ -123,7 +107,6 @@ const Logs = () => {
           saveMessage={saveMessage}
           loading={loading}
           sendSnapshot={sendSnapshot}
-          selected={selected}
         >
           Server
         </LogPageHeader>

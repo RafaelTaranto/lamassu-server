@@ -51,6 +51,8 @@ function LogPageHeader ({ logsResponse, saveMessage, children, loading, sendSnap
     return moment(date).format('YYYY-MM-DD_HH-mm')
   }
 
+  const snapshotName = (!selected) ? 'server' : selected.name
+
   return (
     <div className={classes.titleAndButtonsContainer}>
       <Title>{children}</Title>
@@ -64,7 +66,7 @@ function LogPageHeader ({ logsResponse, saveMessage, children, loading, sendSnap
               const blob = new window.Blob([text], {
                 type: 'text/plain;charset=utf-8'
               })
-              FileSaver.saveAs(blob, `${formatDateFile(new Date())}_${selected.name}`)
+              FileSaver.saveAs(blob, `${formatDateFile(new Date())}_${snapshotName}`)
             }}
           />
           <SimpleButton className={classes.button} disabled={loading} onClick={sendSnapshot}>
