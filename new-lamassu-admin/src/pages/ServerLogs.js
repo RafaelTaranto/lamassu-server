@@ -11,28 +11,37 @@ import { makeStyles } from '@material-ui/core'
 import typographyStyles from '../components/typography/styles'
 
 import { zircon, comet, white, fontSecondary } from '../styling/variables'
+import styles from './Logs.styles'
 
 const { regularLabel } = typographyStyles
+const { tableWrapper } = styles
 
-const styles = {
-  titleWrapper: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  serverVersion: {
-    extend: regularLabel,
-    color: comet,
-    margin: 'auto 0 auto 0'
-  },
-  headerLine2: {
-    height: 60,
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: 24
-  },
-  uptimeContainer: {
-    margin: 'auto 0 auto 0'
-  }
+styles.titleWrapper = {
+  display: 'flex',
+  justifyContent: 'space-between'
+}
+
+styles.serverTableWrapper = {
+  extend: tableWrapper,
+  maxWidth: '100%',
+  marginLeft: 0
+}
+
+styles.serverVersion = {
+  extend: regularLabel,
+  color: comet,
+  margin: 'auto 0 auto 0'
+}
+
+styles.headerLine2 = {
+  height: 60,
+  display: 'flex',
+  justifyContent: 'space-between',
+  marginBottom: 24
+}
+
+styles.uptimeContainer = {
+  margin: 'auto 0 auto 0'
 }
 
 const useStyles = makeStyles(styles)
@@ -133,14 +142,14 @@ const Logs = () => {
             ))}
         </div>
       </div>
-      <div className={styles.wrapper}>
-        <div className={styles.tableWrapper}>
-          <Table className={styles.table}>
+      <div className={classes.wrapper}>
+        <div className={classes.serverTableWrapper}>
+          <Table className={classes.table}>
             <TableHead>
               <TableRow header>
-                <TableHeader className={styles.dateColumn}>Date</TableHeader>
-                <TableHeader className={styles.levelColumn}>Level</TableHeader>
-                <TableHeader className={styles.fillColumn} />
+                <TableHeader className={classes.dateColumn}>Date</TableHeader>
+                <TableHeader className={classes.levelColumn}>Level</TableHeader>
+                <TableHeader className={classes.fillColumn} />
               </TableRow>
             </TableHead>
             <TableBody>
