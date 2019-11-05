@@ -7,7 +7,6 @@
   "author": "Lamassu (https://lamassu.is)",
   "dependencies": {
     "@fczbkk/uuid4": "^3.0.0",
-    "@pauleliet/winston-pg-native": "^4.4.0",
     "axios": "^0.16.1",
     "base-x": "^3.0.2",
     "bchaddrjs": "^0.3.0",
