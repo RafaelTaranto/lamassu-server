@@ -80,7 +80,6 @@ const Logs = () => {
       if (err) return
       if (res) {
         setProcessStates(res.data)
-        console.log(res.data)
       }
     }
   })
