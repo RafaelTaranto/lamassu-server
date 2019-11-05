@@ -8,6 +8,7 @@ const WIDTH = 152
 export default {
   select: {
     width: WIDTH,
+    zIndex: 1000,
     '& label': {
       extend: regularLabel,
       color: comet,
