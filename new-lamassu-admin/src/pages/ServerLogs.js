@@ -1,20 +1,28 @@
 import React, { useState } from 'react'
-import { get, concat, uniq } from 'lodash/fp'
+import FileSaver from 'file-saver'
+import { concat, uniq } from 'lodash/fp'
 import moment from 'moment'
 import useAxios from '@use-hooks/axios'
 
+import Title from '../components/Title'
+import { Info3 } from '../components/typography'
+import { FeatureButton, SimpleButton } from '../components/buttons'
 import { Table, TableHead, TableRow, TableHeader, TableBody, TableCell } from '../components/table'
 import { Select } from '../components/inputs'
 import Uptime from '../components/Uptime'
-import LogPageHeader from '../components/LogPageHeader'
+import { ReactComponent as Download } from '../styling/icons/button/download/zodiac.svg'
+import { ReactComponent as DownloadActive } from '../styling/icons/button/download/white.svg'
+
 import { makeStyles } from '@material-ui/core'
 import typographyStyles from '../components/typography/styles'
 
-import { zircon, comet, white, fontSecondary } from '../styling/variables'
+import { comet } from '../styling/variables'
 import styles from './Logs.styles'
+import logPageHeaderStyles from './LogPageHeader.styles'
 
 const { regularLabel } = typographyStyles
 const { tableWrapper } = styles
+const { titleAndButtonsContainer, buttonsWrapper } = logPageHeaderStyles
 
 styles.titleWrapper = {
   display: 'flex',
@@ -43,6 +51,9 @@ styles.headerLine2 = {
 styles.uptimeContainer = {
   margin: 'auto 0 auto 0'
 }
+
+styles.titleAndButtonsContainer = titleAndButtonsContainer
+styles.buttonsWrapper = buttonsWrapper
 
 const useStyles = makeStyles(styles)
 
@@ -107,17 +118,35 @@ const Logs = () => {
 
   const handleLogLevelChange = (item) => setLogLevel(item)
 
+  const formatDateFile = date => {
+    return moment(date).format('YYYY-MM-DD_HH-mm')
+  }
+
   return (
     <>
       <div className={classes.titleWrapper}>
-        <LogPageHeader
-          logsResponse={logsResponse}
-          saveMessage={saveMessage}
-          loading={loading}
-          sendSnapshot={sendSnapshot}
-        >
-          Server
-        </LogPageHeader>
+        <div className={classes.titleAndButtonsContainer}>
+          <Title>Server</Title>
+          {logsResponse && (
+            <div className={classes.buttonsWrapper}>
+              <FeatureButton
+                Icon={Download}
+                InverseIcon={DownloadActive}
+                onClick={() => {
+                  const text = logsResponse.data.logs.map(it => JSON.stringify(it)).join('\n')
+                  const blob = new window.Blob([text], {
+                    type: 'text/plain;charset=utf-8'
+                  })
+                  FileSaver.saveAs(blob, `${formatDateFile(new Date())}_server`)
+                }}
+              />
+              <SimpleButton className={classes.button} disabled={loading} onClick={sendSnapshot}>
+                Share with Lamassu
+              </SimpleButton>
+              <Info3>{saveMessage}</Info3>
+            </div>
+          )}
+        </div>
         <div className={classes.serverVersion}>
           {version && (
             <span>Server version: v{version}</span>

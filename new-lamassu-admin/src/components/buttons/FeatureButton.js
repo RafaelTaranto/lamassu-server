@@ -26,8 +26,6 @@ const styles = {
   buttonIconActive: {} // required to extend primary
 }
 
-console.log(styles)
-
 const useStyles = makeStyles(styles)
 
 const FeatureButton = memo(({ className, Icon, InverseIcon, ...props }) => {
