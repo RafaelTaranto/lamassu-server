@@ -6,7 +6,7 @@ with import (fetchTarball {
 
 stdenv.mkDerivation {
     name = "node";
-        buildInputs = [
+    buildInputs = [
         nodejs-14_x
         python2Full
         openssl
