@@ -1,0 +1,8 @@
+node_modules/
+new-lamasssu-admin/node_modules
+certs/
+.direnv/
+.vscode/
+dev/
+docker/
+public/
