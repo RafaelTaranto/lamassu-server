@@ -1,35 +1,69 @@
-
-const { fork } = require('child_process')
 const minimist = require('minimist')
 
-const cmd = require('./scripts')
-const variables = require('./utils/variables')
+const { EXIT } = require('./consts')
 
-function createMachines (numberOfMachines) {
-  return cmd.execCommand(
-    `bash ./scripts/create-machines.sh ${numberOfMachines} ${variables.SERVER_CERT_PATH} ${variables.MACHINE_PATH}`
+const SUBCMDS = {
+  env: require('./env'),
+  db: require('./db'),
+  machines: require('./machines'),
+  server: require('./server'),
+}
+
+const README = `
+This program will help you set the lamassu-server up for stress testing. This
+short introduction is meant only as a quickstart guide; the subcommands may
+support more options beyond those shown here. Use the --help flag for details
+on each subcommand.
+
+First of all, you need to create a suitable .env file. With the following
+commands, .env.bak will be used as a starting point, and the result will be
+saved in .env. This is to avoid losing the real configurations.
+
+$ cp .env .env.bak
+$ lamassu-server-stress-testing env --inenv .env.bak --outenv .env
+
+The database chosen in the command above (by default lamassu_stress)
+must be initialized, and must have a bare-bones configuration. The following
+command does that:
+
+$ lamassu-server-stress-testing db
+
+You also need to create fake machines that will be used later in the actual
+stress tests (including certificates, and pairing each to the server). The
+following command creates 10 fake machines, and saves their data in
+path/to/stress/data/. path/to/real/machine/code/ is the path to the root of the
+machine's code.
+
+$ lamassu-server-stress-testing machines -n 10 --fake_data_dir path/to/stress/data/ --machine path/to/real/machine/code/
+`;
+
+const help = (exit_code) => {
+  console.log("Usage: lamassu-server-stress-testing SUBCMD ARGS...",)
+  console.log("Where SUBCMD is one of the following:")
+  Object.entries(SUBCMDS).forEach(
+    ([subcmd, { help_message }]) => {
+      console.log(`\t${subcmd}\t${help_message ?? ''}`)
+    }
   )
+
+  console.log(README)
+
+  return exit_code
 }
 
-function startServer () {
-  const forked = fork('test-server.js')
-  forked.send('start')
-}
+const main = async (args) => {
+  try {
+    const subcmd = SUBCMDS[args[0]]
 
-async function run (args = minimist(process.argv.slice(2))) {
-  const NUMBER_OF_MACHINES = args._[0]
-  const HAS_VARIANCE = args.v || false
+    const exit_code = (args.length === 0) ? help(EXIT.OK) :
+      (!subcmd) ? help(EXIT.BADARGS) :
+      await subcmd.run(args.slice(1))
 
-  await createMachines(NUMBER_OF_MACHINES)
-  startServer()
-
-  for (let i = 1; i <= NUMBER_OF_MACHINES; i++) {
-    const forked = fork('child.js')
-    forked.send({ machineIndex: i, hasVariance: HAS_VARIANCE })
-    forked.on('message', msg => {
-      console.log(`Machine ${i} || ${msg}`)
-    })
+    process.exit(exit_code ?? EXIT.UNKNOWN)
+  } catch (err) {
+    console.error(err)
+    process.exit(EXIT.EXCEPTION)
   }
 }
 
-run()
+module.exports = main
