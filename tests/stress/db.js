@@ -1,5 +1,5 @@
-const cp = require('node:child_process')
-const path = require('node:path')
+const { spawnSync } = require('node:child_process')
+const { join } = require('node:path')
 
 require('../../lib/environment-helper')
 const db = require('../../lib/db')
@@ -23,8 +23,8 @@ const help = (exit_code) => {
 }
 
 const migrate = async () => {
-  const lamassu_migrate_path = path.join(__dirname, "../../bin/lamassu-migrate")
-  const { stdout, stderr, status, signal, error } = cp.spawnSync(lamassu_migrate_path, [], {
+  const lamassu_migrate_path = join(__dirname, "../../bin/lamassu-migrate")
+  const { stdout, stderr, status, signal, error } = spawnSync(lamassu_migrate_path, [], {
     cwd: process.cwd(),
     encoding: 'utf8',
   })

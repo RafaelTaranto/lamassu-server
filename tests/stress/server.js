@@ -1,5 +1,5 @@
-const cp = require('node:child_process')
-const path = require('node:path')
+const { fork } = require('node:child_process')
+const { join } = require('node:path')
 
 const { EXIT } = require('./consts')
 const CLI = require('./cli')
@@ -21,8 +21,8 @@ const help = (exit_code) => {
 
 const start_server = (args) =>
   new Promise((resolve, reject) => {
-    const lamassu_server = path.join(__dirname, "../../bin/lamassu-server")
-    const ls = cp.fork(lamassu_server, args, {
+    const lamassu_server = join(__dirname, "../../bin/lamassu-server")
+    const ls = fork(lamassu_server, args, {
       cwd: process.cwd(),
       encoding: 'utf8',
       env: { LAMASSU_STRESS_TESTING: "YES" },
