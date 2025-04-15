@@ -120,7 +120,8 @@ const PromoCodes = () => {
           onClick={() => {
             setDeleteDialog(true)
             setToBeDeleted({ variables: { codeId: t.id } })
-          }}>
+          }}
+          size="large">
           <DeleteIcon />
         </IconButton>
       )

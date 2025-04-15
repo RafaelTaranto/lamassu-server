@@ -33,7 +33,7 @@ const SingleRowTable = ({
         <THead>
           <Th className={classes.head}>
             {title}
-            <IconButton onClick={onEdit} className={classes.button}>
+            <IconButton onClick={onEdit} className={classes.button} size="large">
               <EditIcon />
             </IconButton>
           </Th>
@@ -62,7 +62,7 @@ const SingleRowTable = ({
         </TBody>
       </Table>
     </>
-  )
+  );
 }
 
 export default SingleRowTable

@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles'
+import { createTheme, adaptV4Theme } from '@mui/material/styles';
 
 import typographyStyles from 'src/components/typography/styles'
 
@@ -18,7 +18,7 @@ import {
 
 const { p } = typographyStyles
 
-export default createTheme({
+export default createTheme(adaptV4Theme({
   typography: {
     fontFamily: inputFontFamily,
     body1: { ...p }
@@ -158,4 +158,4 @@ export default createTheme({
       }
     }
   }
-})
+}))

@@ -144,7 +144,8 @@ const IndividualDiscounts = () => {
           onClick={() => {
             setDeleteDialog(true)
             setToBeDeleted({ variables: { discountId: t.id } })
-          }}>
+          }}
+          size="large">
           <DeleteIcon />
         </IconButton>
       )

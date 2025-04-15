@@ -165,7 +165,7 @@ const WizardStep = ({
             fullWidth
             label={`Select ${displayName}`}
             className={classes.picker}
-            getOptionSelected={R.eqProps('code')}
+            isOptionEqualToValue={R.eqProps('code')}
             labelProp={'display'}
             options={unfilled}
             onChange={(evt, it) => {
@@ -194,7 +194,7 @@ const WizardStep = ({
         </div>
       )}
     </>
-  )
+  );
 }
 
 export default WizardStep

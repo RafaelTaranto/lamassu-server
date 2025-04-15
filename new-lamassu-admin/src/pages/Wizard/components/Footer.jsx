@@ -52,13 +52,13 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
       variant={'persistent'}
       classes={{ paperAnchorDockedBottom: classes.drawer }}>
       <div className={classnames(wrapperClassNames)}>
-        <Grid container direction="row" justify="center" alignItems="baseline">
+        <Grid container direction="row" justifyContent="center" alignItems="baseline">
           <Grid
             item
             xs={5}
             container
             direction={open ? 'column' : 'row'}
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="baseline">
             <H2 className={classes.title}>Setup Lamassu Admin</H2>
             <Info2 className={classes.subtitle}>{subtitle}</Info2>
@@ -69,7 +69,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
             xs={4}
             container
             direction="column"
-            justify="flex-start"
+            justifyContent="flex-start"
             alignItems="flex-end"
             spacing={5}>
             <Grid item xs={12}>
@@ -83,14 +83,14 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
           <Grid
             container
             direction="row"
-            justify="center"
+            justifyContent="center"
             alignItems="baseline">
             <Grid
               item
               xs={5}
               container
               direction="column"
-              justify="flex-start"
+              justifyContent="flex-start"
               alignItems="flex-start">
               <Link
                 onClick={() => {
@@ -104,7 +104,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
               xs={4}
               container
               direction="column"
-              justify="flex-start"
+              justifyContent="flex-start"
               alignItems="flex-end"
               spacing={5}>
               <Grid item>
@@ -129,7 +129,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
         <img width={1152} src={exImage} alt="" />
       </Modal>
     </Drawer>
-  )
+  );
 }
 
 export default Footer

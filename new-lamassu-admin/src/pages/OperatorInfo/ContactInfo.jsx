@@ -221,7 +221,8 @@ const ContactInfo = ({ wizard }) => {
           {!editing && (
             <IconButton
               className={classes.transparentButton}
-              onClick={() => setEditing(true)}>
+              onClick={() => setEditing(true)}
+              size="large">
               <EditIcon />
             </IconButton>
           )}
@@ -311,7 +312,7 @@ const ContactInfo = ({ wizard }) => {
         </div>
       )}
     </>
-  )
+  );
 }
 
 export default ContactInfo

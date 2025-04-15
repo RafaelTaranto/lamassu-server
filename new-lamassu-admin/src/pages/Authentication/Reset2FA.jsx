@@ -121,7 +121,7 @@ const Reset2FA = () => {
       spacing={0}
       direction="column"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.welcomeBackground}>
       <Grid>
         <div>
@@ -205,7 +205,7 @@ const Reset2FA = () => {
         </div>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default Reset2FA

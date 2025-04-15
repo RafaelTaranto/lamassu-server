@@ -15,13 +15,13 @@ const Login = () => {
       spacing={0}
       direction="column"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.welcomeBackground}>
       <Grid>
         <LoginCard />
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default Login

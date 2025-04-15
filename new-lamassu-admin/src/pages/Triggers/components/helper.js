@@ -63,7 +63,7 @@ const getOverridesSchema = (values, customInfoRequests) => {
       .label('Automation')
       .matches(/(Manual|Automatic)/)
       .required()
-  })
+  });
 }
 
 const getDefaultSettings = () => {

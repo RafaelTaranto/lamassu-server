@@ -317,7 +317,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
           fullWidth
           label={`Available requests`}
           className={classes.picker}
-          getOptionSelected={R.eqProps('code')}
+          isOptionEqualToValue={R.eqProps('code')}
           labelProp={'display'}
           options={customInfoRequirementOptions}
           onChange={(evt, it) => {}}
@@ -343,7 +343,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
           }></Upload>
       )}
     </>
-  )
+  );
 }
 
 const customElements = {

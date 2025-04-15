@@ -114,7 +114,7 @@ const Autocomplete = ({
           <Box
             width={18}
             height={18}
-            borderRadius={6}
+            borderRadius="6px"
             bgcolor={warningColors[props.warning]}
           />
         )
@@ -134,7 +134,7 @@ const Autocomplete = ({
         )
       }}
     />
-  )
+  );
 }
 
 export default Autocomplete

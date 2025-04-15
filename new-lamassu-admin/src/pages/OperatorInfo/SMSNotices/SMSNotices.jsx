@@ -180,7 +180,8 @@ const SMSNotices = () => {
             setPreviewOpen(false)
             setSelectedSMS(it)
             setShowModal(true)
-          }}>
+          }}
+          size="large">
           <EditIcon />
         </IconButton>
       )
@@ -221,7 +222,8 @@ const SMSNotices = () => {
             R.equals(selectedSMS, it)
               ? setPreviewOpen(!previewOpen)
               : setPreviewOpen(true)
-          }}>
+          }}
+          size="large">
           {R.equals(selectedSMS, it) && previewOpen ? (
             <ExpandIconOpen />
           ) : (

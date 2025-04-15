@@ -49,7 +49,8 @@ const BlacklistTable = ({
           onClick={() => {
             setDeleteDialog(true)
             setToBeDeleted(it)
-          }}>
+          }}
+          size="large">
           <DeleteIcon />
         </IconButton>
       )

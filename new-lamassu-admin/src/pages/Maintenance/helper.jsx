@@ -132,10 +132,11 @@ const getElements = (
             onClick={() => {
               !R.isNil(setMachineId) && setMachineId(m.id ?? m.deviceId)
               setWizard(true)
-            }}>
+            }}
+            size="large">
             <EditIcon />
           </IconButton>
-        )
+        );
       }
     }
   ]

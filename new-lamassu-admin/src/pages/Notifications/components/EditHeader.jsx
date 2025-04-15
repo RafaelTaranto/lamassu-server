@@ -20,7 +20,8 @@ const Header = ({ title, editing, disabled, setEditing }) => {
         <IconButton
           onClick={() => setEditing(true)}
           className={classes.button}
-          disabled={disabled}>
+          disabled={disabled}
+          size="large">
           {disabled ? <DisabledEditIcon /> : <EditIcon />}
         </IconButton>
       )}
@@ -35,7 +36,7 @@ const Header = ({ title, editing, disabled, setEditing }) => {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default Header

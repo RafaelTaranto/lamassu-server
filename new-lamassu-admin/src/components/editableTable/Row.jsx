@@ -77,7 +77,8 @@ const ActionCol = ({ disabled, editing }) => {
           <IconButton
             disabled={disableEdit}
             className={classes.editButton}
-            onClick={() => onEdit && onEdit(values.id)}>
+            onClick={() => onEdit && onEdit(values.id)}
+            size="large">
             {disableEdit ? <DisabledEditIcon /> : <EditIcon />}
           </IconButton>
         </Td>
@@ -88,7 +89,8 @@ const ActionCol = ({ disabled, editing }) => {
             disabled={disabled}
             onClick={() => {
               setDeleteDialog(true)
-            }}>
+            }}
+            size="large">
             {disabled ? <DisabledDeleteIcon /> : <DeleteIcon />}
           </IconButton>
           <DeleteDialog
@@ -114,7 +116,7 @@ const ActionCol = ({ disabled, editing }) => {
         </Td>
       )}
     </>
-  )
+  );
 }
 
 const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {

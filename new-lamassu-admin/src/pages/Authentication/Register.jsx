@@ -131,7 +131,7 @@ const Register = () => {
       spacing={0}
       direction="column"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.welcomeBackground}>
       <Grid>
         <div>
@@ -214,7 +214,7 @@ const Register = () => {
         </div>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default Register

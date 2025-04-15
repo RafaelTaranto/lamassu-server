@@ -233,7 +233,8 @@ const TermsConditions = () => {
         {!editing && (
           <IconButton
             className={classes.transparentButton}
-            onClick={() => setEditing(true)}>
+            onClick={() => setEditing(true)}
+            size="large">
             <EditIcon />
           </IconButton>
         )}
@@ -287,7 +288,7 @@ const TermsConditions = () => {
         )}
       </Formik>
     </>
-  )
+  );
 }
 
 export default TermsConditions

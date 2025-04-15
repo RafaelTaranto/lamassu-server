@@ -86,7 +86,8 @@ const BooleanPropertiesTable = memo(
                   ) : (
                     <IconButton
                       className={classes.transparentButton}
-                      onClick={() => setEditing(true)}>
+                      onClick={() => setEditing(true)}
+                      size="large">
                       {disabled ? <EditIconDisabled /> : <EditIcon />}
                     </IconButton>
                   )}
@@ -121,11 +122,11 @@ const BooleanPropertiesTable = memo(
                   </TableBody>
                 </Table>
               </Form>
-            )
+            );
           }}
         </Formik>
       </div>
-    )
+    );
   }
 )
 

@@ -6,8 +6,9 @@ import {
   StylesProvider,
   jssPreset,
   MuiThemeProvider,
-  makeStyles
-} from '@mui/material/styles'
+  StyledEngineProvider,
+  makeStyles,
+} from '@mui/material/styles';
 import { create } from 'jss'
 import extendJss from 'jss-plugin-extend'
 import React, { useContext, useState } from 'react'
@@ -153,15 +154,17 @@ const App = () => {
       <Router>
         <ApolloProvider>
           <StylesProvider jss={jss}>
-            <MuiThemeProvider theme={theme}>
-              <CssBaseline />
-              <Main />
-            </MuiThemeProvider>
+            <StyledEngineProvider injectFirst>
+              <MuiThemeProvider theme={theme}>
+                <CssBaseline />
+                <Main />
+              </MuiThemeProvider>
+            </StyledEngineProvider>
           </StylesProvider>
         </ApolloProvider>
       </Router>
     </AppContext.Provider>
-  )
+  );
 }
 
 export default App
