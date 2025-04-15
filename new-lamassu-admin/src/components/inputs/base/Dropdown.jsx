@@ -7,9 +7,10 @@ import React from 'react'
 
 const Dropdown = ({ label, name, options, onChange, value, className }) => {
   return (
-    <FormControl className={classnames(className)}>
+    <FormControl variant="standard" className={classnames(className)}>
       <InputLabel>{label}</InputLabel>
       <Select
+        variant="standard"
         autoWidth={true}
         labelId={label}
         id={name}
@@ -22,7 +23,7 @@ const Dropdown = ({ label, name, options, onChange, value, className }) => {
         ))}
       </Select>
     </FormControl>
-  )
+  );
 }
 
 export default Dropdown

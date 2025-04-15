@@ -35,6 +35,7 @@ const TextInput = memo(
 
     return (
       <TextField
+        variant="standard"
         id={name}
         onChange={onChange}
         onBlur={onBlur}
@@ -50,9 +51,8 @@ const TextInput = memo(
           },
           ...InputProps
         }}
-        {...props}
-      />
-    )
+        {...props} />
+    );
   }
 )
 
