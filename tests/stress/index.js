@@ -30,11 +30,11 @@ $ lamassu-server-stress-testing db
 
 You also need to create fake machines that will be used later in the actual
 stress tests (including certificates, and pairing each to the server). The
-following command creates 10 fake machines, and saves their data in
-path/to/stress/data/. path/to/real/machine/code/ is the path to the root of the
-machine's code.
+following command creates 10 fake machines, and saves their device IDs in
+path/to/machine-ids.txt. path/to/real/machine/code/ is the path to the root of
+the machine's code.
 
-$ lamassu-server-stress-testing machines -n 10 --fake_data_dir path/to/stress/data/ --machine path/to/real/machine/code/ --replace_existing
+$ lamassu-server-stress-testing machines -n 10 --device_ids_path path/to/machine-ids.txt --machine path/to/real/machine/code/ --replace_existing
 
 Finally, use the following to start the lamassu-server in stress-testing mode:
 
