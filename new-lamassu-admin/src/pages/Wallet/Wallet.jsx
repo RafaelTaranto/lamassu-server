@@ -176,6 +176,7 @@ const Wallet = ({ name: SCREEN_KEY }) => {
               coin={R.find(R.propEq('code', wizard))(cryptoCurrencies)}
               onClose={() => setWizard(false)}
               save={save}
+              schemas={schemas}
               error={error?.message}
               cryptoCurrencies={cryptoCurrencies}
               fiatCurrency={fiatCurrency}
@@ -193,7 +194,7 @@ const Wallet = ({ name: SCREEN_KEY }) => {
               <FormRenderer
                 save={wizardSave}
                 elements={editingSchema.elements}
-                validationSchema={editingSchema.validationSchema}
+                validationSchema={editingSchema.getValidationSchema(accounts[editingSchema.code])}
                 value={accounts[editingSchema.code]}
               />
             </Modal>

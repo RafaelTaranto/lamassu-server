@@ -15,7 +15,7 @@ RUN apt-get install -y -q curl \
                           net-tools \
                           tar
 
-RUN curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+RUN curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
 RUN apt-get install nodejs -y -q
 
 WORKDIR lamassu-server

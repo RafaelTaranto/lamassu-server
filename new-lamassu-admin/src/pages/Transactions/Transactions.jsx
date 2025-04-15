@@ -40,8 +40,8 @@ const GET_TRANSACTIONS_CSV = gql`
   query transactions(
     $simplified: Boolean
     $limit: Int
-    $from: Date
-    $until: Date
+    $from: DateTimeISO
+    $until: DateTimeISO
     $timezone: String
     $excludeTestingCustomers: Boolean
   ) {
@@ -61,6 +61,7 @@ const GET_TRANSACTION_FILTERS = gql`
     transactionFilters {
       type
       value
+      label
     }
   }
 `
@@ -68,10 +69,10 @@ const GET_TRANSACTION_FILTERS = gql`
 const GET_TRANSACTIONS = gql`
   query transactions(
     $limit: Int
-    $from: Date
-    $until: Date
+    $from: DateTimeISO
+    $until: DateTimeISO
     $txClass: String
-    $machineName: String
+    $deviceId: String
     $customerName: String
     $fiatCode: String
     $cryptoCode: String
@@ -84,7 +85,7 @@ const GET_TRANSACTIONS = gql`
       from: $from
       until: $until
       txClass: $txClass
-      machineName: $machineName
+      deviceId: $deviceId
       customerName: $customerName
       fiatCode: $fiatCode
       cryptoCode: $cryptoCode
@@ -190,7 +191,7 @@ const Transactions = () => {
         <div className={classes.flexWrapper}>
           <div className={classes.overflowTd}>{Customer.displayName(it)}</div>
           {!it.isAnonymous && (
-            <div onClick={() => redirect(it.customerId)}>
+            <div data-cy="customer-link" onClick={() => redirect(it.customerId)}>
               {it.hasError || it.batchError ? (
                 <CustomerLinkWhiteIcon className={classes.customerLinkIcon} />
               ) : (
@@ -265,13 +266,13 @@ const Transactions = () => {
     setVariables({
       limit: NUM_LOG_RESULTS,
       txClass: filtersObject.type,
-      machineName: filtersObject.machine,
+      deviceId: filtersObject.machine,
       customerName: filtersObject.customer,
       fiatCode: filtersObject.fiat,
       cryptoCode: filtersObject.crypto,
       toAddress: filtersObject.address,
       status: filtersObject.status,
-      swept: filtersObject.swept === 'Swept'
+      swept: filtersObject.swept && filtersObject.swept === 'Swept'
     })
 
     refetch && refetch()
@@ -289,13 +290,13 @@ const Transactions = () => {
     setVariables({
       limit: NUM_LOG_RESULTS,
       txClass: filtersObject.type,
-      machineName: filtersObject.machine,
+      deviceId: filtersObject.machine,
       customerName: filtersObject.customer,
       fiatCode: filtersObject.fiat,
       cryptoCode: filtersObject.crypto,
       toAddress: filtersObject.address,
       status: filtersObject.status,
-      swept: filtersObject.swept === 'Swept'
+      swept: filtersObject.swept && filtersObject.swept === 'Swept'
     })
 
     refetch && refetch()
@@ -308,13 +309,13 @@ const Transactions = () => {
     setVariables({
       limit: NUM_LOG_RESULTS,
       txClass: filtersObject.type,
-      machineName: filtersObject.machine,
+      deviceId: filtersObject.machine,
       customerName: filtersObject.customer,
       fiatCode: filtersObject.fiat,
       cryptoCode: filtersObject.crypto,
       toAddress: filtersObject.address,
       status: filtersObject.status,
-      swept: filtersObject.swept === 'Swept'
+      swept: filtersObject.swept && filtersObject.swept === 'Swept'
     })
 
     refetch && refetch()

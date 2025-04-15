@@ -37,8 +37,8 @@ const MACHINE_LOGS = gql`
   query machineLogsCsv(
     $deviceId: ID!
     $limit: Int
-    $from: Date
-    $until: Date
+    $from: DateTimeISO
+    $until: DateTimeISO
     $timezone: String
   ) {
     machineLogsCsv(
@@ -52,7 +52,6 @@ const MACHINE_LOGS = gql`
 `
 
 const createCsv = async ({ machineLogsCsv }) => {
-  console.log(machineLogsCsv)
   const machineLogs = new Blob([machineLogsCsv], {
     type: 'text/plain;charset=utf-8'
   })

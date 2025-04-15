@@ -18,7 +18,6 @@ jobs:
           key: ${{ runner.os }}-buildx-updatetar
           restore-keys: |
             ${{ runner.os }}-buildx-updatetar
-
       - name: Build Docker image
         uses: docker/build-push-action@v5
         with:
@@ -34,7 +33,6 @@ jobs:
           docker create --name extract_artifact ci_image:latest
           docker cp extract_artifact:/lamassu-server.tar.gz ./lamassu-server.tar.gz
           docker rm extract_artifact
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
