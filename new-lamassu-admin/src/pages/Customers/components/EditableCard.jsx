@@ -1,5 +1,5 @@
-import { CardContent, Card, Grid } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import { CardContent, Card, Grid } from '@mui/material'
+import { makeStyles } from '@mui/material/styles'
 import classnames from 'classnames'
 import { Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'

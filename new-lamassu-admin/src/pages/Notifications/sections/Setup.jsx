@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/material'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
 import {

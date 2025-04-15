@@ -1,4 +1,4 @@
-import { alpha } from '@material-ui/core/styles/colorManipulator'
+import { alpha } from '@mui/material/styles/colorManipulator'
 
 import typographyStyles from 'src/components/typography/styles'
 import {

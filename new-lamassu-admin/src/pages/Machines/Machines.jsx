@@ -1,8 +1,8 @@
 import { useQuery, gql } from "@apollo/client";
-import Breadcrumbs from '@material-ui/core/Breadcrumbs'
-import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core/styles'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Grid from '@mui/material/Grid'
+import { makeStyles } from '@mui/material/styles'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'

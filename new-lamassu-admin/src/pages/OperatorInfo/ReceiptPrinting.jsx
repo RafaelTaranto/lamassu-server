@@ -1,5 +1,5 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/material/styles'
 import * as R from 'ramda'
 import React, { memo } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'

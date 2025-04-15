@@ -1,5 +1,5 @@
-import Switch from '@material-ui/core/Switch'
-import { makeStyles } from '@material-ui/core/styles'
+import Switch from '@mui/material/Switch'
+import { makeStyles } from '@mui/material/styles'
 import React, { memo } from 'react'
 
 import {

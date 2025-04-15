@@ -1,6 +1,6 @@
-import { makeStyles } from '@material-ui/core'
-import { ToggleButtonGroup as MUIToggleButtonGroup } from '@material-ui/lab'
-import ToggleButton from '@material-ui/lab/ToggleButton'
+import { makeStyles } from '@mui/material'
+import { ToggleButtonGroup as MUIToggleButtonGroup } from '@mui/lab'
+import ToggleButton from '@mui/lab/ToggleButton'
 import React from 'react'
 import { H4, P } from 'src/components/typography'
 

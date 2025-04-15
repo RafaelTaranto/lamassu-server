@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/material'
 import React from 'react'
 import { H1, P, Info2 } from 'src/components/typography'
 import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'

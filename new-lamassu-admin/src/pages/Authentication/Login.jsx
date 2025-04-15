@@ -1,4 +1,4 @@
-import { makeStyles, Grid } from '@material-ui/core'
+import { makeStyles, Grid } from '@mui/material'
 import React from 'react'
 
 import LoginCard from './LoginCard'

@@ -1,6 +1,6 @@
 import { useLazyQuery, useMutation, gql } from "@apollo/client";
 import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
-import { makeStyles, Box } from '@material-ui/core'
+import { makeStyles, Box } from '@mui/material'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { add, differenceInYears, format, sub, parse } from 'date-fns/fp'

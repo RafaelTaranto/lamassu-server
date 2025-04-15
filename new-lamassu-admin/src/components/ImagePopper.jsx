@@ -1,4 +1,4 @@
-import { makeStyles, ClickAwayListener } from '@material-ui/core'
+import { makeStyles, ClickAwayListener } from '@mui/material'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
 import Popper from 'src/components/Popper'

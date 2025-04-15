@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/material'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import Sidebar, { Stepper } from 'src/components/layout/Sidebar'

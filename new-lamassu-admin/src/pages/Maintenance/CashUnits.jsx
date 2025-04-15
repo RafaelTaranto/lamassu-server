@@ -1,5 +1,5 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { DialogActions, makeStyles, Box } from '@material-ui/core'
+import { DialogActions, makeStyles, Box } from '@mui/material'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'

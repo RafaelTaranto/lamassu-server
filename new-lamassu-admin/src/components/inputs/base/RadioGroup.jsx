@@ -3,7 +3,7 @@ import {
   RadioGroup as MRadioGroup,
   FormControlLabel,
   makeStyles
-} from '@material-ui/core'
+} from '@mui/material'
 import classnames from 'classnames'
 import React from 'react'
 import { Label1 } from 'src/components/typography'

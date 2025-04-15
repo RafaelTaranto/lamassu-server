@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/material/styles'
 import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import React, { useContext, useState } from 'react'

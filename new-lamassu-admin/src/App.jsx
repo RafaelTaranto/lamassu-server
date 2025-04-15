@@ -1,13 +1,13 @@
 import { useQuery, gql } from "@apollo/client";
-import CssBaseline from '@material-ui/core/CssBaseline'
-import Grid from '@material-ui/core/Grid'
-import Slide from '@material-ui/core/Slide'
+import CssBaseline from '@mui/material/CssBaseline'
+import Grid from '@mui/material/Grid'
+import Slide from '@mui/material/Slide'
 import {
   StylesProvider,
   jssPreset,
   MuiThemeProvider,
   makeStyles
-} from '@material-ui/core/styles'
+} from '@mui/material/styles'
 import { create } from 'jss'
 import extendJss from 'jss-plugin-extend'
 import React, { useContext, useState } from 'react'

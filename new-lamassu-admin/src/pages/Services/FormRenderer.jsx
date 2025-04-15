@@ -1,4 +1,4 @@
-import { makeStyles, Grid } from '@material-ui/core'
+import { makeStyles, Grid } from '@mui/material'
 import classnames from 'classnames'
 import { Formik, Form, FastField } from 'formik'
 import * as R from 'ramda'

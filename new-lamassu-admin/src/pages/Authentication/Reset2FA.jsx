@@ -1,6 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles, Grid } from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
+import { makeStyles, Grid } from '@mui/material'
+import Paper from '@mui/material/Paper'
 import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import React, { useReducer, useState } from 'react'

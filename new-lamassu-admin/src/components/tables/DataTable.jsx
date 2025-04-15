@@ -1,4 +1,4 @@
-import { makeStyles, Box } from '@material-ui/core'
+import { makeStyles, Box } from '@mui/material'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'

@@ -1,4 +1,4 @@
-import { makeStyles, Modal as MaterialModal, Paper } from '@material-ui/core'
+import { makeStyles, Modal as MaterialModal, Paper } from '@mui/material'
 import classnames from 'classnames'
 import React from 'react'
 import { H1, H4 } from 'src/components/typography'

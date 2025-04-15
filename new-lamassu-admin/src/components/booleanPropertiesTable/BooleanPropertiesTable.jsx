@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/material/styles'
 import classnames from 'classnames'
 import { useFormikContext, Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'

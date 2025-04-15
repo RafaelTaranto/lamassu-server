@@ -1,5 +1,5 @@
 import { useMutation, useQuery, gql } from "@apollo/client";
-import { makeStyles, Box } from '@material-ui/core'
+import { makeStyles, Box } from '@mui/material'
 import classnames from 'classnames'
 import React, { useState } from 'react'
 import InfoMessage from 'src/components/InfoMessage'

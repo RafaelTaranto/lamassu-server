@@ -1,4 +1,4 @@
-import { makeStyles, Paper } from '@material-ui/core'
+import { makeStyles, Paper } from '@mui/material'
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
 import { React, useState } from 'react'

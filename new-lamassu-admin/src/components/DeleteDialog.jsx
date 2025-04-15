@@ -3,7 +3,7 @@ import {
   DialogActions,
   DialogContent,
   makeStyles
-} from '@material-ui/core'
+} from '@mui/material'
 import React from 'react'
 import { H4, P } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'

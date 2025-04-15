@@ -1,5 +1,5 @@
 import { useMutation, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/material/styles'
 import { Form, Formik } from 'formik'
 import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'

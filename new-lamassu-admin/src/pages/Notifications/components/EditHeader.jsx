@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/material'
 import React from 'react'
 import { H4 } from 'src/components/typography'
 import DisabledEditIcon from 'src/styling/icons/action/edit/disabled.svg?react'

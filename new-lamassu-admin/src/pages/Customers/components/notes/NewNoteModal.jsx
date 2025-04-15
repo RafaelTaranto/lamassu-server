@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/material/styles'
 import { Form, Formik, Field } from 'formik'
 import { React } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'

@@ -1,4 +1,4 @@
-import { makeStyles, Popper as MaterialPopper, Paper } from '@material-ui/core'
+import { makeStyles, Popper as MaterialPopper, Paper } from '@mui/material'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'

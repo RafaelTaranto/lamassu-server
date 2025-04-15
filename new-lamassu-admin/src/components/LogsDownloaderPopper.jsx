@@ -1,5 +1,5 @@
 import { useLazyQuery } from "@apollo/client";
-import { makeStyles, ClickAwayListener } from '@material-ui/core'
+import { makeStyles, ClickAwayListener } from '@mui/material'
 import classnames from 'classnames'
 import { format, set } from 'date-fns/fp'
 import FileSaver from 'file-saver'

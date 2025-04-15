@@ -1,4 +1,4 @@
-import { makeStyles, IconButton as IconB } from '@material-ui/core'
+import { makeStyles, IconButton as IconB } from '@mui/material'
 import React from 'react'
 
 import { comet } from 'src/styling/variables'

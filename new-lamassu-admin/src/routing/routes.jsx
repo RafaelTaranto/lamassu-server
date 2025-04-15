@@ -1,6 +1,6 @@
-import Fade from '@material-ui/core/Fade'
-import Slide from '@material-ui/core/Slide'
-import { makeStyles } from '@material-ui/core/styles'
+import Fade from '@mui/material/Fade'
+import Slide from '@mui/material/Slide'
+import { makeStyles } from '@mui/material/styles'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
 import {

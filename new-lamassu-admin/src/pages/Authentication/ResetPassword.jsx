@@ -1,6 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles, Grid } from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
+import { makeStyles, Grid } from '@mui/material'
+import Paper from '@mui/material/Paper'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'

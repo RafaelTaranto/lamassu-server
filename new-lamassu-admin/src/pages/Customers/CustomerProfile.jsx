@@ -6,8 +6,8 @@ import {
   DialogActions,
   DialogContent,
   Dialog
-} from '@material-ui/core'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+} from '@mui/material'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'

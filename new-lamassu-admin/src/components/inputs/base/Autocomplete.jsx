@@ -1,5 +1,5 @@
-import { Box } from '@material-ui/core'
-import MAutocomplete from '@material-ui/lab/Autocomplete'
+import { Box } from '@mui/material'
+import MAutocomplete from '@mui/lab/Autocomplete'
 import sort from 'match-sorter'
 import * as R from 'ramda'
 import React from 'react'

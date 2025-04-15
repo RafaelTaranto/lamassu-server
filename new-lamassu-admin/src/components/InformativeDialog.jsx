@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, makeStyles } from '@material-ui/core'
+import { Dialog, DialogContent, makeStyles } from '@mui/material'
 import React, { memo } from 'react'
 import { H1 } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'

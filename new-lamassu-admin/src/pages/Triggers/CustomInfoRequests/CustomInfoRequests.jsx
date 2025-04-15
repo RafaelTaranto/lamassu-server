@@ -1,5 +1,5 @@
 import { useMutation, useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/material'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'

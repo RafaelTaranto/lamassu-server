@@ -4,7 +4,7 @@ import {
   DialogContent,
   makeStyles,
   InputLabel
-} from '@material-ui/core'
+} from '@mui/material'
 import React, { memo, useState } from 'react'
 import { H4, P } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'

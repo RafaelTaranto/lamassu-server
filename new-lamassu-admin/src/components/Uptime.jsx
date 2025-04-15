@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core'
-import Chip from '@material-ui/core/Chip'
+import { makeStyles } from '@mui/material'
+import Chip from '@mui/material/Chip'
 import * as R from 'ramda'
 import React from 'react'
 

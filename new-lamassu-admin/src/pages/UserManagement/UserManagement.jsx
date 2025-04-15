@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles, Box, Chip } from '@material-ui/core'
+import { makeStyles, Box, Chip } from '@mui/material'
 import { startAttestation } from '@simplewebauthn/browser'
 import * as R from 'ramda'
 import React, { useReducer, useState, useContext } from 'react'

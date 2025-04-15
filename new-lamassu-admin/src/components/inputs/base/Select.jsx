@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/material'
 import classnames from 'classnames'
 import { useSelect } from 'downshift'
 import * as R from 'ramda'

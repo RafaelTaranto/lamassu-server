@@ -1,5 +1,5 @@
 import { useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/material/styles'
 import classnames from 'classnames'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'

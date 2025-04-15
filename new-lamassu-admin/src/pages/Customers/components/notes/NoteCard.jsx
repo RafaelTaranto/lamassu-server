@@ -1,4 +1,4 @@
-import { makeStyles, Paper } from '@material-ui/core'
+import { makeStyles, Paper } from '@mui/material'
 import * as R from 'ramda'
 import { React } from 'react'
 import { H3, P } from 'src/components/typography'
