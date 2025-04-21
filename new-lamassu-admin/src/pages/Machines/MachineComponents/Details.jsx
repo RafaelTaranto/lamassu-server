@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { Label3, P } from 'src/components/typography'
 

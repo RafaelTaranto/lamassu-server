@@ -1,5 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles, Dialog, DialogContent } from '@mui/material'
+import { Dialog, DialogContent } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'

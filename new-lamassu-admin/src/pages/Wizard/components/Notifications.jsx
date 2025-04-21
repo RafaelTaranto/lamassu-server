@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import Grid from '@mui/material/Grid'
 import React, { useState } from 'react'
 import Sidebar from 'src/components/layout/Sidebar'

@@ -2,8 +2,8 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  makeStyles
 } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { H4, P } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'

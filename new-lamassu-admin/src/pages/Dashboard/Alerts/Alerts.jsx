@@ -1,7 +1,7 @@
 import { useQuery, gql } from "@apollo/client";
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'

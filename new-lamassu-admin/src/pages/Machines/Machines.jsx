@@ -1,7 +1,7 @@
 import { useQuery, gql } from "@apollo/client";
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import classnames from 'classnames'
 import * as R from 'ramda'

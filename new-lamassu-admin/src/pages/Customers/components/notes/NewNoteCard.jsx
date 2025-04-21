@@ -1,4 +1,5 @@
-import { makeStyles, Paper } from '@mui/material'
+import { Paper } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classNames from 'classnames'
 import { React } from 'react'
 import { P } from 'src/components/typography'

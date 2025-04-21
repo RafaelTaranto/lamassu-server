@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { H1, P } from 'src/components/typography'
 import BitcoinLogo from 'src/styling/logos/icon-bitcoin-colour.svg?react'

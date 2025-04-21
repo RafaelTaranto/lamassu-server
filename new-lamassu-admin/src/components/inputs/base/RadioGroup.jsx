@@ -1,9 +1,9 @@
 import {
   Radio,
   RadioGroup as MRadioGroup,
-  FormControlLabel,
-  makeStyles
+  FormControlLabel
 } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import { Label1 } from 'src/components/typography'

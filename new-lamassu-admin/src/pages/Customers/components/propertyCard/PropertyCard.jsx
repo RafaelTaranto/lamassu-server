@@ -1,5 +1,5 @@
 import { Paper } from '@mui/material'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo } from 'react'
 import { MainStatus } from 'src/components/Status'

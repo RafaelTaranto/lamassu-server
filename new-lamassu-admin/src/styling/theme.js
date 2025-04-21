@@ -107,7 +107,7 @@ export default createTheme(adaptV4Theme({
     },
     MuiFormLabel: {
       root: {
-        '&$focused': {
+        '&.Mui-focused': {
           color: fontColor
         }
       }
@@ -121,7 +121,7 @@ export default createTheme(adaptV4Theme({
     },
     MuiToggleButton: {
       root: {
-        '&$selected': {
+        '&.Mui-selected': {
           backgroundColor: zircon,
           borderColor: primaryColor,
           borderTopColor: [primaryColor, '!important'],

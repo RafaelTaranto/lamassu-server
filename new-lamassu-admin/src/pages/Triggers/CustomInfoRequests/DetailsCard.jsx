@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import { Label1, Info2 } from 'src/components/typography'

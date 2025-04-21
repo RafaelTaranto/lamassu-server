@@ -1,7 +1,7 @@
 import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/material/styles'
-import MAutocomplete from '@mui/lab/Autocomplete'
+import { makeStyles } from '@mui/styles'
+import MAutocomplete from '@mui/material/Autocomplete'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
 import { P } from 'src/components/typography'
@@ -39,11 +39,13 @@ const SearchBox = memo(
         value={filters}
         options={options}
         getOptionLabel={it => it.label || it.value}
-        renderOption={it => (
-          <div className={classes.item}>
-            <P className={classes.itemLabel}>{it.label || it.value}</P>
-            <P className={classes.itemType}>{it.type}</P>
-          </div>
+        renderOption={(props, it) => (
+          <li {...props}>
+            <div className={classes.item}>
+              <P className={classes.itemLabel}>{it.label || it.value}</P>
+              <P className={classes.itemType}>{it.type}</P>
+            </div>
+          </li>
         )}
         autoHighlight
         disableClearable

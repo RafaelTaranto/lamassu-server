@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
 import React from 'react'

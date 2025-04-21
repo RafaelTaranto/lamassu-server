@@ -1,7 +1,7 @@
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 
 import styles from './Machines.styles'

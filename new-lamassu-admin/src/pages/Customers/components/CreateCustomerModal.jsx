@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import { Field, Form, Formik } from 'formik'
 import { parsePhoneNumberWithError } from 'libphonenumber-js'
 import * as R from 'ramda'

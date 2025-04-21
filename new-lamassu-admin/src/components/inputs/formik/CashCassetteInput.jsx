@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classNames from 'classnames'
 import React, { memo, useState } from 'react'
 import { CashOut } from 'src/components/inputs/cashbox/Cashbox'

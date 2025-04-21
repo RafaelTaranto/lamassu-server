@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import { Formik, Form, Field } from 'formik'
 import * as R from 'ramda'
 import React from 'react'

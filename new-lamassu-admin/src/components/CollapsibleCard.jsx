@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'

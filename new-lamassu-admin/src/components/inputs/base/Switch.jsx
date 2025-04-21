@@ -1,5 +1,5 @@
 import Switch from '@mui/material/Switch'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import React, { memo } from 'react'
 
 import {
@@ -18,17 +18,17 @@ const useStyles = makeStyles(theme => ({
   },
   switchBase: {
     padding: 2,
-    '&$disabled': {
+    '&.Mui-disabled': {
       color: disabledColor2,
       '& + $track': {
         backgroundColor: disabledColor,
         opacity: 1
       }
     },
-    '&$checked': {
+    '&.Mui-checked': {
       transform: 'translateX(58%)',
       color: theme.palette.common.white,
-      '&$disabled': {
+      '&.Mui-disabled': {
         color: disabledColor2
       },
       '& + $track': {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => ({
         border: 'none'
       }
     },
-    '&$focusVisible $thumb': {
+    '&.Mui-focusVisible $thumb': {
       border: '6px solid #fff',
       boxShadow: '0 0 4px 0 rgba(0,0,0,0.24)'
     }

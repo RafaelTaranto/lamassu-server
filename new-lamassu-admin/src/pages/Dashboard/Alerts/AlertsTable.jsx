@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import * as R from 'ramda'

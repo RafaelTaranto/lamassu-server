@@ -1,4 +1,5 @@
-import { makeStyles, Drawer, Grid } from '@mui/material'
+import { Drawer, Grid } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState } from 'react'
 import Modal from 'src/components/Modal'

@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { Formik, Form, Field } from 'formik'
 import React, { useState } from 'react'
 import PromptWhenDirty from 'src/components/PromptWhenDirty'

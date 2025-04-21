@@ -1,6 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
 import { formatCryptoAddress } from '@lamassu/coins/lightUtils'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import classnames from 'classnames'
 import { format } from 'date-fns/fp'

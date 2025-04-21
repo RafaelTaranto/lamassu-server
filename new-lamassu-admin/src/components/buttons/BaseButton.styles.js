@@ -1,3 +1,5 @@
+// import { outlinedInputClasses } from '@mui/material/ButtonBase';
+
 import {
   white,
   fontColor,
@@ -37,6 +39,7 @@ export default {
     extend: colors(subheaderColor, subheaderDarkColor, offColor),
     '&:active': {
       color: white,
+      // [`& ${outlinedInputClasses.buttonIcon}`]: {
       '& $buttonIcon': {
         display: 'none'
       },
@@ -54,12 +57,14 @@ export default {
     '&:active': {
       color: fontColor,
       '& $buttonIcon': {
+      // [`& ${outlinedInputClasses.buttonIcon}`]: {
         display: 'flex'
       },
       '& $buttonIconActive': {
         display: 'none'
       }
     },
+    // [`& ${outlinedInputClasses.buttonIcon}`]: {
     '& $buttonIcon': {
       display: 'none'
     },

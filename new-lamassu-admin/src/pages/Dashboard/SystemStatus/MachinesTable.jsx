@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles, withStyles } from '@mui/material'
+import { makeStyles, withStyles } from '@mui/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'

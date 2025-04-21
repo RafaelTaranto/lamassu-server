@@ -1,4 +1,5 @@
-import { makeStyles, Grid } from '@mui/material'
+import { Grid } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Formik, Form, FastField } from 'formik'
 import * as R from 'ramda'

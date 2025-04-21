@@ -1,4 +1,5 @@
-import { makeStyles, Paper } from '@mui/material'
+import { Paper } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { formatDurationWithOptions, intervalToDuration } from 'date-fns/fp'
 import { Form, Formik, Field } from 'formik'
 import { React, useRef } from 'react'

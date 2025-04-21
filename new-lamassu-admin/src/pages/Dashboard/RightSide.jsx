@@ -1,6 +1,6 @@
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState } from 'react'
 import CollapsibleCard, { cardState } from 'src/components/CollapsibleCard'

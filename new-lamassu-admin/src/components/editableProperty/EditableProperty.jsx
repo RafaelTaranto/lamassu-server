@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import React, { useState, memo } from 'react'
 import { H4, P } from 'src/components/typography'
 import EditIconDisabled from 'src/styling/icons/action/edit/disabled.svg?react'

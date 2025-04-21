@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import { useFormikContext } from 'formik'
 import * as R from 'ramda'
 import React, { useState, useCallback } from 'react'

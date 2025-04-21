@@ -1,4 +1,4 @@
-import { alpha } from '@mui/material/styles/colorManipulator'
+import { alpha } from '@mui/material/styles'
 
 import {
   detailsRowStyles,

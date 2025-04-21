@@ -1,5 +1,5 @@
 import { useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import Modal from 'src/components/Modal'

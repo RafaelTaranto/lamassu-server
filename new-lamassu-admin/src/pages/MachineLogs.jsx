@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'

@@ -1,5 +1,5 @@
 import { Paper } from '@mui/material'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo } from 'react'
 import { Info2, Label3, P } from 'src/components/typography'

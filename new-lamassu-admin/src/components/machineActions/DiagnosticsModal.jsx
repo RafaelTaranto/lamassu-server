@@ -1,5 +1,5 @@
 import { useLazyQuery, useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import { subMinutes } from 'date-fns'
 import FileSaver from 'file-saver'
 import React, { useState, useEffect } from 'react'

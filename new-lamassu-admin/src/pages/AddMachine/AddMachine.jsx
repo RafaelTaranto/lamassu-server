@@ -1,6 +1,6 @@
 import { useMutation, useQuery, gql } from "@apollo/client";
 import { Dialog, DialogContent, SvgIcon, IconButton } from '@mui/material'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Form, Formik, FastField } from 'formik'
 import {QRCodeSVG as QRCode} from 'qrcode.react'

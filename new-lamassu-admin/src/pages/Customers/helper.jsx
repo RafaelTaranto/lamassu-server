@@ -1,5 +1,6 @@
 import React from 'react'
-import { makeStyles, Box } from '@mui/material'
+import { Box } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { parse, isValid, format } from 'date-fns/fp'
 import { Field, useFormikContext } from 'formik'

@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import TextField from '@mui/material/TextField'
 import classnames from 'classnames'
 import * as R from 'ramda'

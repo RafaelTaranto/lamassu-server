@@ -1,6 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'

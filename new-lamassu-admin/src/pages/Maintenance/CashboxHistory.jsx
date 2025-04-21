@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React from 'react'
 // import * as Yup from 'yup'

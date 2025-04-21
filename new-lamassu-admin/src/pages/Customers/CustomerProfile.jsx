@@ -1,12 +1,12 @@
 import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
 import {
-  makeStyles,
   Breadcrumbs,
   Box,
   DialogActions,
   DialogContent,
   Dialog
 } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'

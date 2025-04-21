@@ -1,5 +1,5 @@
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import React, { useReducer } from 'react'
 import { H5 } from 'src/components/typography'
 import Logo from 'src/styling/icons/menu/logo.svg?react'

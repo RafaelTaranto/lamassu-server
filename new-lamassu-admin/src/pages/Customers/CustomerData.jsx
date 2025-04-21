@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import { useState, React } from 'react'
 import ImagePopper from 'src/components/ImagePopper'

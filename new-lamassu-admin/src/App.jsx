@@ -2,13 +2,8 @@ import { useQuery, gql } from "@apollo/client";
 import CssBaseline from '@mui/material/CssBaseline'
 import Grid from '@mui/material/Grid'
 import Slide from '@mui/material/Slide'
-import {
-  StylesProvider,
-  jssPreset,
-  MuiThemeProvider,
-  StyledEngineProvider,
-  makeStyles,
-} from '@mui/material/styles';
+import { StylesProvider, jssPreset, makeStyles } from '@mui/styles';
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { create } from 'jss'
 import extendJss from 'jss-plugin-extend'
 import React, { useContext, useState } from 'react'
@@ -155,10 +150,10 @@ const App = () => {
         <ApolloProvider>
           <StylesProvider jss={jss}>
             <StyledEngineProvider injectFirst>
-              <MuiThemeProvider theme={theme}>
+              <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <Main />
-              </MuiThemeProvider>
+              </ThemeProvider>
             </StyledEngineProvider>
           </StylesProvider>
         </ApolloProvider>

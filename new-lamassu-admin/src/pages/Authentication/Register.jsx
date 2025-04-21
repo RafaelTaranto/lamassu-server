@@ -1,5 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles, Grid } from '@mui/material'
+import { Grid } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import Paper from '@mui/material/Paper'
 import { Field, Form, Formik } from 'formik'
 import React, { useReducer } from 'react'

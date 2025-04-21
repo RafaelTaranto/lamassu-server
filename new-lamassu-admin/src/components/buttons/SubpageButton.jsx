@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
 import { H4 } from 'src/components/typography'

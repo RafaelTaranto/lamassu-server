@@ -1,5 +1,5 @@
 import { ClickAwayListener } from '@mui/material'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState, memo } from 'react'
 import Popover from 'src/components/Popper'

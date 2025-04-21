@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import Chip from '@mui/material/Chip'
 import * as R from 'ramda'
 import React from 'react'

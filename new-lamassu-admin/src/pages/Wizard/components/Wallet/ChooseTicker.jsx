@@ -1,6 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
 import { getEquivalentCode } from '@lamassu/coins/lightUtils'
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H4 } from 'src/components/typography'

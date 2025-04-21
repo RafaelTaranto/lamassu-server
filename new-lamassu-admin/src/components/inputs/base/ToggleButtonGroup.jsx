@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import { ToggleButtonGroup as MUIToggleButtonGroup } from '@mui/lab'
 import ToggleButton from '@mui/lab/ToggleButton'
 import React from 'react'

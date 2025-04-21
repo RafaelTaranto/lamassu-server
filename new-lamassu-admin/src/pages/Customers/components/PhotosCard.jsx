@@ -1,6 +1,6 @@
 import ButtonBase from '@mui/material/ButtonBase'
 import Paper from '@mui/material/Card'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import { InformativeDialog } from 'src/components/InformativeDialog'

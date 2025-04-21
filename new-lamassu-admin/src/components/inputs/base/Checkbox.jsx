@@ -1,5 +1,5 @@
 import Checkbox from '@mui/material/Checkbox'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import React from 'react'
@@ -16,7 +16,7 @@ import {
 const useStyles = makeStyles({
   root: {
     color: secondaryColor,
-    '&$checked': {
+    '&.Mui-checked': {
       color: secondaryColor
     }
   },

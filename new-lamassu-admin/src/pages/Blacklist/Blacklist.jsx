@@ -1,6 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { Box, Dialog, DialogContent, DialogActions } from '@mui/material'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'

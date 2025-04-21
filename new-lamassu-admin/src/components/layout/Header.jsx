@@ -1,7 +1,7 @@
 import { useQuery, gql } from "@apollo/client";
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import Popper from '@mui/material/Popper'
-import { makeStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { memo, useState, useEffect, useRef } from 'react'

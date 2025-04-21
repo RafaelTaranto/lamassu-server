@@ -1,4 +1,5 @@
-import { makeStyles, Box } from '@mui/material'
+import { Box } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo } from 'react'
 import CrossedCameraIcon from 'src/styling/icons/ID/photo/crossed-camera.svg?react'
