@@ -252,7 +252,7 @@ const AddMachine = memo(({ close, onPaired }) => {
           <div className={classes.wrapper}>
             <div className={classes.headerDiv}>
               <Title>Add Machine</Title>
-              <IconButton disableRipple={true} onClick={close} size="large">
+              <IconButton onClick={close} size="large">
                 <SvgIcon color="error">
                   <CloseIcon />
                 </SvgIcon>

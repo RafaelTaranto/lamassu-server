@@ -5,11 +5,9 @@ import React from 'react'
 import { comet } from 'src/styling/variables'
 
 const styles = {
-  label: ({ size }) => ({
+  root: ({ size }) => ({
     width: size,
-    height: size
-  }),
-  root: {
+    height: size,
     '& svg': {
       flex: 1
     },
@@ -25,7 +23,7 @@ const styles = {
     '&:hover path': {
       stroke: comet
     }
-  }
+  })
 }
 
 const useStyles = makeStyles(styles)
@@ -36,7 +34,7 @@ const IconButton = ({ size, children, onClick, ...props }) => {
     <IconB
       {...props}
       size="small"
-      classes={{ root: classes.root, label: classes.label }}
+      classes={{ root: classes.root }}
       disableRipple
       onClick={onClick}>
       {children}

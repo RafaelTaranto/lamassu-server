@@ -9,7 +9,6 @@
     "@emotion/styled": "^11.14.0",
     "@lamassu/coins": "v1.6.1",
     "@mui/icons-material": "^5.17.1",
-    "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.17.1",
     "@mui/styles": "^5.17.1",
     "@simplewebauthn/browser": "^3.0.0",

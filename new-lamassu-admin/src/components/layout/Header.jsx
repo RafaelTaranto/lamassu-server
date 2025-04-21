@@ -175,17 +175,22 @@ const Header = memo(({ tree, user }) => {
                   className={classes.popper}
                   disablePortal={false}
                   placement="bottom-end"
-                  modifiers={{
-                    offset: {
+                  modifiers={[
+                    {
+                      name: 'offset',
                       enabled: true,
-                      offset: '100vw'
+                      options: {
+                        offset: ['100vw', '100vw']
+                      }
                     },
-                    preventOverflow: {
+                    {
+                      name: 'preventOverflow',
                       enabled: true,
-                      boundariesElement: 'viewport',
-                      padding: 0
+                      options: {
+                        rootBoundary: 'viewport',
+                      },
                     }
-                  }}>
+                  ]}>
                   <NotificationCenter
                     popperRef={popperRef}
                     buttonCoords={notifButtonCoords}

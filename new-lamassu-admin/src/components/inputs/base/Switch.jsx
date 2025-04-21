@@ -62,6 +62,7 @@ const SwitchInput = memo(({ ...props }) => {
   const classes = useStyles()
   return (
     <Switch
+      color="secondary"
       focusVisibleClassName={classes.focusVisible}
       disableRipple
       classes={{

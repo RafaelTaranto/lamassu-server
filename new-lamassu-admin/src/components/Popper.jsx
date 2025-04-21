@@ -121,28 +121,42 @@ const Popover = ({
     right: ['left']
   }
 
-  const modifiers = R.mergeDeepLeft(props.modifiers, {
-    flip: {
+  const modifiers = [
+    {
+      name: 'flip',
       enabled: R.defaultTo(false, props.flip),
-      allowedAutoPlacements: flipPlacements[props.placement],
-      boundary: 'clippingParents'
+      options: {
+        allowedAutoPlacements: flipPlacements[props.placement]
+      }
     },
-    preventOverflow: {
+    {
+      name: 'preventOverflow',
       enabled: R.defaultTo(true, props.preventOverflow),
-      boundariesElement: 'scrollParent'
+      options: {
+        rootBoundary: 'scrollParent'
+      }
     },
-    offset: {
+    {
+      name: 'offset',
       enabled: true,
-      offset: '0, 10'
+      options: {
+        offset: [0, 10]
+      }
     },
-    arrow: {
+    {
+      name: 'arrow',
       enabled: R.defaultTo(true, props.showArrow),
-      element: arrowRef
+      options: {
+        element: arrowRef
+      }
     },
-    computeStyle: {
-      gpuAcceleration: false
+    {
+      name: 'computeStyles',
+      options: {
+        gpuAcceleration: false
+      }
     }
-  })
+  ]
 
   if (props.preventOverflow === false) {
     modifiers.hide = {
