@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material'
+import Paper from '@mui/material/Paper'
 import { makeStyles } from '@mui/styles'
 import classNames from 'classnames'
 import { React } from 'react'

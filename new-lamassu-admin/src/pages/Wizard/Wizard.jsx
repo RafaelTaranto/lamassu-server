@@ -1,5 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
-import { Dialog, DialogContent } from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState, useContext } from 'react'

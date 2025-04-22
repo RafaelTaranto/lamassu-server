@@ -1,4 +1,5 @@
-import { Modal as MaterialModal, Paper } from '@mui/material'
+import MaterialModal from '@mui/material/Modal'
+import Paper from '@mui/material/Paper'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'

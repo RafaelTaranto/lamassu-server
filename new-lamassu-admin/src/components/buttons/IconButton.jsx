@@ -1,4 +1,4 @@
-import { IconButton as IconB } from '@mui/material'
+import IconB from '@mui/material/IconButton'
 import { makeStyles } from '@mui/styles'
 import React from 'react'
 

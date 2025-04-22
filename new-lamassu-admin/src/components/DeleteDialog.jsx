@@ -1,8 +1,6 @@
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
 import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { H4, P } from 'src/components/typography'

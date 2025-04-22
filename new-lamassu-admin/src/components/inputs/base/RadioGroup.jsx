@@ -1,8 +1,6 @@
-import {
-  Radio,
-  RadioGroup as MRadioGroup,
-  FormControlLabel
-} from '@mui/material'
+import Radio from '@mui/material/Radio'
+import MRadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'

@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo } from 'react'

@@ -1,4 +1,5 @@
-import { Popper as MaterialPopper, Paper } from '@mui/material'
+import MaterialPopper from '@mui/material/Popper'
+import Paper from '@mui/material/Paper'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'

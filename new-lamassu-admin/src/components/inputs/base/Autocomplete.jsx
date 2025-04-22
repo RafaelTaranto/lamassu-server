@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import MAutocomplete from '@mui/material/Autocomplete'
 import sort from 'match-sorter'
 import * as R from 'ramda'

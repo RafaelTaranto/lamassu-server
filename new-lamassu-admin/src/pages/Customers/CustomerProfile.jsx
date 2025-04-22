@@ -1,11 +1,9 @@
 import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
-import {
-  Breadcrumbs,
-  Box,
-  DialogActions,
-  DialogContent,
-  Dialog
-} from '@mui/material'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Box from '@mui/material/Box'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import Dialog from '@mui/material/Dialog'
 import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'

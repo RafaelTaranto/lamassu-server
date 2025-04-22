@@ -1,4 +1,4 @@
-import { Chip } from '@mui/material'
+import Chip from '@mui/material/Chip'
 import { makeStyles } from '@mui/styles'
 import { Form, Formik, Field } from 'formik'
 import * as R from 'ramda'

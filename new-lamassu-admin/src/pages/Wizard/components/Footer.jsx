@@ -1,4 +1,5 @@
-import { Drawer, Grid } from '@mui/material'
+import Drawer from '@mui/material/Drawer'
+import Grid from '@mui/material/Grid'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState } from 'react'

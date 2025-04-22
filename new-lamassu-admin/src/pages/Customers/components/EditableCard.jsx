@@ -1,4 +1,6 @@
-import { CardContent, Card, Grid } from '@mui/material'
+import CardContent from '@mui/material/CardContent'
+import Card from '@mui/material/Card'
+import Grid from '@mui/material/Grid'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Form, Formik, Field as FormikField } from 'formik'

@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
-import { Box, Chip } from '@mui/material'
+import Chip from '@mui/material/Chip'
+import Box from '@mui/material/Box'
 import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import { startAttestation } from '@simplewebauthn/browser'

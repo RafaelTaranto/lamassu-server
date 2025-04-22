@@ -1,5 +1,8 @@
 import { useMutation, useQuery, gql } from "@apollo/client";
-import { Dialog, DialogContent, SvgIcon, IconButton } from '@mui/material'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import SvgIcon from '@mui/material/SvgIcon'
+import IconButton from '@mui/material/IconButton'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Form, Formik, FastField } from 'formik'

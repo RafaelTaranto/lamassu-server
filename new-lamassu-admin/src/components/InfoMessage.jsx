@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { Label1 } from 'src/components/typography'

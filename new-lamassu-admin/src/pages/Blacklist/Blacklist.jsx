@@ -1,5 +1,8 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { Box, Dialog, DialogContent, DialogActions } from '@mui/material'
+import Box from '@mui/material/Box'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
 import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'

@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { endOfToday } from 'date-fns'

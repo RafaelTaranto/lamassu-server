@@ -1,5 +1,5 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { Grid } from '@mui/material'
+import Grid from '@mui/material/Grid'
 import { makeStyles } from '@mui/styles'
 import Paper from '@mui/material/Paper'
 import { Form, Formik } from 'formik'

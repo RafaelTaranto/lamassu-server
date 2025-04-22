@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material'
+import Paper from '@mui/material/Paper'
 import { makeStyles } from '@mui/styles'
 import React, { memo } from 'react'
 import CrossedCameraIcon from 'src/styling/icons/ID/photo/crossed-camera.svg?react'

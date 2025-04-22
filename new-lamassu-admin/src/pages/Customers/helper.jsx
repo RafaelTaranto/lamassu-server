@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { parse, isValid, format } from 'date-fns/fp'
