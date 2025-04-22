@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
 import { Box, Chip } from '@mui/material'
+import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import { startAttestation } from '@simplewebauthn/browser'
 import * as R from 'ramda'
@@ -15,7 +16,6 @@ import UserRoleIcon from 'src/styling/icons/button/user-role/zodiac.svg?react'
 
 import AppContext from 'src/AppContext'
 import { ActionButton, Link } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import { IP_CHECK_REGEX } from 'src/utils/constants'
 
 import styles from './UserManagement.styles'

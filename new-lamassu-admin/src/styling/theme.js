@@ -13,12 +13,12 @@ import {
   fontSize5,
   zircon,
   zircon2,
-  primaryColor
+  primaryColor, disabledColor2, disabledColor
 } from './variables'
 
 const { p } = typographyStyles
 
-export default createTheme({
+let theme = createTheme({
   typography: {
     fontFamily: inputFontFamily,
   },
@@ -37,6 +37,9 @@ export default createTheme({
       default: backgroundColor
     }
   },
+})
+
+theme = createTheme({
   components: {
     MuiTypography: {
       styleOverrides: {
@@ -46,6 +49,53 @@ export default createTheme({
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true
+      }
+    },
+    MuiSwitch: {
+      styleOverrides: {
+        root: {
+          width: 32,
+          height: 20,
+          padding: 0,
+          margin: theme.spacing(1)
+        },
+        thumb: {
+          width: 16,
+          height: 16
+        },
+        track: {
+          borderRadius: 17,
+          border: 'none',
+          backgroundColor: offColor,
+          opacity: 1,
+          transition: theme.transitions.create(['background-color', 'border'])
+        },
+        switchBase: {
+          padding: 2,
+          '&.Mui-disabled': {
+            color: disabledColor2,
+            '& + .MuiSwitch-track': {
+              backgroundColor: disabledColor,
+              opacity: 1
+            }
+          },
+          '&.Mui-checked': {
+            transform: 'translateX(58%)',
+            color: theme.palette.common.white,
+            '&.Mui-disabled': {
+              color: disabledColor2
+            },
+            '& + .MuiSwitch-track': {
+              backgroundColor: secondaryColor,
+              opacity: 1,
+              border: 'none'
+            }
+          },
+          '&.Mui-focusVisible .MuiSwitch-thumb': {
+            border: '6px solid #fff',
+            boxShadow: '0 0 4px 0 rgba(0,0,0,0.24)'
+          }
+        }
       }
     },
     MuiAutocomplete: {
@@ -184,3 +234,5 @@ export default createTheme({
     }
   }
 })
+
+export default theme

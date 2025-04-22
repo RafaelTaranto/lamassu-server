@@ -6,6 +6,7 @@ import {
   DialogContent,
   Dialog
 } from '@mui/material'
+import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
@@ -22,7 +23,6 @@ import DataReversedIcon from 'src/styling/icons/button/data/white.svg?react'
 import DataIcon from 'src/styling/icons/button/data/zodiac.svg?react'
 
 import { Button, IconButton, ActionButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import {
   OVERRIDE_AUTHORIZED,
   OVERRIDE_REJECTED

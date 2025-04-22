@@ -1,5 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { Paper } from '@mui/material'
+import Paper from '@mui/material/Paper'
+import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -12,7 +13,6 @@ import ExpandIconOpen from 'src/styling/icons/action/expand/open.svg?react'
 import WhiteLogo from 'src/styling/icons/menu/logo-white.svg?react'
 
 import { IconButton, SupportLinkButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import { formatDate } from 'src/utils/timezones'
 
 import styles from './SMSNotices.styles'

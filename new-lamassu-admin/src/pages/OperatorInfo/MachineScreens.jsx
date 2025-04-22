@@ -1,10 +1,10 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { makeStyles } from '@mui/styles'
+import Switch from '@mui/material/Switch'
 import * as R from 'ramda'
 import React, { memo } from 'react'
 import { H4, P, Label2 } from 'src/components/typography'
 
-import { Switch } from 'src/components/inputs'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
 import { global } from './OperatorInfo.styles'

@@ -1,12 +1,12 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { makeStyles } from '@mui/styles'
+import Switch from '@mui/material/Switch'
 import * as R from 'ramda'
 import React, { memo } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
 import { H4, P, Label2 } from 'src/components/typography'
 
 import { BooleanPropertiesTable } from 'src/components/booleanPropertiesTable'
-import { Switch } from 'src/components/inputs'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
 import { SupportLinkButton } from '../../components/buttons'

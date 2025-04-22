@@ -1,5 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { makeStyles } from '@mui/styles'
+import Switch from '@mui/material/Switch'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -8,7 +9,6 @@ import { P, Label2 } from 'src/components/typography'
 
 import { SupportLinkButton } from 'src/components/buttons'
 import { NamespacedTable as EditableTable } from 'src/components/editableTable'
-import { Switch } from 'src/components/inputs'
 import { EmptyTable } from 'src/components/table'
 import { fromNamespace, toNamespace } from 'src/utils/config'
 

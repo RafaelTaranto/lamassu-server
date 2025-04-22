@@ -1,5 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
+import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
@@ -15,7 +16,6 @@ import ReverseSettingsIcon from 'src/styling/icons/circle buttons/settings/white
 import SettingsIcon from 'src/styling/icons/circle buttons/settings/zodiac.svg?react'
 
 import { Link, SupportLinkButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import twilioSchema from 'src/pages/Services/schemas/twilio'
 import { fromNamespace, toNamespace } from 'src/utils/config'
 

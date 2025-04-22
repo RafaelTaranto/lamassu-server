@@ -1,4 +1,5 @@
 import { makeStyles } from '@mui/styles'
+import Switch from '@mui/material/Switch'
 import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
@@ -13,7 +14,6 @@ import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import StripesSvg from 'src/styling/icons/stripes.svg?react'
 
 import { Link, IconButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 
 import TableCtx from './Context'
 import styles from './Row.styles'
