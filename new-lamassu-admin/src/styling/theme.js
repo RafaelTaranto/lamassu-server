@@ -39,11 +39,12 @@ let theme = createTheme({
   },
 })
 
-theme = createTheme({
+theme = createTheme(theme, {
   components: {
     MuiTypography: {
       styleOverrides: {
-        root: { ...p }
+        root: { ...p },
+        body1: { ...p },
       }
     },
     MuiButtonBase: {
@@ -98,6 +99,21 @@ theme = createTheme({
         }
       }
     },
+    MuiMenuItem: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            backgroundColor: subheaderColor
+          },
+          '&.Mui-selected': {
+            '&:hover': {
+              backgroundColor: subheaderColor
+            },
+            backgroundColor: subheaderColor
+          }
+        }
+      }
+    },
     MuiAutocomplete: {
       styleOverrides: {
         root: {
@@ -107,9 +123,12 @@ theme = createTheme({
           padding: `6px 16px`
         },
         option: {
-          '&[data-focus="true"]': {
+          '&.Mui-focused': {
             backgroundColor: subheaderColor
-          }
+          },
+          '&[aria-selected="true"]': {
+            backgroundColor: `${subheaderColor} !important`
+          },
         },
         paper: {
           color: fontColor,

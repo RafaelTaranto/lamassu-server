@@ -84,7 +84,7 @@ const Autocomplete = ({
       disableClearable
       ChipProps={{ onDelete: null }}
       clearOnEscape
-      getOptionSelected={R.eqProps(valueProp)}
+      isOptionEqualToValue={R.eqProps(valueProp)}
       {...props}
       renderInput={params => {
         return (
@@ -102,7 +102,7 @@ const Autocomplete = ({
       }}
       renderOption={(iprops, props) => {
         if (!props.warning && !props.warningMessage)
-          return R.path([labelProp])(props)
+          return <li {...iprops}>{R.path([labelProp])(props)}</li>
 
         const warningColors = {
           clean: spring4,
@@ -119,6 +119,7 @@ const Autocomplete = ({
           />
         )
 
+        console.log('props.warningMessage: ', props)
         return (
           <li {...iprops}>
             <Box

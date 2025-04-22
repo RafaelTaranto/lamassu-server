@@ -52,7 +52,7 @@ const SearchBox = memo(
         clearOnEscape
         multiple
         filterSelectedOptions
-        getOptionSelected={(option, value) => option.type === value.type}
+        isOptionEqualToValue={(option, value) => option.type === value.type}
         PaperComponent={({ children }) => (
           <Paper elevation={0} className={classes.popup}>
             <div className={classes.separator} />
