@@ -79,9 +79,6 @@ const gridStyles = {
   },
   link: {
     marginTop: spacer
-  },
-  chip: {
-    margin: [[0, 0, 0, 7]]
   }
 }
 

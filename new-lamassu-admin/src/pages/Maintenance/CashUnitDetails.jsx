@@ -1,7 +1,7 @@
 import { makeStyles } from '@mui/styles'
+import Chip from '@mui/material/Chip'
 import * as R from 'ramda'
 import React from 'react'
-import Chip from 'src/components/Chip'
 import { Label1, TL2 } from 'src/components/typography'
 
 import { CashOut } from 'src/components/inputs'

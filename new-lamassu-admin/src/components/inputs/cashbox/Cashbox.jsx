@@ -1,7 +1,7 @@
 import { makeStyles } from '@mui/styles'
+import Chip from '@mui/material/Chip'
 import classnames from 'classnames'
 import React from 'react'
-import Chip from 'src/components/Chip'
 import { Info2, Label1, Label2 } from 'src/components/typography'
 
 import { numberToFiatAmount } from 'src/utils/number'
@@ -136,10 +136,7 @@ const CashOut = ({
           <div className={classes.col2}>
             <div className={classes.innerRow}>
               <Info2 className={classes.noMarginText}>{notes}</Info2>
-              <Chip
-                className={classes.chip}
-                label={`${denomination} ${currency.code}`}
-              />
+              <Chip label={`${denomination} ${currency.code}`} />
             </div>
             <div className={classes.innerRow}>
               <Label1 className={classes.noMarginText}>

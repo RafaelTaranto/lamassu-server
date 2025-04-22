@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles'
+import Chip from '@mui/material/Chip'
 import React from 'react'
-import Chip from 'src/components/Chip'
 import { P, Label3 } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 import FilterIcon from 'src/styling/icons/button/filter/white.svg?react'

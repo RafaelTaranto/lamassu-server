@@ -10,10 +10,13 @@ import {
   offColor,
   subheaderColor,
   fontSize3,
-  fontSize5,
   zircon,
   zircon2,
-  primaryColor, disabledColor2, disabledColor
+  primaryColor,
+  disabledColor2,
+  disabledColor,
+  smallestFontSize,
+  inputFontWeight
 } from './variables'
 
 const { p } = typographyStyles
@@ -150,11 +153,19 @@ theme = createTheme(theme, {
     },
     MuiChip: {
       styleOverrides: {
+        root: {
+          backgroundColor: subheaderColor,
+          borderRadius: 4,
+          margin: theme.spacing(0.5, 0.25),
+          height: 18
+        },
         label: {
-          paddingLeft: 4,
-          paddingRight: 4,
+          fontSize: smallestFontSize,
           color: fontColor,
-          fontSize: fontSize5
+          fontWeight: inputFontWeight,
+          fontFamily: inputFontFamily,
+          paddingRight: 4,
+          paddingLeft: 4
         }
       }
     },
