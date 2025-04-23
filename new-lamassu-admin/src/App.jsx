@@ -1,9 +1,9 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import CssBaseline from '@mui/material/CssBaseline'
 import Grid from '@mui/material/Grid'
 import Slide from '@mui/material/Slide'
-import { StylesProvider, jssPreset, makeStyles } from '@mui/styles';
-import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
+import { StylesProvider, jssPreset, makeStyles } from '@mui/styles'
+import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import { create } from 'jss'
 import extendJss from 'jss-plugin-extend'
 import React, { useContext, useState } from 'react'
@@ -19,7 +19,6 @@ import { tree, hasSidebar, Routes, getParent } from 'src/routing/routes'
 import ApolloProvider from 'src/utils/apollo'
 
 import AppContext from 'src/AppContext'
-import global from 'src/styling/global'
 import theme from 'src/styling/theme'
 import { backgroundColor, mainWidth } from 'src/styling/variables'
 
@@ -31,7 +30,6 @@ const fill = '100%'
 const flexDirection = 'column'
 
 const useStyles = makeStyles({
-  ...global,
   root: {
     backgroundColor,
     width: fill,
@@ -159,7 +157,7 @@ const App = () => {
         </ApolloProvider>
       </Router>
     </AppContext.Provider>
-  );
+  )
 }
 
 export default App

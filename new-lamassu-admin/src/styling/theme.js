@@ -1,4 +1,5 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles'
+import global from './global'
 
 import typographyStyles from 'src/components/typography/styles'
 
@@ -23,7 +24,7 @@ const { p } = typographyStyles
 
 let theme = createTheme({
   typography: {
-    fontFamily: inputFontFamily,
+    fontFamily: inputFontFamily
   },
   palette: {
     primary: {
@@ -39,15 +40,18 @@ let theme = createTheme({
     background: {
       default: backgroundColor
     }
-  },
+  }
 })
 
 theme = createTheme(theme, {
   components: {
+    MuiCssBaseline: {
+      styleOverrides: global
+    },
     MuiTypography: {
       styleOverrides: {
         root: { ...p },
-        body1: { ...p },
+        body1: { ...p }
       }
     },
     MuiButtonBase: {
@@ -131,7 +135,7 @@ theme = createTheme(theme, {
           },
           '&[aria-selected="true"]': {
             backgroundColor: `${subheaderColor} !important`
-          },
+          }
         },
         paper: {
           color: fontColor,
@@ -234,7 +238,7 @@ theme = createTheme(theme, {
         vertical: {
           borderRadius: 8,
           border: 'none',
-          borderColor: zircon,
+          borderColor: zircon
         },
         firstButton: {
           borderTop: '1px solid',
@@ -259,7 +263,7 @@ theme = createTheme(theme, {
           borderTopLeftRadius: 8,
           borderBottomRightRadius: 8,
           borderBottomLeftRadius: 8
-        },
+        }
       }
     }
   }

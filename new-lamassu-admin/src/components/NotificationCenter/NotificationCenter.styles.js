@@ -93,7 +93,8 @@ const styles = {
     flexGrow: 1
   },
   unreadIcon: {
-    marginTop: 2,
+    marginTop: 5,
+    marginLeft: spacer,
     width: '12px',
     height: '12px',
     backgroundColor: secondaryColor,
