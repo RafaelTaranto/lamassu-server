@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/styles'
-import global from './global'
 
 import typographyStyles from 'src/components/typography/styles'
 
@@ -45,9 +44,6 @@ let theme = createTheme({
 
 theme = createTheme(theme, {
   components: {
-    MuiCssBaseline: {
-      styleOverrides: global
-    },
     MuiTypography: {
       styleOverrides: {
         root: { ...p },

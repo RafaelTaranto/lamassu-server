@@ -1,0 +1,97 @@
+@import "./fonts.css";
+
+/*@tailwind setup with no preflighrt*/
+/* TODO remove important after mui v6 migration*/
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) important;
+
+:root {
+  --zodiac: #1b2559;
+  --spring: #48f694;
+
+  --ghost: #fafbff;
+  --zircon: #ebefff;
+}
+
+@theme {
+  --color-zodiac: var(--zodiac);
+  --color-spring: var(--spring);
+  --color-ghost: var(--ghost);
+  --color-zircon: var(--zircon);
+}
+
+body {
+  font-size: 0.875rem;
+  width: 1200px;
+  color: var(--zodiac);
+  display: flex;
+  min-height: 100%;
+  @media screen and (min-width: 1200px) {
+    width: auto;
+  }
+}
+
+html {
+  height: 100%;
+  @media screen and (max-height: 900px) {
+    scrollbar-gutter: stable;
+  }
+}
+
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+.root-notifcenter-open {
+  /*for when notification center is open*/
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.body-notifcenter-open {
+  /*for when notification center is open*/
+  overflow: hidden;
+}
+
+.root-blur {
+  filter: blur(1px);
+  pointer-events: none;
+}
+
+a::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner {
+  border: 0;
+}
+
+a::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner {
+  border: 0;
+}
+
+a,
+a:visited,
+a:focus,
+a:active,
+a:hover {
+  outline: 0 none;
+}
+
+button::-moz-focus-inner {
+  border: 0;
+}
+
+/*forcing styling onto inner container*/
+.ReactVirtualized__Grid__innerScrollContainer {
+  overflow: inherit !important;
+}
+
+.ReactVirtualized__Grid.ReactVirtualized__List {
+  overflow-y: auto !important;
+}

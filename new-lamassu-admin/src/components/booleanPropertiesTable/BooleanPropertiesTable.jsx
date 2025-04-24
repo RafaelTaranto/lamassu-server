@@ -1,5 +1,3 @@
-import { makeStyles } from '@mui/styles'
-import classnames from 'classnames'
 import { useFormikContext, Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'
 import React, { useState, memo } from 'react'
@@ -15,10 +13,6 @@ import { Link, IconButton } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs/formik'
 import { Table, TableBody, TableRow, TableCell } from 'src/components/table'
 
-import { booleanPropertiesTableStyles } from './BooleanPropertiesTable.styles'
-
-const useStyles = makeStyles(booleanPropertiesTableStyles)
-
 const BooleanCell = ({ name }) => {
   const { values } = useFormikContext()
   return values[name] === 'true' ? <TrueIcon /> : <FalseIcon />
@@ -26,6 +20,8 @@ const BooleanCell = ({ name }) => {
 
 const BooleanPropertiesTable = memo(
   ({ title, disabled, data, elements, save, forcedEditing = false }) => {
+    const [editing, setEditing] = useState(forcedEditing)
+
     const initialValues = R.fromPairs(
       elements.map(it => [it.name, data[it.name]?.toString() ?? 'false'])
     )
@@ -39,10 +35,6 @@ const BooleanPropertiesTable = memo(
       )
     )
 
-    const [editing, setEditing] = useState(forcedEditing)
-
-    const classes = useStyles()
-
     const innerSave = async values => {
       const toBoolean = (num, _) => R.equals(num, 'true')
       save(R.mapObjIndexed(toBoolean, R.filter(R.complement(R.isNil))(values)))
@@ -54,7 +46,7 @@ const BooleanPropertiesTable = memo(
       { display: 'No', code: 'false' }
     ]
     return (
-      <div className={classes.booleanPropertiesTableWrapper}>
+      <div className="flex w-sm flex-col ">
         <Formik
           validateOnBlur={false}
           validateOnChange={false}
@@ -65,16 +57,16 @@ const BooleanPropertiesTable = memo(
           {({ resetForm }) => {
             return (
               <Form>
-                <div className={classes.rowWrapper}>
+                <div className="flex items-center">
                   <H4>{title}</H4>
                   {editing ? (
-                    <div className={classes.rightAligned}>
+                    <div className="ml-auto">
                       <Link type="submit" color="primary">
                         Save
                       </Link>
                       <Link
                         type="reset"
-                        className={classes.rightLink}
+                        className="ml-5"
                         onClick={() => {
                           resetForm()
                           setEditing(false)
@@ -85,7 +77,7 @@ const BooleanPropertiesTable = memo(
                     </div>
                   ) : (
                     <IconButton
-                      className={classes.transparentButton}
+                      className="my-auto mx-3"
                       onClick={() => setEditing(true)}
                       size="large">
                       {disabled ? <EditIconDisabled /> : <EditIcon />}
@@ -93,26 +85,21 @@ const BooleanPropertiesTable = memo(
                   )}
                 </div>
                 <PromptWhenDirty />
-                <Table className={classes.fillColumn}>
-                  <TableBody className={classes.fillColumn}>
+                <Table className="w-full">
+                  <TableBody className="w-full">
                     {elements.map((it, idx) => (
                       <TableRow
                         key={idx}
                         size="sm"
-                        className={classes.tableRow}>
-                        <TableCell className={classes.leftTableCell}>
-                          {it.display}
-                        </TableCell>
-                        <TableCell className={classes.rightTableCell}>
+                        className="h-auto py-2 px-4 flex items-center justify-between min-h-8 even:bg-transparent odd:bg-zircon">
+                        <TableCell className="p-0 w-50">{it.display}</TableCell>
+                        <TableCell className="p-0 flex">
                           {editing && (
                             <FormikField
                               component={RadioGroup}
                               name={it.name}
                               options={radioButtonOptions}
-                              className={classnames(
-                                classes.radioButtons,
-                                classes.rightTableCell
-                              )}
+                              className="flex flex-row m-[-15px] p-0"
                             />
                           )}
                           {!editing && <BooleanCell name={it.name} />}
@@ -122,11 +109,11 @@ const BooleanPropertiesTable = memo(
                   </TableBody>
                 </Table>
               </Form>
-            );
+            )
           }}
         </Formik>
       </div>
-    );
+    )
   }
 )
 

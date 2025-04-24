@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import svgr from 'vite-plugin-svgr'
 import fixReactVirtualized from 'esbuild-plugin-react-virtualized'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   base: '/',
@@ -25,7 +26,7 @@ export default defineConfig({
       plugins: [fixReactVirtualized]
     }
   },
-  plugins: [react(), svgr()],
+  plugins: [react(), svgr(), tailwindcss()],
   resolve: {
     alias: {
       src: fileURLToPath(new URL('./src', import.meta.url))
