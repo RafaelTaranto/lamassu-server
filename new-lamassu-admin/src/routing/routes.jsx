@@ -1,6 +1,5 @@
 import Fade from '@mui/material/Fade'
 import Slide from '@mui/material/Slide'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
 import {
@@ -24,14 +23,7 @@ import PrivateRoute from './PrivateRoute'
 import PublicRoute from './PublicRoute'
 import getLamassuRoutes from './lamassu.routes'
 
-const useStyles = makeStyles({
-  wrapper: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%'
-  }
-})
+const wrapperClasses = 'flex flex-1 flex-col h-full'
 
 const tree = getLamassuRoutes()
 
@@ -65,8 +57,6 @@ const getParent = route =>
   )(flattened)
 
 const Routes = () => {
-  const classes = useStyles()
-
   const history = useHistory()
   const location = useLocation()
   const { wizardTested, userData } = useContext(AppContext)
@@ -115,12 +105,12 @@ const Routes = () => {
       </PrivateRoute>
       <PrivateRoute path={'/dashboard'}>
         <Transition
-          className={classes.wrapper}
+          className={wrapperClasses}
           {...transitionProps}
           in={true}
           mountOnEnter
           unmountOnExit>
-          <div className={classes.wrapper}>
+          <div className={wrapperClasses}>
             <Dashboard />
           </div>
         </Transition>
@@ -134,12 +124,12 @@ const Routes = () => {
       {getFilteredRoutes().map(({ route, component: Page, key }) => (
         <PrivateRoute path={route} key={key}>
           <Transition
-            className={classes.wrapper}
+            className={wrapperClasses}
             {...transitionProps}
             in={!!matchPath(location.pathname, { path: route })}
             mountOnEnter
             unmountOnExit>
-            <div className={classes.wrapper}>
+            <div className={wrapperClasses}>
               <PrivateRoute path={route} key={key}>
                 <Page name={key} />
               </PrivateRoute>

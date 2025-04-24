@@ -9,6 +9,11 @@
 :root {
   --zodiac: #1b2559;
   --spring: #48f694;
+  --spring2: #44e188;
+  --spring3: #ecfbef;
+
+  --comet: #5f668a;
+  --tomato: #ff584a;
 
   --ghost: #fafbff;
   --zircon: #ebefff;
@@ -17,6 +22,10 @@
 @theme {
   --color-zodiac: var(--zodiac);
   --color-spring: var(--spring);
+  --color-spring2: var(--spring2);
+  --color-spring3: var(--spring3);
+  --color-comet: var(--comet);
+  --color-tomato: var(--tomato);
   --color-ghost: var(--ghost);
   --color-zircon: var(--zircon);
 }
