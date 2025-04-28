@@ -1,6 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
+import { useQuery, gql } from '@apollo/client'
 import classnames from 'classnames'
 import { endOfToday } from 'date-fns'
 import { subDays, format, add, startOfWeek } from 'date-fns/fp'
@@ -17,14 +15,11 @@ import { fromNamespace } from 'src/utils/config'
 import { numberToFiatAmount } from 'src/utils/number'
 import { DAY, WEEK, MONTH } from 'src/utils/time'
 
-import styles from './Analytics.styles'
 import LegendEntry from './components/LegendEntry'
 import HourOfDayWrapper from './components/wrappers/HourOfDayWrapper'
 import OverTimeWrapper from './components/wrappers/OverTimeWrapper'
 import TopMachinesWrapper from './components/wrappers/TopMachinesWrapper'
 import VolumeOverTimeWrapper from './components/wrappers/VolumeOverTimeWrapper'
-
-const useStyles = makeStyles(styles)
 
 const MACHINE_OPTIONS = [{ code: 'all', display: 'All machines' }]
 const REPRESENTING_OPTIONS = [
@@ -106,26 +101,28 @@ const GET_DATA = gql`
   }
 `
 
-const OverviewEntry = ({ label, value, oldValue, currency }) => {
-  const classes = useStyles()
+const VerticalLine = () => (
+  <div className="h-16 border-solid border border-comet2" />
+)
 
+const OverviewEntry = ({ label, value, oldValue, currency }) => {
   const _oldValue = !oldValue || R.equals(oldValue, 0) ? 1 : oldValue
   const growthRate = ((value - oldValue) * 100) / _oldValue
 
   const growthClasses = {
-    [classes.growthPercentage]: true,
-    [classes.growth]: R.gt(value, oldValue),
-    [classes.decline]: R.gt(oldValue, value)
+    'font-bold': true,
+    'text-malachite': R.gt(value, oldValue),
+    'text-tomato': R.gt(oldValue, value)
   }
 
   return (
-    <div className={classes.overviewEntry}>
+    <div>
       <P noMargin>{label}</P>
-      <Info2 noMargin className={classes.overviewFieldWrapper}>
-        <span>{numberToFiatAmount(value)}</span>
+      <Info2 noMargin className="mt-[6px] mb-[6px]">
+        <span className="text-[24px]">{numberToFiatAmount(value)}</span>
         {!!currency && ` ${currency}`}
       </Info2>
-      <span className={classes.overviewGrowth}>
+      <span className="flex items-center gap-1">
         {R.gt(growthRate, 0) && <UpIcon height={10} />}
         {R.lt(growthRate, 0) && <DownIcon height={10} />}
         {R.equals(growthRate, 0) && <EqualIcon height={10} />}
@@ -138,8 +135,6 @@ const OverviewEntry = ({ label, value, oldValue, currency }) => {
 }
 
 const Analytics = () => {
-  const classes = useStyles()
-
   const { data: txResponse, loading: txLoading } = useQuery(GET_TRANSACTIONS, {
     variables: {
       from: subDays(65, endOfToday()),
@@ -320,7 +315,7 @@ const Analytics = () => {
     !loading && (
       <>
         <TitleSection title="Analytics">
-          <Box className={classes.overviewLegend}>
+          <div className="flex gap-6 justify-end">
             <LegendEntry
               IconComponent={UpIcon}
               label={'Up since last period'}
@@ -333,10 +328,10 @@ const Analytics = () => {
               IconComponent={EqualIcon}
               label={'Same since last period'}
             />
-          </Box>
+          </div>
         </TitleSection>
-        <div className={classes.dropdownsOverviewWrapper}>
-          <div className={classes.dropdowns}>
+        <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-row gap-6">
             <Select
               label="Representing"
               onSelectedItemChange={handleRepresentationChange}
@@ -354,27 +349,27 @@ const Analytics = () => {
               defaultAsFilter
             />
           </div>
-          <div className={classes.overview}>
+          <div className="flex flex-row items-center gap-10">
             <OverviewEntry
               label="Transactions"
               value={txs.current}
               oldValue={txs.previous}
             />
-            <div className={classes.verticalLine} />
+            <VerticalLine />
             <OverviewEntry
               label="Median amount"
               value={medianAmount.current}
               oldValue={medianAmount.previous}
               currency={fiatLocale}
             />
-            <div className={classes.verticalLine} />
+            <VerticalLine />
             <OverviewEntry
               label="Volume"
               value={txVolume.current}
               oldValue={txVolume.previous}
               currency={fiatLocale}
             />
-            <div className={classes.verticalLine} />
+            <VerticalLine />
             <OverviewEntry
               label="Commissions"
               value={commissions.current}

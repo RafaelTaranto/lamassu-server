@@ -10,10 +10,6 @@ import { numberToFiatAmount } from 'src/utils/number'
 import { singularOrPlural } from 'src/utils/string'
 import { formatDate, formatDateNonUtc } from 'src/utils/timezones'
 
-import styles from './GraphTooltip.styles'
-
-const useStyles = makeStyles(styles)
-
 const GraphTooltip = ({
   coords,
   data,
@@ -22,8 +18,6 @@ const GraphTooltip = ({
   currency,
   representing
 }) => {
-  const classes = useStyles(coords)
-
   const formattedDateInterval = !R.includes('hourOfDay', representing.code)
     ? [
         formatDate(dateInterval[1], null, 'MMM d'),
@@ -48,28 +42,30 @@ const GraphTooltip = ({
   )
 
   return (
-    <Paper className={classes.dotOtWrapper}>
+    <Paper
+      className="absolute top-[351px] w-[150px] p-3 rounded-lg"
+      style={{ left: coords?.x ?? 0 }}>
       {!R.includes('hourOfDay', representing.code) && (
         <Info2 noMargin>{`${formattedDateInterval[0]}`}</Info2>
       )}
       <Info2 noMargin>
         {`${formattedDateInterval[1]} - ${formattedDateInterval[2]}`}
       </Info2>
-      <P noMargin className={classes.dotOtTransactionAmount}>
+      <P noMargin className="my-2">
         {R.length(data)}{' '}
         {singularOrPlural(R.length(data), 'transaction', 'transactions')}
       </P>
-      <P noMargin className={classes.dotOtTransactionVolume}>
+      <P noMargin className="text-comet">
         {numberToFiatAmount(transactions.volume)} {currency} in volume
       </P>
-      <div className={classes.dotOtTransactionClasses}>
+      <div className="mt-4">
         <Label3 noMargin>
           <TxInIcon />
-          <span>{transactions.cashIn} cash-in</span>
+          <span className="ml-1">{transactions.cashIn} cash-in</span>
         </Label3>
-        <Label3 noMargin>
+        <Label3 noMargin className="mt-1">
           <TxOutIcon />
-          <span>{transactions.cashOut} cash-out</span>
+          <span className="ml-1">{transactions.cashOut} cash-out</span>
         </Label3>
       </div>
     </Paper>

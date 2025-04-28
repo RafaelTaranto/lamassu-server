@@ -1,0 +1,56 @@
+.graphHeaderWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+
+.graphHeaderLeft {
+  display: flex;
+  flex-direction: column;
+}
+
+.graphHeaderRight {
+  margin-top: 15px;
+  display: flex;
+  gap: 30px
+}
+
+.cashInIcon {
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
+  background-color: var(--java);
+}
+
+.cashOutIcon {
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
+  background-color: var(--neon);
+}
+
+.graphLegend {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.txIcon {
+  width: 12px;
+  height: 12px;
+  border-radius: 12px;
+  background-color: #000;
+}
+
+.graphHeaderSwitchBox {
+  display: flex;
+  flex-direction: column;
+/*'& > *': {*/
+/*  margin: 0*/
+/*},*/
+/*'& > :first-child': {*/
+/*  marginBottom: 2,*/
+/*  extend: label1,*/
+/*  color: offColor*/
+/*}*/
+}

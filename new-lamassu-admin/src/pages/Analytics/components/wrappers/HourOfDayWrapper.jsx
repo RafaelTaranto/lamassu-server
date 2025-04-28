@@ -1,5 +1,4 @@
 import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
 import { getTimezoneOffset } from 'date-fns-tz'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -8,11 +7,9 @@ import { H2 } from 'src/components/typography'
 import { Select } from 'src/components/inputs'
 import { MINUTE } from 'src/utils/time'
 
-import styles from '../../Analytics.styles'
 import Graph from '../../graphs/Graph'
 import LegendEntry from '../LegendEntry'
-
-const useStyles = makeStyles(styles)
+import classes from './wrappers.module.css'
 
 const options = [
   { code: 'hourOfDayTransactions', display: 'Transactions' },
@@ -32,8 +29,6 @@ const HourOfDayBarGraphHeader = ({
   timezone,
   currency
 }) => {
-  const classes = useStyles()
-
   const [graphType /*, setGraphType */] = useState(options[0].code)
 
   const legend = {
