@@ -132,7 +132,7 @@ const Popover = ({
     },
     {
       name: 'preventOverflow',
-      enabled: R.defaultTo(true, props.preventOverflow),
+      enabled: true,
       options: {
         rootBoundary: 'scrollParent'
       }
@@ -158,12 +158,6 @@ const Popover = ({
       }
     }
   ]
-
-  if (props.preventOverflow === false) {
-    modifiers.hide = {
-      enabled: false
-    }
-  }
 
   return (
     <>

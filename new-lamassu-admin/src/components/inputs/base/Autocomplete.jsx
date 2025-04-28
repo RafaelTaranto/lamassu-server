@@ -119,7 +119,6 @@ const Autocomplete = ({
           />
         )
 
-        console.log('props.warningMessage: ', props)
         return (
           <li {...iprops}>
             <Box
@@ -137,7 +136,7 @@ const Autocomplete = ({
         )
       }}
     />
-  );
+  )
 }
 
 export default Autocomplete
