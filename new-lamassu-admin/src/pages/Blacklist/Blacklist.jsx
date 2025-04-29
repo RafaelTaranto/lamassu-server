@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
@@ -14,7 +13,12 @@ import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 import ReverseSettingsIcon from 'src/styling/icons/circle buttons/settings/white.svg?react'
 import SettingsIcon from 'src/styling/icons/circle buttons/settings/zodiac.svg?react'
 
-import { Link, Button, IconButton, SupportLinkButton } from 'src/components/buttons'
+import {
+  Link,
+  Button,
+  IconButton,
+  SupportLinkButton
+} from 'src/components/buttons'
 import { fromNamespace, toNamespace } from 'src/utils/config'
 
 import styles from './Blacklist.styles'
@@ -234,12 +238,8 @@ const Blacklist = () => {
           }
         ]}>
         {!advancedSettings && (
-          <Box display="flex" alignItems="center" justifyContent="flex-end">
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="end"
-              mr="15px">
+          <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end mr-4">
               <P>Enable paper wallet (only)</P>
               <Switch
                 checked={enablePaperWalletOnly}
@@ -260,12 +260,8 @@ const Blacklist = () => {
                   to scan an address from their own wallet.
                 </P>
               </HelpTooltip>
-            </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="flex-end"
-              mr="15px">
+            </div>
+            <div className="flex items-center justify-end mr-4">
               <P>Reject reused addresses</P>
               <Switch
                 checked={rejectAddressReuse}
@@ -285,11 +281,11 @@ const Blacklist = () => {
                   label="Reject Address Reuse"
                 />
               </HelpTooltip>
-            </Box>
+            </div>
             <Link color="primary" onClick={() => setShowModal(true)}>
               Blacklist new addresses
             </Link>
-          </Box>
+          </div>
         )}
       </TitleSection>
       {!advancedSettings && (

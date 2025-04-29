@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
@@ -52,15 +51,15 @@ const TitleSection = ({
           </>
         )}
       </div>
-      <Box display="flex" flexDirection="row" alignItems="center">
+      <div className="flex flex-row items-center">
         {(labels ?? []).map(({ icon, label }, idx) => (
-          <Box key={idx} display="flex" alignItems="center">
+          <div key={idx} className="flex items-center">
             <div className={classes.icon}>{icon}</div>
             <Label1 className={classes.label}>{label}</Label1>
-          </Box>
+          </div>
         ))}
         {appendixRight}
-      </Box>
+      </div>
       {children}
     </div>
   )

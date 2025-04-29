@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H2 } from 'src/components/typography'
@@ -33,10 +32,10 @@ const TopMachinesBarGraphHeader = ({
       <div className={classes.graphHeaderWrapper}>
         <div className={classes.graphHeaderLeft}>
           <H2 noMargin>{title}</H2>
-          <Box className={classes.graphLegend}>
+          <div className={classes.graphLegend}>
             <LegendEntry IconElement={legend.cashIn} label={'Cash-in'} />
             <LegendEntry IconElement={legend.cashOut} label={'Cash-out'} />
-          </Box>
+          </div>
         </div>
         <div className={classes.graphHeaderRight}>
           {/* <RadioGroup

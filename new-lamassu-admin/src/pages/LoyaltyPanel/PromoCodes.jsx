@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -132,16 +131,11 @@ const PromoCodes = () => {
   return (
     <>
       {!loading && !R.isEmpty(codeResponse.promoCodes) && (
-        <Box
-          marginBottom={4}
-          marginTop={-7}
-          className={classes.tableWidth}
-          display="flex"
-          justifyContent="flex-end">
+        <div className="flex justify-end mb-8 -mt-14">
           <Link color="primary" onClick={toggleModal}>
             Add new code
           </Link>
-        </Box>
+        </div>
       )}
       {!loading && !R.isEmpty(codeResponse.promoCodes) && (
         <>
@@ -164,12 +158,12 @@ const PromoCodes = () => {
         </>
       )}
       {!loading && R.isEmpty(codeResponse.promoCodes) && (
-        <Box display="flex" alignItems="left" flexDirection="column">
+        <div className="flex flex-col items-start">
           <Label3>
             Currently, there are no active promo codes on your network.
           </Label3>
           <Button onClick={toggleModal}>Add Code</Button>
-        </Box>
+        </div>
       )}
       <PromoCodesModal
         showModal={showModal}

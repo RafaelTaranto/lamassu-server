@@ -331,7 +331,7 @@ const Analytics = () => {
           </div>
         </TitleSection>
         <div className="flex justify-between items-center mb-4">
-          <div className="flex flex-row gap-6">
+          <div className="flex gap-6">
             <Select
               label="Representing"
               onSelectedItemChange={handleRepresentationChange}
@@ -349,7 +349,7 @@ const Analytics = () => {
               defaultAsFilter
             />
           </div>
-          <div className="flex flex-row items-center gap-10">
+          <div className="flex items-center gap-10">
             <OverviewEntry
               label="Transactions"
               value={txs.current}

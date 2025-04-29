@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -222,11 +221,11 @@ const Customers = () => {
           </div>
         }
         appendixRight={
-          <Box display="flex">
+          <div className="flex">
             <Link color="primary" onClick={() => setShowCreationModal(true)}>
               Add new user
             </Link>
-          </Box>
+          </div>
         }
         labels={[
           { label: 'Cash-in', icon: <TxInIcon /> },

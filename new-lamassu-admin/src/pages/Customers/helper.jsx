@@ -1,5 +1,4 @@
 import React from 'react'
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { parse, isValid, format } from 'date-fns/fp'
@@ -7,7 +6,7 @@ import { Field, useFormikContext } from 'formik'
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import * as R from 'ramda'
 import { H4 } from 'src/components/typography'
-import { validate as uuidValidate } from 'uuid';
+import { validate as uuidValidate } from 'uuid'
 import * as Yup from 'yup'
 
 import {
@@ -224,9 +223,9 @@ const EntryType = ({ customInfoRequirementOptions }) => {
 
   return (
     <>
-      <Box display="flex" alignItems="center">
+      <div className="flex items-center">
         <H4>Type of entry</H4>
-      </Box>
+      </div>
       <Field
         component={RadioGroup}
         name="entryType"
@@ -237,9 +236,9 @@ const EntryType = ({ customInfoRequirementOptions }) => {
       />
       {displayCustomOptions && (
         <div>
-          <Box display="flex" alignItems="center">
+          <div className="flex items-center">
             <H4>Type of data</H4>
-          </Box>
+          </div>
           <Field
             component={RadioGroup}
             name="dataType"
@@ -252,9 +251,9 @@ const EntryType = ({ customInfoRequirementOptions }) => {
       )}
       {displayRequirementOptions && (
         <div>
-          <Box display="flex" alignItems="center">
+          <div className="flex items-center">
             <H4>Requirements</H4>
-          </Box>
+          </div>
           <Field
             component={RadioGroup}
             name="requirement"
@@ -310,9 +309,9 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
 
   return (
     <>
-      <Box display="flex" alignItems="center">
+      <div className="flex items-center">
         <H4>{title}</H4>
-      </Box>
+      </div>
       {isCustomInfoRequirement && (
         <Autocomplete
           fullWidth
@@ -344,7 +343,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
           }></Upload>
       )}
     </>
-  );
+  )
 }
 
 const customElements = {

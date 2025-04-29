@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
@@ -169,12 +168,8 @@ const Triggers = () => {
         ]}
         className={classnames(titleSectionWidth)}>
         {!subMenu && (
-          <Box display="flex" alignItems="center">
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="flex-end"
-              mr="-5px">
+          <div className="flex items-center">
+            <div className="flex items-center justify-end -mr-1">
               <P>Reject reused addresses</P>
               <Switch
                 checked={rejectAddressReuse}
@@ -196,25 +191,25 @@ const Triggers = () => {
                   label="Reject Address Reuse"
                 />
               </HelpTooltip>
-            </Box>
-          </Box>
+            </div>
+          </div>
         )}
         {subMenu === 'customInfoRequests' &&
           !R.isEmpty(enabledCustomInfoRequests) && (
-            <Box display="flex" justifyContent="flex-end">
+            <div className="flex justify-end">
               <Link
                 color="primary"
                 onClick={() => toggleWizard('newCustomRequest')()}>
                 + Add new custom info request
               </Link>
-            </Box>
+            </div>
           )}
         {!loading && !subMenu && !R.isEmpty(triggers) && (
-          <Box display="flex" justifyContent="flex-end">
+          <div className="flex justify-end">
             <Link color="primary" onClick={addNewTriger}>
               + Add new trigger
             </Link>
-          </Box>
+          </div>
         )}
       </TitleSection>
       {!loading && subMenu === 'customInfoRequests' && (

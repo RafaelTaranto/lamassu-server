@@ -1,5 +1,4 @@
 import { toUnit } from '@lamassu/coins/lightUtils'
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import classnames from 'classnames'
@@ -139,8 +138,8 @@ const TransactionsList = ({ customer, data, loading }) => {
   return (
     <>
       <H3>Transactions</H3>
-      <Box display="flex" flexDirection="column">
-        <Box display="flex" mt="auto">
+      <div className="flex flex-col">
+        <div className="flex mt-auto">
           {summaryElements.map(({ size, header }, idx) => (
             <Label1
               noMargin
@@ -150,8 +149,8 @@ const TransactionsList = ({ customer, data, loading }) => {
               {header}
             </Label1>
           ))}
-        </Box>
-        <Box display="flex">
+        </div>
+        <div className="flex">
           {summaryElements.map(({ size, value }, idx) => (
             <P
               noMargin
@@ -161,8 +160,8 @@ const TransactionsList = ({ customer, data, loading }) => {
               {value}
             </P>
           ))}
-        </Box>
-      </Box>
+        </div>
+      </div>
       <div className={classes.titleWrapper}>
         <div className={classnames(tableSpacingClasses)}>
           {loading ? (

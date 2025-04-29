@@ -1,6 +1,5 @@
-import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
+import { useQuery, useMutation, useLazyQuery, gql } from '@apollo/client'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Box from '@mui/material/Box'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import Dialog from '@mui/material/Dialog'
@@ -637,10 +636,7 @@ const CustomerProfile = memo(() => {
         <div className={classes.rightSidePanel}>
           {isOverview && (
             <div>
-              <Box
-                className={classes.customerDetails}
-                display="flex"
-                justifyContent="space-between">
+              <div className="flex justify-between mb-5">
                 <CustomerDetails
                   customer={customerData}
                   photosData={photosData}
@@ -648,7 +644,7 @@ const CustomerProfile = memo(() => {
                   setShowCompliance={() => setShowCompliance(!showCompliance)}
                   timezone={timezone}
                 />
-              </Box>
+              </div>
               <div>
                 <TransactionsList
                   customer={customerData}

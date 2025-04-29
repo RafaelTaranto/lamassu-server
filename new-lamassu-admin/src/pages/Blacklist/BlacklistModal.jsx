@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import { Formik, Form, Field } from 'formik'
 import * as R from 'ramda'
@@ -55,11 +54,11 @@ const BlackListModal = ({ onClose, addToBlacklist, errorMsg }) => {
       </Formik>
       <div className={classes.footer}>
         {!R.isNil(errorMsg) && <ErrorMessage>{errorMsg}</ErrorMessage>}
-        <Box className={classes.submit}>
+        <div className="flex ml-auto">
           <Link type="submit" form="address-form">
             Blacklist address
           </Link>
-        </Box>
+        </div>
       </div>
     </Modal>
   )

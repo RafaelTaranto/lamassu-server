@@ -1,6 +1,5 @@
-import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
+import { useQuery, useMutation, useLazyQuery, gql } from '@apollo/client'
 import Chip from '@mui/material/Chip'
-import Box from '@mui/material/Box'
 import Switch from '@mui/material/Switch'
 import { makeStyles } from '@mui/styles'
 import { startAttestation } from '@simplewebauthn/browser'
@@ -242,24 +241,21 @@ const Users = () => {
 
   return (
     <>
-      <TitleSection title="User management" />
-      <Box
-        marginBottom={3}
-        marginTop={-5}
-        className={classes.tableWidth}
-        display="flex"
-        justifyContent="flex-end">
-        <Link
-          color="primary"
-          onClick={() => {
-            dispatch({
-              type: 'open',
-              payload: 'showCreateUserModal'
-            })
-          }}>
-          Add new user
-        </Link>
-      </Box>
+      <TitleSection
+        title="User management"
+        appendixRight={
+          <Link
+            color="primary"
+            onClick={() => {
+              dispatch({
+                type: 'open',
+                payload: 'showCreateUserModal'
+              })
+            }}>
+            Add new user
+          </Link>
+        }
+      />
       <DataTable elements={elements} data={R.path(['users'])(userResponse)} />
       <CreateUserModal state={state} dispatch={dispatch} />
       <ResetPasswordModal

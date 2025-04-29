@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
@@ -363,9 +362,9 @@ const Type = ({ ...props }) => {
 
   return (
     <>
-      <Box display="flex" alignItems="center">
+      <div className="flex items-center">
         <H4 className={classnames(typeClass)}>Choose trigger type</H4>
-      </Box>
+      </div>
       <Field
         component={RadioGroup}
         name="triggerType"
@@ -623,9 +622,9 @@ const Requirement = ({
 
   return (
     <>
-      <Box display="flex" alignItems="center">
+      <div className="flex items-center">
         <H4 className={classnames(titleClass)}>Choose a requirement</H4>
-      </Box>
+      </div>
       <Field
         component={RadioGroup}
         name="requirement.requirement"
@@ -749,7 +748,7 @@ const RequirementInput = ({ customInfoRequests = [] }) => {
     : getView(requirementOptions, 'display')(requirement)
 
   return (
-    <Box display="flex" alignItems="baseline">
+    <div className="flex items-baseline">
       {`${display} ${isSuspend ? 'for' : ''}`}
       {isSuspend && (
         <Field
@@ -761,7 +760,7 @@ const RequirementInput = ({ customInfoRequests = [] }) => {
         />
       )}
       {isSuspend && 'days'}
-    </Box>
+    </div>
   )
 }
 
@@ -783,7 +782,7 @@ const RequirementView = ({
         : getView(requirementOptions, 'display')(requirement)
   const isSuspend = requirement === 'suspend'
   return (
-    <Box display="flex" alignItems="baseline">
+    <div className="flex items-baseline">
       {`${display} ${isSuspend ? 'for' : ''}`}
       {isSuspend && (
         <Info2 className={classes.space} noMargin>
@@ -791,7 +790,7 @@ const RequirementView = ({
         </Info2>
       )}
       {isSuspend && 'days'}
-    </Box>
+    </div>
   )
 }
 
@@ -833,16 +832,16 @@ const DisplayThreshold = ({ config, currency, isEdit }) => {
   switch (config?.triggerType) {
     case 'txAmount':
       return (
-        <Box display="flex" alignItems="baseline" justifyContent="right">
+        <div className="flex items-baseline justify-end">
           {Threshold}
           <Label2 noMargin className={classes.lastSpace}>
             {currency}
           </Label2>
-        </Box>
+        </div>
       )
     case 'txVolume':
       return (
-        <Box display="flex" alignItems="baseline" justifyContent="right">
+        <div className="flex items-baseline justify-end">
           {Threshold}
           <Label2 noMargin className={classes.lastSpace}>
             {currency}
@@ -854,11 +853,11 @@ const DisplayThreshold = ({ config, currency, isEdit }) => {
           <Label1 noMargin className={classes.lastSpace}>
             days
           </Label1>
-        </Box>
+        </div>
       )
     case 'txVelocity':
       return (
-        <Box display="flex" alignItems="baseline" justifyContent="right">
+        <div className="flex items-baseline justify-end">
           {Threshold}
           <Label1 className={classes.space} noMargin>
             transactions in
@@ -867,16 +866,16 @@ const DisplayThreshold = ({ config, currency, isEdit }) => {
           <Label1 className={classes.lastSpace} noMargin>
             days
           </Label1>
-        </Box>
+        </div>
       )
     case 'consecutiveDays':
       return (
-        <Box display="flex" alignItems="baseline" justifyContent="right">
+        <div className="flex items-baseline justify-end">
           {ThresholdDays}
           <Label1 className={classes.lastSpace} noMargin>
             days
           </Label1>
-        </Box>
+        </div>
       )
     default:
       return ''

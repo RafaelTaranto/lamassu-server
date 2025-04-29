@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo } from 'react'
@@ -35,7 +34,7 @@ const IdCardPhotoCard = memo(({ customerData, updateCustomer }) => {
         updateCustomer({ idCardPhotoOverride: OVERRIDE_AUTHORIZED })
       }
       reject={() => updateCustomer({ idCardPhotoOverride: OVERRIDE_REJECTED })}>
-      <Box display="flex" flex="1" justifyContent="center" alignItems="center">
+      <div className="flex flex-1 justify-center items-center">
         {customerData.idCardPhotoPath ? (
           <img
             className={classes.idCardPhoto}
@@ -45,7 +44,7 @@ const IdCardPhotoCard = memo(({ customerData, updateCustomer }) => {
         ) : (
           <CrossedCameraIcon />
         )}
-      </Box>
+      </div>
     </PropertyCard>
   )
 })

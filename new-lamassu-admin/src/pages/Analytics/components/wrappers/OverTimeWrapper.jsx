@@ -1,5 +1,4 @@
 import Switch from '@mui/material/Switch'
-import Box from '@mui/material/Box'
 import React, { useState } from 'react'
 import { H2, Label1 } from 'src/components/typography'
 
@@ -44,7 +43,7 @@ const OverTimeDotGraphHeader = ({
       <div className={classes.graphHeaderWrapper}>
         <div className={classes.graphHeaderLeft}>
           <H2 noMargin>{title}</H2>
-          <Box className={classes.graphLegend}>
+          <div className={classes.graphLegend}>
             <LegendEntry IconElement={legend.cashIn} label={'Cash-in'} />
             <LegendEntry IconElement={legend.cashOut} label={'Cash-out'} />
             <LegendEntry
@@ -52,7 +51,7 @@ const OverTimeDotGraphHeader = ({
               label={'One transaction'}
             />
             <LegendEntry IconElement={legend.median} label={'Median'} />
-          </Box>
+          </div>
         </div>
         <div className={classes.graphHeaderRight}>
           <div className={classes.graphHeaderSwitchBox}>

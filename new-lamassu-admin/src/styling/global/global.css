@@ -11,6 +11,8 @@
   --spring: #48f694;
   --spring2: #44e188;
   --spring3: #ecfbef;
+  --spring4: #3fd07e;
+
 
   --comet: #5f668a;
   --comet2: #72799d;
@@ -24,6 +26,7 @@
   --java: #16d6d3;
   --neon: #5a67ff;
   --malachite: #00CD5A;
+  --orange-yellow: #ffcc00;
 }
 
 @theme {
@@ -31,6 +34,7 @@
   --color-spring: var(--spring);
   --color-spring2: var(--spring2);
   --color-spring3: var(--spring3);
+  --color-spring4: var(--spring4);
   --color-comet: var(--comet);
   --color-comet2: var(--comet2);
   --color-comet3: var(--comet3);
@@ -38,6 +42,7 @@
   --color-ghost: var(--ghost);
   --color-zircon: var(--zircon);
   --color-malachite: var(--malachite);
+  --color-orange-yellow: var(--orange-yellow);
 }
 
 body {

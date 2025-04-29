@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
@@ -171,7 +170,7 @@ const DataTable = ({
   }
 
   return (
-    <Box display="flex" flex="1" flexDirection="column">
+    <div className="flex flex-1 flex-col">
       <Table className={classnames(classes.table, tableClassName)}>
         <THead>
           {elements.map(({ width, className, textAlign, header }, idx) => (
@@ -208,7 +207,7 @@ const DataTable = ({
           )}
         </TBody>
       </Table>
-    </Box>
+    </div>
   )
 }
 

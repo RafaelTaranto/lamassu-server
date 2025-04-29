@@ -1,6 +1,5 @@
-import { useLazyQuery, useMutation, gql } from "@apollo/client";
+import { useLazyQuery, useMutation, gql } from '@apollo/client'
 import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
@@ -249,7 +248,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
 
         <div data-cy="availableIds" className={classes.availableIds}>
           <Label>Available IDs</Label>
-          <Box display="flex" flexDirection="row">
+          <div className="flex">
             {tx.customerPhone && (
               <IDButton
                 className={classes.idButton}
@@ -330,7 +329,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
                 />
               </IDButton>
             )}
-          </Box>
+          </div>
         </div>
         <div data-cy="exchangeRate" className={classes.exchangeRate}>
           <Label>Exchange rate</Label>

@@ -1,12 +1,11 @@
-import { useMutation, useQuery, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useMutation, useQuery, gql } from '@apollo/client'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState } from 'react'
-import InfoMessage from 'src/components/InfoMessage'
 import { HelpTooltip } from 'src/components/Tooltip'
-import { H1, H4, P } from 'src/components/typography'
+import { H1, H4, Label1, P } from 'src/components/typography'
 import FormRenderer from 'src/pages/Services/FormRenderer'
+import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
 
 import { Button, SupportLinkButton } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
@@ -98,7 +97,7 @@ function Twilio({ doContinue }) {
     <div className={classes.wrapper}>
       <div className={classes.content}>
         <H1>Twilio (SMS service)</H1>
-        <Box display="flex" alignItems="end">
+        <div className="flex items-end">
           <H4 noMargin className={classnames(titleClasses)}>
             Will you setup a two way machine or compliance?
           </H4>
@@ -112,7 +111,7 @@ function Twilio({ doContinue }) {
               compliance triggers
             </P>
           </HelpTooltip>
-        </Box>
+        </div>
 
         <RadioGroup
           labelClassName={classes.radioLabel}
@@ -122,9 +121,13 @@ function Twilio({ doContinue }) {
           onChange={onSelect}
         />
 
-        <InfoMessage className={classes.info}>
-          To set up Twilio please read the instructions from our support portal.
-        </InfoMessage>
+        <div className="flex gap-4 mt-5 mb-8 items-center">
+          <WarningIcon />
+          <Label1 noMargin>
+            To set up Twilio please read the instructions from our support
+            portal.
+          </Label1>
+        </div>
         <SupportLinkButton
           link="https://support.lamassu.is/hc/en-us/articles/115001203951-Twilio-for-SMS"
           label="Twilio for SMS"

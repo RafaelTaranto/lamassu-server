@@ -1,5 +1,4 @@
-import { useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useMutation, gql } from '@apollo/client'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -52,9 +51,9 @@ const TriggerView = ({
   }
 
   const add = rawConfig => {
-    const toSave = R.concat([{ id: uuidv4(), direction: 'both', ...rawConfig }])(
-      triggers
-    )
+    const toSave = R.concat([
+      { id: uuidv4(), direction: 'both', ...rawConfig }
+    ])(triggers)
     return saveConfig({ variables: { config: { triggers: toServer(toSave) } } })
   }
 
@@ -85,12 +84,12 @@ const TriggerView = ({
         />
       )}
       {R.isEmpty(triggers) && (
-        <Box display="flex" alignItems="center" flexDirection="column" mt={15}>
+        <div className="flex items-center flex-col mt-30">
           <H2>
             It seems there are no active compliance triggers on your network
           </H2>
           <Button onClick={addNewTriger}>Add first trigger</Button>
-        </Box>
+        </div>
       )}
     </>
   )

@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { getTimezoneOffset } from 'date-fns-tz'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -80,10 +79,10 @@ const HourOfDayBarGraphHeader = ({
       <div className={classes.graphHeaderWrapper}>
         <div className={classes.graphHeaderLeft}>
           <H2 noMargin>{title}</H2>
-          <Box className={classes.graphLegend}>
+          <div className={classes.graphLegend}>
             <LegendEntry IconElement={legend.cashIn} label={'Cash-in'} />
             <LegendEntry IconElement={legend.cashOut} label={'Cash-out'} />
-          </Box>
+          </div>
         </div>
         <div className={classes.graphHeaderRight}>
           {/* <RadioGroup

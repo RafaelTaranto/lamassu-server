@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -67,9 +66,7 @@ const IndividualDiscounts = () => {
   const [showModal, setShowModal] = useState(false)
   const toggleModal = () => setShowModal(!showModal)
 
-  const { data: discountResponse, loading } = useQuery(
-    GET_INDIVIDUAL_DISCOUNTS
-  )
+  const { data: discountResponse, loading } = useQuery(GET_INDIVIDUAL_DISCOUNTS)
   const { data: customerData, loading: customerLoading } =
     useQuery(GET_CUSTOMERS)
 
@@ -157,16 +154,15 @@ const IndividualDiscounts = () => {
     <>
       {!loading && !R.isEmpty(discountResponse.individualDiscounts) && (
         <>
-          <Box
-            marginBottom={4}
-            marginTop={-7}
-            className={classes.tableWidth}
-            display="flex"
-            justifyContent="flex-end">
-            <Link color="primary" onClick={toggleModal} className={classnames({[classes.disabled]: customerLoading})} disabled={customerLoading}>
+          <div className="flex justify-end mb-8 -mt-14">
+            <Link
+              color="primary"
+              onClick={toggleModal}
+              className={classnames({ [classes.disabled]: customerLoading })}
+              disabled={customerLoading}>
               Add new code
             </Link>
-          </Box>
+          </div>
           <DataTable
             elements={elements}
             data={R.path(['individualDiscounts'])(discountResponse)}
@@ -186,13 +182,13 @@ const IndividualDiscounts = () => {
         </>
       )}
       {!loading && R.isEmpty(discountResponse.individualDiscounts) && (
-        <Box display="flex" alignItems="left" flexDirection="column">
+        <div className="flex items-start flex-col">
           <Label3>
             It seems there are no active individual customer discounts on your
             network.
           </Label3>
           <Button onClick={toggleModal}>Add individual discount</Button>
-        </Box>
+        </div>
       )}
       <IndividualDiscountModal
         showModal={showModal}

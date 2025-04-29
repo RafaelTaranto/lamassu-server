@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo } from 'react'
@@ -51,9 +50,9 @@ const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
     })
 
   return (
-    <Box display="flex">
+    <div className="flex">
       <PhotosCard photosData={photosData} timezone={timezone} />
-      <Box display="flex" flexDirection="column">
+      <div className="flex flex-col">
         <div className={classes.name}>
           <IdIcon className={classes.idIcon} />
           <H2 noMargin>
@@ -64,7 +63,7 @@ const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
                 : getFormattedPhone(phone, locale.country)}
           </H2>
         </div>
-        <Box display="flex" mt="auto">
+        <div className="flex mt-auto">
           {elements.map(({ size, header }, idx) => (
             <Label1
               noMargin
@@ -74,8 +73,8 @@ const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
               {header}
             </Label1>
           ))}
-        </Box>
-        <Box display="flex">
+        </div>
+        <div className="flex">
           {elements.map(({ size, value }, idx) => (
             <P
               noMargin
@@ -85,9 +84,9 @@ const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
               {value}
             </P>
           ))}
-        </Box>
-      </Box>
-    </Box>
+        </div>
+      </div>
+    </div>
   )
 })
 

@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { differenceInYears, format, parse } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { memo } from 'react'
@@ -77,11 +76,11 @@ const IdDataCard = memo(({ customerData, updateCustomer }) => {
         updateCustomer({ idCardDataOverride: OVERRIDE_AUTHORIZED })
       }
       reject={() => updateCustomer({ idCardDataOverride: OVERRIDE_REJECTED })}>
-      <Box display="flex" alignItems="center">
+      <div className="flex items-center">
         {elements.map(({ header, display, size }, idx) => (
           <Field key={idx} label={header} display={display} size={size} />
         ))}
-      </Box>
+      </div>
     </PropertyCard>
   )
 })
