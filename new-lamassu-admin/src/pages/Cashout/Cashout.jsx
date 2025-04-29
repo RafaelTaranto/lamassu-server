@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Switch from '@mui/material/Switch'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -14,20 +13,6 @@ import { fromNamespace, toNamespace } from 'src/utils/config'
 
 import Wizard from './Wizard'
 import { DenominationsSchema, getElements } from './helper'
-
-const useStyles = makeStyles({
-  fudgeFactor: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  switchLabel: {
-    margin: 6,
-    width: 24
-  },
-  autoComplete: {
-    width: '100%'
-  }
-})
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
@@ -61,7 +46,6 @@ const GET_INFO = gql`
 `
 
 const CashOut = ({ name: SCREEN_KEY }) => {
-  const classes = useStyles()
   const [wizard, setWizard] = useState(false)
   const { data, loading } = useQuery(GET_INFO)
 
@@ -107,7 +91,7 @@ const CashOut = ({ name: SCREEN_KEY }) => {
               />
             </HelpTooltip>
           }>
-          <div className={classes.fudgeFactor}>
+          <div className="flex items-center">
             <P>Transaction fudge factor</P>
             <Switch
               checked={fudgeFactorActive}
@@ -116,7 +100,7 @@ const CashOut = ({ name: SCREEN_KEY }) => {
               }}
               value={fudgeFactorActive}
             />
-            <Label2 className={classes.switchLabel}>
+            <Label2 className="m-1 w-6">
               {fudgeFactorActive ? 'On' : 'Off'}
             </Label2>
             <HelpTooltip width={304}>
@@ -150,7 +134,7 @@ const CashOut = ({ name: SCREEN_KEY }) => {
           error={error?.message}
           validationSchema={DenominationsSchema}
           disableRowEdit={R.compose(R.not, R.path(['active']))}
-          elements={getElements(machines, locale, classes)}
+          elements={getElements(machines, locale)}
         />
         {R.isEmpty(machines) && <EmptyTable message="No machines so far" />}
         {wizard && (

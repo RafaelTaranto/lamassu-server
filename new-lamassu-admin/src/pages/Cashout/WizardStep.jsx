@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Formik, Form, Field } from 'formik'
 import React from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
@@ -17,9 +16,6 @@ import tejo4CassetteOne from 'src/styling/icons/cassettes/tejo/4-cassettes/4-cas
 import tejo4CassetteTwo from 'src/styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-2-left.svg'
 import tejo4CassetteThree from 'src/styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-3-left.svg'
 import tejo4CassetteFour from 'src/styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-4-left.svg'
-
-import styles from './WizardStep.styles'
-const useStyles = makeStyles(styles)
 
 const getCassetesArtworks = () => ({
   1: {
@@ -54,14 +50,12 @@ const WizardStep = ({
   options,
   numberOfCassettes
 }) => {
-  const classes = useStyles()
-
   const label = isLastStep ? 'Finish' : 'Next'
   const cassetteIcon = getCassetesArtworks()[numberOfCassettes]
   return (
     <>
-      <div className={classes.titleDiv}>
-        <Info2 className={classes.title}>{name}</Info2>
+      <div className="pb-8">
+        <Info2 className="m-0 mb-3">{name}</Info2>
         <Stepper steps={steps.length + 1} currentStep={step} />
       </div>
 
@@ -78,18 +72,18 @@ const WizardStep = ({
           }}
           enableReinitialize
           validationSchema={schema}>
-          <Form className={classes.column}>
-            <div className={classes.header}>
+          <Form className="flex flex-col justify-between grow-2 pb-8">
+            <div className="flex">
               {steps.map(
                 ({ type, display, component }, idx) =>
                   1 + idx === step && (
-                    <div key={idx} className={classes.step}>
-                      <H4 className={classes.edit}>Edit {display}</H4>
+                    <div key={idx} className="flex-1">
+                      <H4 noMargin>Edit {display}</H4>
 
                       <Label1>Choose bill denomination</Label1>
-                      <div className={classes.bill}>
+                      <div className="flex items-center justify-end w-33">
                         <Field
-                          className={classes.billInput}
+                          className="w-full"
                           type="text"
                           size="lg"
                           autoFocus={1 + idx === step}
@@ -102,7 +96,7 @@ const WizardStep = ({
                           options={options}
                           valueProp={'code'}
                           labelProp={'display'}></Field>
-                        <Info1 noMargin className={classes.suffix}>
+                        <Info1 noMargin className="pl-4">
                           {fiatCurrency}
                         </Info1>
                       </div>
@@ -110,14 +104,14 @@ const WizardStep = ({
                   )
               )}
               <img
-                className={classes.stepImage}
+                className="relative -top-5 right-4"
                 alt="cassette"
                 width="148"
                 height="205"
                 src={cassetteIcon ? cassetteIcon[step] : null}></img>
             </div>
 
-            <Button className={classes.submit} type="submit">
+            <Button className="self-end" type="submit">
               {label}
             </Button>
           </Form>
@@ -125,11 +119,11 @@ const WizardStep = ({
       )}
 
       {isLastStep && (
-        <div className={classes.column}>
+        <div className="flex flex-col justify-between grow-2 pb-8">
           <div>
-            <Info2 className={classes.title}>Cash Cassette Bill Count</Info2>
+            <Info2 className="m-0 mb-3">Cash Cassette Bill Count</Info2>
             <P>
-              <WarningIcon className={classes.disclaimerIcon} />
+              <WarningIcon className="float-left mr-4 mb-12" />
               When enabling cash-out, your bill count will be automatically set
               to zero. Make sure you physically put cash inside the cash
               cassettes to allow the machine to dispense it to your users. If
@@ -137,9 +131,9 @@ const WizardStep = ({
               count for this machine on your Cash boxes & cassettes tab under
               Maintenance.
             </P>
-            <Info2 className={classes.title}>Default Commissions</Info2>
+            <Info2 className="m-0 mb-3">Default Commissions</Info2>
             <P>
-              <WarningIcon className={classes.disclaimerIcon} />
+              <WarningIcon className="float-left mr-4 mb-12" />
               When enabling cash-out, default commissions will be set. To change
               commissions for this machine, please go to the Commissions tab
               under Settings where you can set exceptions for each of the
@@ -147,7 +141,7 @@ const WizardStep = ({
             </P>
           </div>
           {error && <ErrorMessage>Failed to save</ErrorMessage>}
-          <Button className={classes.submit} onClick={() => onContinue()}>
+          <Button className="self-end" onClick={() => onContinue()}>
             {label}
           </Button>
         </div>
