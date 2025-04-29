@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Form, Formik, Field } from 'formik'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -14,10 +13,6 @@ import * as Yup from 'yup'
 
 import { ActionButton, IconButton, Button } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
-
-import styles from './Blacklist.styles'
-
-const useStyles = makeStyles(styles)
 
 const DEFAULT_MESSAGE = `This address may be associated with a deceptive offer or a prohibited group. Please make sure you're using an address from your own wallet.`
 
@@ -35,7 +30,6 @@ const BlacklistAdvanced = ({
   onClose,
   mutationError
 }) => {
-  const classes = useStyles()
   const [selectedMessage, setSelectedMessage] = useState(null)
 
   const elements = [
@@ -63,7 +57,7 @@ const BlacklistAdvanced = ({
       size: 'sm',
       view: it => (
         <IconButton
-          className={classes.deleteButton}
+          className="pl-3"
           onClick={() => setSelectedMessage(it)}
           size="large">
           <EditIcon />
@@ -78,7 +72,7 @@ const BlacklistAdvanced = ({
       size: 'sm',
       view: it => (
         <IconButton
-          className={classes.deleteButton}
+          className="pl-3"
           disabled={
             !R.isNil(R.path(['allowToggle'], it)) &&
             !R.path(['allowToggle'], it)
@@ -138,12 +132,12 @@ const BlacklistAdvanced = ({
               handleSubmit({ id: selectedMessage.id, ...values })
             }>
             {({ errors, touched, setFieldValue }) => (
-              <Form className={classes.advancedForm}>
+              <Form className="flex flex-col h-full gap-5 py-5">
                 <ActionButton
                   color="primary"
                   Icon={DefaultIcon}
                   InverseIcon={DefaultIconReverse}
-                  className={classes.resetToDefault}
+                  className="w-36"
                   type="button"
                   onClick={() => setFieldValue('content', DEFAULT_MESSAGE)}>
                   Reset to default
@@ -156,15 +150,13 @@ const BlacklistAdvanced = ({
                   rows={6}
                   component={TextInput}
                 />
-                <div className={classes.footer}>
+                <div className="flex flex-row ml-auto mt-auto">
                   {getErrorMsg(errors, touched, mutationError) && (
                     <ErrorMessage>
                       {getErrorMsg(errors, touched, mutationError)}
                     </ErrorMessage>
                   )}
-                  <Button type="submit" className={classes.submit}>
-                    Confirm
-                  </Button>
+                  <Button type="submit">Confirm</Button>
                 </div>
               </Form>
             )}
