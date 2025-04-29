@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import {
@@ -10,24 +9,6 @@ import {
 
 import { Table as EditableTable } from 'src/components/editableTable'
 import { Select } from 'src/components/inputs'
-
-const styles = {
-  headerLine: {
-    display: 'flex',
-    justifyContent: '',
-    marginBottom: 24
-  },
-  select: {
-    marginRight: 24
-  },
-  tableWrapper: {
-    flex: 1,
-    display: 'block',
-    overflowY: 'auto',
-    width: '100%',
-    maxHeight: '70vh'
-  }
-}
 
 const SHOW_ALL = {
   code: 'SHOW_ALL',
@@ -61,8 +42,6 @@ const ORDER_OPTIONS = [
   }
 ]
 
-const useStyles = makeStyles(styles)
-
 const getElement = (code, display) => ({
   code: code,
   display: display || code
@@ -92,8 +71,6 @@ const filterCommissions = (coinFilter, machineFilter) =>
 
 const CommissionsList = memo(
   ({ config, localeConfig, currency, data, error, saveOverrides }) => {
-    const classes = useStyles()
-
     const [machineFilter, setMachineFilter] = useState(SHOW_ALL)
     const [coinFilter, setCoinFilter] = useState(SHOW_ALL)
     const [orderProp, setOrderProp] = useState(ORDER_OPTIONS[0])
@@ -137,9 +114,9 @@ const CommissionsList = memo(
 
     return (
       <div>
-        <div className={classes.headerLine}>
+        <div className="flex mb-6">
           <Select
-            className={classes.select}
+            className="mr-5"
             onSelectedItemChange={setMachineFilter}
             label="Machines"
             default={SHOW_ALL}
@@ -147,7 +124,7 @@ const CommissionsList = memo(
             selectedItem={machineFilter}
           />
           <Select
-            className={classes.select}
+            className="mr-5"
             onSelectedItemChange={setCoinFilter}
             label="Cryptocurrency"
             default={SHOW_ALL}
@@ -163,7 +140,7 @@ const CommissionsList = memo(
             defaultAsFilter
           />
         </div>
-        <div className={classes.tableWrapper}>
+        <div className="flex-1 w-full max-h-[70vh] overflow-y-auto">
           <EditableTable
             error={error?.message}
             name="comissionsList"
