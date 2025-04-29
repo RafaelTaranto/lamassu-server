@@ -1,4 +1,4 @@
-import { useMutation, gql } from "@apollo/client";
+import { useMutation, gql } from '@apollo/client'
 import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Field, Form, Formik } from 'formik'
@@ -73,7 +73,7 @@ const CreateUserModal = ({ state, dispatch }) => {
 
   const [createUser, { error }] = useMutation(CREATE_USER, {
     onCompleted: ({ createRegisterToken: token }) => {
-      setCreateUserURL(urlResolver(`/register?t${token.token}`))
+      setCreateUserURL(urlResolver(`/register?t=${token.token}`))
     }
   })
 

@@ -1,6 +1,5 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 import Paper from '@mui/material/Paper'
 import { Field, Form, Formik } from 'formik'
 import React, { useReducer } from 'react'
@@ -11,11 +10,9 @@ import * as Yup from 'yup'
 
 import { Button } from 'src/components/buttons'
 import { SecretInput } from 'src/components/inputs/formik'
-
-import styles from './shared.styles'
+import classes from './Authentication.module.css'
 
 const QueryParams = () => new URLSearchParams(useLocation().search)
-const useStyles = makeStyles(styles)
 
 const VALIDATE_REGISTER_LINK = gql`
   query validateRegisterLink($token: String!) {
@@ -87,7 +84,6 @@ const getErrorMsg = (
 }
 
 const Register = () => {
-  const classes = useStyles()
   const history = useHistory()
   const token = QueryParams().get('t')
 
@@ -165,7 +161,7 @@ const Register = () => {
                         component={SecretInput}
                         size="lg"
                         fullWidth
-                        className={classes.input}
+                        className="-mt-4 mb-6"
                       />
                       <Field
                         name="confirmPassword"
@@ -174,14 +170,14 @@ const Register = () => {
                         size="lg"
                         fullWidth
                       />
-                      <div className={classes.footer}>
+                      <div className="mt-15">
                         {getErrorMsg(
                           errors,
                           touched,
                           queryError,
                           mutationError
                         ) && (
-                          <P className={classes.errorMessage}>
+                          <P className="text-tomato">
                             {getErrorMsg(
                               errors,
                               touched,
@@ -193,7 +189,7 @@ const Register = () => {
                         <Button
                           type="submit"
                           form="register-form"
-                          buttonClassName={classes.loginButton}>
+                          buttonClassName="w-full">
                           Done
                         </Button>
                       </div>
@@ -215,7 +211,7 @@ const Register = () => {
         </div>
       </Grid>
     </Grid>
-  );
+  )
 }
 
 export default Register

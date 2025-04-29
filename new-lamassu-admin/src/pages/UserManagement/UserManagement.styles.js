@@ -118,9 +118,6 @@ const styles = {
   actionButtonWrapper: {
     display: 'flex',
     gap: 12
-  },
-  enterButton: {
-    display: 'none'
   }
 }
 

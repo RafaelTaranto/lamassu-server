@@ -1,4 +1,4 @@
-import { useLazyQuery, gql } from "@apollo/client";
+import { useLazyQuery, gql } from '@apollo/client'
 import { makeStyles } from '@mui/styles'
 import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
@@ -80,17 +80,16 @@ const Input2FAModal = ({ showModal, handleClose, setConfirmation }) => {
               error={invalidCode}
               containerStyle={classes.codeContainer}
             />
-            <button onClick={handleSubmit} className={classes.enterButton} />
+            {getErrorMsg() && (
+              <P className={classes.errorMessage}>{getErrorMsg()}</P>
+            )}
+            <div className={classes.footer}>
+              <Button className={classes.submit} onClick={handleSubmit}>
+                Confirm
+              </Button>
+            </div>
           </Form>
         </Formik>
-        {getErrorMsg() && (
-          <P className={classes.errorMessage}>{getErrorMsg()}</P>
-        )}
-        <div className={classes.footer}>
-          <Button className={classes.submit} onClick={handleSubmit}>
-            Confirm
-          </Button>
-        </div>
       </Modal>
     )
   )

@@ -1,5 +1,4 @@
-import { useMutation, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, useLazyQuery, gql } from '@apollo/client'
 import { startAssertion } from '@simplewebauthn/browser'
 import { Field, Form, Formik } from 'formik'
 import React, { useState, useContext } from 'react'
@@ -10,10 +9,6 @@ import * as Yup from 'yup'
 import AppContext from 'src/AppContext'
 import { Button } from 'src/components/buttons'
 import { Checkbox, TextInput } from 'src/components/inputs/formik'
-
-import styles from './shared.styles'
-
-const useStyles = makeStyles(styles)
 
 const GET_USER_DATA = gql`
   {
@@ -66,7 +61,6 @@ const InputFIDOState = ({ state, strategy }) => {
     }
   `
 
-  const classes = useStyles()
   const history = useHistory()
   const { setUserData } = useContext(AppContext)
 
@@ -166,32 +160,25 @@ const InputFIDOState = ({ state, strategy }) => {
                 component={TextInput}
                 fullWidth
                 autoFocus
-                className={classes.input}
+                className="-mt-4 mb-6"
                 error={getErrorMsg(errors, touched)}
                 onKeyUp={() => {
                   if (invalidUsername) setInvalidUsername(false)
                 }}
               />
-              <div className={classes.rememberMeWrapper}>
+              <div className="mt-9 flex">
                 <Field
                   name="localRememberMe"
-                  className={classes.checkbox}
+                  className="-ml-2 transform-[scale(1.5)]"
                   component={Checkbox}
                 />
-                <Label2 className={classes.inputLabel}>
-                  Keep me logged in
-                </Label2>
+                <Label2>Keep me logged in</Label2>
               </div>
-              <div className={classes.twofaFooter}>
+              <div className="mt-9">
                 {getErrorMsg(errors, touched) && (
-                  <P className={classes.errorMessage}>
-                    {getErrorMsg(errors, touched)}
-                  </P>
+                  <P className="text-tomato">{getErrorMsg(errors, touched)}</P>
                 )}
-                <Button
-                  type="submit"
-                  form="fido-form"
-                  buttonClassName={classes.loginButton}>
+                <Button type="submit" form="fido-form" buttonClassName="w-full">
                   Use FIDO
                 </Button>
               </div>
@@ -201,14 +188,14 @@ const InputFIDOState = ({ state, strategy }) => {
       )}
       {strategy === 'FIDO2FA' && (
         <>
-          <H2 className={classes.info}>
+          <H2 className="mb-8">
             Insert your hardware key and follow the instructions
           </H2>
           <Button
             type="button"
             form="fido-form"
             onClick={() => assertionOptions()}
-            buttonClassName={classes.loginButton}>
+            buttonClassName="w-full">
             Use FIDO
           </Button>
         </>

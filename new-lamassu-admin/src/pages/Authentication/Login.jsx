@@ -1,15 +1,10 @@
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 import React from 'react'
 
 import LoginCard from './LoginCard'
-import styles from './shared.styles'
-
-const useStyles = makeStyles(styles)
+import classes from './Authentication.module.css'
 
 const Login = () => {
-  const classes = useStyles()
-
   return (
     <Grid
       container
@@ -22,7 +17,7 @@ const Login = () => {
         <LoginCard />
       </Grid>
     </Grid>
-  );
+  )
 }
 
 export default Login
