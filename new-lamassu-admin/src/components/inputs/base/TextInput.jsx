@@ -19,6 +19,7 @@ const TextInput = memo(
     suffix,
     textAlign,
     width,
+    inputClasses,
     // lg or sm
     size,
     bold,
@@ -29,7 +30,7 @@ const TextInput = memo(
     const classes = useStyles({ textAlign, width, size })
     const isTextFilled = !error && !R.isNil(value) && !R.isEmpty(value)
     const filled = isPasswordFilled || isTextFilled
-    const inputClasses = {
+    const divClass = {
       [classes.bold]: bold
     }
 
@@ -44,15 +45,17 @@ const TextInput = memo(
         classes={{ root: classes.root }}
         className={className}
         InputProps={{
-          className: classnames(inputClasses),
+          className: classnames(divClass),
           classes: {
             root: classes.size,
-            underline: filled ? classes.underline : null
+            underline: filled ? classes.underline : null,
+            input: inputClasses
           },
           ...InputProps
         }}
-        {...props} />
-    );
+        {...props}
+      />
+    )
   }
 )
 

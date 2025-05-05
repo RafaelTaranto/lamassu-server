@@ -1,28 +1,19 @@
-import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import { useState, React } from 'react'
 import ImagePopper from 'src/components/ImagePopper'
 import { H3, Info3 } from 'src/components/typography'
 import CardIcon from 'src/styling/icons/ID/card/comet.svg?react'
 import PhoneIcon from 'src/styling/icons/ID/phone/comet.svg?react'
-import CrossedCameraIcon from 'src/styling/icons/ID/photo/crossed-camera.svg?react'
 import EditIcon from 'src/styling/icons/action/edit/comet.svg?react'
-import CustomerListViewReversedIcon from 'src/styling/icons/circle buttons/customer-list-view/white.svg?react'
-import CustomerListViewIcon from 'src/styling/icons/circle buttons/customer-list-view/zodiac.svg?react'
-import OverviewReversedIcon from 'src/styling/icons/circle buttons/overview/white.svg?react'
-import OverviewIcon from 'src/styling/icons/circle buttons/overview/zodiac.svg?react'
 import * as Yup from 'yup'
 
-import { FeatureButton } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 import {
   OVERRIDE_AUTHORIZED,
   OVERRIDE_REJECTED
-} from 'src/pages/Customers/components/propertyCard'
+} from 'src/pages/Customers/components/consts'
 import { onlyFirstToUpper } from 'src/utils/string'
 
-import styles from './CustomerData.styles'
 import { EditableCard } from './components'
 import {
   customerDataElements,
@@ -32,32 +23,20 @@ import {
   getFormattedPhone
 } from './helper'
 
-const useStyles = makeStyles(styles)
-
 const IMAGE_WIDTH = 165
 const IMAGE_HEIGHT = 32
 const POPUP_IMAGE_WIDTH = 360
 const POPUP_IMAGE_HEIGHT = 240
 
-const Photo = ({ show, src }) => {
-  const classes = useStyles({ width: IMAGE_WIDTH })
-
+const Photo = ({ src }) => {
   return (
-    <>
-      {show ? (
-        <ImagePopper
-          src={src}
-          width={IMAGE_WIDTH}
-          height={IMAGE_HEIGHT}
-          popupWidth={POPUP_IMAGE_WIDTH}
-          popupHeight={POPUP_IMAGE_HEIGHT}
-        />
-      ) : (
-        <div className={classes.photoWrapper}>
-          <CrossedCameraIcon />
-        </div>
-      )}
-    </>
+    <ImagePopper
+      src={src}
+      width={IMAGE_WIDTH}
+      height={IMAGE_HEIGHT}
+      popupWidth={POPUP_IMAGE_WIDTH}
+      popupHeight={POPUP_IMAGE_HEIGHT}
+    />
   )
 }
 
@@ -75,8 +54,6 @@ const CustomerData = ({
   setRetrieve,
   checkAgainstSanctions
 }) => {
-  const classes = useStyles()
-  const [listView, setListView] = useState(false)
   const [previewPhoto, setPreviewPhoto] = useState(null)
   const [previewCard, setPreviewCard] = useState(null)
 
@@ -163,7 +140,7 @@ const CustomerData = ({
     {
       fields: customerDataElements.idCardData,
       title: 'ID Scan',
-      titleIcon: <CardIcon className={classes.cardIcon} />,
+      titleIcon: <CardIcon />,
       state: R.path(['idCardDataOverride'])(customer),
       authorize: () =>
         updateCustomer({ idCardDataOverride: OVERRIDE_AUTHORIZED }),
@@ -187,7 +164,7 @@ const CustomerData = ({
     {
       fields: smsDataElements,
       title: 'SMS data',
-      titleIcon: <PhoneIcon className={classes.cardIcon} />,
+      titleIcon: <PhoneIcon />,
       state: R.path(['phoneOverride'])(customer),
       authorize: () => updateCustomer({ phoneOverride: OVERRIDE_AUTHORIZED }),
       reject: () => updateCustomer({ phoneOverride: OVERRIDE_REJECTED }),
@@ -208,7 +185,7 @@ const CustomerData = ({
     {
       title: 'Email',
       fields: customerDataElements.email,
-      titleIcon: <CardIcon className={classes.cardIcon} />,
+      titleIcon: <CardIcon />,
       // state: R.path(['emailOverride'])(customer),
       // authorize: () => updateCustomer({ emailOverride: OVERRIDE_AUTHORIZED }),
       // reject: () => updateCustomer({ emailOverride: OVERRIDE_REJECTED }),
@@ -220,13 +197,13 @@ const CustomerData = ({
     },
     {
       title: 'Name',
-      titleIcon: <EditIcon className={classes.editIcon} />,
+      titleIcon: <EditIcon />,
       isAvailable: false,
       editable: true
     },
     {
       title: 'Sanctions check',
-      titleIcon: <EditIcon className={classes.editIcon} />,
+      titleIcon: <EditIcon />,
       state: R.path(['sanctionsOverride'])(customer),
       authorize: () =>
         updateCustomer({ sanctionsOverride: OVERRIDE_AUTHORIZED }),
@@ -238,7 +215,7 @@ const CustomerData = ({
     {
       fields: customerDataElements.frontCamera,
       title: 'Front facing camera',
-      titleIcon: <EditIcon className={classes.editIcon} />,
+      titleIcon: <EditIcon />,
       state: R.path(['frontCameraOverride'])(customer),
       authorize: () =>
         updateCustomer({ frontCameraOverride: OVERRIDE_AUTHORIZED }),
@@ -259,7 +236,6 @@ const CustomerData = ({
 
         return customer.frontCameraPath ? (
           <Photo
-            show={customer.frontCameraPath}
             src={
               !R.isNil(previewPhoto)
                 ? URL.createObjectURL(previewPhoto)
@@ -277,7 +253,7 @@ const CustomerData = ({
     {
       fields: customerDataElements.idCardPhoto,
       title: 'ID card image',
-      titleIcon: <EditIcon className={classes.editIcon} />,
+      titleIcon: <EditIcon />,
       state: R.path(['idCardPhotoOverride'])(customer),
       authorize: () =>
         updateCustomer({ idCardPhotoOverride: OVERRIDE_AUTHORIZED }),
@@ -298,7 +274,6 @@ const CustomerData = ({
 
         return customer.idCardPhotoPath ? (
           <Photo
-            show={customer.idCardPhotoPath}
             src={
               !R.isNil(previewCard)
                 ? URL.createObjectURL(previewCard)
@@ -316,7 +291,7 @@ const CustomerData = ({
     {
       fields: customerDataElements.usSsn,
       title: 'US SSN',
-      titleIcon: <CardIcon className={classes.cardIcon} />,
+      titleIcon: <CardIcon />,
       state: R.path(['usSsnOverride'])(customer),
       authorize: () => updateCustomer({ usSsnOverride: OVERRIDE_AUTHORIZED }),
       reject: () => updateCustomer({ usSsnOverride: OVERRIDE_REJECTED }),
@@ -342,7 +317,7 @@ const CustomerData = ({
         }
       ],
       title: it.customInfoRequest.customRequest.name,
-      titleIcon: <CardIcon className={classes.cardIcon} />,
+      titleIcon: <CardIcon />,
       state: R.path(['override'])(it),
       authorize: () =>
         authorizeCustomRequest({
@@ -395,7 +370,7 @@ const CustomerData = ({
           }
         ],
         title: it.label,
-        titleIcon: <EditIcon className={classes.editIcon} />,
+        titleIcon: <EditIcon />,
         save: values => {
           updateCustomEntry({
             fieldId: it.id,
@@ -445,7 +420,7 @@ const CustomerData = ({
         editable: false
       }
     ],
-    titleIcon: <CardIcon className={classes.cardIcon} />,
+    titleIcon: <CardIcon />,
     title: `External Info [${it.service}]`,
     initialValues: it ?? {
       externalId: '',
@@ -477,26 +452,28 @@ const CustomerData = ({
     idx
   ) => {
     return (
-      <EditableCard
-        title={title}
-        key={idx}
-        authorize={authorize}
-        reject={reject}
-        state={state}
-        titleIcon={titleIcon}
-        hasImage={hasImage}
-        hasAdditionalData={hasAdditionalData}
-        fields={fields}
-        validationSchema={validationSchema}
-        initialValues={initialValues}
-        save={save}
-        cancel={cancel}
-        deleteEditedData={deleteEditedData}
-        retrieveAdditionalData={retrieveAdditionalData}
-        checkAgainstSanctions={checkAgainstSanctions}
-        editable={editable}>
-        {children}
-      </EditableCard>
+      <div className="mb-4">
+        <EditableCard
+          title={title}
+          key={idx}
+          authorize={authorize}
+          reject={reject}
+          state={state}
+          titleIcon={titleIcon}
+          hasImage={hasImage}
+          hasAdditionalData={hasAdditionalData}
+          fields={fields}
+          validationSchema={validationSchema}
+          initialValues={initialValues}
+          save={save}
+          cancel={cancel}
+          deleteEditedData={deleteEditedData}
+          retrieveAdditionalData={retrieveAdditionalData}
+          checkAgainstSanctions={checkAgainstSanctions}
+          editable={editable}>
+          {children}
+        </EditableCard>
+      </div>
     )
   }
 
@@ -505,113 +482,67 @@ const CustomerData = ({
     idx
   ) => {
     return (
-      <EditableCard
-        title={title}
-        key={idx}
-        state={state}
-        initialValues={initialValues}
-        titleIcon={titleIcon}
-        editable={false}
-        hasImage={hasImage}
-        fields={fields}>
-        {children}
-      </EditableCard>
+      <div className="mb-4">
+        <EditableCard
+          title={title}
+          key={idx}
+          state={state}
+          initialValues={initialValues}
+          titleIcon={titleIcon}
+          editable={false}
+          hasImage={hasImage}
+          fields={fields}>
+          {children}
+        </EditableCard>
+      </div>
     )
   }
 
   const visibleCards = getVisibleCards(cards)
 
+  const Separator = ({ title }) => (
+    <div className="w-full my-4 col-span-all">
+      <div className="flex items-center">
+        <div className="h-px bg-comet grow-1"></div>
+        <span className="mx-4 text-comet font-medium">{title}</span>
+        <div className="h-px bg-comet grow-5"></div>
+      </div>
+    </div>
+  )
+
   return (
     <div>
-      <div className={classes.header}>
-        <H3 className={classes.title}>{'Customer data'}</H3>
-        {
-          // TODO: Remove false condition for next release
-          // false && (
-          //   <>
-          //     <FeatureButton
-          //       active={!listView}
-          //       className={classes.viewIcons}
-          //       Icon={OverviewIcon}
-          //       InverseIcon={OverviewReversedIcon}
-          //       onClick={() => setListView(false)}
-          //     />
-          //     <FeatureButton
-          //       active={listView}
-          //       className={classes.viewIcons}
-          //       Icon={CustomerListViewIcon}
-          //       InverseIcon={CustomerListViewReversedIcon}
-          //       onClick={() => setListView(true)}></FeatureButton>
-          //   </>
-          // )
-        }
-      </div>
+      <H3 className="mt-1 mb-7">{'Customer data'}</H3>
       <div>
-        {!listView && customer && (
-          <Grid container>
-            <Grid container direction="column" item xs={6}>
-              {visibleCards.map((elem, idx) => {
-                return isEven(idx) ? editableCard(elem, idx) : null
-              })}
-            </Grid>
-            <Grid container direction="column" item xs={6}>
-              {visibleCards.map((elem, idx) => {
-                return !isEven(idx) ? editableCard(elem, idx) : null
-              })}
-            </Grid>
-          </Grid>
-        )}
-        {!R.isEmpty(customFields) && (
-          <div className={classes.wrapper}>
-            <span className={classes.separator}>Custom data entry</span>
-            <Grid container>
-              <Grid container direction="column" item xs={6}>
+        {customer && (
+          <div className="columns-2 gap-4">
+            {visibleCards.map((elem, idx) => {
+              return editableCard(elem, idx)
+            })}
+            {!R.isEmpty(customFields) && (
+              <>
+                <Separator title="Custom data entry" />
                 {customFields.map((elem, idx) => {
-                  return isEven(idx) ? editableCard(elem, idx) : null
+                  return editableCard(elem, idx)
                 })}
-              </Grid>
-              <Grid container direction="column" item xs={6}>
-                {customFields.map((elem, idx) => {
-                  return !isEven(idx) ? editableCard(elem, idx) : null
-                })}
-              </Grid>
-            </Grid>
-          </div>
-        )}
-        {!R.isEmpty(customRequirements) && (
-          <div className={classes.wrapper}>
-            <span className={classes.separator}>Custom requirements</span>
-            <Grid container>
-              <Grid container direction="column" item xs={6}>
+              </>
+            )}
+            {!R.isEmpty(customRequirements) && (
+              <>
+                <Separator title="Custom requirements" />
                 {customRequirements.map((elem, idx) => {
-                  return isEven(idx) ? editableCard(elem, idx) : null
+                  return editableCard(elem, idx)
                 })}
-              </Grid>
-              <Grid container direction="column" item xs={6}>
-                {customRequirements.map((elem, idx) => {
-                  return !isEven(idx) ? editableCard(elem, idx) : null
-                })}
-              </Grid>
-            </Grid>
-          </div>
-        )}
-        {!R.isEmpty(externalCompliance) && (
-          <div className={classes.wrapper}>
-            <span className={classes.separator}>
-              External compliance information
-            </span>
-            <Grid container>
-              <Grid container direction="column" item xs={6}>
+              </>
+            )}
+            {!R.isEmpty(externalCompliance) && (
+              <>
+                <Separator title="External compliance information" />
                 {externalCompliance.map((elem, idx) => {
-                  return isEven(idx) ? nonEditableCard(elem, idx) : null
+                  return nonEditableCard(elem, idx)
                 })}
-              </Grid>
-              <Grid container direction="column" item xs={6}>
-                {externalCompliance.map((elem, idx) => {
-                  return !isEven(idx) ? nonEditableCard(elem, idx) : null
-                })}
-              </Grid>
-            </Grid>
+              </>
+            )}
           </div>
         )}
       </div>

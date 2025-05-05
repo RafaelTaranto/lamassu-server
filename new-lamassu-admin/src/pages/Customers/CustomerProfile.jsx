@@ -4,7 +4,6 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import Dialog from '@mui/material/Dialog'
 import Switch from '@mui/material/Switch'
-import { makeStyles } from '@mui/styles'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
@@ -23,7 +22,7 @@ import { Button, IconButton, ActionButton } from 'src/components/buttons'
 import {
   OVERRIDE_AUTHORIZED,
   OVERRIDE_REJECTED
-} from 'src/pages/Customers/components/propertyCard'
+} from 'src/pages/Customers/components/consts'
 // TODO: Enable for next release
 // import DiscountReversedIcon from 'src/styling/icons/button/discount/white.svg?react'
 // import Discount from 'src/styling/icons/button/discount/zodiac.svg?react'
@@ -32,7 +31,6 @@ import { fromNamespace, namespaces } from 'src/utils/config'
 import CustomerData from './CustomerData'
 import CustomerNotes from './CustomerNotes'
 import CustomerPhotos from './CustomerPhotos'
-import styles from './CustomerProfile.styles'
 import {
   CustomerDetails,
   TransactionsList,
@@ -40,8 +38,6 @@ import {
   Wizard
 } from './components'
 import { getFormattedPhone, getName, formatPhotosData } from './helper'
-
-const useStyles = makeStyles(styles)
 
 const GET_CUSTOMER = gql`
   query customer($customerId: ID!) {
@@ -528,23 +524,22 @@ const CustomerProfile = memo(() => {
       display: it.customRequest.name
     })) ?? []
 
-  const classes = useStyles()
   const email = R.path(['email'])(customerData)
   const phone = R.path(['phone'])(customerData)
 
   return (
     <>
       <Breadcrumbs
-        classes={{ root: classes.breadcrumbs }}
+        className="my-5"
         separator={<NavigateNextIcon fontSize="small" />}
         aria-label="breadcrumb">
         <Label1
           noMargin
-          className={classes.labelLink}
+          className="cursor-pointer text-comet"
           onClick={() => history.push('/compliance/customers')}>
           Customers
         </Label1>
-        <Label2 noMargin className={classes.labelLink}>
+        <Label2 noMargin className="cursor-pointer text-comet">
           {name.length
             ? name
             : email?.length
@@ -552,8 +547,8 @@ const CustomerProfile = memo(() => {
               : getFormattedPhone(phone, locale.country)}
         </Label2>
       </Breadcrumbs>
-      <div className={classes.panels}>
-        <div className={classes.leftSidePanel}>
+      <div className="flex gap-20">
+        <div className="w-55 flex flex-col gap-6">
           {!loading && !customerData.isAnonymous && (
             <>
               <CustomerSidebar
@@ -561,10 +556,12 @@ const CustomerProfile = memo(() => {
                 onClick={onClickSidebarItem}
               />
               <div>
-                <Label1 className={classes.actionLabel}>Actions</Label1>
-                <div className={classes.actionBar}>
+                <Label1 noMargin className="text-comet my-1">
+                  Actions
+                </Label1>
+                <div className="flex flex-col gap-1">
                   <ActionButton
-                    className={classes.actionButton}
+                    center
                     color="primary"
                     Icon={DataIcon}
                     InverseIcon={DataReversedIcon}
@@ -572,7 +569,6 @@ const CustomerProfile = memo(() => {
                     {`Manual data entry`}
                   </ActionButton>
                   {/* <ActionButton
-                    className={classes.actionButton}
                     color="primary"
                     Icon={Discount}
                     InverseIcon={DiscountReversedIcon}
@@ -581,7 +577,7 @@ const CustomerProfile = memo(() => {
                   </ActionButton> */}
                   {isSuspended && (
                     <ActionButton
-                      className={classes.actionButton}
+                      center
                       color="primary"
                       Icon={AuthorizeIcon}
                       InverseIcon={AuthorizeReversedIcon}
@@ -595,7 +591,7 @@ const CustomerProfile = memo(() => {
                   )}
                   <ActionButton
                     color="primary"
-                    className={classes.actionButton}
+                    center
                     Icon={blocked ? AuthorizeIcon : BlockIcon}
                     InverseIcon={
                       blocked ? AuthorizeReversedIcon : BlockReversedIcon
@@ -612,11 +608,11 @@ const CustomerProfile = memo(() => {
                 </div>
               </div>
               <div>
-                <Label1 className={classes.actionLabel}>
+                <Label1 className="text-comet my-1">
                   {`Special user status`}
                 </Label1>
-                <div className={classes.actionBar}>
-                  <div className={classes.userStatusAction}>
+                <div className="flex flex-col">
+                  <div className="flex items-center bg-zircon px-1 rounded-lg">
                     <Switch
                       checked={!!R.path(['isTestCustomer'])(customerData)}
                       value={!!R.path(['isTestCustomer'])(customerData)}
@@ -626,14 +622,14 @@ const CustomerProfile = memo(() => {
                           : enableTestCustomer()
                       }
                     />
-                    {`Test user`}
+                    <Label1 noMargin>Test user</Label1>
                   </div>
                 </div>
               </div>
             </>
           )}
         </div>
-        <div className={classes.rightSidePanel}>
+        <div className="flex-1">
           {isOverview && (
             <div>
               <div className="flex justify-between mb-5">
@@ -724,8 +720,6 @@ const RetrieveDataDialog = ({
   error,
   props
 }) => {
-  const classes = useStyles()
-
   return (
     <Dialog
       open={open}
@@ -739,31 +733,28 @@ const RetrieveDataDialog = ({
         }
       }}
       {...props}>
-      <div className={classes.closeButton}>
+      <div className="pt-4 pr-4 flex justify-end">
         <IconButton
-          size={16}
+          size={32}
           aria-label="close"
           onClick={() => onDismissed(false)}>
           <CloseIcon />
         </IconButton>
       </div>
-      <H2 className={classes.dialogTitle}>{'Retrieve API data from Twilio'}</H2>
-      <DialogContent className={classes.dialogContent}>
+      <H2 className="mb-2 ml-10">{'Retrieve API data from Twilio'}</H2>
+      <DialogContent className="w-153 ml-4">
         <Info3>{`With this action you'll be using Twilio's API to retrieve additional
   data from this user. This includes name and address, if available.\n`}</Info3>
         <Info3>{` There is a small cost from Twilio for each retrieval. Would you like
   to proceed?`}</Info3>
       </DialogContent>
       {error && (
-        <ErrorMessage className={classes.errorMessage}>
+        <ErrorMessage className="ml-10">
           Failed to fetch additional data
         </ErrorMessage>
       )}
-      <DialogActions className={classes.dialogActions}>
-        <Button
-          backgroundColor="grey"
-          className={classes.cancelButton}
-          onClick={() => onDismissed(false)}>
+      <DialogActions className="p-8 pt-4 gap-2">
+        <Button backgroundColor="grey" onClick={() => onDismissed(false)}>
           Cancel
         </Button>
         <Button

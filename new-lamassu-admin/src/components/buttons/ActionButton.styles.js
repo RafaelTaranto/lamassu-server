@@ -119,5 +119,9 @@ export default {
       }
     }
   },
+  center: {
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   actionButtonIconActive: {}
 }

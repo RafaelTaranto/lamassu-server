@@ -1,5 +1,4 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -10,7 +9,6 @@ import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 
 import { Link } from 'src/components/buttons'
-import baseStyles from 'src/pages/Logs.styles'
 import { fromNamespace, namespaces } from 'src/utils/config'
 
 import CustomersList from './CustomersList'
@@ -93,13 +91,10 @@ const CREATE_CUSTOMER = gql`
   }
 `
 
-const useBaseStyles = makeStyles(baseStyles)
-
 const getFiltersObj = filters =>
   R.reduce((s, f) => ({ ...s, [f.type]: f.value }), {}, filters)
 
 const Customers = () => {
-  const baseStyles = useBaseStyles()
   const history = useHistory()
 
   const handleCustomerClicked = customer =>
@@ -210,7 +205,7 @@ const Customers = () => {
       <TitleSection
         title="Customers"
         appendix={
-          <div className={baseStyles.buttonsWrapper}>
+          <div className="flex ml-4">
             <SearchBox
               loading={loadingFilters}
               filters={filters}

@@ -1,5 +1,4 @@
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/styles'
 import { formatDurationWithOptions, intervalToDuration } from 'date-fns/fp'
 import { Form, Formik, Field } from 'formik'
 import { React, useRef } from 'react'
@@ -14,13 +13,8 @@ import { ActionButton } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 import { toTimezone } from 'src/utils/timezones'
 
-import styles from './NoteCard.styles'
-
-const useStyles = makeStyles(styles)
-
 const NoteEdit = ({ note, cancel, edit, timezone }) => {
   const formRef = useRef()
-  const classes = useStyles()
 
   const validationSchema = Yup.object().shape({
     content: Yup.string()
@@ -31,8 +25,8 @@ const NoteEdit = ({ note, cancel, edit, timezone }) => {
   }
 
   return (
-    <Paper className={classes.editCardChip}>
-      <div className={classes.editCardHeader}>
+    <Paper className="p-4">
+      <div className="flex flex-row justify-between items-center mb-4">
         <P noMargin>
           {`Last edited `}
           {formatDurationWithOptions(
@@ -44,7 +38,7 @@ const NoteEdit = ({ note, cancel, edit, timezone }) => {
           )}
           {` ago`}
         </P>
-        <div className={classes.editCardActions}>
+        <div className="flex flex-row items-center gap-2">
           <ActionButton
             color="primary"
             type="button"
@@ -88,7 +82,7 @@ const NoteEdit = ({ note, cancel, edit, timezone }) => {
           <Field
             name="content"
             component={TextInput}
-            className={classes.editNotesContent}
+            InputProps={{ disableUnderline: true }}
             size="sm"
             autoComplete="off"
             fullWidth

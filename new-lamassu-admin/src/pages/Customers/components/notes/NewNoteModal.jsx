@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Form, Formik, Field } from 'formik'
 import { React } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
@@ -7,10 +6,6 @@ import * as Yup from 'yup'
 
 import { Button } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
-
-import styles from './NewNoteModal.styles'
-
-const useStyles = makeStyles(styles)
 
 const initialValues = {
   title: '',
@@ -23,8 +18,6 @@ const validationSchema = Yup.object().shape({
 })
 
 const NewNoteModal = ({ showModal, onClose, onSubmit, errorMsg }) => {
-  const classes = useStyles()
-
   return (
     <>
       <Modal
@@ -42,7 +35,7 @@ const NewNoteModal = ({ showModal, onClose, onSubmit, errorMsg }) => {
           onSubmit={({ title, content }) => {
             onSubmit({ title, content })
           }}>
-          <Form id="note-form" className={classes.form}>
+          <Form id="note-form" className="flex flex-col h-full gap-5">
             <Field
               name="title"
               autofocus
@@ -62,9 +55,12 @@ const NewNoteModal = ({ showModal, onClose, onSubmit, errorMsg }) => {
               rows={11}
               label="Note content"
             />
-            <div className={classes.footer}>
+            <div className="flex flex-row mt-auto mb-6">
               {errorMsg && <ErrorMessage>{errorMsg}</ErrorMessage>}
-              <Button type="submit" form="note-form" className={classes.submit}>
+              <Button
+                type="submit"
+                form="note-form"
+                className="mt-auto ml-auto">
                 Add note
               </Button>
             </div>

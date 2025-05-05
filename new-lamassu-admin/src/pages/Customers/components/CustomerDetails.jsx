@@ -1,19 +1,13 @@
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo } from 'react'
 import { H2, Label1, P } from 'src/components/typography'
 import IdIcon from 'src/styling/icons/ID/card/zodiac.svg?react'
 
-import mainStyles from '../CustomersList.styles'
 import { getFormattedPhone, getName } from '../helper'
 
 import PhotosCard from './PhotosCard'
 
-const useStyles = makeStyles(mainStyles)
-
 const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
-  const classes = useStyles()
-
   const idNumber = R.path(['idCardData', 'documentNumber'])(customer)
   const usSsn = R.path(['usSsn'])(customer)
   const name = getName(customer)
@@ -50,11 +44,11 @@ const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
     })
 
   return (
-    <div className="flex">
+    <div className="flex gap-7">
       <PhotosCard photosData={photosData} timezone={timezone} />
       <div className="flex flex-col">
-        <div className={classes.name}>
-          <IdIcon className={classes.idIcon} />
+        <div className="flex items-center gap-2">
+          <IdIcon />
           <H2 noMargin>
             {name.length
               ? name
@@ -68,7 +62,7 @@ const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
             <Label1
               noMargin
               key={idx}
-              className={classes.label}
+              className="mb-1 text-comet"
               style={{ width: size }}>
               {header}
             </Label1>
@@ -76,11 +70,7 @@ const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
         </div>
         <div className="flex">
           {elements.map(({ size, value }, idx) => (
-            <P
-              noMargin
-              key={idx}
-              className={classes.value}
-              style={{ width: size }}>
+            <P noMargin key={idx} style={{ width: size }}>
               {value}
             </P>
           ))}

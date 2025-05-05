@@ -27,6 +27,10 @@
   --neon: #5a67ff;
   --malachite: #00CD5A;
   --orange-yellow: #ffcc00;
+
+  --mont: 'Mont';
+  --museo: 'MuseoSans';
+  --bpmono: 'BPmono';
 }
 
 @theme {
@@ -44,6 +48,13 @@
   --color-neon: var(--neon);
   --color-malachite: var(--malachite);
   --color-orange-yellow: var(--orange-yellow);
+  --font-mont: var(--mont);
+  --font-museo: var(--museo);
+  --font-bpmono: var(--bpmono);
+}
+
+@utility col-span-all {
+  column-span: all;
 }
 
 body {

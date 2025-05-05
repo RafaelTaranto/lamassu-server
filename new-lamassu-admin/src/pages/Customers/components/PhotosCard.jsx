@@ -1,20 +1,14 @@
 import ButtonBase from '@mui/material/ButtonBase'
 import Paper from '@mui/material/Card'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import { InformativeDialog } from 'src/components/InformativeDialog'
 import { Info2 } from 'src/components/typography'
 import CrossedCameraIcon from 'src/styling/icons/ID/photo/crossed-camera.svg?react'
 
-import styles from './PhotosCard.styles'
 import PhotosCarousel from './PhotosCarousel'
 
-const useStyles = makeStyles(styles)
-
 const PhotosCard = memo(({ photosData, timezone }) => {
-  const classes = useStyles()
-
   const [photosDialog, setPhotosDialog] = useState(false)
 
   const sortedPhotosData = R.sortWith(
@@ -26,24 +20,24 @@ const PhotosCard = memo(({ photosData, timezone }) => {
 
   return (
     <>
-      <Paper className={classes.photo} elevation={0}>
+      <Paper
+        className="flex justify-center items-center bg-zircon rounded-lg h-34 w-34"
+        elevation={0}>
         <ButtonBase
           disabled={!singlePhoto}
-          className={classes.button}
           onClick={() => {
             setPhotosDialog(true)
           }}>
           {singlePhoto ? (
-            <div className={classes.container}>
+            <div>
               <img
-                className={classes.img}
+                className="w-34 h-34 object-center object-cover block"
                 src={`/${singlePhoto.photoDir}/${singlePhoto.path}`}
                 alt=""
               />
-              <circle className={classes.circle}>
-                <div>
-                  <Info2>{sortedPhotosData.length}</Info2>
-                </div>
+              <div className=""></div>
+              <circle className="absolute top-0 right-0 mr-1 mt-1 bg-ghost rounded-full w-6 h-6 flex items-center justify-center">
+                <Info2>{sortedPhotosData.length}</Info2>
               </circle>
             </div>
           ) : (

@@ -16,6 +16,7 @@ const CopyToClipboard = ({
   className,
   buttonClassname,
   children,
+  variant,
   wrapperClassname,
   removeSpace = true,
   ...props
@@ -71,7 +72,7 @@ const CopyToClipboard = ({
         </>
       )}
     </div>
-  );
+  )
 }
 
 export default CopyToClipboard

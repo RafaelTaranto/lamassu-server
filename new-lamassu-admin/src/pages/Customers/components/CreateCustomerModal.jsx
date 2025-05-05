@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Field, Form, Formik } from 'formik'
 import { parsePhoneNumberWithError } from 'libphonenumber-js'
 import * as R from 'ramda'
@@ -10,28 +9,6 @@ import * as Yup from 'yup'
 
 import { Button } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
-import { spacer, primaryColor, fontPrimary } from 'src/styling/variables'
-
-const styles = {
-  modalTitle: {
-    marginTop: -5,
-    color: primaryColor,
-    fontFamily: fontPrimary
-  },
-  footer: {
-    display: 'flex',
-    flexDirection: 'row',
-    margin: [['auto', 0, spacer * 3, 0]]
-  },
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%'
-  },
-  submit: {
-    margin: [['auto', 0, 0, 'auto']]
-  }
-}
 
 const getValidationSchema = countryCodes =>
   Yup.object().shape({
@@ -39,7 +16,9 @@ const getValidationSchema = countryCodes =>
       .required('A phone number is required')
       .test('is-valid-number', 'That is not a valid phone number', value => {
         try {
-          return countryCodes.some(countryCode => parsePhoneNumberWithError(value, countryCode).isValid())
+          return countryCodes.some(countryCode =>
+            parsePhoneNumberWithError(value, countryCode).isValid()
+          )
         } catch (e) {
           return false
         }
@@ -60,8 +39,6 @@ const initialValues = {
   phoneNumber: ''
 }
 
-const useStyles = makeStyles(styles)
-
 const getErrorMsg = (formikErrors, formikTouched) => {
   if (!formikErrors || !formikTouched) return null
   if (formikErrors.phoneNumber && formikTouched.phoneNumber)
@@ -70,8 +47,6 @@ const getErrorMsg = (formikErrors, formikTouched) => {
 }
 
 const CreateCustomerModal = ({ showModal, handleClose, onSubmit, locale }) => {
-  const classes = useStyles()
-
   const possibleCountries = R.append(
     locale?.country,
     R.map(it => it.country, locale?.overrides ?? [])
@@ -99,8 +74,10 @@ const CreateCustomerModal = ({ showModal, handleClose, onSubmit, locale }) => {
           })
         }}>
         {({ errors, touched }) => (
-          <Form id="customer-registration-form" className={classes.form}>
-            <H1 className={classes.modalTitle}>Create new customer</H1>
+          <Form
+            id="customer-registration-form"
+            className="flex flex-col h-full">
+            <H1 className="-mt-2">Create new customer</H1>
             <Field
               component={TextInput}
               name="phoneNumber"
@@ -108,14 +85,14 @@ const CreateCustomerModal = ({ showModal, handleClose, onSubmit, locale }) => {
               autoFocus
               label="Phone number"
             />
-            <div className={classes.footer}>
+            <div className="flex flex-row mt-auto mb-6">
               {getErrorMsg(errors, touched) && (
                 <ErrorMessage>{getErrorMsg(errors, touched)}</ErrorMessage>
               )}
               <Button
                 type="submit"
                 form="customer-registration-form"
-                className={classes.submit}>
+                className="ml-auto">
                 Finish
               </Button>
             </div>
