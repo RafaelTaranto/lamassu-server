@@ -1,18 +1,12 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
 import { cardState as cardState_ } from 'src/components/CollapsibleCard'
-// import ActionButton from 'src/components/buttons/ActionButton'
 import { H4, TL2, Label1 } from 'src/components/typography'
 
 import MachinesTable from './MachinesTable'
-import styles from './MachinesTable.styles'
-
-const useStyles = makeStyles(styles)
 
 // number of machines in the table to render on page load
 const NUM_TO_RENDER = 4
@@ -59,29 +53,28 @@ const GET_DATA = gql`
 } */
 
 const SystemStatus = ({ onReset, onExpand, size }) => {
-  const classes = useStyles()
   const { data, loading } = useQuery(GET_DATA)
 
   const machines = R.path(['machines'])(data) ?? []
   const showAllItems = size === cardState_.EXPANDED
 
   const machinesTableContainerClasses = {
-    [classes.machinesTableContainer]: !showAllItems,
-    [classes.expandedMachinesTableContainer]: showAllItems
+    'h-55': !showAllItems,
+    'h-103': showAllItems
   }
   // const uptime = data?.uptime ?? [{}]
   return (
     <>
-      <div className={classes.container}>
-        <H4 className={classes.h4}>System status</H4>{' '}
+      <div className="flex justify-between">
+        <H4 className="mt-0">System status</H4>
         {showAllItems && (
-          <Label1 className={classes.upperButtonLabel}>
+          <Label1 noMargin className="-mt-1">
             <Button
               onClick={onReset}
               size="small"
               disableRipple
               disableFocusRipple
-              className={classes.button}>
+              className="p-0 text-zodiac normal-case">
               {'Show less'}
             </Button>
           </Label1>
@@ -89,54 +82,29 @@ const SystemStatus = ({ onReset, onExpand, size }) => {
       </div>
       {!loading && (
         <>
-          <Grid container spacing={1}>
-            {/*             
-            On hold until system uptime is implemented
-            <Grid item xs={4}>
-              <TL2 className={classes.tl2}>
-                {parseUptime(uptime[0].time)}
-              </TL2>
-              <Label1 className={classes.label1}> System up time</Label1>
-            </Grid> */}
-            <Grid item xs={4}>
-              <TL2 className={classes.tl2}>{data?.serverVersion}</TL2>
-              <Label1 className={classes.label1}> server version</Label1>
-            </Grid>
-            <Grid item xs={4}>
-              {/*
-              On hold until system update features are implemented
-              <ActionButton
-                color="primary"
-                className={classes.actionButton}
-                onClick={() => console.log('Upgrade button clicked')}>
-                Update to v10.6.0
-              </ActionButton> */}
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            spacing={1}
-            className={classnames(machinesTableContainerClasses)}>
-            <Grid item xs={12}>
-              <MachinesTable
-                numToRender={showAllItems ? Infinity : NUM_TO_RENDER}
-                machines={machines}
-              />
-            </Grid>
-          </Grid>
+          <div className="mb-4">
+            <TL2 className="inline">{data?.serverVersion}</TL2>
+            <Label1 className="inline"> server version</Label1>
+          </div>
+          <div className={classnames(machinesTableContainerClasses)}>
+            <MachinesTable
+              numToRender={showAllItems ? Infinity : NUM_TO_RENDER}
+              machines={machines}
+            />
+          </div>
           {!showAllItems && machines.length > NUM_TO_RENDER && (
-            <Grid item xs={12}>
-              <Label1 className={classes.centerLabel}>
+            <div>
+              <Label1 className="text-center mb-0">
                 <Button
                   onClick={() => onExpand()}
                   size="small"
                   disableRipple
                   disableFocusRipple
-                  className={classes.button}>
+                  className="p-0 text-zodiac normal-case">
                   {`Show all (${machines.length})`}
                 </Button>
               </Label1>
-            </Grid>
+            </div>
           )}
         </>
       )}

@@ -2,8 +2,6 @@ import * as d3 from 'd3'
 import * as R from 'ramda'
 import React, { useEffect, useRef, useCallback } from 'react'
 
-import { backgroundColor, zircon, primaryColor } from 'src/styling/variables'
-
 const transactionProfit = R.prop('profit')
 
 const mockPoint = (tx, offsetMs, profit) => {
@@ -106,7 +104,7 @@ const RefLineChart = ({
       .attr('y', -margin.top)
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top)
-      .attr('fill', backgroundColor)
+      .attr('fill', 'var(--ghost)')
       .attr('transform', `translate(${0},${margin.top})`)
 
     // gradient color for the graph (creates the "url", the color is applied by calling the url, in the area color fill )
@@ -120,9 +118,9 @@ const RefLineChart = ({
       .attr('y2', '100%')
       .selectAll('stop')
       .data([
-        { offset: '0%', color: zircon },
-        { offset: '25%', color: zircon },
-        { offset: '100%', color: backgroundColor }
+        { offset: '0%', color: 'var(--zircon)' },
+        { offset: '25%', color: 'var(--zircon)' },
+        { offset: '100%', color: 'var(--ghost)' }
       ])
       .enter()
       .append('stop')
@@ -181,7 +179,7 @@ const RefLineChart = ({
       .attr('fill', 'none')
       .attr('stroke-width', '2')
       .attr('stroke-linejoin', 'round')
-      .attr('stroke', primaryColor)
+      .attr('stroke', 'var(--zodiac)')
   }, [realData, timeFrame, previousTimeData, previousProfit])
 
   useEffect(() => {

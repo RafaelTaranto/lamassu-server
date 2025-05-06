@@ -1,12 +1,10 @@
-import { useQuery, gql } from "@apollo/client";
-import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
+import { useQuery, gql } from '@apollo/client'
 import BigNumber from 'bignumber.js'
 import classnames from 'classnames'
 import { isAfter } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { Label1, Label2, P } from 'src/components/typography/index'
+import { Info2, Label1, Label2, P } from 'src/components/typography/index'
 import PercentDownIcon from 'src/styling/icons/dashboard/down.svg?react'
 import PercentNeutralIcon from 'src/styling/icons/dashboard/equal.svg?react'
 import PercentUpIcon from 'src/styling/icons/dashboard/up.svg?react'
@@ -23,12 +21,10 @@ import LineChart from './Graphs/RefLineChart'
 import Scatterplot from './Graphs/RefScatterplot'
 import InfoWithLabel from './InfoWithLabel'
 import Nav from './Nav'
-import styles from './SystemPerformance.styles'
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_HALF_UP })
 
 const getFiats = R.map(R.prop('fiat'))
-const useStyles = makeStyles(styles)
 
 const GET_DATA = gql`
   query getData($excludeTestingCustomers: Boolean) {
@@ -54,7 +50,6 @@ const GET_DATA = gql`
 `
 
 const SystemPerformance = () => {
-  const classes = useStyles()
   const [selectedRange, setSelectedRange] = useState('Day')
   const { data, loading } = useQuery(GET_DATA, {
     variables: { excludeTestingCustomers: true }
@@ -162,17 +157,17 @@ const SystemPerformance = () => {
   const percentChange = getPercentChange()
 
   const percentageClasses = {
-    [classes.percentDown]: percentChange < 0,
-    [classes.percentUp]: percentChange > 0,
-    [classes.percentNeutral]: percentChange === 0
+    'text-tomato': percentChange < 0,
+    'text-spring4': percentChange > 0,
+    'text-comet': percentChange === 0,
+    'flex items-center justify-center gap-1': true
   }
 
   const getPercentageIcon = () => {
-    if (percentChange === 0)
-      return <PercentNeutralIcon className={classes.directionIcon} />
-    if (percentChange > 0)
-      return <PercentUpIcon className={classes.directionIcon} />
-    return <PercentDownIcon className={classes.directionIcon} />
+    const className = 'w-4 h-4'
+    if (percentChange === 0) return <PercentNeutralIcon className={className} />
+    if (percentChange > 0) return <PercentUpIcon className={className} />
+    return <PercentDownIcon className={className} />
   }
 
   return (
@@ -182,74 +177,67 @@ const SystemPerformance = () => {
         handleSetRange={setSelectedRange}
       />
       {!loading && R.isEmpty(data.transactions) && (
-        <EmptyTable
-          className={classes.emptyTransactions}
-          message="No transactions so far"
-        />
+        <EmptyTable className="pt-10" message="No transactions so far" />
       )}
       {!loading && !R.isEmpty(data.transactions) && (
-        <>
-          <Grid container spacing={2}>
-            <Grid item xs={3}>
-              <InfoWithLabel
-                info={getNumTransactions()}
-                label={'transactions'}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <InfoWithLabel
-                info={getFiatVolume()}
-                label={`${data?.config.locale_fiatCurrency} volume`}
-              />
-            </Grid>
-            {/* todo new customers */}
-          </Grid>
-          <Grid container className={classes.txGraphContainer}>
-            <Grid item xs={12}>
-              <div className={classes.graphHeader}>
-                <Label2 noMargin>Transactions</Label2>
-                <div className={classes.labelWrapper}>
-                  <P noMargin>
-                    {timezones[timezone]?.short ?? timezones[timezone]?.long}{' '}
-                    timezone
-                  </P>
-                  <span className={classes.verticalLine} />
-                  <div>
+        <div className="flex flex-col gap-12">
+          <div className="flex gap-16">
+            <InfoWithLabel info={getNumTransactions()} label={'transactions'} />
+            <InfoWithLabel
+              info={getFiatVolume()}
+              label={`${data?.config.locale_fiatCurrency} volume`}
+            />
+          </div>
+          <div className="h-62">
+            <div className="flex justify-between mb-4">
+              <Label2 noMargin>Transactions</Label2>
+              <div className="flex items-center">
+                <P noMargin>
+                  {timezones[timezone]?.short ?? timezones[timezone]?.long}{' '}
+                  timezone
+                </P>
+                <span className="h-4 w-[1px] bg-comet2 mr-4 ml-8" />
+                <div className="flex flex-row gap-4">
+                  <div className="flex items-center">
                     <svg width={8} height={8}>
                       <rect width={8} height={8} rx={4} fill={java} />
                     </svg>
-                    <Label1 noMargin>In</Label1>
+                    <Label1 noMargin className="ml-2">
+                      In
+                    </Label1>
                   </div>
-                  <div>
+                  <div className="flex items-center">
                     <svg width={8} height={8}>
                       <rect width={8} height={8} rx={4} fill={neon} />
                     </svg>
-                    <Label1 noMargin>Out</Label1>
+                    <Label1 noMargin className="ml-2">
+                      Out
+                    </Label1>
                   </div>
                 </div>
               </div>
-              <Scatterplot
-                timeFrame={selectedRange}
-                data={transactionsToShow}
-                timezone={timezone}
-              />
-            </Grid>
-          </Grid>
-          <Grid container className={classes.commissionGraphContainer}>
-            <Grid item xs={8}>
-              <Label2 noMargin className={classes.commissionProfitTitle}>
+            </div>
+            <Scatterplot
+              timeFrame={selectedRange}
+              data={transactionsToShow}
+              timezone={timezone}
+            />
+          </div>
+          <div className="flex h-62">
+            <div className="flex-2">
+              <Label2 noMargin className="mb-4">
                 Profit from commissions
               </Label2>
-              <div className={classes.profitContainer}>
-                <div className={classes.profitLabel}>
+              <div className="flex justify-between mt-6 mr-7 -mb-8 ml-4 relative">
+                <Info2 noMargin>
                   {`${getProfit(transactionsToShow).toFormat(2)} ${
                     data?.config.locale_fiatCurrency
                   }`}
-                </div>
-                <div className={classnames(percentageClasses)}>
+                </Info2>
+                <Info2 noMargin className={classnames(percentageClasses)}>
                   {getPercentageIcon()}
                   {`${new BigNumber(percentChange).toFormat(2)}%`}
-                </div>
+                </Info2>
               </div>
               <LineChart
                 timeFrame={selectedRange}
@@ -257,34 +245,36 @@ const SystemPerformance = () => {
                 previousTimeData={transactionsLastTimePeriod}
                 previousProfit={getProfit(transactionsLastTimePeriod)}
               />
-            </Grid>
-            <Grid item xs={4}>
-              <Grid container className={classes.graphHeader}>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between mb-4">
                 <Label2 noMargin>Direction</Label2>
-                <div className={classes.labelWrapper}>
-                  <div>
+                <div className="flex flex-row gap-4">
+                  <div className="flex items-center">
                     <svg width={8} height={8}>
                       <rect width={8} height={8} rx={2} fill={java} />
                     </svg>
-                    <Label1 noMargin>In</Label1>
+                    <Label1 noMargin className="ml-2">
+                      In
+                    </Label1>
                   </div>
-                  <div>
+                  <div className="flex items-center">
                     <svg width={8} height={8}>
                       <rect width={8} height={8} rx={2} fill={neon} />
                     </svg>
-                    <Label1 noMargin>Out</Label1>
+                    <Label1 noMargin className="ml-2">
+                      Out
+                    </Label1>
                   </div>
                 </div>
-              </Grid>
-              <Grid item xs>
-                <PercentageChart
-                  cashIn={getDirectionPercent().cashIn}
-                  cashOut={getDirectionPercent().cashOut}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        </>
+              </div>
+              <PercentageChart
+                cashIn={getDirectionPercent().cashIn}
+                cashOut={getDirectionPercent().cashOut}
+              />
+            </div>
+          </div>
+        </div>
       )}
     </>
   )

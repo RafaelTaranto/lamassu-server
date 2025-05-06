@@ -22,6 +22,7 @@
 
   --ghost: #fafbff;
   --zircon: #ebefff;
+  --zircon2: #dbdfed;
 
   --java: #16d6d3;
   --neon: #5a67ff;
@@ -45,6 +46,8 @@
   --color-tomato: var(--tomato);
   --color-ghost: var(--ghost);
   --color-zircon: var(--zircon);
+  --color-zircon2: var(--zircon2);
+  --color-java: var(--java);
   --color-neon: var(--neon);
   --color-malachite: var(--malachite);
   --color-orange-yellow: var(--orange-yellow);

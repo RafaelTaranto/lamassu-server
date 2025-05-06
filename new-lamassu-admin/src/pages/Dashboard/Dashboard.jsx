@@ -1,6 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
-import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
+import { useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -13,11 +11,10 @@ import { Button } from 'src/components/buttons'
 import AddMachine from 'src/pages/AddMachine'
 import { errorColor } from 'src/styling/variables'
 
-import styles from './Dashboard.styles'
 import Footer from './Footer'
-import LeftSide from './LeftSide'
 import RightSide from './RightSide'
-const useStyles = makeStyles(styles)
+import Paper from '@mui/material/Paper'
+import SystemPerformance from './SystemPerformance/index.js'
 
 const GET_DATA = gql`
   query getData {
@@ -30,7 +27,6 @@ const GET_DATA = gql`
 
 const Dashboard = () => {
   const history = useHistory()
-  const classes = useStyles()
   const [open, setOpen] = useState(false)
 
   const { data, loading } = useQuery(GET_DATA)
@@ -44,16 +40,16 @@ const Dashboard = () => {
     !R.isEmpty(data.machines) ? (
       <>
         <TitleSection title="Dashboard">
-          <div className={classes.headerLabels}>
-            <div>
+          <div className="flex gap-6">
+            <div className="flex items-center gap-2">
               <TxInIcon />
               <span>Cash-in</span>
             </div>
-            <div>
+            <div className="flex items-center gap-2">
               <TxOutIcon />
               <span>Cash-out</span>
             </div>
-            <div>
+            <div className="flex items-center gap-2">
               <svg width={12} height={12}>
                 <rect width={12} height={12} rx={3} fill={errorColor} />
               </svg>
@@ -61,15 +57,15 @@ const Dashboard = () => {
             </div>
           </div>
         </TitleSection>
-        <div className={classes.root}>
-          <Grid container>
-            <Grid container direction="column" item xs={6}>
-              <LeftSide />
-            </Grid>
-            <Grid container direction="column" item xs={6}>
-              <RightSide />
-            </Grid>
-          </Grid>
+        <div className="flex mb-30 gap-4">
+          <div className="flex flex-col flex-1">
+            <Paper className="p-6">
+              <SystemPerformance />
+            </Paper>
+          </div>
+          <div className="flex flex-col flex-1">
+            <RightSide />
+          </div>
         </div>
         <Footer />
       </>
@@ -79,17 +75,17 @@ const Dashboard = () => {
           <AddMachine close={() => setOpen(false)} onPaired={onPaired} />
         )}
         <TitleSection title="Dashboard">
-          <div className={classes.headerLabels}>
+          <div className="flex flex-row">
             <span>
-              <TL2 className={classes.inline}>{data?.serverVersion}</TL2>{' '}
-              <Label1 className={classes.inline}> server version</Label1>
+              <TL2 className="inline">{data?.serverVersion}</TL2>{' '}
+              <Label1 className="inline"> server version</Label1>
             </span>
           </div>
         </TitleSection>
-        <div className={classes.emptyMachinesRoot}>
-          <div className={classes.emptyMachinesContent}>
-            <H1 className={classes.offColor}>No machines on your system yet</H1>
-            <Info2 className={classes.offColor}>
+        <div className="h-75 bg-zircon border-zircon2 border-2">
+          <div className="flex flex-col h-full justify-center items-center gap-6">
+            <H1 className="text-comet2">No machines on your system yet</H1>
+            <Info2 className="text-comet2">
               To fully take advantage of Lamassu Admin, add a new machine to
               your system
             </Info2>

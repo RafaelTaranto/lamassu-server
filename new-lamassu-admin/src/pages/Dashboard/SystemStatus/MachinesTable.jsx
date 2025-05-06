@@ -1,12 +1,11 @@
-import { useQuery, gql } from "@apollo/client";
-import { makeStyles, withStyles } from '@mui/styles'
+import { useQuery, gql } from '@apollo/client'
+import { styled } from '@mui/material/styles'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
 import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
@@ -15,10 +14,7 @@ import { Label2, TL2 } from 'src/components/typography'
 import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 import MachineLinkIcon from 'src/styling/icons/month arrows/right.svg?react'
 
-// import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
 import { fromNamespace } from 'src/utils/config'
-
-import styles from './MachinesTable.styles'
 
 // percentage threshold where below this number the text in the cash cassettes percentage turns red
 const PERCENTAGE_THRESHOLD = 20
@@ -29,27 +25,20 @@ const GET_CONFIG = gql`
   }
 `
 
-const useStyles = makeStyles(styles)
+const StyledCell = styled(TableCell)({
+  borderBottom: '4px solid white',
+  padding: 0,
+  paddingLeft: '15px'
+})
 
-const StyledCell = withStyles({
-  root: {
-    borderBottom: '4px solid white',
-    padding: 0,
-    paddingLeft: 15
-  }
-})(TableCell)
-
-const HeaderCell = withStyles({
-  root: {
-    borderBottom: '4px solid white',
-    padding: 0,
-    paddingLeft: 15,
-    backgroundColor: 'white'
-  }
-})(TableCell)
+const HeaderCell = styled(TableCell)({
+  borderBottom: '4px solid white',
+  padding: 0,
+  paddingLeft: '15px',
+  backgroundColor: 'white'
+})
 
 const MachinesTable = ({ machines = [], numToRender }) => {
-  const classes = useStyles()
   const history = useHistory()
 
   const { data } = useQuery(GET_CONFIG)
@@ -69,7 +58,7 @@ const MachinesTable = ({ machines = [], numToRender }) => {
       R.defaultTo(PERCENTAGE_THRESHOLD)
     )(fillingPercentageSettings)
     return percent < percentageThreshold ? (
-      <TL2 className={classes.error}>{`${percent}%`}</TL2>
+      <TL2 className="text-tomato">{`${percent}%`}</TL2>
     ) : (
       <TL2>{`${percent}%`}</TL2>
     )
@@ -87,30 +76,32 @@ const MachinesTable = ({ machines = [], numToRender }) => {
   )
 
   return (
-    <TableContainer className={classes.table}>
+    <TableContainer className="max-h-110">
       <Table>
         <TableHead>
           <TableRow>
             <HeaderCell>
-              <div className={classes.header}>
-                <Label2 className={classes.label}>Machines</Label2>
+              <div className="flex items-center">
+                <Label2 noMargin className="text-comet">
+                  Machines
+                </Label2>
               </div>
             </HeaderCell>
             <HeaderCell>
-              <div className={`${classes.header} ${classes.statusHeader}`}>
-                <Label2 className={classes.label}>Status</Label2>
+              <div className="flex items-center">
+                <Label2 noMargin className="text-comet">
+                  Status
+                </Label2>
               </div>
             </HeaderCell>
-            {/*               <HeaderCell>
-                <div className={classes.header}>
-                  <TxInIcon />
-                </div>
-              </HeaderCell> */}
             {R.times(R.identity, maxNumberOfCassettes).map((it, idx) => (
               <HeaderCell key={idx}>
-                <div className={classes.header}>
+                <div className="flex items-center whitespace-pre">
                   <TxOutIcon />
-                  <Label2 className={classes.label}> {it + 1}</Label2>
+                  <Label2 noMargin className="text-comet">
+                    {' '}
+                    {it + 1}
+                  </Label2>
                 </div>
               </HeaderCell>
             ))}
@@ -122,20 +113,23 @@ const MachinesTable = ({ machines = [], numToRender }) => {
               return (
                 <TableRow
                   onClick={() => redirect(machine)}
-                  className={classnames(classes.row)}
+                  className="boder-b-0 bg-ghost"
                   key={machine.deviceId + idx}>
-                  <StyledCell align="left">
-                    <div className={classes.machineNameWrapper}>
+                  <TableCell
+                    sx={{
+                      borderBottom: '4px solid white',
+                      padding: 0,
+                      paddingLeft: '15px'
+                    }}
+                    align="left">
+                    <div className="flex items-center">
                       <TL2>{machine.name}</TL2>
                       <MachineLinkIcon
-                        className={classnames(
-                          classes.machineRedirectIcon,
-                          classes.clickableRow
-                        )}
+                        className="cursor-pointer ml-2"
                         onClick={() => redirect(machine)}
                       />
                     </div>
-                  </StyledCell>
+                  </TableCell>
                   <StyledCell>
                     <Status status={machine.statuses[0]} />
                   </StyledCell>

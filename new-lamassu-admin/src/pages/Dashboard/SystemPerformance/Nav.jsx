@@ -1,16 +1,11 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H4 } from 'src/components/typography'
 
-import styles from './SystemPerformance.styles'
-
-const useStyles = makeStyles(styles)
 const ranges = ['Month', 'Week', 'Day']
 
 const Nav = ({ handleSetRange, showPicker }) => {
-  const classes = useStyles()
   const [clickedItem, setClickedItem] = useState('Day')
 
   const isSelected = R.equals(clickedItem)
@@ -20,22 +15,20 @@ const Nav = ({ handleSetRange, showPicker }) => {
   }
 
   return (
-    <div className={classnames(classes.titleWrapper)}>
-      <div className={classes.titleAndButtonsContainer}>
-        <H4 className={classes.h4}>{'System performance'}</H4>
-      </div>
+    <div className="flex justify-between items-center">
+      <H4 noMargin>{'System performance'}</H4>
       {showPicker && (
-        <div className={classes.navContainer}>
+        <div className="flex gap-6">
           {ranges.map((it, idx) => {
             return (
               <div
                 key={idx}
                 onClick={e => handleClick(e.target.innerText)}
-                className={
-                  isSelected(it)
-                    ? classnames(classes.newHighlightedLabel, classes.navButton)
-                    : classnames(classes.label, classes.navButton)
-                }>
+                className={classnames({
+                  'cursor-pointer text-comet': true,
+                  'font-bold text-zodiac border-b-zodiac border-b-2':
+                    isSelected(it)
+                })}>
                 {it}
               </div>
             )
