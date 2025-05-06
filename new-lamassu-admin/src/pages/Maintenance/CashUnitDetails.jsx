@@ -1,86 +1,11 @@
-import { makeStyles } from '@mui/styles'
 import Chip from '@mui/material/Chip'
 import * as R from 'ramda'
 import React from 'react'
 import { Label1, TL2 } from 'src/components/typography'
 
 import { CashOut } from 'src/components/inputs'
-import { offDarkColor } from 'src/styling/variables'
 import { fromNamespace } from 'src/utils/config'
 import { getCashUnitCapacity, modelPrettifier } from 'src/utils/machine'
-
-const styles = {
-  wrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    marginTop: 12,
-    marginBottom: 16,
-    '& > *': {
-      marginRight: 40
-    },
-    '& > *:last-child': {
-      marginRight: 0
-    },
-    minHeight: 120
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  col: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  machineData: {
-    display: 'flex',
-    flexDirection: 'column',
-    minWidth: 210
-  },
-  billList: ({ hideMachineData }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    minWidth: hideMachineData ? 60 : 160,
-    '& > span': {
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      '& > p': {
-        minWidth: 30
-      }
-    }
-  }),
-  unitList: {
-    display: 'flex',
-    flexDirection: 'row',
-    '& > *': {
-      marginRight: 20
-    },
-    '& > *:last-child': {
-      marginRight: 0
-    },
-    marginTop: 10
-  },
-  verticalLine: {
-    height: '100%',
-    width: 1,
-    backgroundColor: offDarkColor
-  },
-  label: {
-    marginBottom: 10
-  },
-  loadingBoxes: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& > *': {
-      marginBottom: 20
-    },
-    '& > *:last-child': {
-      marginBottom: 0
-    }
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const CashUnitDetails = ({
   machine,
@@ -89,38 +14,40 @@ const CashUnitDetails = ({
   config,
   hideMachineData = false
 }) => {
-  const classes = useStyles({ hideMachineData })
   const billCount = R.countBy(it => it.fiat)(bills)
   const fillingPercentageSettings = fromNamespace('notifications', config)
   const cashout = fromNamespace('cashOut')(config)
   const getCashoutSettings = id => fromNamespace(id)(cashout)
 
+  const minWidth = hideMachineData ? 'min-w-15' : 'min-w-40'
+  const VerticalLine = () => <span className="h-full w-[1px] bg-comet2" />
+
   return (
-    <div className={classes.wrapper}>
+    <div className="flex flex-row mt-3 mb-4 gap-10 min-h-30">
       {!hideMachineData && (
-        <div className={classes.machineData}>
+        <div className="min-w-52">
           <Label1>Machine Model</Label1>
           <span>{modelPrettifier[machine.model]}</span>
         </div>
       )}
-      <div className={classes.billList}>
+      <div className={`flex flex-col ${minWidth}`}>
         <Label1>Cash box</Label1>
         {R.isEmpty(billCount) && <TL2 noMargin>Empty</TL2>}
         {R.keys(billCount).map((it, idx) => (
-          <span key={idx}>
-            <TL2 noMargin>{billCount[it]}</TL2>
+          <span className="flex items-center" key={idx}>
+            <TL2 className="min-w-7" noMargin>
+              {billCount[it]}
+            </TL2>
             <Chip label={`${it} ${currency}`} />
           </span>
         ))}
       </div>
-      <div className={classes.unitList}>
+      <div className="flex gap-5">
         {machine.numberOfRecyclers === 0 &&
           R.map(it => (
             <>
-              <div className={classes.col}>
-                <Label1
-                  noMargin
-                  className={classes.label}>{`Cassette ${it}`}</Label1>
+              <div className="flex flex-col gap-2">
+                <Label1 noMargin>{`Cassette ${it}`}</Label1>
                 <CashOut
                   width={60}
                   height={40}
@@ -137,18 +64,14 @@ const CashUnitDetails = ({
                   capacity={getCashUnitCapacity(machine.model, 'cassette')}
                 />
               </div>
-              {it !== machine.numberOfCassettes && (
-                <span className={classes.verticalLine} />
-              )}
+              {it !== machine.numberOfCassettes && <VerticalLine />}
             </>
           ))(R.range(1, machine.numberOfCassettes + 1))}
         {machine.numberOfRecyclers > 0 && (
           <>
-            <div className={classes.col}>
-              <Label1
-                noMargin
-                className={classes.label}>{`Loading boxes`}</Label1>
-              <div className={classes.loadingBoxes}>
+            <div className="flex flex-col gap-2">
+              <Label1 noMargin>{`Loading boxes`}</Label1>
+              <div className="flex flex-col gap-5">
                 {R.range(1, machine.numberOfCassettes + 1).map((it, idx) => (
                   <CashOut
                     key={idx}
@@ -171,18 +94,18 @@ const CashUnitDetails = ({
                 ))}
               </div>
             </div>
-            <span className={classes.verticalLine} />
+            <VerticalLine />
             {R.map(it => (
               <>
-                <div className={classes.col}>
-                  <Label1 noMargin className={classes.label}>
+                <div className="flex flex-col gap-2">
+                  <Label1 noMargin>
                     {`Recycler ${
                       machine.model === 'aveiro'
                         ? `${it} f/r`
                         : `${it * 2 - 1} - ${it * 2}`
                     }`}
                   </Label1>
-                  <div className={classes.loadingBoxes}>
+                  <div className="flex flex-col gap-5">
                     <CashOut
                       width={60}
                       height={40}
@@ -219,9 +142,7 @@ const CashUnitDetails = ({
                     />
                   </div>
                 </div>
-                {it !== machine.numberOfRecyclers / 2 && (
-                  <span className={classes.verticalLine} />
-                )}
+                {it !== machine.numberOfRecyclers / 2 && <VerticalLine />}
               </>
             ))(R.range(1, machine.numberOfRecyclers / 2 + 1))}
           </>

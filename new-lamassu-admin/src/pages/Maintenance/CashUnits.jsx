@@ -1,6 +1,5 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import DialogActions from '@mui/material/DialogActions'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'
@@ -21,13 +20,10 @@ import { MANUAL, AUTOMATIC } from 'src/utils/constants'
 import { onlyFirstToUpper } from 'src/utils/string'
 
 import CashUnitDetails from './CashUnitDetails'
-import styles from './CashUnits.styles'
 import CashCassettesFooter from './CashUnitsFooter'
 import CashboxHistory from './CashboxHistory'
 import Wizard from './Wizard/Wizard'
 import helper from './helper'
-
-const useStyles = makeStyles(styles)
 
 const GET_MACHINES_AND_CONFIG = gql`
   query getData($billFilters: JSONObject) {
@@ -114,7 +110,6 @@ const widths = {
 }
 
 const CashCassettes = () => {
-  const classes = useStyles()
   const [showHistory, setShowHistory] = useState(false)
   const [editingSchema, setEditingSchema] = useState(null)
   const [selectedRadio, setSelectedRadio] = useState(null)
@@ -219,7 +214,7 @@ const CashCassettes = () => {
             {
               component: showHistory ? (
                 <LogsDowloaderPopover
-                  className={classes.downloadLogsButton}
+                  className="ml-4"
                   title="Download logs"
                   name="cashboxHistory"
                   query={GET_BATCHES_CSV}
@@ -232,8 +227,7 @@ const CashCassettes = () => {
               )
             }
           ]}
-          iconClassName={classes.listViewButton}
-          className={classes.tableWidth}
+          className="flex items-center mr-[1px]"
           appendix={
             <HelpTooltip width={220}>
               <P>
@@ -248,18 +242,17 @@ const CashCassettes = () => {
             </HelpTooltip>
           }>
           {!showHistory && (
-            <div className="flex items-center justify-end">
-              <Label1 className={classes.cashboxReset}>Cash box resets</Label1>
+            <div className="flex flex-col items-end">
+              <Label1 noMargin className="text-comet">
+                Cash box resets
+              </Label1>
               <div className="flex items-center justify-end -mr-1">
                 {cashboxReset && (
-                  <P className={classes.selection}>
+                  <P noMargin className="mr-2">
                     {onlyFirstToUpper(cashboxReset)}
                   </P>
                 )}
-                <IconButton
-                  onClick={() => setEditingSchema(true)}
-                  className={classes.button}
-                  size="large">
+                <IconButton onClick={() => setEditingSchema(true)} size="large">
                   <EditIcon />
                 </IconButton>
               </div>
@@ -275,7 +268,7 @@ const CashCassettes = () => {
               Details={InnerCashUnitDetails}
               emptyText="No machines so far"
               expandable
-              tableClassName={classes.dataTable}
+              tableClassName="mb-20"
             />
 
             {data && R.isEmpty(machines) && (
@@ -315,7 +308,7 @@ const CashCassettes = () => {
             width={478}
             handleClose={() => setEditingSchema(null)}
             open={true}>
-            <P className={classes.descriptions}>
+            <P className="text-comet mt-0">
               We can automatically assume you emptied a bill validator's cash
               box when the machine detects that it has been removed.
             </P>
@@ -324,9 +317,8 @@ const CashCassettes = () => {
               value={selectedRadio ?? cashboxReset}
               options={[radioButtonOptions[0]]}
               onChange={handleRadioButtons}
-              className={classes.radioButtons}
             />
-            <P className={classes.descriptions}>
+            <P className="text-comet mt-0">
               Assume the cash box is emptied whenever it's removed, creating a
               new batch on the history screen and setting its current balance to
               zero.
@@ -336,14 +328,13 @@ const CashCassettes = () => {
               value={selectedRadio ?? cashboxReset}
               options={[radioButtonOptions[1]]}
               onChange={handleRadioButtons}
-              className={classes.radioButtons}
             />
-            <P className={classes.descriptions}>
+            <P className="text-comet mt-0">
               Cash boxes won't be assumed emptied when removed, nor their counts
               modified. Instead, to update the count and create a new batch,
               you'll click the 'Edit' button on this panel.
             </P>
-            <DialogActions className={classes.actions}>
+            <DialogActions>
               <Button onClick={() => saveCashboxOption(selectedRadio)}>
                 Confirm
               </Button>

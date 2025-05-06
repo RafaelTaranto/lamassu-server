@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
 import React from 'react'
@@ -9,10 +8,6 @@ import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 import { fromNamespace } from 'src/utils/config'
 import { numberToFiatAmount } from 'src/utils/number'
 
-import styles from './CashUnitsFooter.styles'
-
-const useStyles = makeStyles(styles)
-
 const CashCassettesFooter = ({
   machines,
   config,
@@ -20,7 +15,6 @@ const CashCassettesFooter = ({
   bills,
   deviceIds
 }) => {
-  const classes = useStyles()
   const cashout = config && fromNamespace('cashOut')(config)
   const getCashoutSettings = id => fromNamespace(id)(cashout)
   const cashoutReducerFn = (
@@ -84,33 +78,33 @@ const CashCassettesFooter = ({
   ).toFormat(0)
 
   return (
-    <div className={classes.footerContainer}>
-      <div className={classes.footerContent}>
-        <Info3 className={classes.footerLabel}>Cash value in System</Info3>
-        <div className={classes.flex}>
-          <TxInIcon className={classes.icon} />
-          <Info2 className={classes.iconLabel}>Cash-in:</Info2>
-          <Info1 className={classes.valueDisplay}>
+    <div className="fixed h-16 left-0 bottom-0 w-[100vw] bg-white flex justify-around shadow-2xl">
+      <div className="w-300 max-h-16 flex fixed justify-around">
+        <Info3 className="text-comet self-center">Cash value in System</Info3>
+        <div className="flex">
+          <TxInIcon className="self-center h-5 w-5 mr-2" />
+          <Info2 className="self-center mr-2">Cash-in:</Info2>
+          <Info1 className="self-center">
             {numberToFiatAmount(totalInCashBox)} {currencyCode}
           </Info1>
         </div>
-        <div className={classes.flex}>
-          <TxOutIcon className={classes.icon} />
-          <Info2 className={classes.iconLabel}>Cash-out:</Info2>
-          <Info1 className={classes.valueDisplay}>
+        <div className="flex gap-2">
+          <TxOutIcon className="self-center h-5 w-5" />
+          <Info2 className="self-center">Cash-out:</Info2>
+          <Info1 className="self-center">
             {numberToFiatAmount(totalInCassettes)} {currencyCode}
           </Info1>
         </div>
-        <div className={classes.flex}>
-          <TxOutIcon className={classes.icon} />
-          <Info2 className={classes.iconLabel}>Recycle:</Info2>
-          <Info1 className={classes.valueDisplay}>
+        <div className="flex gap-2">
+          <TxOutIcon className="self-center h-5 w-5" />
+          <Info2 className="self-center">Recycle:</Info2>
+          <Info1 className="self-center">
             {numberToFiatAmount(totalInRecyclers)} {currencyCode}
           </Info1>
         </div>
-        <div className={classes.flex}>
-          <Info2 className={classes.iconLabel}>Total:</Info2>
-          <Info1 className={classes.valueDisplay}>
+        <div className="flex gap-2">
+          <Info2 className="self-center">Total:</Info2>
+          <Info1 className="self-center">
             {numberToFiatAmount(total)} {currencyCode}
           </Info1>
         </div>
