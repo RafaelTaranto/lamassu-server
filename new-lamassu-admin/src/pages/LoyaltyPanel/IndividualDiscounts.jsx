@@ -1,20 +1,16 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
+
+import { Link, Button, IconButton } from 'src/components/buttons'
 import { DeleteDialog } from 'src/components/DeleteDialog'
 import DataTable from 'src/components/tables/DataTable'
 import { Label3, TL1 } from 'src/components/typography'
 import PhoneIdIcon from 'src/styling/icons/ID/phone/zodiac.svg?react'
 import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
 
-import { Link, Button, IconButton } from 'src/components/buttons'
-
-import styles from './IndividualDiscount.styles'
 import IndividualDiscountModal from './IndividualDiscountModal'
 import classnames from 'classnames'
-
-const useStyles = makeStyles(styles)
 
 const GET_INDIVIDUAL_DISCOUNTS = gql`
   query individualDiscounts {
@@ -57,8 +53,6 @@ const GET_CUSTOMERS = gql`
 `
 
 const IndividualDiscounts = () => {
-  const classes = useStyles()
-
   const [deleteDialog, setDeleteDialog] = useState(false)
   const [toBeDeleted, setToBeDeleted] = useState()
 
@@ -94,7 +88,7 @@ const IndividualDiscounts = () => {
       size: 'sm',
       view: t => {
         return (
-          <div className={classes.identification}>
+          <div className="flex items-center gap-2">
             <PhoneIdIcon />
             <span>{t.customer.phone}</span>
           </div>
@@ -158,7 +152,7 @@ const IndividualDiscounts = () => {
             <Link
               color="primary"
               onClick={toggleModal}
-              className={classnames({ [classes.disabled]: customerLoading })}
+              className={classnames({ 'cursor-wait': customerLoading })}
               disabled={customerLoading}>
               Add new code
             </Link>

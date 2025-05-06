@@ -1,5 +1,4 @@
-import { useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import DataTable from 'src/components/tables/DataTable'
@@ -8,10 +7,6 @@ import Wizard from 'src/pages/Maintenance/Wizard/Wizard'
 import helper from 'src/pages/Maintenance/helper'
 
 import { fromNamespace } from 'src/utils/config'
-
-import styles from './Cassettes.styles'
-
-const useStyles = makeStyles(styles)
 
 const SET_CASSETTE_BILLS = gql`
   mutation MachineAction(
@@ -46,8 +41,6 @@ const widths = {
 }
 
 const CashCassettes = ({ machine, config, refetchData, bills }) => {
-  const classes = useStyles()
-
   const [wizard, setWizard] = useState(false)
 
   const cashout = config && fromNamespace('cashOut')(config)
@@ -57,7 +50,7 @@ const CashCassettes = ({ machine, config, refetchData, bills }) => {
   const getCashoutSettings = deviceId => fromNamespace(deviceId)(cashout)
 
   const elements = R.filter(it => it.name !== 'name')(
-    helper.getElements(classes, config, bills, setWizard, widths)
+    helper.getElements(config, bills, setWizard, widths)
   )
 
   const [setCassetteBills, { error }] = useMutation(SET_CASSETTE_BILLS, {
@@ -92,7 +85,7 @@ const CashCassettes = ({ machine, config, refetchData, bills }) => {
         Details={InnerCashUnitDetails}
         emptyText="No machines so far"
         initialExpanded={0}
-        tableClassName={classes.dataTable}
+        tableClassName="min-h-72"
       />
       {wizard && (
         <Wizard

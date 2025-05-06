@@ -188,7 +188,6 @@ const CashCassettes = () => {
   }
 
   const elements = helper.getElements(
-    classes,
     config,
     bills,
     setWizard,

@@ -1,5 +1,4 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { DeleteDialog } from 'src/components/DeleteDialog'
@@ -9,10 +8,7 @@ import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
 
 import { Link, Button, IconButton } from 'src/components/buttons'
 
-import styles from './PromoCodes.styles'
 import PromoCodesModal from './PromoCodesModal'
-
-const useStyles = makeStyles(styles)
 
 const DUPLICATE_ERROR_MSG = 'There is already a promotion with that code!'
 const DEFAULT_ERROR_MSG = 'Failed to save'
@@ -46,8 +42,6 @@ const CREATE_CODE = gql`
 `
 
 const PromoCodes = () => {
-  const classes = useStyles()
-
   const [deleteDialog, setDeleteDialog] = useState(false)
   const [toBeDeleted, setToBeDeleted] = useState()
 

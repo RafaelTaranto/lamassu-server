@@ -7,14 +7,7 @@ import { IconButton } from 'src/components/buttons'
 import { fromNamespace } from 'src/utils/config'
 import { getCashUnitCapacity } from 'src/utils/machine'
 
-const getElements = (
-  classes,
-  config,
-  bills,
-  setWizard,
-  widths,
-  setMachineId
-) => {
+const getElements = (config, bills, setWizard, widths, setMachineId) => {
   const fillingPercentageSettings = fromNamespace('notifications', config)
   const locale = fromNamespace('locale')(config)
   const cashout = fromNamespace('cashOut')(config)
@@ -42,7 +35,6 @@ const getElements = (
           width={25}
           height={45}
           omitInnerPercentage
-          className={classes.padding}
         />
       ),
       inputProps: {
@@ -55,8 +47,8 @@ const getElements = (
       width: widths.cassettes,
       view: m => {
         return (
-          <div className={classes.unitsRow}>
-            <div className={classes.units}>
+          <div className="flex my-2 mx-0 gap-8">
+            <div className="flex gap-2">
               {R.range(1, m.numberOfCassettes + 1).map((it, idx) => (
                 <CashOutLite
                   key={idx}
@@ -73,7 +65,7 @@ const getElements = (
                 />
               ))}
             </div>
-            <div className={classes.units}>
+            <div className="flex gap-2">
               {R.map(it => (
                 <>
                   <CashOutLite
@@ -109,7 +101,7 @@ const getElements = (
                     capacity={getCashUnitCapacity(m.model, 'recycler')}
                   />
                   {it !== m.numberOfRecyclers / 2 && (
-                    <span className={classes.verticalLine} />
+                    <span className="h-full w-[1px] bg-comet2" />
                   )}
                 </>
               ))(R.range(1, m.numberOfRecyclers / 2 + 1))}
@@ -136,7 +128,7 @@ const getElements = (
             size="large">
             <EditIcon />
           </IconButton>
-        );
+        )
       }
     }
   ]
