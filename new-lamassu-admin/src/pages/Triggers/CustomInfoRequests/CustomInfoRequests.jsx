@@ -1,6 +1,4 @@
-import { useMutation, useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
-import classnames from 'classnames'
+import { useMutation, useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { DeleteDialog } from 'src/components/DeleteDialog'
@@ -12,10 +10,8 @@ import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import { IconButton, Button, Link } from 'src/components/buttons'
 import { fromNamespace, namespaces, toNamespace } from 'src/utils/config'
 
-import styles from './CustomInfoRequests.styles'
 import DetailsRow from './DetailsCard'
 import Wizard from './Wizard'
-const useStyles = makeStyles(styles)
 
 const inputTypeDisplay = {
   numerical: 'Numerical',
@@ -76,8 +72,6 @@ const CustomInfoRequests = ({
   toggleWizard,
   data: customRequests
 }) => {
-  const classes = useStyles()
-
   const [toBeDeleted, setToBeDeleted] = useState()
   const [toBeEdited, setToBeEdited] = useState()
   const [deleteDialog, setDeleteDialog] = useState(false)
@@ -178,118 +172,122 @@ const CustomInfoRequests = ({
     </>
   )
 
-  return (!configLoading && (<>
-    {customRequests.length > 0 && (
-      <DataTable
-        emptyText="No custom info requests so far"
-        elements={[
-          {
-            header: 'Requirement name',
-            width: 300,
-            textAlign: 'left',
-            size: 'sm',
-            view: it => it.customRequest.name
-          },
-          {
-            header: 'Data entry type',
-            width: 300,
-            textAlign: 'left',
-            size: 'sm',
-            view: it => inputTypeDisplay[it.customRequest.input.type]
-          },
-          {
-            header: 'Constraints',
-            width: 300,
-            textAlign: 'left',
-            size: 'sm',
-            view: it =>
-              constraintTypeDisplay[it.customRequest.input.constraintType]
-          },
-          {
-            header: 'Edit',
-            width: 100,
-            textAlign: 'center',
-            size: 'sm',
-            view: it => {
-              return (
-                <IconButton
-                  onClick={() => {
-                    setToBeEdited(it)
-                    return toggleWizard()
-                  }}
-                  size="large">
-                  <EditIcon />
-                </IconButton>
-              );
-            }
-          },
-          {
-            header: 'Delete',
-            width: 100,
-            textAlign: 'center',
-            size: 'sm',
-            view: it => {
-              return (
-                <IconButton
-                  onClick={() => {
-                    setToBeDeleted(it.id)
-                    return setDeleteDialog(true)
-                  }}
-                  size="large">
-                  <DeleteIcon />
-                </IconButton>
-              );
-            }
-          }
-        ]}
-        data={customRequests}
-        Details={DetailsRow}
-        expandable
-        rowSize="sm"
-      />
-    )}
-    {!customRequests.length && (
-      <div className={classes.centerItems}>
-        <Info1 className={classnames(classes.m0, classes.mb10)}>
-          It seems you haven't added any custom information requests yet.
-        </Info1>
-        <Info3 className={classnames(classes.m0, classes.mb10)}>
-          Please read our{' '}
-          <a href="https://support.lamassu.is/hc/en-us/sections/115000817232-Compliance">
-            <Link>Support Article</Link>
-          </a>{' '}
-          on Compliance before adding new information requests.
-        </Info3>
-        <Button onClick={() => toggleWizard()}>
-          Add custom information request
-        </Button>
-      </div>
-    )}
-    {showWizard && (
-      <Wizard
-        hasError={hasError}
-        onClose={() => {
-          setToBeEdited(null)
-          setHasError(false)
-          toggleWizard()
-        }}
-        toBeEdited={toBeEdited}
-        onSave={(...args) => handleSave(...args)}
-        existingRequirements={customRequests}
-      />
-    )}
-    <DeleteDialog
-      errorMessage={hasError ? 'Failed to delete' : ''}
-      open={deleteDialog}
-      onDismissed={() => {
-        setDeleteDialog(false)
-        setHasError(false)
-      }}
-      item={`custom information request`}
-      extraMessage={detailedDeleteMsg}
-      onConfirmed={() => handleDelete(toBeDeleted)}
-    />
-  </>));
+  return (
+    !configLoading && (
+      <>
+        {customRequests.length > 0 && (
+          <DataTable
+            emptyText="No custom info requests so far"
+            elements={[
+              {
+                header: 'Requirement name',
+                width: 300,
+                textAlign: 'left',
+                size: 'sm',
+                view: it => it.customRequest.name
+              },
+              {
+                header: 'Data entry type',
+                width: 300,
+                textAlign: 'left',
+                size: 'sm',
+                view: it => inputTypeDisplay[it.customRequest.input.type]
+              },
+              {
+                header: 'Constraints',
+                width: 300,
+                textAlign: 'left',
+                size: 'sm',
+                view: it =>
+                  constraintTypeDisplay[it.customRequest.input.constraintType]
+              },
+              {
+                header: 'Edit',
+                width: 100,
+                textAlign: 'center',
+                size: 'sm',
+                view: it => {
+                  return (
+                    <IconButton
+                      onClick={() => {
+                        setToBeEdited(it)
+                        return toggleWizard()
+                      }}
+                      size="large">
+                      <EditIcon />
+                    </IconButton>
+                  )
+                }
+              },
+              {
+                header: 'Delete',
+                width: 100,
+                textAlign: 'center',
+                size: 'sm',
+                view: it => {
+                  return (
+                    <IconButton
+                      onClick={() => {
+                        setToBeDeleted(it.id)
+                        return setDeleteDialog(true)
+                      }}
+                      size="large">
+                      <DeleteIcon />
+                    </IconButton>
+                  )
+                }
+              }
+            ]}
+            data={customRequests}
+            Details={DetailsRow}
+            expandable
+            rowSize="sm"
+          />
+        )}
+        {!customRequests.length && (
+          <div className="flex flex-col items-center h-1/2 justify-center">
+            <Info1 className="m-0 mb-3">
+              It seems you haven't added any custom information requests yet.
+            </Info1>
+            <Info3 className="m-0 mb-3">
+              Please read our{' '}
+              <a href="https://support.lamassu.is/hc/en-us/sections/115000817232-Compliance">
+                <Link>Support Article</Link>
+              </a>{' '}
+              on Compliance before adding new information requests.
+            </Info3>
+            <Button onClick={() => toggleWizard()}>
+              Add custom information request
+            </Button>
+          </div>
+        )}
+        {showWizard && (
+          <Wizard
+            hasError={hasError}
+            onClose={() => {
+              setToBeEdited(null)
+              setHasError(false)
+              toggleWizard()
+            }}
+            toBeEdited={toBeEdited}
+            onSave={(...args) => handleSave(...args)}
+            existingRequirements={customRequests}
+          />
+        )}
+        <DeleteDialog
+          errorMessage={hasError ? 'Failed to delete' : ''}
+          open={deleteDialog}
+          onDismissed={() => {
+            setDeleteDialog(false)
+            setHasError(false)
+          }}
+          item={`custom information request`}
+          extraMessage={detailedDeleteMsg}
+          onConfirmed={() => handleDelete(toBeDeleted)}
+        />
+      </>
+    )
+  )
 }
 
 export default CustomInfoRequests

@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Form, Formik, useFormikContext } from 'formik'
 import * as R from 'ramda'
 import React, { useState, Fragment, useEffect } from 'react'
@@ -8,45 +7,11 @@ import Stepper from 'src/components/Stepper'
 import { H5, Info3 } from 'src/components/typography'
 
 import { Button } from 'src/components/buttons'
-import { comet } from 'src/styling/variables'
 import { singularOrPlural } from 'src/utils/string'
 
 import { type, requirements } from './helper'
 
 const LAST_STEP = 2
-
-const styles = {
-  stepper: {
-    margin: [[16, 0, 14, 0]]
-  },
-  submit: {
-    display: 'flex',
-    flexDirection: 'row',
-    margin: [['auto', 0, 24]]
-  },
-  button: {
-    marginLeft: 'auto'
-  },
-  form: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  infoTitle: {
-    margin: [[18, 0, 20, 0]]
-  },
-  infoCurrentText: {
-    color: comet
-  },
-  blankSpace: {
-    padding: [[0, 30]],
-    margin: [[0, 4, 0, 2]],
-    borderBottom: `1px solid ${comet}`,
-    display: 'inline-block'
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const getStep = (
   { step, config },
@@ -74,21 +39,23 @@ const getStep = (
   }
 }
 
-const getText = (step, config, currency, classes) => {
+const getText = (step, config, currency) => {
   switch (step) {
     // case 1:
     //   return `In ${getDirectionText(config)} transactions`
     case 1:
-      return <>If the user {getTypeText(config, currency, classes)}</>
+      return <>If the user {getTypeText(config, currency)}</>
     case 2:
-      return <>the user will be {getRequirementText(config, classes)}.</>
+      return <>the user will be {getRequirementText(config)}.</>
     default:
       return <></>
   }
 }
 
-const orUnderline = (value, classes) => {
-  const blankSpaceEl = <span className={classes.blankSpace}></span>
+const orUnderline = value => {
+  const blankSpaceEl = (
+    <span className="py-0 px-7 my-0 mx-1 border-b-1 border-b-comet inline-block"></span>
+  )
   return R.isEmpty(value) || R.isNil(value) ? blankSpaceEl : value
 }
 
@@ -105,34 +72,34 @@ const orUnderline = (value, classes) => {
 //   }
 // }
 
-const getTypeText = (config, currency, classes) => {
+const getTypeText = (config, currency) => {
   switch (config.triggerType) {
     case 'txAmount':
       return (
         <>
           makes a single transaction over{' '}
-          {orUnderline(config.threshold.threshold, classes)} {currency}
+          {orUnderline(config.threshold.threshold)} {currency}
         </>
       )
     case 'txVolume':
       return (
         <>
-          makes more than {orUnderline(config.threshold.threshold, classes)}{' '}
-          {currency} worth of transactions within{' '}
-          {orUnderline(config.threshold.thresholdDays, classes)}{' '}
+          makes more than {orUnderline(config.threshold.threshold)} {currency}{' '}
+          worth of transactions within{' '}
+          {orUnderline(config.threshold.thresholdDays)}{' '}
           {singularOrPlural(config.threshold.thresholdDays, 'day', 'days')}
         </>
       )
     case 'txVelocity':
       return (
         <>
-          makes more than {orUnderline(config.threshold.threshold, classes)}{' '}
+          makes more than {orUnderline(config.threshold.threshold)}{' '}
           {singularOrPlural(
             config.threshold.threshold,
             'transaction',
             'transactions'
           )}{' '}
-          in {orUnderline(config.threshold.thresholdDays, classes)}{' '}
+          in {orUnderline(config.threshold.thresholdDays)}{' '}
           {singularOrPlural(config.threshold.thresholdDays, 'day', 'days')}
         </>
       )
@@ -140,7 +107,7 @@ const getTypeText = (config, currency, classes) => {
       return (
         <>
           at least one transaction every day for{' '}
-          {orUnderline(config.threshold.thresholdDays, classes)}{' '}
+          {orUnderline(config.threshold.thresholdDays)}{' '}
           {singularOrPlural(config.threshold.thresholdDays, 'day', 'days')}
         </>
       )
@@ -149,7 +116,7 @@ const getTypeText = (config, currency, classes) => {
   }
 }
 
-const getRequirementText = (config, classes) => {
+const getRequirementText = config => {
   switch (config.requirement?.requirement) {
     case 'email':
       return <>asked to enter code provided through email verification</>
@@ -170,8 +137,7 @@ const getRequirementText = (config, classes) => {
     case 'suspend':
       return (
         <>
-          suspended for{' '}
-          {orUnderline(config.requirement.suspensionDays, classes)}{' '}
+          suspended for {orUnderline(config.requirement.suspensionDays)}{' '}
           {singularOrPlural(config.requirement.suspensionDays, 'day', 'days')}
         </>
       )
@@ -182,28 +148,24 @@ const getRequirementText = (config, classes) => {
     case 'external':
       return <>redirected to an external verification process</>
     default:
-      return orUnderline(null, classes)
+      return orUnderline(null)
   }
 }
 
 const InfoPanel = ({ step, config = {}, liveValues = {}, currency }) => {
-  const classes = useStyles()
-
   const oldText = R.range(1, step).map((it, idx) => (
-    <React.Fragment key={idx}>
-      {getText(it, config, currency, classes)}
-    </React.Fragment>
+    <React.Fragment key={idx}>{getText(it, config, currency)}</React.Fragment>
   ))
-  const newText = getText(step, liveValues, currency, classes)
+  const newText = getText(step, liveValues, currency)
   const isLastStep = step === LAST_STEP
 
   return (
     <>
-      <H5 className={classes.infoTitle}>Trigger overview so far</H5>
+      <H5 className="my-5 mx-0">Trigger overview so far</H5>
       <Info3 noMargin>
         {oldText}
         {step !== 1 && ', '}
-        <span className={classes.infoCurrentText}>{newText}</span>
+        <span className="text-comet">{newText}</span>
         {!isLastStep && '...'}
       </Info3>
     </>
@@ -229,8 +191,6 @@ const Wizard = ({
   emailAuth,
   triggers
 }) => {
-  const classes = useStyles()
-
   const [liveValues, setLiveValues] = useState({})
   const [{ step, config }, setState] = useState({
     step: 1
@@ -321,11 +281,7 @@ const Wizard = ({
         }
         infoPanelHeight={172}
         open={true}>
-        <Stepper
-          className={classes.stepper}
-          steps={LAST_STEP}
-          currentStep={step}
-        />
+        <Stepper className="my-4 mx-0" steps={LAST_STEP} currentStep={step} />
         <Formik
           validateOnBlur={false}
           validateOnChange={true}
@@ -334,17 +290,17 @@ const Wizard = ({
           initialValues={stepOptions.initialValues}
           validationSchema={stepOptions.schema}>
           {({ errors, touched, values }) => (
-            <Form className={classes.form}>
+            <Form className="h-full flex flex-col">
               <GetValues setValues={setLiveValues} />
               <stepOptions.Component {...stepOptions.props} />
-              <div className={classes.submit}>
+              <div className="flex flex-row mt-auto mx-0 mb-6">
                 {error && <ErrorMessage>Failed to save</ErrorMessage>}
                 {createErrorMessage(errors, touched, values) && (
                   <ErrorMessage>
                     {createErrorMessage(errors, touched, values)}
                   </ErrorMessage>
                 )}
-                <Button className={classes.button} type="submit">
+                <Button className="ml-auto" type="submit">
                   {isLastStep ? 'Finish' : 'Next'}
                 </Button>
               </div>

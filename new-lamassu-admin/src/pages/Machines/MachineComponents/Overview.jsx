@@ -4,7 +4,7 @@ import React from 'react'
 import { Status } from 'src/components/Status'
 import MachineActions from 'src/components/machineActions/MachineActions'
 import { H3, Label1, P } from 'src/components/typography'
-import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
+import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 
 const Overview = ({ data, onActionSuccess }) => {
   return (

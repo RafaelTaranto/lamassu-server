@@ -2,7 +2,7 @@ import * as R from 'ramda'
 import React, { useState } from 'react'
 import { DeleteDialog } from 'src/components/DeleteDialog'
 import DataTable from 'src/components/tables/DataTable'
-import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
+import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
 
 import { IconButton } from 'src/components/buttons'

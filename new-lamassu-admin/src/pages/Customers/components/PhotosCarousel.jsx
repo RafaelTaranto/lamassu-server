@@ -5,7 +5,7 @@ import { Label1 } from 'src/components/typography'
 
 import { formatDate } from 'src/utils/timezones'
 
-import CopyToClipboard from '../../Transactions/CopyToClipboard'
+import CopyToClipboard from '../../../components/CopyToClipboard.jsx'
 
 const PhotosCarousel = memo(({ photosData, timezone }) => {
   const [currentIndex, setCurrentIndex] = useState(0)

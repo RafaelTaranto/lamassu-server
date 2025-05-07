@@ -10,7 +10,7 @@ import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 import { ifNotNull } from 'src/utils/nullCheck'
 import { formatDate } from 'src/utils/timezones'
 
-import CopyToClipboard from '../../Transactions/CopyToClipboard'
+import CopyToClipboard from '../../../components/CopyToClipboard.jsx'
 
 const TransactionsList = ({ customer, data, loading }) => {
   const LastTxIcon = customer.lastTxClass === 'cashOut' ? TxOutIcon : TxInIcon

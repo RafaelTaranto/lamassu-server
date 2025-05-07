@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import Modal from 'src/components/Modal'
 import { H1, H3, Info2, P, Mono } from 'src/components/typography'
-import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
+import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 import * as Yup from 'yup'
 
 import { Button } from 'src/components/buttons'

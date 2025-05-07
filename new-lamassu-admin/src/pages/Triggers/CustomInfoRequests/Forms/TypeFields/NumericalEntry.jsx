@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
@@ -7,9 +6,6 @@ import NumberInput from 'src/components/inputs/formik/NumberInput'
 import RadioGroup from 'src/components/inputs/formik/RadioGroup'
 import { TL1, H4 } from 'src/components/typography'
 
-import styles from './formStyles.styles'
-const useStyles = makeStyles(styles)
-
 const options = [
   { display: 'None', code: 'none' },
   { display: 'Date', code: 'date' },
@@ -17,7 +13,6 @@ const options = [
 ]
 
 const NumericalEntry = () => {
-  const classes = useStyles()
   const context = useFormikContext()
 
   const isLength =
@@ -25,8 +20,8 @@ const NumericalEntry = () => {
     'length'
 
   const showErrorColor = {
-    [classes.radioSubtitle]: true,
-    [classes.error]:
+    'mb-0': true,
+    'text-tomat':
       !R.path(['values', 'constraintType'])(context) &&
       R.path(['errors', 'constraintType'])(context)
   }
@@ -37,13 +32,13 @@ const NumericalEntry = () => {
         Numerical entry constraints
       </H4>
       <Field
-        className={classes.row}
+        className="flex-row"
         component={RadioGroup}
         options={options}
         name="constraintType"
       />
       {isLength && (
-        <div className={classnames(classes.flex, classes.numberField)}>
+        <div className="flex mt-27 max-w-29">
           <Field
             component={NumberInput}
             name={'inputLength'}
@@ -51,7 +46,7 @@ const NumericalEntry = () => {
             decimalPlaces={0}
             allowNegative={false}
           />
-          <TL1 className={classes.tl1}>digits</TL1>
+          <TL1 className="ml-2 mt-6">digits</TL1>
         </div>
       )}
     </>

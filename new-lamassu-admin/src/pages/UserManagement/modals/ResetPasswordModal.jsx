@@ -1,10 +1,10 @@
-import { useMutation, gql } from "@apollo/client";
+import { useMutation, gql } from '@apollo/client'
 import { makeStyles } from '@mui/styles'
 import React, { useEffect, useState } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import Modal from 'src/components/Modal'
 import { Info2, P, Mono } from 'src/components/typography'
-import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
+import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 
 import { urlResolver } from 'src/utils/urlResolver'
 

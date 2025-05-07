@@ -1,6 +1,5 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import Switch from '@mui/material/Switch'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -20,10 +19,8 @@ import { fromNamespace, toNamespace } from 'src/utils/config'
 
 import CustomInfoRequests from './CustomInfoRequests'
 import TriggerView from './TriggerView'
-import styles from './Triggers.styles'
 import AdvancedTriggers from './components/AdvancedTriggers'
 import { fromServer } from './helper'
-const useStyles = makeStyles(styles)
 
 const SAVE_ACCOUNT = gql`
   mutation Save($accounts: JSONObject) {
@@ -61,7 +58,6 @@ const GET_CUSTOM_REQUESTS = gql`
 `
 
 const Triggers = () => {
-  const classes = useStyles()
   const [wizardType, setWizard] = useState(false)
   const { data, loading: configLoading, refetch } = useQuery(GET_CONFIG)
   const { data: customInfoReqData, loading: customInfoLoading } =
@@ -109,7 +105,7 @@ const Triggers = () => {
   }
 
   const titleSectionWidth = {
-    [classes.tableWidth]: !subMenu === 'customInfoRequests'
+    'w-230': !subMenu === 'customInfoRequests'
   }
 
   const setBlur = shouldBlur => {
@@ -178,7 +174,7 @@ const Triggers = () => {
                 }}
                 value={rejectAddressReuse}
               />
-              <Label2 className={classes.switchLabel}>
+              <Label2 className="m-3 w-6">
                 {rejectAddressReuse ? 'On' : 'Off'}
               </Label2>
               <HelpTooltip width={304}>

@@ -1,5 +1,4 @@
 import { useMutation, gql } from '@apollo/client'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H2 } from 'src/components/typography'
@@ -9,11 +8,8 @@ import { Button } from 'src/components/buttons'
 import { Table as EditableTable } from 'src/components/editableTable'
 import { fromNamespace, namespaces } from 'src/utils/config'
 
-import styles from './Triggers.styles'
 import Wizard from './Wizard'
 import { Schema, getElements, sortBy, toServer } from './helper'
-
-const useStyles = makeStyles(styles)
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
@@ -34,7 +30,6 @@ const TriggerView = ({
   const currency = R.path(['fiatCurrency'])(
     fromNamespace(namespaces.LOCALE)(config)
   )
-  const classes = useStyles()
   const [error, setError] = useState(null)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
@@ -69,7 +64,7 @@ const TriggerView = ({
         error={error?.message}
         save={save}
         validationSchema={Schema}
-        elements={getElements(currency, classes, customInfoRequests)}
+        elements={getElements(currency, customInfoRequests)}
       />
       {showWizard && (
         <Wizard

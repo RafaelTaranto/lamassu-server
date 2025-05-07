@@ -1,33 +1,26 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
 import { CopyToClipboard as ReactCopyToClipboard } from 'react-copy-to-clipboard'
-import Popover from 'src/components/Popper'
+import Popover from 'src/components/Popper.jsx'
 import CopyIcon from 'src/styling/icons/action/copy/copy.svg?react'
 
-import { comet } from 'src/styling/variables'
+import { comet } from 'src/styling/variables.js'
 
-import { cpcStyles } from './Transactions.styles'
-
-const useStyles = makeStyles(cpcStyles)
+import { Label1, Mono } from './typography/index.jsx'
 
 const CopyToClipboard = ({
   className,
   buttonClassname,
   children,
-  variant,
   wrapperClassname,
-  removeSpace = true,
-  ...props
+  removeSpace = true
 }) => {
   const [anchorEl, setAnchorEl] = useState(null)
 
   useEffect(() => {
     if (anchorEl) setTimeout(() => setAnchorEl(null), 3000)
   }, [anchorEl])
-
-  const classes = useStyles()
 
   const handleClick = event => {
     setAnchorEl(anchorEl ? null : event.currentTarget)
@@ -41,16 +34,17 @@ const CopyToClipboard = ({
   const id = open ? 'simple-popper' : undefined
 
   return (
-    <div className={classnames(classes.wrapper, wrapperClassname)}>
+    <div className={classnames('flex items-center', wrapperClassname)}>
       {children && (
         <>
-          <div className={classnames(classes.address, className)}>
+          <Mono noMargin className={className}>
             {children}
-          </div>
-          <div className={classnames(classes.buttonWrapper, buttonClassname)}>
+          </Mono>
+          <div className={buttonClassname}>
             <ReactCopyToClipboard
               text={removeSpace ? R.replace(/\s/g, '')(children) : children}>
               <button
+                className="border-0 bg-transparent cursor-pointer"
                 aria-describedby={id}
                 onClick={event => handleClick(event)}>
                 <CopyIcon />
@@ -64,10 +58,11 @@ const CopyToClipboard = ({
             onClose={handleClose}
             arrowSize={3}
             bgColor={comet}
+            className="py-1 px-2"
             placement="top">
-            <div className={classes.popoverContent}>
-              <div>Copied to clipboard!</div>
-            </div>
+            <Label1 noMargin className="text-white rounded-sm">
+              Copied to clipboard!
+            </Label1>
           </Popover>
         </>
       )}

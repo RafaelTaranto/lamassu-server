@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import { formatCryptoAddress } from '@lamassu/coins/lightUtils'
 import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
@@ -19,7 +19,7 @@ import {
   Label1,
   Label3
 } from 'src/components/typography'
-import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
+import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 
 import { primaryColor } from 'src/styling/variables'
 
