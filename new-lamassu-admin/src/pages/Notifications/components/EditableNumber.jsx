@@ -1,14 +1,9 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { useFormikContext, Field as FormikField } from 'formik'
 import React from 'react'
 import { Label1, Info1, TL2 } from 'src/components/typography'
 
 import { NumberInput } from 'src/components/inputs/formik'
-
-import styles from './EditableNumber.styles'
-
-const useStyles = makeStyles(styles)
 
 const EditableNumber = ({
   label,
@@ -20,20 +15,21 @@ const EditableNumber = ({
   decimalPlaces = 0,
   width = 80
 }) => {
-  const classes = useStyles({ width, editing })
   const { values } = useFormikContext()
 
   const classNames = {
-    [classes.fieldWrapper]: true,
+    'h-13': true,
     className
   }
 
   return (
     <div className={classnames(classNames)}>
-      {label && <Label1 className={classes.label}>{label}</Label1>}
-      <div className={classes.valueWrapper}>
+      {label && <Label1 noMargin>{label}</Label1>}
+      <div className="flex items-baseline">
         {!editing && (
-          <Info1 className={classes.text}>{displayValue(values[name])}</Info1>
+          <Info1 noMargin className="my-2">
+            {displayValue(values[name])}
+          </Info1>
         )}
         {editing && (
           <FormikField
@@ -47,7 +43,9 @@ const EditableNumber = ({
             decimalPlaces={decimalPlaces}
           />
         )}
-        <TL2 className={classes.decoration}>{decoration}</TL2>
+        <TL2 noMargin className="ml-2">
+          {decoration}
+        </TL2>
       </div>
     </div>
   )

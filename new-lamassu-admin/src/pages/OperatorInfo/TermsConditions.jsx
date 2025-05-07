@@ -1,24 +1,20 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
-import Switch from '@mui/material/Switch'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import classnames from 'classnames'
 import { Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import PromptWhenDirty from 'src/components/PromptWhenDirty'
-import { HelpTooltip } from 'src/components/Tooltip'
-import { H4, Info2, Info3, Label2, Label3, P } from 'src/components/typography'
+import { Info2, Info3, Label3 } from 'src/components/typography'
 import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import * as Yup from 'yup'
 
-import { Link, IconButton, SupportLinkButton } from 'src/components/buttons'
+import { Link, IconButton } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
-import { global, fieldStyles } from './OperatorInfo.styles'
-
-const useFieldStyles = makeStyles(fieldStyles)
+import Header from './components/Header.jsx'
+import SwitchRow from './components/SwitchRow.jsx'
 
 const Field = ({
   editing,
@@ -32,21 +28,21 @@ const Field = ({
   onFocus,
   ...props
 }) => {
-  const classes = useFieldStyles()
-
-  const classNames = {
-    [classes.field]: true,
-    [classes.notEditing]: !editing,
-    [classes.notEditingSingleLine]: !editing && !multiline,
-    [classes.notEditingMultiline]: !editing && multiline
+  const info3ClassNames = {
+    'overflow-hidden whitespace-nowrap text-ellipsis h-6': !multiline,
+    'wrap-anywhere overflow-y-auto h-32 mt-4 leading-[23px]': multiline
   }
 
   return (
-    <div className={classnames(classNames)}>
+    <div className={`w-125 p-0 pl-1 pb-1`}>
       {!editing && (
         <>
-          <Label3>{label}</Label3>
-          <Info3>{value}</Info3>
+          <Label3 noMargin className="h-4 text-[13px] my-[3px] mb-1">
+            {label}
+          </Label3>
+          <Info3 noMargin className={classnames(info3ClassNames)}>
+            {value}
+          </Info3>
         </>
       )}
       {editing && (
@@ -81,8 +77,6 @@ const SAVE_CONFIG = gql`
   }
 `
 
-const useTermsConditionsStyles = makeStyles(global)
-
 const TermsConditions = () => {
   const [error, setError] = useState(null)
   const [editing, setEditing] = useState(false)
@@ -94,8 +88,6 @@ const TermsConditions = () => {
     refetchQueries: () => ['getData'],
     onError: e => setError(e)
   })
-
-  const classes = useTermsConditionsStyles()
 
   const { data } = useQuery(GET_CONFIG)
 
@@ -169,72 +161,30 @@ const TermsConditions = () => {
 
   return (
     <>
-      <div className={classes.header}>
-        <H4>Terms &amp; Conditions</H4>
-        <HelpTooltip width={320}>
-          <P>
-            For details on configuring this panel, please read the relevant
-            knowledgebase article:
-          </P>
-          <SupportLinkButton
-            link="https://support.lamassu.is/hc/en-us/articles/360015982211-Terms-and-Conditions"
-            label="Lamassu Support Article"
-            bottomSpace="1"
-          />
-        </HelpTooltip>
-      </div>
-      <div className={classes.switchRow}>
-        <P>Show on screen</P>
-        <div className={classes.switch}>
-          <Switch
-            checked={showOnScreen}
-            onChange={event =>
-              save({
-                active: event.target.checked
-              })
-            }
-          />
-          <Label2>{showOnScreen ? 'Yes' : 'No'}</Label2>
-        </div>
-      </div>
-      <div className={classes.switchRow}>
-        <P>
-          Capture customer photo on acceptance <br /> of Terms & Conditions
-          screen
-        </P>
-        <div className={classes.switch}>
-          <Switch
-            checked={tcPhoto}
-            onChange={event =>
-              save({
-                tcPhoto: event.target.checked
-              })
-            }
-          />
-          <Label2>{tcPhoto ? 'Yes' : 'No'}</Label2>
-        </div>
-      </div>
-      <div className={classes.switchRow}>
-        <P>Add 7 seconds delay on screen</P>
-        <div className={classes.switch}>
-          <Switch
-            checked={addDelayOnScreen}
-            onChange={event =>
-              save({
-                delay: event.target.checked
-              })
-            }
-          />
-          <Label2>{addDelayOnScreen ? 'Yes' : 'No'}</Label2>
-        </div>
-      </div>
-      <div className={classes.header}>
+      <Header
+        title="Terms & Conditions"
+        tooltipText="For details on configuring this panel, please read the relevant knowledgebase article:"
+        articleUrl="https://support.lamassu.is/hc/en-us/articles/360015982211-Terms-and-Conditions"
+      />
+      <SwitchRow
+        title="Show on screen"
+        checked={showOnScreen}
+        save={it => save({ active: it })}
+      />
+      <SwitchRow
+        title="Capture customer photo on acceptance of Terms & Conditions"
+        checked={tcPhoto}
+        save={it => save({ tcPhoto: it })}
+      />
+      <SwitchRow
+        title="Add 7 seconds delay on screen"
+        checked={addDelayOnScreen}
+        save={it => save({ delay: it })}
+      />
+      <div className="flex gap-3">
         <Info2>Info card</Info2>
         {!editing && (
-          <IconButton
-            className={classes.transparentButton}
-            onClick={() => setEditing(true)}
-            size="large">
+          <IconButton onClick={() => setEditing(true)} size="large">
             <EditIcon />
           </IconButton>
         )}
@@ -251,10 +201,10 @@ const TermsConditions = () => {
           setError(null)
         }}>
         {({ errors }) => (
-          <Form>
+          <Form className="flex flex-col gap-6">
             <PromptWhenDirty />
             {fields.map((f, idx) => (
-              <div className={classes.row} key={idx}>
+              <div className="flex gap-7" key={idx}>
                 <Field
                   editing={editing}
                   name={f.name}
@@ -268,7 +218,7 @@ const TermsConditions = () => {
                 />
               </div>
             ))}
-            <div className={classnames(classes.row, classes.submit)}>
+            <div className="flex gap-10">
               {editing && (
                 <>
                   <Link color="primary" type="submit">
@@ -288,7 +238,7 @@ const TermsConditions = () => {
         )}
       </Formik>
     </>
-  );
+  )
 }
 
 export default TermsConditions

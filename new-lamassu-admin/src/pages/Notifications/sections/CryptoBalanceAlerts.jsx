@@ -1,31 +1,24 @@
-import { makeStyles } from '@mui/styles'
 import React, { useContext } from 'react'
 
 import NotificationsCtx from '../NotificationsContext'
 import SingleFieldEditableNumber from '../components/SingleFieldEditableNumber'
 
-import styles from './CryptoBalanceAlerts.styles'
-
 const LOW_BALANCE_KEY = 'cryptoLowBalance'
 const HIGH_BALANCE_KEY = 'cryptoHighBalance'
 
-const useStyles = makeStyles(styles)
-
 const CryptoBalanceAlerts = ({ section, fieldWidth }) => {
-  const classes = useStyles()
-
   const { data, save, currency, setEditing, isEditing, isDisabled } =
     useContext(NotificationsCtx)
 
   return (
-    <div className={classes.cryptoBalanceAlerts}>
+    <div className="flex mb-9 h-34 items-center gap-12">
       <SingleFieldEditableNumber
         name={LOW_BALANCE_KEY}
         data={data}
         save={save}
         section={section}
         decoration={currency}
-        className={classes.cryptoBalanceAlertsForm}
+        className="w-50"
         title="Default (Low balance)"
         label="Alert me under"
         editing={isEditing(LOW_BALANCE_KEY)}
@@ -34,7 +27,7 @@ const CryptoBalanceAlerts = ({ section, fieldWidth }) => {
         width={fieldWidth}
       />
 
-      <div className={classes.vertSeparator} />
+      <div className="w-[1px] h-full border-r border-r-comet" />
 
       <SingleFieldEditableNumber
         name={HIGH_BALANCE_KEY}
@@ -42,7 +35,6 @@ const CryptoBalanceAlerts = ({ section, fieldWidth }) => {
         section={section}
         save={save}
         decoration={currency}
-        className={classes.cryptoBalanceAlertsSecondForm}
         title="Default (High balance)"
         label="Alert me over"
         editing={isEditing(HIGH_BALANCE_KEY)}

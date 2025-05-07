@@ -1,6 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import Modal from 'src/components/Modal'
@@ -33,16 +31,6 @@ const SAVE_ACCOUNT = gql`
   }
 `
 
-const styles = {
-  wrapper: {
-    // widths + spacing is a little over 1200 on the design
-    // this adjusts the margin after a small reduction on card size
-    marginLeft: 1
-  }
-}
-
-const useStyles = makeStyles(styles)
-
 const Services = () => {
   const [editingSchema, setEditingSchema] = useState(null)
 
@@ -56,8 +44,6 @@ const Services = () => {
   const markets = marketsData?.getMarkets
 
   const schemas = _schemas(markets)
-
-  const classes = useStyles()
 
   const accounts = data?.accounts ?? {}
 
@@ -116,20 +102,19 @@ const Services = () => {
 
   return (
     !loading && (
-      <div className={classes.wrapper}>
+      <div>
         <TitleSection title="Third-Party services" />
-        <Grid container spacing={4}>
+        <div className="grid grid-cols-3 gap-5">
           {R.values(schemas).map(schema => (
-            <Grid item key={schema.code}>
-              <SingleRowTable
-                editMessage={'Configure ' + schema.title}
-                title={schema.title}
-                onEdit={() => setEditingSchema(schema)}
-                items={getItems(schema.code, schema.elements)}
-              />
-            </Grid>
+            <SingleRowTable
+              key={schema.code}
+              editMessage={'Configure ' + schema.title}
+              title={schema.title}
+              onEdit={() => setEditingSchema(schema)}
+              items={getItems(schema.code, schema.elements)}
+            />
           ))}
-        </Grid>
+        </div>
         {editingSchema && (
           <Modal
             title={`Edit ${editingSchema.name}`}

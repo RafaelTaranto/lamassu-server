@@ -1,18 +1,11 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
-import Switch from '@mui/material/Switch'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import React, { memo } from 'react'
-import { HelpTooltip } from 'src/components/Tooltip'
-import { H4, P, Label2 } from 'src/components/typography'
 
 import { BooleanPropertiesTable } from 'src/components/booleanPropertiesTable'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
-import { SupportLinkButton } from '../../components/buttons'
-
-import { global } from './OperatorInfo.styles'
-
-const useStyles = makeStyles(global)
+import SwitchRow from './components/SwitchRow.jsx'
+import Header from './components/Header.jsx'
 
 const GET_CONFIG = gql`
   query getData {
@@ -26,27 +19,7 @@ const SAVE_CONFIG = gql`
   }
 `
 
-const Row = memo(({ title, disabled = false, checked, save, label }) => {
-  const classes = useStyles()
-
-  return (
-    <div className={classes.switchRow}>
-      <P>{title}</P>
-      <div className={classes.switch}>
-        <Switch
-          disabled={disabled}
-          checked={checked}
-          onChange={event => save && save(event.target.checked)}
-        />
-        {label && <Label2>{label}</Label2>}
-      </div>
-    </div>
-  )
-})
-
 const CoinATMRadar = memo(({ wizard }) => {
-  const classes = useStyles()
-
   const { data } = useQuery(GET_CONFIG)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
@@ -63,53 +36,34 @@ const CoinATMRadar = memo(({ wizard }) => {
   if (!coinAtmRadarConfig) return null
 
   return (
-    <div className={classes.content}>
-      <div>
-        <div className={classes.header}>
-          <H4>Coin ATM Radar share settings</H4>
-          <HelpTooltip width={320}>
-            <P>
-              For details on configuring this panel, please read the relevant
-              knowledgebase article{' '}
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                href="https://support.lamassu.is/hc/en-us/articles/360023720472-Coin-ATM-Radar">
-                here
-              </a>
-              .
-            </P>
-            <SupportLinkButton
-              link="https://support.lamassu.is/hc/en-us/articles/360023720472-Coin-ATM-Radar"
-              label="Lamassu Support Article"
-              bottomSpace="1"
-            />
-          </HelpTooltip>
-        </div>
-        <Row
-          title={'Share information?'}
-          checked={coinAtmRadarConfig.active}
-          save={value => save({ active: value })}
-          label={coinAtmRadarConfig.active ? 'Yes' : 'No'}
-        />
-        <BooleanPropertiesTable
-          editing={wizard}
-          title="Machine info"
-          data={coinAtmRadarConfig}
-          elements={[
-            {
-              name: 'commissions',
-              display: 'Commissions'
-            },
-            {
-              name: 'limitsAndVerification',
-              display: 'Limits and verification'
-            }
-          ]}
-          save={save}
-        />
-      </div>
-    </div>
+    <>
+      <Header
+        title="Coin ATM Radar share settings"
+        articleUrl="https://support.lamassu.is/hc/en-us/articles/360023720472-Coin-ATM-Radar"
+        tooltipText="For details on configuring this panel, please read the relevant knowledgebase article."
+      />
+      <SwitchRow
+        title={'Share information?'}
+        checked={coinAtmRadarConfig.active}
+        save={value => save({ active: value })}
+      />
+      <BooleanPropertiesTable
+        editing={wizard}
+        title="Machine info"
+        data={coinAtmRadarConfig}
+        elements={[
+          {
+            name: 'commissions',
+            display: 'Commissions'
+          },
+          {
+            name: 'limitsAndVerification',
+            display: 'Limits and verification'
+          }
+        ]}
+        save={save}
+      />
+    </>
   )
 })
 

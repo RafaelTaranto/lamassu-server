@@ -35,7 +35,7 @@ const cashboxStyles = {
     border: '4px solid'
   },
   emptyPart: {
-    backgroundColor: 'white',
+    backgroundColor: 'var(--ghost)',
     height: ({ percent }) => `${100 - percent}%`,
     position: 'relative',
     '& > p': {
