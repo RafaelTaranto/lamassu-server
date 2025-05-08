@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import Switch from '@mui/material/Switch'
 import IconButton from '@mui/material/IconButton'
 import SvgIcon from '@mui/material/SvgIcon'
@@ -18,12 +17,9 @@ import StripesSvg from 'src/styling/icons/stripes.svg?react'
 import { Link } from 'src/components/buttons'
 
 import TableCtx from './Context'
-import styles from './Row.styles'
-
-const useStyles = makeStyles(styles)
+import moduleStyles from './Row.module.css'
 
 const ActionCol = ({ disabled, editing }) => {
-  const classes = useStyles()
   const { values, submitForm, resetForm } = useFormikContext()
   const {
     editWidth,
@@ -61,7 +57,7 @@ const ActionCol = ({ disabled, editing }) => {
       {editing && (
         <Td textAlign="center" width={actionColSize}>
           <Link
-            className={classes.saveButton}
+            className={moduleStyles.saveButton}
             type="submit"
             color="primary"
             onClick={submitForm}>
@@ -78,8 +74,8 @@ const ActionCol = ({ disabled, editing }) => {
         <Td textAlign="center" width={editWidth}>
           <IconButton
             disabled={disableEdit}
-            className={classes.editButton}
-            onClick={() => onEdit && onEdit(values.id)}>
+            onClick={() => onEdit && onEdit(values.id)}
+            size="small">
             <SvgIcon>
               {disableEdit ? <DisabledEditIcon /> : <EditIcon />}
             </SvgIcon>
@@ -92,7 +88,8 @@ const ActionCol = ({ disabled, editing }) => {
             disabled={disabled}
             onClick={() => {
               setDeleteDialog(true)
-            }}>
+            }}
+            size="small">
             <SvgIcon>
               {disabled ? <DisabledDeleteIcon /> : <DeleteIcon />}
             </SvgIcon>
@@ -155,11 +152,6 @@ const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {
   const isEditing = editing && isEditable(editable)
   const isField = !bypassField
 
-  const classes = useStyles({
-    textAlign: isEditing ? editingAlign : textAlign,
-    size
-  })
-
   const innerProps = {
     fullWidth: true,
     autoFocus: focus,
@@ -169,16 +161,20 @@ const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {
     ...inputProps
   }
 
+  const newAlign = isEditing ? editingAlign : textAlign
+  const justifyContent = newAlign === 'right' ? 'flex-end' : newAlign
+  const style = suffix || prefix ? { justifyContent } : {}
+
   return (
-    <div className={classes.fields}>
+    <div className={moduleStyles.fields}>
       {fields.map((f, idx) => (
         <Td
+          style={style}
           key={idx}
           className={{
-            [classes.extraPaddingRight]: extraPaddingRight,
-            [classes.extraPadding]: extraPadding,
-            [classes.withSuffix]: suffix,
-            [classes.withPrefix]: prefix
+            [moduleStyles.extraPaddingRight]: extraPaddingRight,
+            [moduleStyles.extraPadding]: extraPadding,
+            'flex items-center': suffix || prefix
           }}
           width={width}
           size={size}
@@ -186,7 +182,7 @@ const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {
           textAlign={textAlign}>
           {prefix && !isHidden(values) && (
             <PrefixComponent
-              className={classes.prefix}
+              className={moduleStyles.prefix}
               style={isEditing ? {} : textStyle(values, isEditing)}>
               {typeof prefix === 'function' ? prefix(f) : prefix}
             </PrefixComponent>
@@ -204,7 +200,7 @@ const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {
           )}
           {suffix && !isHidden(values) && (
             <SuffixComponent
-              className={classes.suffix}
+              className={moduleStyles.suffix}
               style={isEditing ? {} : textStyle(values, isEditing)}>
               {suffix}
             </SuffixComponent>
@@ -245,8 +241,6 @@ const ERow = ({ editing, disabled, lastOfGroup, newRow }) => {
     stripeWhen
   } = useContext(TableCtx)
 
-  const classes = useStyles()
-
   const shouldStripe = !editing && stripeWhen && stripeWhen(values)
 
   const innerElements = shouldStripe ? groupStriped(elements) : elements
@@ -265,7 +259,7 @@ const ERow = ({ editing, disabled, lastOfGroup, newRow }) => {
   )
 
   const classNames = {
-    [classes.lastOfGroup]: lastOfGroup
+    [moduleStyles.lastOfGroup]: lastOfGroup
   }
 
   const touchedErrors = R.pick(R.keys(touched), errors)

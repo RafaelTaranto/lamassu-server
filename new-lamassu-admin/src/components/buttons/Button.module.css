@@ -1,0 +1,49 @@
+.button {
+  composes: h3 from '../typography/typography.module.css';
+  border: none;
+  cursor: pointer;
+  outline: 0;
+  font-weight: 900;
+  background-color: var(--spring);
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px var(--spring4);
+}
+
+.buttonXl {
+  composes: h1 from '../typography/typography.module.css';
+  height: 61px;
+  border-radius: 15px
+}
+
+.buttonSm {
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 8px
+}
+
+.button:disabled {
+  background-color: var(--dust);
+  box-shadow: none;
+}
+
+.button:disabled:hover {
+  background-color: var(--dust);
+  box-shadow: none;
+}
+
+.button:disabled:active {
+  margin-top: 0;
+}
+
+.button:hover {
+  background-color: var(--spring2);
+  box-shadow: 0 3px var(--spring4);
+}
+
+.button:active {
+  margin-top: 2px;
+  background-color: var(--spring2);
+  box-shadow: 0 2px var(--spring4);
+}

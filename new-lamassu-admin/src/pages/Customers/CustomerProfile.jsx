@@ -755,9 +755,6 @@ const RetrieveDataDialog = ({
         </ErrorMessage>
       )}
       <DialogActions className="p-8 pt-4 gap-2">
-        <Button backgroundColor="grey" onClick={() => onDismissed(false)}>
-          Cancel
-        </Button>
         <Button
           onClick={() => {
             onConfirmed()

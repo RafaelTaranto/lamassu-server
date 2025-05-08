@@ -1,25 +1,37 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo } from 'react'
 
-import styles from './Button.styles'
+import moduleStyles from './Button.module.css'
+import { spacer } from '../../styling/variables.js'
 
-const useStyles = makeStyles(styles)
+const pickSize = size => {
+  switch (size) {
+    case 'xl':
+      return spacer * 7.625
+    case 'sm':
+      return spacer * 4
+    case 'lg':
+    default:
+      return spacer * 5
+  }
+}
 
 const ActionButton = memo(
-  ({
-    size = 'lg',
-    children,
-    className,
-    buttonClassName,
-    backgroundColor,
-    ...props
-  }) => {
-    const classes = useStyles({ size, backgroundColor })
+  ({ size = 'lg', children, className, buttonClassName, ...props }) => {
+    const height = pickSize(size)
+
     return (
-      <div className={classnames(className, classes.wrapper)}>
+      <div className={className} style={{ height: height + height / 12 }}>
         <button
-          className={classnames(buttonClassName, classes.button)}
+          className={classnames(
+            buttonClassName,
+            moduleStyles.button,
+            'text-white',
+            {
+              [moduleStyles.buttonSm]: size === 'sm',
+              [moduleStyles.buttonXl]: size === 'xl'
+            }
+          )}
           {...props}>
           {children}
         </button>

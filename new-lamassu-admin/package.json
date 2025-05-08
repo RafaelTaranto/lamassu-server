@@ -10,7 +10,6 @@
     "@lamassu/coins": "v1.6.1",
     "@mui/icons-material": "^5.17.1",
     "@mui/material": "^5.17.1",
-    "@mui/styles": "^5.17.1",
     "@simplewebauthn/browser": "^3.0.0",
     "apollo-upload-client": "^18.0.0",
     "bignumber.js": "9.0.0",

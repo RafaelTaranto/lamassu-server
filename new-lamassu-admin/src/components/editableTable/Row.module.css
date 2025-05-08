@@ -1,0 +1,29 @@
+.saveButton {
+  margin-right: 20px;
+}
+
+.lastOfGroup {
+  margin-bottom: 24px;
+}
+
+.extraPadding {
+  padding-left: 35px;
+  padding-right: 30px;
+}
+
+.extraPaddingRight {
+  padding-right: 39px;
+}
+
+.suffix {
+  margin: 0 0 0 7px;
+}
+
+.prefix {
+  margin: 0 7px 0 0;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+}

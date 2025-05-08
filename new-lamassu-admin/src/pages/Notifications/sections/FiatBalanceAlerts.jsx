@@ -126,8 +126,8 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
                           values[`fillingPercentageCassette${it + 1}`] ??
                           data[`cassette${it + 1}`]
                         }
-                        applyColorVariant
-                        applyFiatBalanceAlertsStyling
+                        isLow={false}
+                        className="border-4 inline-block"
                         omitInnerPercentage
                         cashOut
                       />
@@ -168,8 +168,8 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
                             `fillingPercentageRecycler${(it + 1) * 2 - 1}`
                           ] ?? data[`recycler${(it + 1) * 2 - 1}`]
                         }
-                        applyColorVariant
-                        applyFiatBalanceAlertsStyling
+                        isLow={false}
+                        className="border-4 inline-block"
                         omitInnerPercentage
                         cashOut
                       />
@@ -193,8 +193,8 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
                           values[`fillingPercentageRecycler${(it + 1) * 2}`] ??
                           data[`recycler${(it + 1) * 2}`]
                         }
-                        applyColorVariant
-                        applyFiatBalanceAlertsStyling
+                        isLow={false}
+                        className="border-4 inline-block"
                         omitInnerPercentage
                         cashOut
                       />

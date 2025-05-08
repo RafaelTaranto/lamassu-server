@@ -27,14 +27,17 @@ const TextInput = memo(
     const isTextFilled = !error && !R.isNil(value) && !R.isEmpty(value)
     const filled = isPasswordFilled || isTextFilled
 
-    // Set CSS variables for dynamic styles
-    const rootStyle = { 
-      '--input-width': width,
-      '--input-text-align': textAlign
+    const style = {
+      width: width,
+      textAlign: textAlign
     }
 
-    // Determine size class based on size prop
-    const sizeClass = size === 'sm' ? styles.sizeSm : size === 'lg' ? styles.sizeLg : styles.size
+    const sizeClass =
+      size === 'sm'
+        ? styles.sizeSm
+        : size === 'lg'
+          ? styles.sizeLg
+          : styles.size
 
     const divClass = {
       [styles.bold]: bold
@@ -48,9 +51,9 @@ const TextInput = memo(
         onBlur={onBlur}
         error={error}
         value={value}
-        classes={{ root: styles.root }}
         className={className}
-        style={rootStyle}
+        style={style}
+        inputProps={{ style: { textAlign } }}
         InputProps={{
           className: classnames(divClass),
           classes: {

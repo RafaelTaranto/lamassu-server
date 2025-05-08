@@ -1,35 +1,31 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo } from 'react'
 
-import styles from './ActionButton.styles'
-
-const useStyles = makeStyles(styles)
+import moduleStyles from './ActionButton.module.css'
 
 const ActionButton = memo(
   ({ className, Icon, InverseIcon, color, center, children, ...props }) => {
-    const classes = useStyles()
     const classNames = {
-      [classes.actionButton]: true,
-      [classes.primary]: color === 'primary',
-      [classes.secondary]: color === 'secondary',
-      [classes.spring]: color === 'spring',
-      [classes.tomato]: color === 'tomato',
-      [classes.center]: center
+      [moduleStyles.actionButton]: true,
+      [moduleStyles.primary]: color === 'primary',
+      [moduleStyles.secondary]: color === 'secondary',
+      [moduleStyles.spring]: color === 'spring',
+      [moduleStyles.tomato]: color === 'tomato',
+      [moduleStyles.center]: center
     }
 
     return (
       <button className={classnames(classNames, className)} {...props}>
         {Icon && (
-          <div className={classes.actionButtonIcon}>
+          <div className={moduleStyles.actionButtonIcon}>
             <Icon />
           </div>
         )}
         {InverseIcon && (
           <div
             className={classnames(
-              classes.actionButtonIcon,
-              classes.actionButtonIconActive
+              moduleStyles.actionButtonIcon,
+              moduleStyles.actionButtonIconActive
             )}>
             <InverseIcon />
           </div>

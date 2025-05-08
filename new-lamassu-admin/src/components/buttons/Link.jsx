@@ -1,14 +1,10 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo } from 'react'
 
-import styles from './Link.styles'
-
-const useStyles = makeStyles(styles)
+import classes from './Link.module.css'
 
 const Link = memo(
   ({ submit, className, children, color = 'primary', ...props }) => {
-    const classes = useStyles()
     const classNames = {
       [classes.link]: true,
       [classes.primary]: color === 'primary',

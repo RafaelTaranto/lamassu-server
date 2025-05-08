@@ -1,12 +1,9 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
 import { H4 } from 'src/components/typography'
 import CancelIconInverse from 'src/styling/icons/button/cancel/white.svg?react'
 
-import subpageButtonStyles from './SubpageButton.styles'
-
-const useStyles = makeStyles(subpageButtonStyles)
+import classes from './SubpageButton.module.css'
 
 const SubpageButton = memo(
   ({
@@ -19,11 +16,10 @@ const SubpageButton = memo(
   }) => {
     const [active, setActive] = useState(false)
     const isActive = forceDisable ? false : active
-    const classes = useStyles()
     const classNames = {
       [classes.button]: true,
-      [classes.normalButton]: !isActive,
-      [classes.activeButton]: isActive
+      [classes.normal]: !isActive,
+      [classes.active]: isActive
     }
 
     const normalButton = <Icon className={classes.buttonIcon} />
@@ -36,7 +32,7 @@ const SubpageButton = memo(
             classes.buttonIconActiveLeft
           )}
         />
-        <H4 className={classes.white}>{children}</H4>
+        <H4 className="text-white">{children}</H4>
         <CancelIconInverse
           className={classnames(
             classes.buttonIcon,

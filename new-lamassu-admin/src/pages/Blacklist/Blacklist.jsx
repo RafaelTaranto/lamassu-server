@@ -111,12 +111,6 @@ const PaperWalletDialog = ({ onConfirmed, onDissmised, open, props }) => {
           <Info3>{`This mode is only useful for countries like Switzerland which mandates such a feature.\n`}</Info3>
           <Info2>{`Don't enable this if you want users to be able to scan an address of their choosing.`}</Info2>
           <div className="flex justify-end mt-8">
-            <Button
-              backgroundColor="grey"
-              className="mr-2 p-0"
-              onClick={() => onDissmised()}>
-              Cancel
-            </Button>
             <Button onClick={() => onConfirmed(true)}>Confirm</Button>
           </div>
         </DialogContent>

@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import Chip from '@mui/material/Chip'
 import classnames from 'classnames'
 import React from 'react'
@@ -6,49 +5,55 @@ import { Info2, Label1, Label2 } from 'src/components/typography'
 
 import { numberToFiatAmount } from 'src/utils/number'
 
-import { cashboxStyles, gridStyles } from './Cashbox.styles'
+import classes from './Cashbox.module.css'
+import { primaryColor as zodiac, tomato } from '../../../styling/variables.js'
 
-const cashboxClasses = makeStyles(cashboxStyles)
-const gridClasses = makeStyles(gridStyles)
+const colors = {
+  cashOut: {
+    empty: tomato,
+    full: zodiac
+  },
+  cashIn: {
+    empty: zodiac,
+    full: tomato
+  }
+}
 
 const Cashbox = ({
   percent = 0,
   cashOut = false,
-  width,
-  height,
+  width = 80,
+  height = 118,
   className,
   emptyPartClassName,
   labelClassName,
-  applyColorVariant,
-  applyFiatBalanceAlertsStyling,
   omitInnerPercentage,
   isLow
 }) => {
-  const classes = cashboxClasses({
-    percent,
-    cashOut,
-    width,
-    height,
-    applyColorVariant,
-    isLow
-  })
   const ltHalf = percent <= 51
-
-  const showCashBox = {
-    [classes.fiatBalanceAlertCashbox]: applyFiatBalanceAlertsStyling,
-    [classes.cashbox]: !applyFiatBalanceAlertsStyling
-  }
+  const color =
+    colors[cashOut ? 'cashOut' : 'cashIn'][!isLow ? 'full' : 'empty']
 
   return (
-    <div className={classnames(className, showCashBox)}>
-      <div className={classnames(emptyPartClassName, classes.emptyPart)}>
+    <div
+      style={{ height, width, backgroundColor: color, borderColor: color }}
+      className={classnames(className, classes.cashbox)}>
+      <div
+        className={classnames(emptyPartClassName, classes.emptyPart)}
+        style={{ height: `${100 - percent}%` }}>
         {!omitInnerPercentage && ltHalf && (
-          <Label2 className={labelClassName}>{percent.toFixed(0)}%</Label2>
+          <Label2
+            style={{ color }}
+            className={classnames(labelClassName, classes.emptyPartP)}>
+            {percent.toFixed(0)}%
+          </Label2>
         )}
       </div>
-      <div className={classes.fullPart}>
+      <div style={{ backgroundColor: color }}>
         {!omitInnerPercentage && !ltHalf && (
-          <Label2 className={labelClassName}>{percent.toFixed(0)}%</Label2>
+          <Label2 className={classnames(classes.fullPartP, labelClassName)}>
+            {percent.toFixed(0)}%
+          </Label2>
         )}
       </div>
     </div>
@@ -71,7 +76,6 @@ const CashIn = ({
 }) => {
   const percent = (100 * notes) / capacity
   const isLow = percent < threshold
-  const classes = gridClasses()
   return (
     <>
       <div className={classes.row}>
@@ -117,7 +121,6 @@ const CashOut = ({
 }) => {
   const percent = (100 * notes) / capacity
   const isLow = percent < threshold
-  const classes = gridClasses()
   return (
     <>
       <div className={classes.row}>
@@ -160,7 +163,6 @@ const CashOutLite = ({
 }) => {
   const percent = (100 * notes) / capacity
   const isLow = percent < threshold
-  const classes = gridClasses()
   return (
     <div className={classes.col}>
       <Cashbox

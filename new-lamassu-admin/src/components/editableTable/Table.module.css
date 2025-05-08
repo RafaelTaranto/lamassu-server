@@ -1,0 +1,16 @@
+.addLink {
+  margin-left: auto;
+}
+
+.title {
+  margin: 0;
+  color: var(--comet);
+}
+
+.outerHeader {
+  min-height: 16px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

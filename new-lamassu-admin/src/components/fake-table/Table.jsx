@@ -27,6 +27,7 @@ const TBody = ({ children, className }) => {
 }
 
 const Td = ({
+  style = {},
   children,
   header,
   className,
@@ -37,17 +38,17 @@ const Td = ({
   action
 }) => {
   const inlineStyle = {
+    ...style,
     width,
-    textAlign
+    textAlign,
+    fontSize: size === 'sm' ? '14px' : size === 'lg' ? '24px' : ''
   }
 
   const cssClasses = {
     [styles.td]: !header,
     [styles.tdHeader]: header,
-    [styles.bold]: !header && bold,
-    [styles.actionCol]: action,
-    [styles.sizeSm]: !header && size === 'sm',
-    [styles.sizeLg]: !header && size === 'lg'
+    'font-bold': !header && (bold || size === 'lg'),
+    [styles.actionCol]: action
   }
 
   return (
@@ -73,7 +74,7 @@ const ThDoubleLevel = ({ title, children, className, width }) => {
     <div
       className={classnames(className, styles.thDoubleLevel)}
       style={{ width }}>
-      <div>{title}</div>
+      <div className={styles.thDoubleLevelFirst}>{title}</div>
       <div>{children}</div>
     </div>
   )
@@ -89,6 +90,9 @@ const Tr = ({
   size,
   newRow
 }) => {
+  const inlineStyle = {
+    minHeight: size === 'sm' ? '34px' : size === 'lg' ? '68px' : '48px'
+  }
   const cardClasses = {
     [styles.card]: true,
     [styles.trError]: error,
@@ -105,7 +109,9 @@ const Tr = ({
     <>
       <Card className={classnames(className, cardClasses)} onClick={onClick}>
         <CardContent className={styles.cardContentRoot}>
-          <div className={classnames(mainContentClasses)}>{children}</div>
+          <div className={classnames(mainContentClasses)} style={inlineStyle}>
+            {children}
+          </div>
           {error && shouldShowError && (
             <div className={styles.errorContent}>{errorMessage}</div>
           )}
