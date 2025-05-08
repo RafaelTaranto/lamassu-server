@@ -1,7 +1,6 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Paper from '@mui/material/Paper'
 import Switch from '@mui/material/Switch'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -15,10 +14,7 @@ import WhiteLogo from 'src/styling/icons/menu/logo-white.svg?react'
 import { IconButton, SupportLinkButton } from 'src/components/buttons'
 import { formatDate } from 'src/utils/timezones'
 
-import styles from './SMSNotices.styles'
 import CustomSMSModal from './SMSNoticesModal'
-
-const useStyles = makeStyles(styles)
 
 const GET_SMS_NOTICES = gql`
   query SMSNotices {
@@ -88,20 +84,20 @@ const TOOLTIPS = {
 }
 
 const SMSPreview = ({ sms, coords, timezone }) => {
-  const classes = useStyles(coords)
-
   const matches = {
     '#code': 123,
     '#timestamp': formatDate(new Date(), timezone, 'HH:mm')
   }
 
   return (
-    <div className={classes.smsPreview}>
-      <div className={classes.smsPreviewContainer}>
-        <div className={classes.smsPreviewIcon}>
+    <div
+      className="absolute w-88 overflow-visible"
+      style={{ left: coords.x, bottom: coords.y }}>
+      <div className="flex flex-row items-end gap-2">
+        <div className="flex w-9 h-9 rounded-full bg-[#16D6D3] items-center justify-center">
           <WhiteLogo width={22} height={22} />
         </div>
-        <Paper className={classes.smsPreviewContent}>
+        <Paper className="w-56 p-4 rounded-2xl">
           <P noMargin>
             {R.isEmpty(sms?.message) ? (
               <i>No content available</i>
@@ -117,8 +113,6 @@ const SMSPreview = ({ sms, coords, timezone }) => {
 }
 
 const SMSNotices = () => {
-  const classes = useStyles()
-
   const [showModal, setShowModal] = useState(false)
   const [selectedSMS, setSelectedSMS] = useState(null)
   const [previewOpen, setPreviewOpen] = useState(false)
@@ -160,7 +154,7 @@ const SMSNotices = () => {
       textAlign: 'left',
       view: it =>
         !R.isEmpty(TOOLTIPS[it.event]) ? (
-          <div className={classes.messageWithTooltip}>
+          <div className="flex flex-row items-center">
             {R.prop('messageName', it)}
             <HelpTooltip width={250}>
               <P>{TOOLTIPS[it.event]}</P>
@@ -237,7 +231,7 @@ const SMSNotices = () => {
 
   return (
     <>
-      <div className={classes.header}>
+      <div className="flex relative items-center justify-between w-200">
         <H4>SMS notices</H4>
         <HelpTooltip width={320}>
           <P>

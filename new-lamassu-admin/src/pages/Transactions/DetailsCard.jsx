@@ -384,7 +384,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
           <CopyToClipboard>{tx.id}</CopyToClipboard>
         </div>
       </div>
-      <div className="flex flex-row mb-8">
+      <div className="flex flex-row mb-8 gap-10">
         <div data-cy="status" className="62">
           {errorElements}
           {((tx.txClass === 'cashOut' && getStatus(tx) === 'Pending') ||

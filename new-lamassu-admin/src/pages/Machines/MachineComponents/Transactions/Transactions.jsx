@@ -11,7 +11,7 @@ import { getStatus } from 'src/pages/Transactions/helper'
 import * as Customer from 'src/utils/customer'
 import { formatDate } from 'src/utils/timezones'
 
-import DataTable from './DataTable'
+import DataTable from 'src/components/tables/DataTable'
 
 const NUM_LOG_RESULTS = 5
 
@@ -164,6 +164,8 @@ const Transactions = ({ id }) => {
     <DataTable
       extraHeight={extraHeight}
       onClick={handleClick}
+      maxWidth="950"
+      className="min-h-90"
       loading={loading || id === null}
       emptyText="No transactions so far"
       elements={elements}

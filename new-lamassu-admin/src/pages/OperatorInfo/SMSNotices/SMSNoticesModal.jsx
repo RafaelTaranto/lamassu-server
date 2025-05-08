@@ -1,5 +1,4 @@
 import Chip from '@mui/material/Chip'
-import { makeStyles } from '@mui/styles'
 import { Form, Formik, Field } from 'formik'
 import * as R from 'ramda'
 import React from 'react'
@@ -13,10 +12,6 @@ import * as Yup from 'yup'
 import { ActionButton, Button } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 import { zircon } from 'src/styling/variables'
-
-import styles from './SMSNotices.styles'
-
-const useStyles = makeStyles(styles)
 
 const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
   if (!formikErrors || !formikTouched) return null
@@ -77,8 +72,6 @@ const SMSNoticesModal = ({
   creationError,
   submit
 }) => {
-  const classes = useStyles()
-
   const initialValues = {
     event: !R.isNil(sms) ? sms.event : '',
     message: !R.isNil(sms) ? sms.message : ''
@@ -128,12 +121,12 @@ const SMSNoticesModal = ({
               handleSubmit(values, errors, touched)
             }>
             {({ values, errors, touched, setFieldValue }) => (
-              <Form id="sms-notice" className={classes.form}>
+              <Form id="sms-notice" className="flex flex-col h-full gap-5">
                 <ActionButton
                   color="primary"
                   Icon={DefaultIcon}
                   InverseIcon={DefaultIconReverse}
-                  className={classes.resetToDefault}
+                  className="w-37"
                   type="button"
                   onClick={() =>
                     setFieldValue('message', DEFAULT_MESSAGES[sms?.event])
@@ -151,9 +144,9 @@ const SMSNoticesModal = ({
                 {R.length(CHIPS[sms?.event]) > 0 && (
                   <Info2 noMargin>Values to attach</Info2>
                 )}
-                <div className={classes.chipButtons}>
+                <div className="w-120">
                   {R.splitEvery(3, CHIPS[sms?.event]).map((it, idx) => (
-                    <div key={idx}>
+                    <div key={idx} className="flex gap-2">
                       {it.map((ite, idx2) => (
                         <Chip
                           key={idx2}
@@ -161,7 +154,7 @@ const SMSNoticesModal = ({
                           size="small"
                           style={{ backgroundColor: zircon }}
                           disabled={R.includes(ite.code, values.message)}
-                          className={classes.chip}
+                          className="p-2"
                           onClick={() => {
                             setFieldValue(
                               'message',
@@ -176,7 +169,7 @@ const SMSNoticesModal = ({
                     </div>
                   ))}
                 </div>
-                <div className={classes.footer}>
+                <div className="flex flex-row mt-auto mx-0 mb-6">
                   {getErrorMsg(errors, touched, creationError) && (
                     <ErrorMessage>
                       {getErrorMsg(errors, touched, creationError)}
@@ -185,7 +178,7 @@ const SMSNoticesModal = ({
                   <Button
                     type="submit"
                     form="sms-notice"
-                    className={classes.submit}>
+                    className="mt-auto ml-auto mr-0 mb-0">
                     Confirm
                   </Button>
                 </div>

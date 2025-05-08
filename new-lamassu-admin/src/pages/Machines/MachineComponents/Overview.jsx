@@ -47,7 +47,7 @@ const Overview = ({ data, onActionSuccess }) => {
       <div>
         <div>
           <Label1 className="text-comet mt-0">Device ID</Label1>
-          <P noMargin>
+          <P className="wrap-anywhere" noMargin>
             <CopyToClipboard>{data.deviceId}</CopyToClipboard>
           </P>
         </div>

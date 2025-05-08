@@ -105,6 +105,7 @@ const DataTable = ({
   initialExpanded,
   onClick,
   loading,
+  maxWidth = 1200,
   emptyText,
   rowSize,
   ...props
@@ -114,7 +115,7 @@ const DataTable = ({
   useEffect(() => setExpanded(initialExpanded), [initialExpanded])
 
   const coreWidth = R.compose(R.sum, R.map(R.prop('width')))(elements)
-  const expWidth = 1200 - coreWidth
+  const expWidth = maxWidth - coreWidth
   const width = coreWidth + (expandable ? expWidth : 0)
 
   const classes = useStyles({ width })
@@ -170,7 +171,11 @@ const DataTable = ({
   }
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div
+      className={classnames({
+        'flex flex-1 flex-col': true,
+        [className]: !!className
+      })}>
       <Table className={classnames(classes.table, tableClassName)}>
         <THead>
           {elements.map(({ width, className, textAlign, header }, idx) => (
