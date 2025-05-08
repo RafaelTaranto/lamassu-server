@@ -1,3 +1,4 @@
+import IconButton from '@mui/material/IconButton'
 import { useFormikContext, Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'
 import React, { useState, memo } from 'react'
@@ -9,9 +10,10 @@ import FalseIcon from 'src/styling/icons/table/false.svg?react'
 import TrueIcon from 'src/styling/icons/table/true.svg?react'
 import * as Yup from 'yup'
 
-import { Link, IconButton } from 'src/components/buttons'
+import { Link } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs/formik'
 import { Table, TableBody, TableRow, TableCell } from 'src/components/table'
+import SvgIcon from '@mui/material/SvgIcon'
 
 const BooleanCell = ({ name }) => {
   const { values } = useFormikContext()
@@ -78,9 +80,10 @@ const BooleanPropertiesTable = memo(
                   ) : (
                     <IconButton
                       className="my-auto mx-3"
-                      onClick={() => setEditing(true)}
-                      size="large">
-                      {disabled ? <EditIconDisabled /> : <EditIcon />}
+                      onClick={() => setEditing(true)}>
+                      <SvgIcon fontSize="small">
+                        {disabled ? <EditIconDisabled /> : <EditIcon />}
+                      </SvgIcon>
                     </IconButton>
                   )}
                 </div>

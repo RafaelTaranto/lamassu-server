@@ -37,7 +37,9 @@ const CopyToClipboard = ({
     <div className={classnames('flex items-center', wrapperClassname)}>
       {children && (
         <>
-          <Mono noMargin className={className}>
+          <Mono
+            noMargin
+            className={classnames('linebreak-anywhere', className)}>
             {children}
           </Mono>
           <div className={buttonClassname}>

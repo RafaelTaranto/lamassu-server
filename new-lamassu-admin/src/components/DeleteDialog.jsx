@@ -1,25 +1,25 @@
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
+import IconButton from '@mui/material/IconButton'
 import React from 'react'
 import { H4, P } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 
-import { Button, IconButton } from 'src/components/buttons'
+import { Button } from 'src/components/buttons'
 
 import ErrorMessage from './ErrorMessage'
+import SvgIcon from '@mui/material/SvgIcon'
 
 export const DialogTitle = ({ children, close }) => {
   return (
     <div className="p-4 pr-3 flex justify-between m-0">
       {children}
       {close && (
-        <IconButton
-          size={16}
-          aria-label="close"
-          onClick={close}
-          className="p-0 -mt-1">
-          <CloseIcon />
+        <IconButton aria-label="close" onClick={close} className="p-0 -mt-1">
+          <SvgIcon fontSize="small">
+            <CloseIcon />
+          </SvgIcon>
         </IconButton>
       )}
     </div>

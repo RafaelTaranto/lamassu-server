@@ -1,3 +1,5 @@
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import React from 'react'
 import {
   Table,
@@ -8,8 +10,6 @@ import {
   Tr
 } from 'src/components/fake-table/Table'
 import EditIcon from 'src/styling/icons/action/edit/white.svg?react'
-
-import { IconButton } from 'src/components/buttons'
 
 import { Label1, P } from '../typography/index.jsx'
 
@@ -27,8 +27,10 @@ const SingleRowTable = ({
         <THead>
           <Th className="flex flex-1 justify-between items-center pr-3">
             {title}
-            <IconButton onClick={onEdit} className="mb-[1px]" size="large">
-              <EditIcon />
+            <IconButton onClick={onEdit} className="mb-[1px]">
+              <SvgIcon>
+                <EditIcon />
+              </SvgIcon>
             </IconButton>
           </Th>
         </THead>

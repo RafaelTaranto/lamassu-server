@@ -1,16 +1,12 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 
-import styles from './styles'
-
-const useStyles = makeStyles(styles)
+import styles from './typography.module.css'
 
 function H1({ children, noMargin, className, ...props }) {
-  const classes = useStyles()
   const classNames = {
-    [classes.h1]: true,
-    [classes.noMargin]: noMargin,
+    [styles.h1]: true,
+    [styles.noMargin]: noMargin,
     [className]: !!className
   }
 
@@ -22,10 +18,9 @@ function H1({ children, noMargin, className, ...props }) {
 }
 
 function H2({ children, noMargin, className, ...props }) {
-  const classes = useStyles()
   const classNames = {
-    [classes.h2]: true,
-    [classes.noMargin]: noMargin,
+    [styles.h2]: true,
+    [styles.noMargin]: noMargin,
     [className]: !!className
   }
 
@@ -37,10 +32,9 @@ function H2({ children, noMargin, className, ...props }) {
 }
 
 function H3({ children, noMargin, className, ...props }) {
-  const classes = useStyles()
   const classNames = {
-    [classes.h3]: true,
-    [classes.noMargin]: noMargin,
+    [styles.h3]: true,
+    [styles.noMargin]: noMargin,
     [className]: !!className
   }
 
@@ -52,10 +46,9 @@ function H3({ children, noMargin, className, ...props }) {
 }
 
 function H4({ children, noMargin, className, ...props }) {
-  const classes = useStyles()
   const classNames = {
-    [classes.h4]: true,
-    [classes.noMargin]: noMargin,
+    [styles.h4]: true,
+    [styles.noMargin]: noMargin,
     [className]: !!className
   }
 
@@ -67,10 +60,9 @@ function H4({ children, noMargin, className, ...props }) {
 }
 
 function H5({ children, noMargin, className, ...props }) {
-  const classes = useStyles()
   const classNames = {
-    [classes.h5]: true,
-    [classes.noMargin]: noMargin,
+    [styles.h5]: true,
+    [styles.noMargin]: noMargin,
     [className]: !!className
   }
 
@@ -94,12 +86,11 @@ const Label3 = pBuilder('label3')
 
 function pBuilder(elementClass) {
   return ({ inline, noMargin, className, children, ...props }) => {
-    const classes = useStyles()
     const classNames = {
       [className]: !!className,
-      [classes[elementClass]]: elementClass,
-      [classes.inline]: inline,
-      [classes.noMargin]: noMargin
+      [styles[elementClass]]: elementClass,
+      [styles.inline]: inline,
+      [styles.noMargin]: noMargin
     }
     return (
       <p className={classnames(classNames)} {...props}>

@@ -1,5 +1,7 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import DialogActions from '@mui/material/DialogActions'
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'
@@ -12,7 +14,7 @@ import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import ReverseHistoryIcon from 'src/styling/icons/circle buttons/history/white.svg?react'
 import HistoryIcon from 'src/styling/icons/circle buttons/history/zodiac.svg?react'
 
-import { IconButton, Button, SupportLinkButton } from 'src/components/buttons'
+import { Button, SupportLinkButton } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
 import { EmptyTable } from 'src/components/table'
 import { fromNamespace, toNamespace } from 'src/utils/config'
@@ -252,8 +254,10 @@ const CashCassettes = () => {
                     {onlyFirstToUpper(cashboxReset)}
                   </P>
                 )}
-                <IconButton onClick={() => setEditingSchema(true)} size="large">
-                  <EditIcon />
+                <IconButton onClick={() => setEditingSchema(true)}>
+                  <SvgIcon>
+                    <EditIcon />
+                  </SvgIcon>
                 </IconButton>
               </div>
             </div>

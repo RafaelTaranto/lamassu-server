@@ -1,5 +1,7 @@
 import { makeStyles } from '@mui/styles'
 import Switch from '@mui/material/Switch'
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
@@ -13,7 +15,7 @@ import DisabledEditIcon from 'src/styling/icons/action/edit/disabled.svg?react'
 import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import StripesSvg from 'src/styling/icons/stripes.svg?react'
 
-import { Link, IconButton } from 'src/components/buttons'
+import { Link } from 'src/components/buttons'
 
 import TableCtx from './Context'
 import styles from './Row.styles'
@@ -77,9 +79,10 @@ const ActionCol = ({ disabled, editing }) => {
           <IconButton
             disabled={disableEdit}
             className={classes.editButton}
-            onClick={() => onEdit && onEdit(values.id)}
-            size="large">
-            {disableEdit ? <DisabledEditIcon /> : <EditIcon />}
+            onClick={() => onEdit && onEdit(values.id)}>
+            <SvgIcon>
+              {disableEdit ? <DisabledEditIcon /> : <EditIcon />}
+            </SvgIcon>
           </IconButton>
         </Td>
       )}
@@ -89,9 +92,10 @@ const ActionCol = ({ disabled, editing }) => {
             disabled={disabled}
             onClick={() => {
               setDeleteDialog(true)
-            }}
-            size="large">
-            {disabled ? <DisabledDeleteIcon /> : <DeleteIcon />}
+            }}>
+            <SvgIcon>
+              {disabled ? <DisabledDeleteIcon /> : <DeleteIcon />}
+            </SvgIcon>
           </IconButton>
           <DeleteDialog
             open={deleteDialog}
@@ -116,7 +120,7 @@ const ActionCol = ({ disabled, editing }) => {
         </Td>
       )}
     </>
-  );
+  )
 }
 
 const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {

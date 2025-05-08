@@ -1,3 +1,4 @@
+import IconButton from '@mui/material/IconButton'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import classnames from 'classnames'
 import { Form, Formik, Field as FormikField } from 'formik'
@@ -9,12 +10,13 @@ import { Info2, Info3, Label3 } from 'src/components/typography'
 import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import * as Yup from 'yup'
 
-import { Link, IconButton } from 'src/components/buttons'
+import { Link } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
 import Header from './components/Header.jsx'
 import SwitchRow from './components/SwitchRow.jsx'
+import SvgIcon from '@mui/material/SvgIcon'
 
 const Field = ({
   editing,
@@ -184,8 +186,10 @@ const TermsConditions = () => {
       <div className="flex gap-3">
         <Info2>Info card</Info2>
         {!editing && (
-          <IconButton onClick={() => setEditing(true)} size="large">
-            <EditIcon />
+          <IconButton onClick={() => setEditing(true)}>
+            <SvgIcon>
+              <EditIcon />
+            </SvgIcon>
           </IconButton>
         )}
       </div>

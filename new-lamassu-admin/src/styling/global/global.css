@@ -64,6 +64,10 @@
   column-span: all;
 }
 
+@utility linebreak-anywhere {
+  line-break: anywhere;
+}
+
 body {
   font-size: 0.875rem;
   width: 1200px;

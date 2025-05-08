@@ -1,3 +1,5 @@
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import { useQuery, useMutation, useLazyQuery, gql } from '@apollo/client'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
 import DialogActions from '@mui/material/DialogActions'
@@ -18,7 +20,7 @@ import BlockIcon from 'src/styling/icons/button/block/zodiac.svg?react'
 import DataReversedIcon from 'src/styling/icons/button/data/white.svg?react'
 import DataIcon from 'src/styling/icons/button/data/zodiac.svg?react'
 
-import { Button, IconButton, ActionButton } from 'src/components/buttons'
+import { Button, ActionButton } from 'src/components/buttons'
 import {
   OVERRIDE_AUTHORIZED,
   OVERRIDE_REJECTED
@@ -734,11 +736,10 @@ const RetrieveDataDialog = ({
       }}
       {...props}>
       <div className="pt-4 pr-4 flex justify-end">
-        <IconButton
-          size={32}
-          aria-label="close"
-          onClick={() => onDismissed(false)}>
-          <CloseIcon />
+        <IconButton aria-label="close" onClick={() => onDismissed(false)}>
+          <SvgIcon>
+            <CloseIcon />
+          </SvgIcon>
         </IconButton>
       </div>
       <H2 className="mb-2 ml-10">{'Retrieve API data from Twilio'}</H2>

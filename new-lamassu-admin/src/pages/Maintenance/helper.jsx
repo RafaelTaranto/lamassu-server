@@ -1,9 +1,10 @@
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import React from 'react'
 import * as R from 'ramda'
 import { CashIn, CashOutLite } from 'src/components/inputs/cashbox/Cashbox'
 import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 
-import { IconButton } from 'src/components/buttons'
 import { fromNamespace } from 'src/utils/config'
 import { getCashUnitCapacity } from 'src/utils/machine'
 
@@ -124,9 +125,10 @@ const getElements = (config, bills, setWizard, widths, setMachineId) => {
             onClick={() => {
               !R.isNil(setMachineId) && setMachineId(m.id ?? m.deviceId)
               setWizard(true)
-            }}
-            size="large">
-            <EditIcon />
+            }}>
+            <SvgIcon>
+              <EditIcon />
+            </SvgIcon>
           </IconButton>
         )
       }

@@ -1,3 +1,4 @@
+import IconButton from '@mui/material/IconButton'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'
@@ -9,13 +10,14 @@ import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
 import * as Yup from 'yup'
 
-import { Link, IconButton } from 'src/components/buttons'
+import { Link } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
 import SwitchRow from './components/SwitchRow.jsx'
 import InfoMessage from './components/InfoMessage.jsx'
 import Header from './components/Header.jsx'
+import SvgIcon from '@mui/material/SvgIcon'
 
 const FIELD_WIDTH = 280
 
@@ -160,8 +162,10 @@ const ContactInfo = ({ wizard }) => {
         <div className="flex items-center gap-4">
           <H4>Info card</H4>
           {!editing && (
-            <IconButton onClick={() => setEditing(true)} size="large">
-              <EditIcon />
+            <IconButton onClick={() => setEditing(true)}>
+              <SvgIcon>
+                <EditIcon />
+              </SvgIcon>
             </IconButton>
           )}
         </div>

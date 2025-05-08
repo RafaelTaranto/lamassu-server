@@ -1,3 +1,4 @@
+import IconButton from '@mui/material/IconButton'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -7,11 +8,12 @@ import { Info1, Info3, P } from 'src/components/typography'
 import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
 import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 
-import { IconButton, Button, Link } from 'src/components/buttons'
+import { Button, Link } from 'src/components/buttons'
 import { fromNamespace, namespaces, toNamespace } from 'src/utils/config'
 
 import DetailsRow from './DetailsCard'
 import Wizard from './Wizard'
+import SvgIcon from '@mui/material/SvgIcon'
 
 const inputTypeDisplay = {
   numerical: 'Numerical',
@@ -212,9 +214,10 @@ const CustomInfoRequests = ({
                       onClick={() => {
                         setToBeEdited(it)
                         return toggleWizard()
-                      }}
-                      size="large">
-                      <EditIcon />
+                      }}>
+                      <SvgIcon>
+                        <EditIcon />
+                      </SvgIcon>
                     </IconButton>
                   )
                 }
@@ -230,9 +233,10 @@ const CustomInfoRequests = ({
                       onClick={() => {
                         setToBeDeleted(it.id)
                         return setDeleteDialog(true)
-                      }}
-                      size="large">
-                      <DeleteIcon />
+                      }}>
+                      <SvgIcon>
+                        <DeleteIcon />
+                      </SvgIcon>
                     </IconButton>
                   )
                 }

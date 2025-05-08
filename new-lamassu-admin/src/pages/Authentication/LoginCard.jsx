@@ -57,7 +57,7 @@ const LoginCard = () => {
       <div className={classes.wrapper}>
         <div className={classes.titleWrapper}>
           <Logo className={classes.icon} />
-          <H5 className={classes.title}>Lamassu Admin</H5>
+          <h3 className={classes.title}>Lamassu Admin</h3>
         </div>
         {renderState()}
       </div>

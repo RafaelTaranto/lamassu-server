@@ -4,7 +4,6 @@ import Button from './Button'
 import DeleteButton from './DeleteButton'
 import FeatureButton from './FeatureButton'
 import IDButton from './IDButton'
-import IconButton from './IconButton'
 import Link from './Link'
 import SubpageButton from './SubpageButton'
 import SupportLinkButton from './SupportLinkButton'
@@ -14,7 +13,6 @@ export {
   Link,
   ActionButton,
   FeatureButton,
-  IconButton,
   IDButton,
   AddButton,
   SupportLinkButton,

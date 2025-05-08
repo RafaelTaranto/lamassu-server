@@ -1,10 +1,10 @@
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
+import SvgIcon from '@mui/material/SvgIcon'
+import IconButton from '@mui/material/IconButton'
 import React, { memo } from 'react'
 import { H1 } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
-
-import { IconButton } from 'src/components/buttons'
 
 export const InformativeDialog = memo(
   ({ title = '', open, onDissmised, disabled = false, data, ...props }) => {
@@ -24,7 +24,10 @@ export const InformativeDialog = memo(
         aria-labelledby="form-dialog-title"
         {...props}>
         <div className="flex justify-end pt-4 pr-3 pb-0 pl-4">
-          <IconButton size={16} aria-label="close" onClick={innerOnClose}>
+          <IconButton aria-label="close" onClick={innerOnClose}>
+            <SvgIcon fontSize="small">
+              <CloseIcon />
+            </SvgIcon>
             <CloseIcon />
           </IconButton>
         </div>

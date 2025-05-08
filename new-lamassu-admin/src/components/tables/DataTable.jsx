@@ -40,7 +40,7 @@ const Row = ({
   const trClasses = {
     'cursor-pointer': hasPointer,
     'border-2 border-transparent': true,
-    'border-2 border-zircon shadow-xl': expanded
+    'border-2 border-zircon shadow-md': expanded
   }
 
   return (

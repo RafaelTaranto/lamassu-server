@@ -21,8 +21,8 @@ const ImagePopper = memo(
 
     const popperOpen = Boolean(popperAnchorEl)
 
-    const Image = ({ className }) => (
-      <img className={classnames(className)} src={src} alt="" />
+    const Image = ({ className, style }) => (
+      <img className={classnames(className)} style={style} src={src} alt="" />
     )
 
     return (
@@ -35,12 +35,12 @@ const ImagePopper = memo(
           <FeatureButton
             Icon={ZoomIcon}
             InverseIcon={ZoomIconInverse}
-            className="rounded-br-lg"
+            className="rounded-none rounded-tr-lg rounded-br-lg"
             style={{ height }}
             onClick={handleOpenPopper}
           />
           <Popper open={popperOpen} anchorEl={popperAnchorEl} placement="top">
-            <div className="block py-2 px-4">
+            <div className="py-2 px-4">
               <Image
                 className="object-cover"
                 style={{ width: popupWidth, height: popupHeight }}

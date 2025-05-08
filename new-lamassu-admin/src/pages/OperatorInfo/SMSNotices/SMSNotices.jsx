@@ -1,6 +1,7 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import Paper from '@mui/material/Paper'
 import Switch from '@mui/material/Switch'
+import IconButton from '@mui/material/IconButton'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -11,10 +12,11 @@ import ExpandIconClosed from 'src/styling/icons/action/expand/closed.svg?react'
 import ExpandIconOpen from 'src/styling/icons/action/expand/open.svg?react'
 import WhiteLogo from 'src/styling/icons/menu/logo-white.svg?react'
 
-import { IconButton, SupportLinkButton } from 'src/components/buttons'
+import { SupportLinkButton } from 'src/components/buttons'
 import { formatDate } from 'src/utils/timezones'
 
 import CustomSMSModal from './SMSNoticesModal'
+import SvgIcon from '@mui/material/SvgIcon'
 
 const GET_SMS_NOTICES = gql`
   query SMSNotices {
@@ -175,9 +177,10 @@ const SMSNotices = () => {
             setPreviewOpen(false)
             setSelectedSMS(it)
             setShowModal(true)
-          }}
-          size="large">
-          <EditIcon />
+          }}>
+          <SvgIcon>
+            <EditIcon />
+          </SvgIcon>
         </IconButton>
       )
     },
@@ -217,13 +220,14 @@ const SMSNotices = () => {
             R.equals(selectedSMS, it)
               ? setPreviewOpen(!previewOpen)
               : setPreviewOpen(true)
-          }}
-          size="large">
-          {R.equals(selectedSMS, it) && previewOpen ? (
-            <ExpandIconOpen />
-          ) : (
-            <ExpandIconClosed />
-          )}
+          }}>
+          <SvgIcon>
+            {R.equals(selectedSMS, it) && previewOpen ? (
+              <ExpandIconOpen />
+            ) : (
+              <ExpandIconClosed />
+            )}
+          </SvgIcon>
         </IconButton>
       )
     }

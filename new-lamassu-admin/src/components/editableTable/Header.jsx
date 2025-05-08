@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
@@ -12,14 +11,6 @@ import {
 import { sentenceCase } from 'src/utils/string'
 
 import TableCtx from './Context'
-
-const styles = {
-  orderedBySpan: {
-    whiteSpace: 'nowrap'
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const groupSecondHeader = elements => {
   const doubleHeader = R.prop('doubleHeader')
@@ -46,7 +37,6 @@ const groupSecondHeader = elements => {
 }
 
 const Header = () => {
-  const classes = useStyles()
   const {
     elements,
     enableEdit,
@@ -79,7 +69,7 @@ const Header = () => {
     idx
   ) => {
     const orderClasses = classnames({
-      [classes.orderedBySpan]:
+      'whitespace-nowrap':
         R.isNil(header) && !R.isNil(orderedBy) && R.equals(name, orderedBy.code)
     })
 

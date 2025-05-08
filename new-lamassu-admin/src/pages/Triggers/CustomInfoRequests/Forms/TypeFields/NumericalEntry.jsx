@@ -38,7 +38,7 @@ const NumericalEntry = () => {
         name="constraintType"
       />
       {isLength && (
-        <div className="flex mt-27 max-w-29">
+        <div className="flex mt-6 max-w-29">
           <Field
             component={NumberInput}
             name={'inputLength'}

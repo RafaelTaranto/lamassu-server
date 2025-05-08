@@ -1,8 +1,10 @@
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 
-import { Link, Button, IconButton } from 'src/components/buttons'
+import { Link, Button } from 'src/components/buttons'
 import { DeleteDialog } from 'src/components/DeleteDialog'
 import DataTable from 'src/components/tables/DataTable'
 import { Label3, TL1 } from 'src/components/typography'
@@ -136,9 +138,10 @@ const IndividualDiscounts = () => {
           onClick={() => {
             setDeleteDialog(true)
             setToBeDeleted({ variables: { discountId: t.id } })
-          }}
-          size="large">
-          <DeleteIcon />
+          }}>
+          <SvgIcon>
+            <DeleteIcon />
+          </SvgIcon>
         </IconButton>
       )
     }

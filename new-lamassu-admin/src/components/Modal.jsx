@@ -1,11 +1,11 @@
 import MaterialModal from '@mui/material/Modal'
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import Paper from '@mui/material/Paper'
 import classnames from 'classnames'
 import React from 'react'
 import { H1, H4 } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
-
-import { IconButton } from 'src/components/buttons'
 
 const Modal = ({
   width,
@@ -59,10 +59,11 @@ const Modal = ({
               className="ml-auto"
               style={{ marginRight: marginBySize, marginTop: marginBySize }}>
               <IconButton
-                size={closeSize}
                 className="p-0 mb-auto ml-auto"
                 onClick={() => handleClose()}>
-                <CloseIcon />
+                <SvgIcon fontSize={xl ? 'large' : 'small'}>
+                  <CloseIcon />
+                </SvgIcon>
               </IconButton>
             </div>
           </div>

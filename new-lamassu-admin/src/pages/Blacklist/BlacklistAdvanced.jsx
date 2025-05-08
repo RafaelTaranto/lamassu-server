@@ -1,3 +1,5 @@
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import { Form, Formik, Field } from 'formik'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -11,7 +13,7 @@ import DefaultIconReverse from 'src/styling/icons/button/retry/white.svg?react'
 import DefaultIcon from 'src/styling/icons/button/retry/zodiac.svg?react'
 import * as Yup from 'yup'
 
-import { ActionButton, IconButton, Button } from 'src/components/buttons'
+import { ActionButton, Button } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 
 const DEFAULT_MESSAGE = `This address may be associated with a deceptive offer or a prohibited group. Please make sure you're using an address from your own wallet.`
@@ -56,11 +58,10 @@ const BlacklistAdvanced = ({
       textAlign: 'center',
       size: 'sm',
       view: it => (
-        <IconButton
-          className="pl-3"
-          onClick={() => setSelectedMessage(it)}
-          size="large">
-          <EditIcon />
+        <IconButton className="pl-3" onClick={() => setSelectedMessage(it)}>
+          <SvgIcon>
+            <EditIcon />
+          </SvgIcon>
         </IconButton>
       )
     },
@@ -76,13 +77,14 @@ const BlacklistAdvanced = ({
           disabled={
             !R.isNil(R.path(['allowToggle'], it)) &&
             !R.path(['allowToggle'], it)
-          }
-          size="large">
-          {R.path(['allowToggle'], it) ? (
-            <DeleteIcon />
-          ) : (
-            <DisabledDeleteIcon />
-          )}
+          }>
+          <SvgIcon>
+            {R.path(['allowToggle'], it) ? (
+              <DeleteIcon />
+            ) : (
+              <DisabledDeleteIcon />
+            )}
+          </SvgIcon>
         </IconButton>
       )
     }

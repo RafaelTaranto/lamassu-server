@@ -3,6 +3,8 @@ import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Switch from '@mui/material/Switch'
+import SvgIcon from '@mui/material/SvgIcon'
+import IconButton from '@mui/material/IconButton'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -12,12 +14,7 @@ import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 import ReverseSettingsIcon from 'src/styling/icons/circle buttons/settings/white.svg?react'
 import SettingsIcon from 'src/styling/icons/circle buttons/settings/zodiac.svg?react'
 
-import {
-  Link,
-  Button,
-  IconButton,
-  SupportLinkButton
-} from 'src/components/buttons'
+import { Link, Button, SupportLinkButton } from 'src/components/buttons'
 import { fromNamespace, toNamespace } from 'src/utils/config'
 
 import BlackListAdvanced from './BlacklistAdvanced'
@@ -100,11 +97,12 @@ const PaperWalletDialog = ({ onConfirmed, onDissmised, open, props }) => {
       <div className="p-2">
         <DialogTitle className="flex flex-col">
           <IconButton
-            size={30}
             aria-label="close"
             onClick={onDissmised}
             className="-mt-2 -mr-4 ml-auto">
-            <CloseIcon />
+            <SvgIcon>
+              <CloseIcon />
+            </SvgIcon>
           </IconButton>
           <H2 noMargin>{'Are you sure you want to enable this?'}</H2>
         </DialogTitle>

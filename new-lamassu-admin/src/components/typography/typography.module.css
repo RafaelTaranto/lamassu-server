@@ -1,0 +1,140 @@
+.base {
+  line-height: 120%;
+  color: var(--zodiac);
+}
+
+.h1 {
+  composes: base;
+  font-size: 24px;
+  font-family: var(--mont);
+  font-weight: 900;
+}
+
+.h2 {
+  composes: base;
+  font-size: 20px;
+  font-family: var(--mont);
+  font-weight: 900;
+}
+
+.h3 {
+  composes: base;
+  font-size: 14px;
+  font-family: var(--mont);
+  font-weight: 900;
+}
+
+.h4 {
+  composes: base;
+  font-size: 14px;
+  font-family: var(--mont);
+  font-weight: 700;
+}
+
+.h5 {
+  composes: base;
+  font-size: 16px;
+  font-family: var(--mont);
+  font-weight: 700;
+}
+
+.p {
+  composes: base;
+  font-size: 14px;
+  font-family: var(--museo);
+  font-weight: 500;
+}
+
+.tl1 {
+  composes: base;
+  font-size: 20px;
+  font-family: var(--museo);
+  font-weight: 700;
+}
+
+.tl2 {
+  composes: base;
+  font-size: 14px;
+  font-family: var(--museo);
+  font-weight: 700;
+}
+
+.info1 {
+  composes: base;
+  font-size: 24px;
+  font-family: var(--museo);
+  font-weight: 700;
+}
+
+.info2 {
+  composes: base;
+  font-size: 16px;
+  font-family: var(--museo);
+  font-weight: 700;
+}
+
+.info3 {
+  composes: base;
+  font-size: 16px;
+  font-family: var(--museo);
+  font-weight: 500;
+}
+
+.mono {
+  composes: base;
+  font-size: 14px;
+  font-family: var(--bpmono);
+  font-weight: 500;
+}
+
+.monoBold {
+  font-weight: 700;
+}
+
+.monoSmall {
+  font-size: 13px;
+}
+
+.inputFont {
+  font-size: 20px;
+  font-family: var(--museo);
+  font-weight: 500;
+  line-height: 110%;
+  color: var(--zodiac);
+}
+
+.regularLabel {
+  font-size: 14px;
+  font-family: var(--museo);
+  font-weight: 500;
+  line-height: 110%;
+}
+
+.label1 {
+  font-size: 13px;
+  font-family: var(--museo);
+  font-weight: 500;
+  color: var(--zodiac);
+}
+
+.label2 {
+  font-size: 13px;
+  font-family: var(--museo);
+  font-weight: 700;
+  color: var(--zodiac);
+}
+
+.label3 {
+  font-size: 14px;
+  font-family: var(--museo);
+  font-weight: 500;
+  color: var(--zodiac);
+}
+
+.inline {
+  display: inline;
+}
+
+.noMargin {
+  margin: 0;
+}

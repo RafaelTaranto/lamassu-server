@@ -7,8 +7,7 @@ import {
   fontSize5,
   fontPrimary,
   fontSecondary,
-  fontMonospaced,
-  codeInputFontSize
+  fontMonospaced
 } from 'src/styling/variables'
 
 const base = {
@@ -17,6 +16,10 @@ const base = {
 }
 
 export default {
+  base: {
+    lineHeight: '120%',
+    color: fontColor
+  },
   h1: {
     extend: base,
     fontSize: fontSize1,
@@ -125,12 +128,6 @@ export default {
     fontFamily: fontSecondary,
     fontWeight: 500,
     color: fontColor
-  },
-  confirmationCode: {
-    extend: base,
-    fontSize: codeInputFontSize,
-    fontFamily: fontSecondary,
-    fontWeight: 900
   },
   inline: {
     display: 'inline'

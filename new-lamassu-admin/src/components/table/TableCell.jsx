@@ -1,17 +1,19 @@
 import classnames from 'classnames'
 import React, { memo } from 'react'
 
+import classes from './Table.module.css'
+
 const TableCell = memo(
   ({ colspan, rightAlign, className, children, ...props }) => {
     const styles = {
-      'py-0 px-6': true,
+      [classes.tableCell]: true,
       'text-right': rightAlign
     }
 
     return (
       <td
         colSpan={colspan}
-        className={classnames(styles, className)}
+        className={classnames(className, styles)}
         {...props}>
         {children}
       </td>

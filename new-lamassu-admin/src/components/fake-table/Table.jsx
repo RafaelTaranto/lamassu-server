@@ -1,14 +1,10 @@
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 
 import { Link } from 'src/components/buttons'
-
-import styles from './Table.styles'
-
-const useStyles = makeStyles(styles)
+import styles from './Table.module.css'
 
 const Table = ({ children, className, ...props }) => (
   <div className={classnames(className)} {...props}>
@@ -17,17 +13,12 @@ const Table = ({ children, className, ...props }) => (
 )
 
 const THead = ({ children, className }) => {
-  const classes = useStyles()
-  return <div className={classnames(className, classes.header)}>{children}</div>
+  return <div className={classnames(className, styles.header)}>{children}</div>
 }
 
 const TDoubleLevelHead = ({ children, className }) => {
-  const classes = useStyles()
-
   return (
-    <div className={classnames(className, classes.doubleHeader)}>
-      {children}
-    </div>
+    <div className={classnames(className, styles.doubleHeader)}>{children}</div>
   )
 }
 
@@ -45,15 +36,28 @@ const Td = ({
   textAlign,
   action
 }) => {
-  const classes = useStyles({ textAlign, width, size })
-  const classNames = {
-    [classes.td]: true,
-    [classes.tdHeader]: header,
-    [classes.actionCol]: action,
-    [classes.size]: !header,
-    [classes.bold]: !header && bold
+  const inlineStyle = {
+    width,
+    textAlign
   }
-  return <div data-cy={`td-${header}`} className={classnames(className, classNames)}>{children}</div>
+
+  const cssClasses = {
+    [styles.td]: !header,
+    [styles.tdHeader]: header,
+    [styles.bold]: !header && bold,
+    [styles.actionCol]: action,
+    [styles.sizeSm]: !header && size === 'sm',
+    [styles.sizeLg]: !header && size === 'lg'
+  }
+
+  return (
+    <div
+      data-cy={`td-${header}`}
+      className={classnames(className, cssClasses)}
+      style={inlineStyle}>
+      {children}
+    </div>
+  )
 }
 
 const Th = ({ children, ...props }) => {
@@ -65,10 +69,10 @@ const Th = ({ children, ...props }) => {
 }
 
 const ThDoubleLevel = ({ title, children, className, width }) => {
-  const classes = useStyles({ width })
-
   return (
-    <div className={classnames(className, classes.thDoubleLevel)}>
+    <div
+      className={classnames(className, styles.thDoubleLevel)}
+      style={{ width }}>
       <div>{title}</div>
       <div>{children}</div>
     </div>
@@ -85,23 +89,25 @@ const Tr = ({
   size,
   newRow
 }) => {
-  const classes = useStyles({ size })
-  const cardClasses = { root: classes.cardContentRoot }
-  const classNames = {
-    [classes.tr]: true,
-    [classes.trError]: error,
-    [classes.card]: true,
-    [classes.trAdding]: newRow,
-    className
+  const cardClasses = {
+    [styles.card]: true,
+    [styles.trError]: error,
+    [styles.trAdding]: newRow
+  }
+
+  const mainContentClasses = {
+    [styles.mainContent]: true,
+    [styles.sizeSm]: size === 'sm',
+    [styles.sizeLg]: size === 'lg'
   }
 
   return (
     <>
-      <Card className={classnames(classNames, className)} onClick={onClick}>
-        <CardContent classes={cardClasses}>
-          <div className={classes.mainContent}>{children}</div>
+      <Card className={classnames(className, cardClasses)} onClick={onClick}>
+        <CardContent className={styles.cardContentRoot}>
+          <div className={classnames(mainContentClasses)}>{children}</div>
           {error && shouldShowError && (
-            <div className={classes.errorContent}>{errorMessage}</div>
+            <div className={styles.errorContent}>{errorMessage}</div>
           )}
         </CardContent>
       </Card>

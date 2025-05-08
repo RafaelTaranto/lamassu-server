@@ -56,6 +56,11 @@ theme = createTheme(theme, {
         body1: { ...p }
       }
     },
+    MuiIconButtonBase: {
+      defaultProps: {
+        disableRipple: true
+      }
+    },
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true
@@ -159,6 +164,9 @@ theme = createTheme(theme, {
     },
     MuiPaper: {
       styleOverrides: {
+        root: {
+          color: primaryColor
+        },
         elevation1: {
           boxShadow: '0 0 4px 0 rgba(0, 0, 0, 0.08)'
         }
