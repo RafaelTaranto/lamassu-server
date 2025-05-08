@@ -1,5 +1,4 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
 import { Formik, Form, Field } from 'formik'
 import React, { useState } from 'react'
 import PromptWhenDirty from 'src/components/PromptWhenDirty'
@@ -9,9 +8,7 @@ import * as Yup from 'yup'
 import { Button } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs/formik'
 
-import styles from './Shared.styles'
-
-const useStyles = makeStyles(styles)
+import classes from './Shared.module.css'
 
 const GET_CONFIG = gql`
   {
@@ -27,7 +24,6 @@ const schema = Yup.object().shape({
 })
 
 const ChooseCoin = ({ addData }) => {
-  const classes = useStyles()
   const [error, setError] = useState(false)
 
   const { data } = useQuery(GET_CONFIG)

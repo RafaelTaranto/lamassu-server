@@ -1,5 +1,4 @@
 import { useMutation, useQuery, gql } from '@apollo/client'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -11,7 +10,8 @@ import { Button, SupportLinkButton } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
 import twilio from 'src/pages/Services/schemas/twilio'
 
-import styles from './Wallet/Shared.styles'
+import sharedClasses from './Wallet/Shared.module.css'
+import classes from './Twilio.module.css'
 
 const GET_CONFIG = gql`
   {
@@ -26,30 +26,6 @@ const SAVE_ACCOUNTS = gql`
   }
 `
 
-const useStyles = makeStyles({
-  ...styles,
-  content: {
-    width: 820
-  },
-  radioLabel: {
-    ...styles.radioLabel,
-    width: 280
-  },
-  wrapper: {
-    width: 1200,
-    height: 100,
-    margin: [[0, 'auto']]
-  },
-  title: {
-    marginLeft: 8,
-    marginBottom: 5
-  },
-  info: {
-    marginTop: 20,
-    marginBottom: 20
-  }
-})
-
 const options = [
   {
     code: 'enable',
@@ -62,7 +38,6 @@ const options = [
 ]
 
 function Twilio({ doContinue }) {
-  const classes = useStyles()
   const [selected, setSelected] = useState(null)
   const [error, setError] = useState(false)
 
@@ -89,8 +64,8 @@ function Twilio({ doContinue }) {
   }
 
   const titleClasses = {
-    [classes.title]: true,
-    [classes.error]: error
+    'ml-2 mb-2': true,
+    [sharedClasses.error]: error
   }
 
   return (
@@ -115,7 +90,7 @@ function Twilio({ doContinue }) {
 
         <RadioGroup
           labelClassName={classes.radioLabel}
-          className={classes.radioGroup}
+          className={sharedClasses.radioGroup}
           options={options}
           value={selected}
           onChange={onSelect}
@@ -143,12 +118,15 @@ function Twilio({ doContinue }) {
               elements={twilio.elements}
               validationSchema={twilio.getValidationSchema(accounts.twilio)}
               buttonLabel={'Continue'}
-              buttonClass={classes.formButton}
+              buttonClass={sharedClasses.formButton}
             />
           </>
         )}
         {selected !== 'enable' && (
-          <Button size="lg" onClick={clickContinue} className={classes.button}>
+          <Button
+            size="lg"
+            onClick={clickContinue}
+            className={sharedClasses.button}>
             Continue
           </Button>
         )}

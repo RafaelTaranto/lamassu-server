@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
 import Section from 'src/components/layout/Section'
@@ -7,15 +6,7 @@ import TitleSection from 'src/components/layout/TitleSection'
 import { mainFields, defaults, getSchema } from 'src/pages/Commissions/helper'
 
 import { Table as EditableTable } from 'src/components/editableTable'
-import styles from 'src/pages/AddMachine/styles'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
-
-const useStyles = makeStyles(styles)
-const useCommissionStyles = makeStyles({
-  autoComplete: {
-    width: '100%'
-  }
-})
 
 const GET_DATA = gql`
   query getData {
@@ -29,8 +20,6 @@ const SAVE_CONFIG = gql`
 `
 
 function Commissions({ isActive, doContinue }) {
-  const classes = useStyles()
-  const commissionClasses = useCommissionStyles()
   const { data } = useQuery(GET_DATA)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
@@ -49,7 +38,7 @@ function Commissions({ isActive, doContinue }) {
   const locale = fromNamespace(namespaces.LOCALE)(data?.config)
 
   return (
-    <div className={classes.wrapper}>
+    <div className="w-[1132px] h-full mx-auto flex-1 flex flex-col">
       <TitleSection title="Commissions" />
       <Section>
         <EditableTable
@@ -63,7 +52,7 @@ function Commissions({ isActive, doContinue }) {
           save={save}
           validationSchema={getSchema(locale)}
           data={[]}
-          elements={mainFields(currency, locale, commissionClasses)}
+          elements={mainFields(currency)}
         />
       </Section>
     </div>

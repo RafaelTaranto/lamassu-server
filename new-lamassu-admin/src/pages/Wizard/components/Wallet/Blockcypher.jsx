@@ -1,5 +1,4 @@
 import { useMutation, useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
 import { P, H4 } from 'src/components/typography'
 import FormRenderer from 'src/pages/Services/FormRenderer'
@@ -8,16 +7,7 @@ import { SupportLinkButton, Button } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
 import blockcypherSchema from 'src/pages/Services/schemas/blockcypher'
 
-import styles from './Shared.styles'
-
-const useStyles = makeStyles({
-  ...styles,
-  radioGroup: styles.radioGroup,
-  radioLabel: {
-    ...styles.radioLabel,
-    width: 200
-  }
-})
+import classes from './Shared.module.css'
 
 const GET_CONFIG = gql`
   {
@@ -42,8 +32,6 @@ const options = [
 ]
 
 const Blockcypher = ({ addData }) => {
-  const classes = useStyles()
-
   const { data } = useQuery(GET_CONFIG)
   const [saveConfig] = useMutation(SAVE_ACCOUNTS, {
     onCompleted: () => addData({ zeroConf: 'blockcypher' })

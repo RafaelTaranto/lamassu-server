@@ -1,16 +1,9 @@
-import { makeStyles } from '@mui/styles'
 import React from 'react'
 // import OperatorInfo from 'src/pages/OperatorInfo'
 
-import styles from 'src/pages/AddMachine/styles'
-
-const useStyles = makeStyles(styles)
-
 function WizardOperatorInfo() {
-  const classes = useStyles()
-
   return (
-    <div className={classes.wrapper}>
+    <div className="w-[1132px] h-full mx-auto flex-1 flex flex-col">
       {/* <OperatorInfo wizard={true}></OperatorInfo> */}
     </div>
   )

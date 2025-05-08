@@ -1,10 +1,7 @@
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import Sidebar, { Stepper } from 'src/components/layout/Sidebar'
 import TitleSection from 'src/components/layout/TitleSection'
-
-import styles from 'src/pages/AddMachine/styles'
 
 import AllSet from './AllSet'
 import Blockcypher from './Blockcypher'
@@ -12,8 +9,6 @@ import ChooseCoin from './ChooseCoin'
 import ChooseExchange from './ChooseExchange'
 import ChooseTicker from './ChooseTicker'
 import ChooseWallet from './ChooseWallet'
-
-const useStyles = makeStyles(styles)
 
 const steps = [
   {
@@ -46,7 +41,6 @@ const Wallet = ({ doContinue }) => {
   const [step, setStep] = useState(0)
   const [data, setData] = useState({})
 
-  const classes = useStyles()
   const mySteps = data?.coin === 'BTC' ? steps : R.remove(4, 1, steps)
 
   const Component = mySteps[step].component
@@ -57,17 +51,17 @@ const Wallet = ({ doContinue }) => {
   }
 
   return (
-    <div className={classes.wrapper}>
-      <div className={classes.headerDiv}>
+    <div className="w-[1132px] h-full mx-auto flex-1 flex flex-col">
+      <div className="flex justify-between items-center">
         <TitleSection title="Wallet settings"></TitleSection>
       </div>
-      <div className={classes.contentDiv}>
+      <div className="flex flex-1 flex-row">
         <Sidebar>
           {mySteps.map((it, idx) => (
             <Stepper key={idx} step={step} it={it} idx={idx} steps={mySteps} />
           ))}
         </Sidebar>
-        <div className={classes.contentWrapper}>
+        <div className="ml-12">
           <Component data={data} addData={addData} doContinue={doContinue} />
         </div>
       </div>

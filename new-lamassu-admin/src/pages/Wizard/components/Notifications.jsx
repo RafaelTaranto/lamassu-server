@@ -1,28 +1,12 @@
-import { makeStyles } from '@mui/styles'
 import Grid from '@mui/material/Grid'
 import React, { useState } from 'react'
 import Sidebar from 'src/components/layout/Sidebar'
 import TitleSection from 'src/components/layout/TitleSection'
 import Notifications from 'src/pages/Notifications/Notifications'
 
-import addMachineStyles from 'src/pages/AddMachine/styles'
 import { namespaces } from 'src/utils/config'
 
 import Mailgun from './Mailgun'
-
-const styles = {
-  ...addMachineStyles,
-  grid: {
-    flex: 1,
-    height: '100%'
-  },
-  content: {
-    marginLeft: 48,
-    paddingTop: 15
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const EMAIL = 'Email'
 const SETUP_CHANNELS = 'Setup channels'
@@ -40,21 +24,20 @@ const pages = [
 
 const N = () => {
   const [selected, setSelected] = useState(EMAIL)
-  const classes = useStyles()
 
   const isSelected = it => selected === it
 
   return (
-    <div className={classes.wrapper}>
+    <div className="w-[1132px] h-full mx-auto flex-1 flex flex-col">
       <TitleSection title="Notifications"></TitleSection>
-      <Grid container className={classes.grid}>
+      <Grid container className="flex-1 h-full">
         <Sidebar
           data={pages}
           isSelected={isSelected}
           displayName={it => it}
           onClick={it => setSelected(it)}
         />
-        <div className={classes.content}>
+        <div className="ml-12 pt-4">
           {isSelected(EMAIL) && <Mailgun />}
           {isSelected(SETUP_CHANNELS) && (
             <Notifications

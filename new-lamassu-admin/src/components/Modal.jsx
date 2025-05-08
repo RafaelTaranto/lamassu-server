@@ -53,7 +53,7 @@ const styles = {
     padding: xl ? [[0, 60 + 28]] : small ? [[0, 16]] : [[0, 32]]
   }),
   button: ({ small, xl }) => ({
-    padding: [[0, 0, xl ? 26 : 0, 0]],
+    padding: [[0, 0, 0, 0]],
     margin: xl
       ? [[0, 0, 'auto', 'auto']]
       : small
