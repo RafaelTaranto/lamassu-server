@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import Chip from '@mui/material/Chip'
 import React from 'react'
 import { P, Label3 } from 'src/components/typography'
@@ -9,38 +8,29 @@ import ReverseFilterIcon from 'src/styling/icons/button/filter/zodiac.svg?react'
 import { ActionButton } from 'src/components/buttons'
 import { onlyFirstToUpper, singularOrPlural } from 'src/utils/string'
 
-import { chipStyles, styles } from './SearchFilter.styles'
-
-const useChipStyles = makeStyles(chipStyles)
-const useStyles = makeStyles(styles)
-
 const SearchFilter = ({
   filters,
   onFilterDelete,
   deleteAllFilters,
   entries = 0
 }) => {
-  const chipClasses = useChipStyles()
-  const classes = useStyles()
-
   return (
     <>
-      <P className={classes.text}>{'Filters:'}</P>
-      <div className={classes.filters}>
-        <div className={classes.chips}>
+      <P className="mx-0">{'Filters:'}</P>
+      <div className="flex mb-4">
+        <div className="mt-auto">
           {filters.map((f, idx) => (
             <Chip
               key={idx}
-              classes={chipClasses}
               label={`${onlyFirstToUpper(f.type)}: ${f.label || f.value}`}
               onDelete={() => onFilterDelete(f)}
-              deleteIcon={<CloseIcon className={classes.button} />}
+              deleteIcon={<CloseIcon className="w-2 h-2 mx-2" />}
             />
           ))}
         </div>
-        <div className={classes.deleteWrapper}>
+        <div className="flex ml-auto justify-end flex-row">
           {
-            <Label3 className={classes.entries}>{`${entries} ${singularOrPlural(
+            <Label3 className="text-comet m-auto mr-3">{`${entries} ${singularOrPlural(
               entries,
               `entry`,
               `entries`
@@ -50,7 +40,6 @@ const SearchFilter = ({
             color="secondary"
             Icon={ReverseFilterIcon}
             InverseIcon={FilterIcon}
-            className={classes.deleteButton}
             onClick={deleteAllFilters}>
             Delete filters
           </ActionButton>

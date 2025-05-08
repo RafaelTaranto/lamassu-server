@@ -1,27 +1,9 @@
-import { makeStyles } from '@mui/styles'
 import React, { memo } from 'react'
 import ReactCarousel from 'react-material-ui-carousel'
 import LeftArrow from 'src/styling/icons/arrow/carousel-left-arrow.svg?react'
 import RightArrow from 'src/styling/icons/arrow/carousel-right-arrow.svg?react'
 
-const useStyles = makeStyles({
-  imgWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex'
-  },
-  imgInner: {
-    objectFit: 'contain',
-    objectPosition: 'center',
-    width: 500,
-    height: 400,
-    marginBottom: 40
-  }
-})
-
 export const Carousel = memo(({ photosData, slidePhoto }) => {
-  const classes = useStyles()
-
   return (
     <>
       <ReactCarousel
@@ -48,9 +30,9 @@ export const Carousel = memo(({ photosData, slidePhoto }) => {
         prev={activeIndex => slidePhoto(activeIndex)}>
         {photosData.map((item, i) => (
           <div key={i}>
-            <div className={classes.imgWrapper}>
+            <div className="items-center justify-center flex">
               <img
-                className={classes.imgInner}
+                className="object-contain object-center w-75 h-100 mb-10"
                 src={`/${item?.photoDir}/${item?.path}`}
                 alt=""
               />

@@ -16,7 +16,13 @@ import {
   disabledColor2,
   disabledColor,
   smallestFontSize,
-  inputFontWeight
+  inputFontWeight,
+  spring3,
+  spring4,
+  tomato,
+  mistyRose,
+  linen,
+  pumpkin
 } from './variables'
 
 const { p } = typographyStyles
@@ -173,6 +179,30 @@ theme = createTheme(theme, {
           fontFamily: inputFontFamily,
           paddingRight: 4,
           paddingLeft: 4
+        },
+        colorDefault: {
+          backgroundColor: zircon,
+          '& .MuiChip-label': {
+            color: primaryColor
+          }
+        },
+        colorWarning: {
+          backgroundColor: linen,
+          '& .MuiChip-label': {
+            color: pumpkin
+          }
+        },
+        colorError: {
+          backgroundColor: mistyRose,
+          '& .MuiChip-label': {
+            color: tomato
+          }
+        },
+        colorSuccess: {
+          backgroundColor: spring3,
+          '& .MuiChip-label': {
+            color: spring4
+          }
         }
       }
     },

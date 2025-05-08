@@ -2,49 +2,25 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import InputLabel from '@mui/material/InputLabel'
-import { makeStyles } from '@mui/styles'
 import React, { memo, useState } from 'react'
 import { H4, P } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 
 import { Button, IconButton } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs'
-import { spacer } from 'src/styling/variables'
 
 import ErrorMessage from './ErrorMessage'
 
-const useStyles = makeStyles({
-  dialogContent: {
-    width: 434,
-    padding: spacer * 2,
-    paddingRight: spacer * 3.5
-  },
-  dialogTitle: {
-    padding: spacer * 2,
-    paddingRight: spacer * 1.5,
-    display: 'flex',
-    'justify-content': 'space-between',
-    '& > h4': {
-      margin: 0
-    },
-    '& > button': {
-      padding: 0,
-      marginTop: -(spacer / 2)
-    }
-  },
-  dialogActions: {
-    padding: spacer * 4,
-    paddingTop: spacer * 2
-  }
-})
-
 export const DialogTitle = ({ children, onClose }) => {
-  const classes = useStyles()
   return (
-    <div className={classes.dialogTitle}>
+    <div className="p-4 pr-3 flex justify-between">
       {children}
       {onClose && (
-        <IconButton size={16} aria-label="close" onClick={onClose}>
+        <IconButton
+          size={16}
+          aria-label="close"
+          onClick={onClose}
+          className="p-0 -mt-1">
           <CloseIcon />
         </IconButton>
       )}
@@ -67,7 +43,6 @@ export const ConfirmDialog = memo(
     disabled = false,
     ...props
   }) => {
-    const classes = useStyles()
     const [value, setValue] = useState(initialValue)
     const [error, setError] = useState(false)
     const handleChange = event => setValue(event.target.value)
@@ -84,7 +59,7 @@ export const ConfirmDialog = memo(
     return (
       <Dialog open={open} aria-labelledby="form-dialog-title" {...props}>
         <DialogTitle id="customized-dialog-title" onClose={innerOnClose}>
-          <H4>{title}</H4>
+          <H4 noMargin>{title}</H4>
         </DialogTitle>
         {errorMessage && (
           <DialogTitle>
@@ -98,7 +73,7 @@ export const ConfirmDialog = memo(
             </ErrorMessage>
           </DialogTitle>
         )}
-        <DialogContent className={classes.dialogContent}>
+        <DialogContent className="w-108 p-4 pr-7">
           {message && <P>{message}</P>}
           <InputLabel htmlFor="confirm-input">{confirmationMessage}</InputLabel>
           <TextInput
@@ -116,7 +91,7 @@ export const ConfirmDialog = memo(
             onChange={handleChange}
           />
         </DialogContent>
-        <DialogActions className={classes.dialogActions}>
+        <DialogActions className="p-8 pt-4">
           <Button
             color="green"
             disabled={isOnErrorState}

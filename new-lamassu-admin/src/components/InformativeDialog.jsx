@@ -1,43 +1,13 @@
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
-import { makeStyles } from '@mui/styles'
 import React, { memo } from 'react'
 import { H1 } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 
 import { IconButton } from 'src/components/buttons'
-import { spacer } from 'src/styling/variables'
-
-const useStyles = makeStyles({
-  closeButton: {
-    display: 'flex',
-    padding: [[spacer * 2, spacer * 2, 0, spacer * 2]],
-    paddingRight: spacer * 1.5,
-    justifyContent: 'end'
-  },
-  title: {
-    margin: [[0, spacer * 2, spacer, spacer * 2 + 4]]
-  }
-})
-
-export const DialogTitle = ({ children, onClose }) => {
-  const classes = useStyles()
-  return (
-    <div className={classes.dialogTitle}>
-      {children}
-      {onClose && (
-        <IconButton size={16} aria-label="close" onClick={onClose}>
-          <CloseIcon />
-        </IconButton>
-      )}
-    </div>
-  )
-}
 
 export const InformativeDialog = memo(
   ({ title = '', open, onDissmised, disabled = false, data, ...props }) => {
-    const classes = useStyles()
-
     const innerOnClose = () => {
       onDissmised()
     }
@@ -53,13 +23,13 @@ export const InformativeDialog = memo(
         open={open}
         aria-labelledby="form-dialog-title"
         {...props}>
-        <div className={classes.closeButton}>
+        <div className="flex justify-end pt-4 pr-3 pb-0 pl-4">
           <IconButton size={16} aria-label="close" onClick={innerOnClose}>
             <CloseIcon />
           </IconButton>
         </div>
-        <H1 className={classes.title}>{title}</H1>
-        <DialogContent className={classes.dialogContent}>{data}</DialogContent>
+        <H1 className="mt-0 mr-4 mb-2 ml-5">{title}</H1>
+        <DialogContent>{data}</DialogContent>
       </Dialog>
     )
   }

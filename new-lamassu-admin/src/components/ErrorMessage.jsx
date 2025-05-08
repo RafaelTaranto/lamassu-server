@@ -1,38 +1,16 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import ErrorIcon from 'src/styling/icons/warning-icon/tomato.svg?react'
 
-import { errorColor } from 'src/styling/variables'
-
 import { Info3 } from './typography'
 
-const styles = {
-  wrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    '& > svg': {
-      marginRight: 10
-    }
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-    color: errorColor,
-    margin: 0,
-    whiteSpace: 'break-spaces'
-  }
-}
-
-const useStyles = makeStyles(styles)
-
-const ErrorMessage = ({ className, children, ...props }) => {
-  const classes = useStyles()
-
+const ErrorMessage = ({ className, children }) => {
   return (
-    <div className={classnames(classes.wrapper, className)}>
-      <ErrorIcon />
-      <Info3 className={classes.message}>{children}</Info3>
+    <div className={classnames('flex items-center', className)}>
+      <ErrorIcon className="mr-3" />
+      <Info3 className="flex items-center text-tomato m-0 whitespace-break-spaces">
+        {children}
+      </Info3>
     </div>
   )
 }

@@ -19,6 +19,7 @@
   --comet3: #525772;
 
   --tomato: #ff584a;
+  --misty-rose: #ffeceb;
 
   --dust: #dddddd;
   --ghost: #fafbff;
@@ -45,7 +46,8 @@
   --color-comet2: var(--comet2);
   --color-comet3: var(--comet3);
   --color-tomato: var(--tomato);
-  --color--dust: var(--dust);
+  --color-misty-rose: var(--misty-rose);
+  --color-dust: var(--dust);
   --color-ghost: var(--ghost);
   --color-zircon: var(--zircon);
   --color-zircon2: var(--zircon2);

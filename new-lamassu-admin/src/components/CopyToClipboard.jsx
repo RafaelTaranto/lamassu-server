@@ -56,7 +56,6 @@ const CopyToClipboard = ({
             open={open}
             anchorEl={anchorEl}
             onClose={handleClose}
-            arrowSize={3}
             bgColor={comet}
             className="py-1 px-2"
             placement="top">

@@ -1,15 +1,10 @@
 import InputBase from '@mui/material/InputBase'
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/styles'
 import MAutocomplete from '@mui/material/Autocomplete'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
 import { P } from 'src/components/typography'
 import SearchIcon from 'src/styling/icons/circle buttons/search/zodiac.svg?react'
-
-import styles from './SearchBox.styles'
-
-const useStyles = makeStyles(styles)
 
 const SearchBox = memo(
   ({
@@ -21,13 +16,11 @@ const SearchBox = memo(
     onChange,
     ...props
   }) => {
-    const classes = useStyles({ size })
-
     const [popupOpen, setPopupOpen] = useState(false)
 
     const inputClasses = {
-      [classes.input]: true,
-      [classes.inputWithPopup]: popupOpen
+      'flex flex-1 h-8 px-2 py-2 font-md items-center rounded-2xl bg-zircon text-comet': true,
+      'rounded-b-none': popupOpen
     }
 
     const innerOnChange = filters => onChange(filters)
@@ -35,15 +28,16 @@ const SearchBox = memo(
     return (
       <MAutocomplete
         loading={loading}
-        classes={{ option: classes.autocomplete }}
         value={filters}
         options={options}
         getOptionLabel={it => it.label || it.value}
         renderOption={(props, it) => (
           <li {...props}>
-            <div className={classes.item}>
-              <P className={classes.itemLabel}>{it.label || it.value}</P>
-              <P className={classes.itemType}>{it.type}</P>
+            <div className="flex flex-row w-full h-8">
+              <P className="m-0 whitespace-nowrap overflow-hidden text-ellipsis">
+                {it.label || it.value}
+              </P>
+              <P className="m-0 ml-auto text-sm text-come">{it.type}</P>
             </div>
           </li>
         )}
@@ -54,8 +48,10 @@ const SearchBox = memo(
         filterSelectedOptions
         isOptionEqualToValue={(option, value) => option.type === value.type}
         PaperComponent={({ children }) => (
-          <Paper elevation={0} className={classes.popup}>
-            <div className={classes.separator} />
+          <Paper
+            elevation={0}
+            className="flex flex-col rounded-b-xl bg-zircon shadow-2xl">
+            <div className="w-[88%] h-[1px] my-p mx-auto border-1 border-comet" />
             {children}
           </Paper>
         )}
@@ -65,13 +61,10 @@ const SearchBox = memo(
               ref={params.InputProps.ref}
               {...params}
               className={classnames(inputClasses)}
-              startAdornment={<SearchIcon className={classes.iconButton} />}
+              startAdornment={<SearchIcon className="mr-3" />}
               placeholder={inputPlaceholder}
               inputProps={{
-                className: classes.bold,
-                classes: {
-                  root: classes.size
-                },
+                className: 'font-bold',
                 ...params.inputProps
               }}
             />

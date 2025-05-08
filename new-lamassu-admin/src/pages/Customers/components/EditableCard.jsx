@@ -1,6 +1,5 @@
 import CardContent from '@mui/material/CardContent'
 import Card from '@mui/material/Card'
-import classnames from 'classnames'
 import { Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'
 import { useState, React, useRef } from 'react'
@@ -90,7 +89,7 @@ const EditableCard = ({
 
   const authorized =
     state === OVERRIDE_PENDING
-      ? { label: 'Pending', type: 'neutral' }
+      ? { label: 'Pending', type: 'default' }
       : state === OVERRIDE_REJECTED
         ? { label: 'Rejected', type: 'error' }
         : { label: 'Accepted', type: 'success' }

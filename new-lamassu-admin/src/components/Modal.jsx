@@ -1,74 +1,11 @@
 import MaterialModal from '@mui/material/Modal'
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import { H1, H4 } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 
 import { IconButton } from 'src/components/buttons'
-
-const styles = {
-  modal: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  wrapper: ({ width, height }) => ({
-    width,
-    height,
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: height ?? 400,
-    maxHeight: '90vh',
-    overflowY: 'auto',
-    borderRadius: 8,
-    outline: 0
-  }),
-  infoPanelWrapper: ({ width, infoPanelHeight }) => ({
-    width,
-    height: infoPanelHeight,
-    marginTop: 16,
-    display: 'flex',
-    flexDirection: 'column',
-    minHeight: infoPanelHeight ?? 200,
-    maxHeight: '90vh',
-    overflowY: 'auto',
-    borderRadius: 8,
-    outline: 0
-  }),
-  panelContent: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    padding: [[0, 24]]
-  },
-  content: ({ small, xl }) => ({
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    padding: xl ? [[0, 60 + 28]] : small ? [[0, 16]] : [[0, 32]]
-  }),
-  button: ({ small, xl }) => ({
-    padding: [[0, 0, 0, 0]],
-    margin: xl
-      ? [[0, 0, 'auto', 'auto']]
-      : small
-        ? [[12, 12, 'auto', 'auto']]
-        : [[16, 16, 'auto', 'auto']]
-  }),
-  header: {
-    display: 'flex'
-  },
-  title: ({ small }) => ({
-    margin: small ? [[20, 0, 8, 16]] : [[28, 0, 8, 32]]
-  })
-}
-
-const useStyles = makeStyles(styles)
 
 const Modal = ({
   width,
@@ -86,7 +23,6 @@ const Modal = ({
   closeOnBackdropClick,
   ...props
 }) => {
-  const classes = useStyles({ width, height, small, infoPanelHeight, xl })
   const TitleCase = small ? H4 : H1
   const closeSize = xl ? 28 : small ? 16 : 20
 
@@ -96,24 +32,60 @@ const Modal = ({
     handleClose()
   }
 
+  const marginBySize = xl ? 0 : small ? 12 : 16
+  const paddingBySize = xl ? 88 : small ? 16 : 32
   return (
-    <MaterialModal onClose={innerClose} className={classes.modal} {...props}>
+    <MaterialModal
+      onClose={innerClose}
+      className="flex justify-center flex-col items-center"
+      {...props}>
       <>
-        <Paper className={classnames(classes.wrapper, className)}>
-          <div className={classes.header}>
-            {title && <TitleCase className={classes.title}>{title}</TitleCase>}
-            <IconButton
-              size={closeSize}
-              className={classes.button}
-              onClick={() => handleClose()}>
-              <CloseIcon />
-            </IconButton>
+        <Paper
+          style={{ width, height, minHeight: height ?? 400 }}
+          className={classnames(
+            'flex flex-col max-h-[90vh] rounded-lg outline-0',
+            className
+          )}>
+          <div className="flex">
+            {title && (
+              <TitleCase
+                className={
+                  small ? 'mt-5 mr-0 mb-2 ml-4' : 'mt-7 mr-0 mb-2 ml-8'
+                }>
+                {title}
+              </TitleCase>
+            )}
+            <div
+              className="ml-auto"
+              style={{ marginRight: marginBySize, marginTop: marginBySize }}>
+              <IconButton
+                size={closeSize}
+                className="p-0 mb-auto ml-auto"
+                onClick={() => handleClose()}>
+                <CloseIcon />
+              </IconButton>
+            </div>
           </div>
-          <div className={classes.content}>{children}</div>
+          <div
+            className="w-full flex flex-col flex-1"
+            style={{ paddingRight: paddingBySize, paddingLeft: paddingBySize }}>
+            {children}
+          </div>
         </Paper>
         {infoPanel && (
-          <Paper className={classnames(classes.infoPanelWrapper, className)}>
-            <div className={classes.panelContent}>{infoPanel}</div>
+          <Paper
+            style={{
+              width,
+              height: infoPanelHeight,
+              minHeight: infoPanelHeight ?? 200
+            }}
+            className={classnames(
+              'mt-4 flex flex-col max-h-[90vh] overflow-y-auto rounded-lg outline-0',
+              className
+            )}>
+            <div className="w-full flex flex-col flex-1 py-0 px-6">
+              {infoPanel}
+            </div>
           </Paper>
         )}
       </>

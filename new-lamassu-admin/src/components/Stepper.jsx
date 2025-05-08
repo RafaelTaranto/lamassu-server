@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { memo } from 'react'
@@ -9,79 +8,29 @@ import CompleteStageIconZodiac from 'src/styling/icons/stage/zodiac/complete.svg
 import CurrentStageIconZodiac from 'src/styling/icons/stage/zodiac/current.svg?react'
 import EmptyStageIconZodiac from 'src/styling/icons/stage/zodiac/empty.svg?react'
 
-import {
-  primaryColor,
-  secondaryColor,
-  offColor,
-  disabledColor
-} from 'src/styling/variables'
-
-const styles = {
-  stages: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  wrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: 0
-  },
-  stage: {
-    display: 'flex',
-    height: 28,
-    width: 28,
-    zIndex: 2,
-    '& > svg': {
-      height: '100%',
-      width: '100%',
-      overflow: 'visible'
-    }
-  },
-  separator: {
-    width: 28,
-    height: 2,
-    border: [[2, 'solid']],
-    zIndex: 1
-  },
-  separatorSpring: {
-    borderColor: secondaryColor
-  },
-  separatorZodiac: {
-    borderColor: primaryColor
-  },
-  separatorSpringEmpty: {
-    borderColor: disabledColor
-  },
-  separatorZodiacEmpty: {
-    borderColor: offColor
-  }
-}
-
-const useStyles = makeStyles(styles)
+import classes from './Stepper.module.css'
 
 const Stepper = memo(({ steps, currentStep, color = 'spring', className }) => {
   if (currentStep < 1 || currentStep > steps)
     throw Error('Value of currentStage is invalid')
   if (steps < 1) throw Error('Value of stages is invalid')
 
-  const classes = useStyles()
-
   const separatorClasses = {
-    [classes.separator]: true,
-    [classes.separatorSpring]: color === 'spring',
-    [classes.separatorZodiac]: color === 'zodiac'
+    'w-7 h-[2px] border-2 z-1': true,
+    'border-spring': color === 'spring',
+    'border-zodiac': color === 'zodiac'
   }
 
   const separatorEmptyClasses = {
-    [classes.separator]: true,
-    [classes.separatorSpringEmpty]: color === 'spring',
-    [classes.separatorZodiacEmpty]: color === 'zodiac'
+    'w-7 h-[2px] border-2 z-1': true,
+    'border-dust': color === 'spring',
+    'border-comet': color === 'zodiac'
   }
 
   return (
-    <div className={classnames(className, classes.stages)}>
+    <div className={classnames(className, 'flex items-center')}>
       {R.range(1, currentStep).map(idx => (
-        <div key={idx} className={classes.wrapper}>
+        <div key={idx} className="flex items-center m-0">
           {idx > 1 && <div className={classnames(separatorClasses)} />}
           <div className={classes.stage}>
             {color === 'spring' && <CompleteStageIconSpring />}
@@ -89,7 +38,7 @@ const Stepper = memo(({ steps, currentStep, color = 'spring', className }) => {
           </div>
         </div>
       ))}
-      <div className={classes.wrapper}>
+      <div className="flex items-center m-0">
         {currentStep > 1 && <div className={classnames(separatorClasses)} />}
         <div className={classes.stage}>
           {color === 'spring' && <CurrentStageIconSpring />}
@@ -97,7 +46,7 @@ const Stepper = memo(({ steps, currentStep, color = 'spring', className }) => {
         </div>
       </div>
       {R.range(currentStep + 1, steps + 1).map(idx => (
-        <div key={idx} className={classes.wrapper}>
+        <div key={idx} className="flex items-center m-0">
           <div className={classnames(separatorEmptyClasses)} />
           <div className={classes.stage}>
             {color === 'spring' && <EmptyStageIconSpring />}

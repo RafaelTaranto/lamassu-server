@@ -1,10 +1,10 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'
-import Title from 'src/components/Title'
-import Sidebar from 'src/components/layout/Sidebar'
-import { Info3, H4 } from 'src/components/typography'
+import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper.jsx'
+import Title from 'src/components/Title.jsx'
+import Sidebar from 'src/components/layout/Sidebar.jsx'
+import { Info3, H4 } from 'src/components/typography/index.jsx'
 
 import {
   Table,
@@ -13,8 +13,8 @@ import {
   TableHeader,
   TableBody,
   TableCell
-} from 'src/components/table'
-import { formatDate } from 'src/utils/timezones'
+} from 'src/components/table/index.js'
+import { formatDate } from 'src/utils/timezones.js'
 
 import classes from './Logs.module.css'
 
@@ -48,7 +48,12 @@ const GET_MACHINE_LOGS_CSV = gql`
 `
 
 const GET_MACHINE_LOGS = gql`
-  query MachineLogs($deviceId: ID!, $limit: Int, $from: DateTimeISO, $until: DateTimeISO) {
+  query MachineLogs(
+    $deviceId: ID!
+    $limit: Int
+    $from: DateTimeISO
+    $until: DateTimeISO
+  ) {
     machineLogs(
       deviceId: $deviceId
       limit: $limit

@@ -1,5 +1,5 @@
 .serverTableWrapper {
-  composes: tableWrapper from './Logs.module.css';
+  composes: tableWrapper from 'Logs.module.css';
   max-width: 100%;
   margin-left: 0;
 }

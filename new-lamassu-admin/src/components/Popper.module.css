@@ -1,0 +1,33 @@
+.newArrow,
+.newArrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+}
+
+.newArrow {
+  visibility: hidden;
+}
+
+.newArrow::before {
+  visibility: visible;
+  content: '';
+  transform: rotate(45deg);
+}
+
+.tooltip[data-popper-placement^='top'] > div > span {
+  bottom: -4px;
+}
+
+.tooltip[data-popper-placement^='bottom'] > div > span {
+  top: -4px;
+}
+
+.tooltip[data-popper-placement^='left'] > div > span {
+  right: -4px;
+}
+
+.tooltip[data-popper-placement^='right'] > div > span {
+  left: -4px;
+}

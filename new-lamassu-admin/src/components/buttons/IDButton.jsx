@@ -127,7 +127,6 @@ const IDButton = memo(
           open={open}
           anchorEl={anchorEl}
           onClose={handleClose}
-          arrowSize={3}
           placement="top"
           flip>
           <div className={classes.popoverContent}>
