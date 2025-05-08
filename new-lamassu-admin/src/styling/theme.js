@@ -164,6 +164,16 @@ theme = createTheme(theme, {
         }
       }
     },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          color: secondaryColor,
+          '&.Mui-checked': {
+            color: secondaryColor
+          }
+        }
+      }
+    },
     MuiChip: {
       styleOverrides: {
         root: {

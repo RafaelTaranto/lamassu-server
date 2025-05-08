@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
 import ActionButton from 'src/components/buttons/ActionButton'
@@ -9,10 +8,8 @@ import ClearAllIconInverse from 'src/styling/icons/stage/spring/empty.svg?react'
 import ClearAllIcon from 'src/styling/icons/stage/zodiac/empty.svg?react'
 import ShowUnreadIcon from 'src/styling/icons/stage/zodiac/full.svg?react'
 
-import styles from './NotificationCenter.styles'
 import NotificationRow from './NotificationRow'
-
-const useStyles = makeStyles(styles)
+import classes from './NotificationCenter.module.css'
 
 const GET_NOTIFICATIONS = gql`
   query getNotifications {
@@ -63,7 +60,6 @@ const NotificationCenter = ({
   const [xOffset, setXoffset] = useState(300)
 
   const [showingUnread, setShowingUnread] = useState(false)
-  const classes = useStyles({ buttonCoords, xOffset })
   const machines = R.compose(
     R.map(R.prop('name')),
     R.indexBy(R.prop('deviceId'))
@@ -120,7 +116,13 @@ const NotificationCenter = ({
       <div className={classes.container}>
         <div className={classes.header}>
           <H5 className={classes.headerText}>Notifications</H5>
-          <button onClick={close} className={classes.notificationIcon}>
+          <button
+            onClick={close}
+            className={classes.notificationIcon}
+            style={{
+              top: buttonCoords?.y ?? 0,
+              left: buttonCoords?.x ? buttonCoords.x - xOffset : 0
+            }}>
             <NotificationIconZodiac />
             {hasUnread && <div className={classes.hasUnread} />}
           </button>

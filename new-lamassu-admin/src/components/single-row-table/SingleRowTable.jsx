@@ -1,5 +1,3 @@
-import { makeStyles } from '@mui/styles'
-import classnames from 'classnames'
 import React from 'react'
 import {
   Table,
@@ -13,9 +11,7 @@ import EditIcon from 'src/styling/icons/action/edit/white.svg?react'
 
 import { IconButton } from 'src/components/buttons'
 
-import styles from './SingleRowTable.styles'
-
-const useStyles = makeStyles(styles)
+import { Label1, P } from '../typography/index.jsx'
 
 const SingleRowTable = ({
   width = 378,
@@ -25,34 +21,44 @@ const SingleRowTable = ({
   onEdit,
   className
 }) => {
-  const classes = useStyles({ width, height })
-
   return (
     <>
-      <Table className={classnames(className, classes.table)}>
+      <Table className={className} style={{ width }}>
         <THead>
-          <Th className={classes.head}>
+          <Th className="flex flex-1 justify-between items-center pr-3">
             {title}
-            <IconButton onClick={onEdit} className={classes.button} size="large">
+            <IconButton onClick={onEdit} className="mb-[1px]" size="large">
               <EditIcon />
             </IconButton>
           </Th>
         </THead>
         <TBody>
-          <Tr className={classes.tr}>
+          <Tr className="m-0" style={{ height }}>
             <Td width={width}>
               {items && (
                 <>
                   {items[0] && (
-                    <div className={classes.itemWrapper}>
-                      <div className={classes.label}>{items[0].label}</div>
-                      <div className={classes.item}>{items[0].value}</div>
+                    <div className="flex flex-col mt-4 min-h-9">
+                      <Label1 noMargin className="color-comet mb-1">
+                        {items[0].label}
+                      </Label1>
+                      <P
+                        noMargin
+                        className="overflow-hidden text-ellipsis whitespace-nowrap">
+                        {items[0].value}
+                      </P>
                     </div>
                   )}
                   {items[1] && (
-                    <div className={classes.itemWrapper}>
-                      <div className={classes.label}>{items[1].label}</div>
-                      <div className={classes.item}>{items[1].value}</div>
+                    <div className="flex flex-col mt-4 min-h-9">
+                      <Label1 noMargin className="color-comet mb-1">
+                        {items[1].label}
+                      </Label1>
+                      <P
+                        noMargin
+                        className="overflow-hidden text-ellipsis whitespace-nowrap">
+                        {items[1].value}
+                      </P>
                     </div>
                   )}
                 </>
@@ -62,7 +68,7 @@ const SingleRowTable = ({
         </TBody>
       </Table>
     </>
-  );
+  )
 }
 
 export default SingleRowTable

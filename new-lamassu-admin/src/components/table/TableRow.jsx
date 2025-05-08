@@ -1,54 +1,18 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo } from 'react'
 
-import typographyStyles from 'src/components/typography/styles'
-import {
-  tableCellColor,
-  tableCellHeight,
-  tableSmCellHeight,
-  tableLgCellHeight,
-  tableErrorColor,
-  tableSuccessColor
-} from 'src/styling/variables'
-
-const { info2, p } = typographyStyles
-
-const useStyles = makeStyles({
-  tr: {
-    extend: p,
-    padding: 4,
-    height: tableCellHeight,
-    backgroundColor: tableCellColor
-  },
-  lg: {
-    extend: info2,
-    height: tableLgCellHeight
-  },
-  sm: {
-    height: tableSmCellHeight
-  },
-  error: {
-    backgroundColor: tableErrorColor
-  },
-  success: {
-    backgroundColor: tableSuccessColor
-  }
-})
-
 const TableRow = memo(
   ({ className, children, header, error, success, size = 'sm', ...props }) => {
-    const classes = useStyles()
     const classnamesObj = {
-      [classes.tr]: !header,
-      [classes.sm]: !header && size === 'sm',
-      [classes.lg]: !header && size === 'lg',
-      [classes.error]: error,
-      [classes.success]: success
+      'p-1 h-12 bg-white': !header,
+      'h-8': !header && size === 'sm',
+      'h-9 font-bold text-base ': !header && size === 'lg',
+      'bg-misty-rose': error,
+      'bg-spring3': success
     }
 
     return (
-      <tr className={classnames(classnamesObj, className)} {...props}>
+      <tr className={classnames(classnamesObj, className, 'text-')} {...props}>
         {children}
       </tr>
     )

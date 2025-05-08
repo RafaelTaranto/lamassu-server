@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
@@ -22,10 +21,6 @@ import ExpandOpenIcon from 'src/styling/icons/action/expand/open.svg?react'
 
 import { EmptyTable } from 'src/components/table'
 
-import styles from './DataTable.styles'
-
-const useStyles = makeStyles(styles)
-
 const Row = ({
   id,
   index,
@@ -41,20 +36,18 @@ const Row = ({
   size,
   ...props
 }) => {
-  const classes = useStyles()
-
   const hasPointer = onClick || expandable
   const trClasses = {
-    [classes.pointer]: hasPointer,
-    [classes.row]: true,
-    [classes.expanded]: expanded
+    'cursor-pointer': hasPointer,
+    'border-2 border-transparent': true,
+    'border-2 border-zircon shadow-xl': expanded
   }
 
   return (
-    <div className={classes.rowWrapper}>
+    <div className="p-[1px]">
       <div
         data-cy={id}
-        className={classnames({ [classes.before]: expanded && index !== 0 })}>
+        className={classnames({ 'pt-3': expanded && index !== 0 })}>
         <Tr
           size={size}
           className={classnames(trClasses)}
@@ -74,7 +67,7 @@ const Row = ({
             <Td width={expWidth} textAlign="center">
               <button
                 onClick={() => expandRow(id, data)}
-                className={classes.expandButton}>
+                className="outline-0 border-0 bg-transparent cursor-pointer p-1">
                 {expanded && <ExpandOpenIcon />}
                 {!expanded && <ExpandClosedIcon />}
               </button>
@@ -83,8 +76,11 @@ const Row = ({
         </Tr>
       </div>
       {expanded && (
-        <div className={classes.after}>
-          <Tr className={classnames({ [classes.expanded]: expanded })}>
+        <div className="pb-3">
+          <Tr
+            className={classnames({
+              'border-2 border-zircon shadow-md': expanded
+            })}>
             <Td width={width}>
               <Details it={data} timezone={props.timezone} />
             </Td>
@@ -117,8 +113,6 @@ const DataTable = ({
   const coreWidth = R.compose(R.sum, R.map(R.prop('width')))(elements)
   const expWidth = maxWidth - coreWidth
   const width = coreWidth + (expandable ? expWidth : 0)
-
-  const classes = useStyles({ width })
 
   const expandRow = (id, data) => {
     if (data.id) {
@@ -176,7 +170,12 @@ const DataTable = ({
         'flex flex-1 flex-col': true,
         [className]: !!className
       })}>
-      <Table className={classnames(classes.table, tableClassName)}>
+      <Table
+        className={classnames(
+          'mb-12 min-h-50 flex-1 flex flex-col',
+          tableClassName
+        )}
+        style={{ width }}>
         <THead>
           {elements.map(({ width, className, textAlign, header }, idx) => (
             <Th
@@ -189,7 +188,7 @@ const DataTable = ({
           ))}
           {expandable && <Th width={expWidth}></Th>}
         </THead>
-        <TBody className={classes.body}>
+        <TBody className="flex-auto">
           {loading && <H4>Loading...</H4>}
           {!loading && R.isEmpty(data) && <EmptyTable message={emptyText} />}
           {!loading && !R.isEmpty(data) && (

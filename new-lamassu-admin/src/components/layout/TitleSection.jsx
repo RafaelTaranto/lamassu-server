@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
@@ -7,10 +6,6 @@ import Title from 'src/components/Title'
 import { Info1, Label1 } from 'src/components/typography'
 
 import { SubpageButton } from 'src/components/buttons'
-
-import styles from './TitleSection.styles'
-
-const useStyles = makeStyles(styles)
 
 const TitleSection = ({
   className,
@@ -22,15 +17,16 @@ const TitleSection = ({
   appendix,
   appendixRight
 }) => {
-  const classes = useStyles()
   return (
-    <div className={classnames(classes.titleWrapper, className)}>
-      <div className={classes.titleAndButtonsContainer}>
+    <div
+      className={classnames(
+        'flex justify-between items-center flex-row',
+        className
+      )}>
+      <div className="flex items-center">
         <Title>{title}</Title>
         {!!appendix && appendix}
-        {error && (
-          <ErrorMessage className={classes.error}>Failed to save</ErrorMessage>
-        )}
+        {error && <ErrorMessage className="ml-3">Failed to save</ErrorMessage>}
         {buttons.length > 0 && (
           <>
             {buttons.map((button, idx) =>
@@ -39,12 +35,14 @@ const TitleSection = ({
               ) : (
                 <SubpageButton
                   key={idx}
-                  className={classes.subpageButton}
+                  className="ml-3"
                   Icon={button.icon}
                   InverseIcon={button.inverseIcon}
                   toggle={button.toggle}
                   forceDisable={button.forceDisable}>
-                  <Info1 className={classes.buttonText}>{button.text}</Info1>
+                  <Info1 className="text-ghost font-mont text-base">
+                    {button.text}
+                  </Info1>
                 </SubpageButton>
               )
             )}
@@ -54,8 +52,8 @@ const TitleSection = ({
       <div className="flex flex-row items-center">
         {(labels ?? []).map(({ icon, label }, idx) => (
           <div key={idx} className="flex items-center">
-            <div className={classes.icon}>{icon}</div>
-            <Label1 className={classes.label}>{label}</Label1>
+            <div className="mr-1">{icon}</div>
+            <Label1 className="mr-6">{label}</Label1>
           </div>
         ))}
         {appendixRight}

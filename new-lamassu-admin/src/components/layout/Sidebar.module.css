@@ -1,0 +1,106 @@
+:root {
+  --sidebar-color: var(--zircon);
+}
+
+.sidebar {
+  display: flex;
+  background-color: var(--sidebar-color);
+  width: 520px;
+  margin-left: -300px;
+  box-shadow: -500px 0px 0px 0px var(--sidebar-color);
+  border-radius: 0 20px 0 0;
+  align-items: flex-end;
+  padding: 24px;
+  flex-direction: column;
+}
+
+@media (max-width: 1440px) {
+  .sidebar {
+    width: auto;
+    margin-left: 0;
+    min-width: 250px;
+    box-shadow: -200px 0px 0px 0px var(--sidebar-color);
+  }
+}
+
+.linkWrapper {
+  cursor: pointer;
+}
+
+.link {
+  position: relative;
+  color: var(--comet);
+  margin: 12px 24px 12px 0;
+  cursor: pointer;
+}
+
+.link:hover::after {
+  height: 140%;
+}
+
+.link::after {
+  content: "";
+  display: block;
+  background: var(--zodiac);
+  width: 4px;
+  height: 0;
+  left: 100%;
+  margin-left: 20px;
+  bottom: -2px;
+  position: absolute;
+  border-radius: 1000px;
+  transition: all 0.2s cubic-bezier(0.95, 0.1, 0.45, 0.94);
+}
+
+.activeLink {
+  font-weight: 700;
+  color: var(--zodiac);
+}
+
+.activeLink::after {
+  height: 140%;
+}
+
+.customRenderLink:hover::after {
+  height: 100%;
+}
+
+.customRenderLink::after {
+  bottom: 0;
+}
+
+.customRenderActiveLink::after {
+  height: 100%;
+}
+
+.item {
+  position: relative;
+  margin: 12px 0 12px 0;
+  display: flex;
+}
+
+.itemText {
+  color: var(--comet);
+  margin-right: 24px;
+}
+
+.itemTextActive {
+  color: var(--zodiac);
+}
+
+.itemTextPast {
+  color: var(--zodiac);
+}
+
+.stepperPath {
+  position: absolute;
+  height: 25px;
+  width: 1px;
+  border: 1px solid var(--comet);
+  right: 8px;
+  top: 18px;
+}
+
+.stepperPast {
+  border: 1px solid var(--zodiac);
+}

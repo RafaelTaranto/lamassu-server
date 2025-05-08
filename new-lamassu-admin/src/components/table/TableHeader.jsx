@@ -30,8 +30,8 @@ const TableHeaderCell = memo(
   ({ rightAlign, children, className, ...props }) => {
     const classes = useStyles()
     const styles = {
-      [classes.th]: true,
-      [classes.alignRight]: rightAlign
+      'bg-zodiac text-white py-0 px-6 h-8 font-': true,
+      'text-right': rightAlign
     }
 
     return (

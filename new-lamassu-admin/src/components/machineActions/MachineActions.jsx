@@ -1,5 +1,4 @@
-import { useMutation, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, useLazyQuery, gql } from '@apollo/client'
 import React, { memo, useState } from 'react'
 import { ConfirmDialog } from 'src/components/ConfirmDialog'
 import ActionButton from 'src/components/buttons/ActionButton'
@@ -14,9 +13,6 @@ import UnpairReversedIcon from 'src/styling/icons/button/unpair/white.svg?react'
 import UnpairIcon from 'src/styling/icons/button/unpair/zodiac.svg?react'
 
 import DiagnosticsModal from './DiagnosticsModal'
-import { machineActionsStyles } from './MachineActions.styles'
-
-const useStyles = makeStyles(machineActionsStyles)
 
 const MACHINE_ACTION = gql`
   mutation MachineAction(
@@ -67,10 +63,9 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
   const [preflightOptions, setPreflightOptions] = useState({})
   const [showModal, setShowModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
-  const classes = useStyles()
 
   const warningMessage = (
-    <span className={classes.warning}>
+    <span className="text-tomato">
       A user may be in the middle of a transaction and they could lose their
       funds if you continue.
     </span>
@@ -113,10 +108,9 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
   return (
     <div>
       <H3>Actions</H3>
-      <div className={classes.stack}>
+      <div className="flex flex-row flex-wrap justify-start gap-2">
         <ActionButton
           color="primary"
-          className={classes.mr}
           Icon={EditIcon}
           InverseIcon={EditReversedIcon}
           disabled={loading}
@@ -131,7 +125,6 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
         </ActionButton>
         <ActionButton
           color="primary"
-          className={classes.mr}
           Icon={UnpairIcon}
           InverseIcon={UnpairReversedIcon}
           disabled={loading}
@@ -145,7 +138,6 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
         </ActionButton>
         <ActionButton
           color="primary"
-          className={classes.mr}
           Icon={RebootIcon}
           InverseIcon={RebootReversedIcon}
           disabled={loading}
@@ -159,7 +151,6 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
         </ActionButton>
         <ActionButton
           color="primary"
-          className={classes.mr}
           Icon={ShutdownIcon}
           InverseIcon={ShutdownReversedIcon}
           disabled={loading}
@@ -175,7 +166,6 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
         </ActionButton>
         <ActionButton
           color="primary"
-          className={classes.inlineChip}
           Icon={RebootIcon}
           InverseIcon={RebootReversedIcon}
           disabled={loading}
@@ -190,7 +180,6 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
         {machine.model === 'aveiro' && (
           <ActionButton
             color="primary"
-            className={classes.mr}
             Icon={RebootIcon}
             InverseIcon={RebootReversedIcon}
             disabled={loading}
@@ -208,7 +197,6 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
         {machine.model === 'aveiro' && (
           <ActionButton
             color="primary"
-            className={classes.inlineChip}
             Icon={RebootIcon}
             InverseIcon={RebootReversedIcon}
             disabled={loading}
@@ -225,7 +213,6 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
         )}
         <ActionButton
           color="primary"
-          className={classes.mr}
           Icon={RebootIcon}
           InverseIcon={RebootReversedIcon}
           disabled={loading}

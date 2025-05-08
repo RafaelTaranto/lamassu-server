@@ -1,19 +1,13 @@
-import { makeStyles } from '@mui/styles'
 import React from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import Subtitle from 'src/components/Subtitle'
 
-import styles from './Section.styles'
-
-const useStyles = makeStyles(styles)
-
 const Section = ({ error, children, title }) => {
-  const classes = useStyles()
   return (
-    <div className={classes.section}>
+    <div className="mb-8">
       {(title || error) && (
-        <div className={classes.sectionHeader}>
-          <Subtitle className={classes.sectionTitle}>{title}</Subtitle>
+        <div className="flex items-center">
+          <Subtitle className="mt-4 mr-5 mb-6 ml-0">{title}</Subtitle>
           {error && <ErrorMessage>Failed to save changes</ErrorMessage>}
         </div>
       )}

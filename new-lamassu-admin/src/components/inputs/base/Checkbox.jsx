@@ -1,60 +1,22 @@
 import Checkbox from '@mui/material/Checkbox'
-import { makeStyles } from '@mui/styles'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import React from 'react'
 import { Label2, Info3 } from 'src/components/typography'
 import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
 
-import {
-  fontSize2,
-  fontSize3,
-  secondaryColor,
-  offColor
-} from 'src/styling/variables'
-
-const useStyles = makeStyles({
-  root: {
-    color: secondaryColor,
-    '&.Mui-checked': {
-      color: secondaryColor
-    }
-  },
-  checked: {},
-  checkBoxLabel: {
-    display: 'flex'
-  },
-  wrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    '& > svg': {
-      marginRight: 10
-    }
-  },
-  message: {
-    display: 'flex',
-    alignItems: 'center',
-    color: offColor,
-    margin: 0,
-    whiteSpace: 'break-spaces'
-  }
-})
+import { fontSize2, fontSize3 } from 'src/styling/variables'
 
 const CheckboxInput = ({ name, onChange, value, settings, ...props }) => {
   const { enabled, label, disabledMessage, rightSideLabel } = settings
-  const classes = useStyles()
 
   return (
     <>
       {enabled ? (
-        <div className={classes.checkBoxLabel}>
+        <div className="flex">
           {!rightSideLabel && <Label2>{label}</Label2>}
           <Checkbox
             id={name}
-            classes={{
-              root: classes.root,
-              checked: classes.checked
-            }}
             onChange={onChange}
             value={value}
             checked={value}
@@ -70,9 +32,11 @@ const CheckboxInput = ({ name, onChange, value, settings, ...props }) => {
           {rightSideLabel && <Label2>{label}</Label2>}
         </div>
       ) : (
-        <div className={classes.wrapper}>
+        <div className="flex items-center gap-2">
           <WarningIcon />
-          <Info3 className={classes.message}>{disabledMessage}</Info3>
+          <Info3 className="flex items-center text-comet m-0 whitespace-break-spaces">
+            {disabledMessage}
+          </Info3>
         </div>
       )}
     </>

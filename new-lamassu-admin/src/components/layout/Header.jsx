@@ -1,7 +1,6 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import Popper from '@mui/material/Popper'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { memo, useState, useEffect, useRef } from 'react'
@@ -16,9 +15,7 @@ import NotificationIcon from 'src/styling/icons/menu/notification.svg?react'
 import NotificationCenter from 'src/components/NotificationCenter'
 import AddMachine from 'src/pages/AddMachine'
 
-import styles from './Header.styles'
-
-const useStyles = makeStyles(styles)
+import styles from './Header.module.css'
 
 const HAS_UNREAD = gql`
   query getUnread {
@@ -26,22 +23,22 @@ const HAS_UNREAD = gql`
   }
 `
 
-const Subheader = ({ item, classes, user }) => {
+const Subheader = ({ item, user }) => {
   const [prev, setPrev] = useState(null)
 
   return (
-    <div className={classes.subheader}>
-      <div className={classes.content}>
+    <div className={styles.subheader}>
+      <div className={styles.content}>
         <nav>
-          <ul className={classes.subheaderUl}>
+          <ul className={styles.subheaderUl}>
             {item.children.map((it, idx) => {
               if (!R.includes(user.role, it.allowedRoles)) return <></>
               return (
-                <li key={idx} className={classes.subheaderLi}>
+                <li key={idx} className={styles.subheaderLi}>
                   <NavLink
                     to={{ pathname: it.route, state: { prev } }}
-                    className={classes.subheaderLink}
-                    activeClassName={classes.activeSubheaderLink}
+                    className={styles.subheaderLink}
+                    activeClassName={styles.activeSubheaderLink}
                     isActive={match => {
                       if (!match) return false
                       setPrev(it.route)
@@ -72,7 +69,6 @@ const Header = memo(({ tree, user }) => {
   const notifCenterButtonRef = useRef()
   const popperRef = useRef()
   const history = useHistory()
-  const classes = useStyles()
 
   useEffect(() => {
     if (data?.hasUnreadNotifications) return setHasUnread(true)
@@ -112,20 +108,20 @@ const Header = memo(({ tree, user }) => {
   const popperOpen = Boolean(anchorEl)
   const id = popperOpen ? 'notifications-popper' : undefined
   return (
-    <header className={classes.headerContainer}>
-      <div className={classes.header}>
-        <div className={classes.content}>
+    <header className={styles.headerContainer}>
+      <div className={styles.header}>
+        <div className={styles.content}>
           <div
             onClick={() => {
               setActive(false)
               history.push('/dashboard')
             }}
-            className={classnames(classes.logo, classes.logoLink)}>
+            className={classnames(styles.logo, styles.logoLink)}>
             <Logo />
-            <H4 className={classes.white}>Lamassu Admin</H4>
+            <H4 className="text-white">Lamassu Admin</H4>
           </div>
-          <nav className={classes.nav}>
-            <ul className={classes.ul}>
+          <nav className={styles.nav}>
+            <ul className={styles.ul}>
               {tree.map((it, idx) => {
                 if (!R.includes(user.role, it.allowedRoles)) return <></>
                 return (
@@ -137,11 +133,11 @@ const Header = memo(({ tree, user }) => {
                       setActive(it)
                       return true
                     }}
-                    className={classnames(classes.link, classes.whiteLink)}
-                    activeClassName={classes.activeLink}>
-                    <li className={classes.li}>
+                    className={classnames(styles.link)}
+                    activeClassName={styles.activeLink}>
+                    <li className={styles.li}>
                       <span
-                        className={classes.forceSize}
+                        className={styles.forceSize}
                         data-forcesize={it.label}>
                         {it.label}
                       </span>
@@ -151,7 +147,7 @@ const Header = memo(({ tree, user }) => {
               })}
             </ul>
           </nav>
-          <div className={classes.actionButtonsContainer}>
+          <div className={styles.actionButtonsContainer}>
             <ActionButton
               color="secondary"
               Icon={AddIcon}
@@ -163,16 +159,16 @@ const Header = memo(({ tree, user }) => {
               <div ref={notifCenterButtonRef}>
                 <button
                   onClick={handleClick}
-                  className={classes.notificationIcon}>
+                  className={styles.notificationIcon}>
                   <NotificationIcon />
-                  {hasUnread && <div className={classes.hasUnread} />}
+                  {hasUnread && <div className={styles.hasUnread} />}
                 </button>
                 <Popper
                   ref={popperRef}
                   id={id}
                   open={popperOpen}
                   anchorEl={anchorEl}
-                  className={classes.popper}
+                  className={styles.popper}
                   disablePortal={false}
                   placement="bottom-end"
                   modifiers={[
@@ -187,8 +183,8 @@ const Header = memo(({ tree, user }) => {
                       name: 'preventOverflow',
                       enabled: true,
                       options: {
-                        rootBoundary: 'viewport',
-                      },
+                        rootBoundary: 'viewport'
+                      }
                     }
                   ]}>
                   <NotificationCenter
@@ -204,9 +200,7 @@ const Header = memo(({ tree, user }) => {
           </div>
         </div>
       </div>
-      {active && active.children && (
-        <Subheader item={active} classes={classes} user={user} />
-      )}
+      {active && active.children && <Subheader item={active} user={user} />}
       {open && <AddMachine close={() => setOpen(false)} onPaired={onPaired} />}
     </header>
   )

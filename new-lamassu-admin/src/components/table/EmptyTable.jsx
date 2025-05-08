@@ -1,26 +1,15 @@
-import { makeStyles } from '@mui/styles'
 import classNames from 'classnames'
 import React, { memo } from 'react'
 import { H4 } from 'src/components/typography'
 import EmptyTableIcon from 'src/styling/icons/table/empty-table.svg?react'
 
-const styles = {
-  emptyTable: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    marginTop: 52
-  }
-}
-
-const useStyles = makeStyles(styles)
-
 const EmptyTable = memo(({ message, className }) => {
-  const classes = useStyles()
-
   return (
-    <div className={classNames(className, classes.emptyTable)}>
+    <div
+      className={classNames(
+        className,
+        'flex flex-col items-center w-full mt-13 text-sm font-bold font-museo'
+      )}>
       <EmptyTableIcon />
       <H4>{message}</H4>
     </div>
