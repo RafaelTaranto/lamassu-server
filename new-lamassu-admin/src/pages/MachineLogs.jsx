@@ -1,5 +1,4 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'
@@ -17,9 +16,7 @@ import {
 } from 'src/components/table'
 import { formatDate } from 'src/utils/timezones'
 
-import styles from './Logs.styles'
-
-const useStyles = makeStyles(styles)
+import classes from './Logs.module.css'
 
 const GET_MACHINES = gql`
   {
@@ -73,8 +70,6 @@ const GET_DATA = gql`
 `
 
 const Logs = () => {
-  const classes = useStyles()
-
   const [selected, setSelected] = useState(null)
   const [saveMessage, setSaveMessage] = useState(null)
 

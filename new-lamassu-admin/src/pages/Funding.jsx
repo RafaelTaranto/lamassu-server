@@ -1,6 +1,5 @@
 import { useQuery, gql } from '@apollo/client'
 import { formatCryptoAddress } from '@lamassu/coins/lightUtils'
-import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import classnames from 'classnames'
 import { format } from 'date-fns/fp'
@@ -23,12 +22,11 @@ import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 
 import { primaryColor } from 'src/styling/variables'
 
-import styles from './Funding.styles'
+import classes from './Funding.module.css'
 
 const NODE_NOT_CONNECTED_ERR =
   "Couldn't establish connection with the node. Make sure it is installed and try again"
 
-const useStyles = makeStyles(styles)
 const sizes = {
   big: 165,
   time: 140,
@@ -79,7 +77,6 @@ const getPendingTotal = list => {
 const Funding = () => {
   const [selected, setSelected] = useState(null)
   const [viewHistory] = useState(false)
-  const classes = useStyles()
   const fundingHistory = [
     {
       cryptoAmount: 2.0,
@@ -194,7 +191,7 @@ const Funding = () => {
                 <Info1 inline noMargin>
                   {`${selected.confirmedBalance} ${selected.cryptoCode}`}
                 </Info1>
-                <Info2 inline noMargin className={classes.leftSpacer}>
+                <Info2 inline noMargin className="ml-2">
                   {`(${signIfPositive(selected.pending)} ${
                     selected.pending
                   } pending)`}
@@ -207,7 +204,7 @@ const Funding = () => {
                     selected.fiatCode
                   }`}
                 </Info3>
-                <Label3 inline noMargin className={classes.leftSpacer}>
+                <Label3 inline noMargin className="ml-2">
                   {`(${signIfPositive(selected.fiatPending)} ${formatNumber(
                     selected.fiatPending
                   )} pending)`}

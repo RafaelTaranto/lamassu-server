@@ -1,5 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState, useRef } from 'react'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'
@@ -16,47 +15,23 @@ import {
   TableBody,
   TableCell
 } from 'src/components/table'
-import typographyStyles from 'src/components/typography/styles'
-import { offColor } from 'src/styling/variables'
 import { startCase } from 'src/utils/string'
 import { formatDate } from 'src/utils/timezones'
 
-import logsStyles from './Logs.styles'
-
-const { p } = typographyStyles
-const { tableWrapper } = logsStyles
-
-const localStyles = {
-  serverTableWrapper: {
-    extend: tableWrapper,
-    maxWidth: '100%',
-    marginLeft: 0
-  },
-  serverVersion: {
-    extend: p,
-    color: offColor,
-    margin: 'auto 0 auto 0'
-  },
-  headerLine2: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: 24
-  },
-  uptimeContainer: {
-    margin: 'auto 0 auto 0'
-  }
-}
-
-const styles = R.merge(logsStyles, localStyles)
-
-const useStyles = makeStyles(styles)
+import logsClasses from './Logs.module.css'
+import classes from './ServerLogs.module.css'
 
 const SHOW_ALL = { code: 'SHOW_ALL', display: 'Show all' }
 
 const NUM_LOG_RESULTS = 500
 
 const GET_CSV = gql`
-  query ServerData($limit: Int, $from: DateTimeISO, $until: DateTimeISO, $timezone: String) {
+  query ServerData(
+    $limit: Int
+    $from: DateTimeISO
+    $until: DateTimeISO
+    $timezone: String
+  ) {
     serverLogsCsv(
       limit: $limit
       from: $from
@@ -90,8 +65,6 @@ const GET_DATA = gql`
 `
 
 const Logs = () => {
-  const classes = useStyles()
-
   const tableEl = useRef()
 
   const [saveMessage, setSaveMessage] = useState(null)
@@ -135,11 +108,11 @@ const Logs = () => {
 
   return (
     <>
-      <div className={classes.titleWrapper}>
-        <div className={classes.titleAndButtonsContainer}>
+      <div className={logsClasses.titleWrapper}>
+        <div className={logsClasses.titleAndButtonsContainer}>
           <Title>Server</Title>
           {data && (
-            <div className={classes.buttonsWrapper}>
+            <div className={logsClasses.buttonsWrapper}>
               <LogsDowloaderPopover
                 title="Download logs"
                 name="server-logs"
@@ -174,14 +147,18 @@ const Logs = () => {
             ))}
         </div>
       </div>
-      <div className={classes.wrapper}>
+      <div className={logsClasses.wrapper}>
         <div ref={tableEl} className={classes.serverTableWrapper}>
-          <Table className={classes.table}>
+          <Table className={logsClasses.table}>
             <TableHead>
               <TableRow header>
-                <TableHeader className={classes.dateColumn}>Date</TableHeader>
-                <TableHeader className={classes.levelColumn}>Level</TableHeader>
-                <TableHeader className={classes.fillColumn} />
+                <TableHeader className={logsClasses.dateColumn}>
+                  Date
+                </TableHeader>
+                <TableHeader className={logsClasses.levelColumn}>
+                  Level
+                </TableHeader>
+                <TableHeader className={logsClasses.fillColumn} />
               </TableRow>
             </TableHead>
             <TableBody>
