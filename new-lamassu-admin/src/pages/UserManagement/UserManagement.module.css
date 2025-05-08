@@ -1,0 +1,134 @@
+.footer {
+  display: flex;
+  flex-direction: row;
+  margin: auto 0 24px 0;
+}
+
+.modalTitle {
+  margin-top: -5px;
+  color: var(--zodiac);
+  font-family: var(--mont);
+}
+
+.modalLabel1 {
+  margin-top: 20px;
+}
+
+.modalLabel2 {
+  margin-top: 40px;
+}
+
+.inputLabel {
+  color: var(--zodiac);
+  font-family: var(--mont);
+  font-size: 24px;
+  margin-left: 8px;
+  margin-top: 15px;
+}
+
+.tableWidth {
+  width: 1132px;
+}
+
+.radioGroup {
+  flex-direction: row;
+  width: 500px;
+}
+
+.radioLabel {
+  width: 150px;
+  height: 48px;
+}
+
+.copyToClipboard {
+  margin-left: auto;
+  padding-top: 7px;
+  margin-right: -5px;
+}
+
+.chip {
+  background-color: var(--zircon);
+  font-family: var(--mont);
+  margin-left: 10px;
+}
+
+.info {
+  font-family: var(--museo);
+  text-align: justify;
+}
+
+.addressWrapper {
+  background-color: var(--zircon);
+  margin-top: 8px;
+  height: 35px;
+}
+
+.address {
+  margin: 0px 16px 0px 16px;
+  padding-right: -15px;
+}
+
+.errorMessage {
+  font-family: var(--museo);
+  color: var(--tomato);
+}
+
+.codeContainer {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.submit {
+  margin: auto 0 0 auto;
+}
+
+.error {
+  color: var(--tomato);
+}
+
+.link {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  bottom: -20px;
+  right: -20px;
+  white-space: nowrap;
+  overflow-x: auto;
+  width: 92.5%;
+}
+
+.linkWrapper {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.loginWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.username {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.roleSwitch {
+  margin-left: 15px;
+}
+
+.actionButtonWrapper {
+  display: flex;
+  gap: 12px;
+}

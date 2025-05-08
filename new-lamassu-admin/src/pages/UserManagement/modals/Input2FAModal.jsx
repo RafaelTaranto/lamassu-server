@@ -1,16 +1,13 @@
 import { useLazyQuery, gql } from '@apollo/client'
-import { makeStyles } from '@mui/styles'
 import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
+
 import Modal from 'src/components/Modal'
 import { Info2, P } from 'src/components/typography'
-
 import { Button } from 'src/components/buttons'
 import { CodeInput } from 'src/components/inputs/base'
 
-import styles from '../UserManagement.styles'
-
-const useStyles = makeStyles(styles)
+import classes from '../UserManagement.module.css'
 
 const CONFIRM_2FA = gql`
   query confirm2FA($code: String!) {
@@ -19,8 +16,6 @@ const CONFIRM_2FA = gql`
 `
 
 const Input2FAModal = ({ showModal, handleClose, setConfirmation }) => {
-  const classes = useStyles()
-
   const [twoFACode, setTwoFACode] = useState('')
   const [invalidCode, setInvalidCode] = useState(false)
 

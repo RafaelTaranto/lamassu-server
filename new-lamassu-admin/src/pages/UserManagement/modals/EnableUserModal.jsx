@@ -1,5 +1,4 @@
-import { useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, gql } from '@apollo/client'
 import React, { useState } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import Modal from 'src/components/Modal'
@@ -7,9 +6,8 @@ import { Info2, P } from 'src/components/typography'
 
 import { Button } from 'src/components/buttons'
 
-import styles from '../UserManagement.styles'
-
 import Input2FAModal from './Input2FAModal'
+import classes from '../UserManagement.module.css'
 
 const ENABLE_USER = gql`
   mutation enableUser($confirmationCode: String, $id: ID!) {
@@ -27,11 +25,7 @@ const DISABLE_USER = gql`
   }
 `
 
-const useStyles = makeStyles(styles)
-
 const EnableUserModal = ({ state, dispatch, user, requiresConfirmation }) => {
-  const classes = useStyles()
-
   const [enableUser, { error: enableError }] = useMutation(ENABLE_USER, {
     onCompleted: () => handleClose(),
     refetchQueries: () => ['users']

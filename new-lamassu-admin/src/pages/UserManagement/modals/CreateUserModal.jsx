@@ -1,5 +1,4 @@
 import { useMutation, gql } from '@apollo/client'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
@@ -13,9 +12,7 @@ import { Button } from 'src/components/buttons'
 import { TextInput, RadioGroup } from 'src/components/inputs/formik'
 import { urlResolver } from 'src/utils/urlResolver'
 
-import styles from '../UserManagement.styles'
-
-const useStyles = makeStyles(styles)
+import classes from '../UserManagement.module.css'
 
 const CREATE_USER = gql`
   mutation createRegisterToken($username: String!, $role: String!) {
@@ -58,8 +55,6 @@ const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
 }
 
 const CreateUserModal = ({ state, dispatch }) => {
-  const classes = useStyles()
-
   const [usernameField, setUsernameField] = useState('')
   const [createUserURL, setCreateUserURL] = useState(null)
 

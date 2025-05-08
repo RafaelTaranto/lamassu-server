@@ -29,7 +29,7 @@ const WizardSplash = ({ name, onContinue }) => {
           bills before adding the new ones.
         </P>
       </div>
-      <Button className="m-auto mb-0" onClick={onContinue}>
+      <Button className="ml-auto mt-auto mb-0" onClick={onContinue}>
         Get started
       </Button>
     </div>
