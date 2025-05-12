@@ -50,7 +50,7 @@ node packages/server/bin/lamassu-migrate
 ### Run new-lamassu-admin
 
 ```
-cd packages-admin-ui/
+cd packages/admin-ui/
 npm run start
 ```
 
