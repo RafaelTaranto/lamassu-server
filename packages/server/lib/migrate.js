@@ -7,11 +7,11 @@ const migrateDir = path.resolve(__dirname, '..', 'migrations')
 const migrateOpts = {
   migrationsDirectory: migrateDir,
   stateStore: new DbMigrateStore(),
-  filterFunction: it => it.match(/^\d+.*\.js$/)
+  filterFunction: it => it.match(/^\d+.*\.js$/),
 }
 
 module.exports = { run }
-function run () {
+function run() {
   return new Promise((resolve, reject) => {
     migrate.load(migrateOpts, (err, set) => {
       if (err) return reject(err)

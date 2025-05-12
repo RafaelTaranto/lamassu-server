@@ -7,7 +7,7 @@ import {
   TBody,
   Tr,
   Td,
-  Th
+  Th,
 } from 'src/components/fake-table/Table'
 
 import { fromNamespace, toNamespace } from 'src/utils/config'
@@ -22,7 +22,7 @@ const sizes = {
   compliance: 178,
   errors: 142,
   security: 152,
-  active: 263
+  active: 263,
 }
 
 const Row = ({
@@ -31,7 +31,7 @@ const Row = ({
   forceDisable,
   save,
   shouldUpperCase,
-  onActivation
+  onActivation,
 }) => {
   const disabled = forceDisable || !data || !data.active
 
@@ -80,7 +80,7 @@ const Setup = ({ wizard, forceDisable }) => {
     twilioAvailable,
     setSmsSetupPopup,
     mailgunAvailable,
-    setEmailSetupPopup
+    setEmailSetupPopup,
   } = useContext(NotificationsCtx)
 
   const namespaces = [
@@ -92,7 +92,7 @@ const Setup = ({ wizard, forceDisable }) => {
         if (mailgunAvailable) return true
         setEmailSetupPopup(true)
         return false
-      }
+      },
     },
     {
       name: 'sms',
@@ -102,14 +102,14 @@ const Setup = ({ wizard, forceDisable }) => {
         if (twilioAvailable) return true
         setSmsSetupPopup(true)
         return false
-      }
+      },
     },
     {
       name: 'notificationCenter',
       forceDisable: forceDisable,
       shouldUpperCase: false,
-      onActivation: () => true
-    }
+      onActivation: () => true,
+    },
   ]
 
   const widthAdjust = wizard ? 20 : 0

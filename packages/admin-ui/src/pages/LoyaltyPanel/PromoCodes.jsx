@@ -59,23 +59,23 @@ const PromoCodes = () => {
       setErrorMsg(errorMessage)
     },
     onCompleted: () => setDeleteDialog(false),
-    refetchQueries: () => ['promoCodes']
+    refetchQueries: () => ['promoCodes'],
   })
 
   const [createCode] = useMutation(CREATE_CODE, {
-    refetchQueries: () => ['promoCodes']
+    refetchQueries: () => ['promoCodes'],
   })
 
   const addCode = (code, discount) => {
     setErrorMsg(null)
     createCode({
-      variables: { code: code, discount: discount }
+      variables: { code: code, discount: discount },
     })
       .then(res => {
         if (!res.errors) return setShowModal(false)
 
         const duplicateCodeError = R.any(it =>
-          R.includes('duplicate', it?.message)
+          R.includes('duplicate', it?.message),
         )(res.errors)
 
         const msg = duplicateCodeError ? DUPLICATE_ERROR_MSG : DEFAULT_ERROR_MSG
@@ -93,7 +93,7 @@ const PromoCodes = () => {
       width: 300,
       textAlign: 'left',
       size: 'sm',
-      view: t => t.code
+      view: t => t.code,
     },
     {
       header: 'Discount',
@@ -104,7 +104,7 @@ const PromoCodes = () => {
         <>
           <TL1 inline>{t.discount}</TL1> % in commissions
         </>
-      )
+      ),
     },
     {
       header: 'Delete',
@@ -121,8 +121,8 @@ const PromoCodes = () => {
             <DeleteIcon />
           </SvgIcon>
         </IconButton>
-      )
-    }
+      ),
+    },
   ]
 
   return (

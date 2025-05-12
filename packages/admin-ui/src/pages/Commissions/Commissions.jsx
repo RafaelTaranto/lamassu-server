@@ -36,7 +36,7 @@ const SAVE_CONFIG = gql`
 `
 const removeCoinFromOverride = crypto => override =>
   R.mergeRight(override, {
-    cryptoCurrencies: R.without([crypto], override.cryptoCurrencies)
+    cryptoCurrencies: R.without([crypto], override.cryptoCurrencies),
   })
 
 const Commissions = ({ name: SCREEN_KEY }) => {
@@ -45,7 +45,7 @@ const Commissions = ({ name: SCREEN_KEY }) => {
   const { data, loading } = useQuery(GET_DATA)
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)
@@ -78,11 +78,11 @@ const Commissions = ({ name: SCREEN_KEY }) => {
     const machineOverrides = R.map(removeCoin)(filterMachine(it))
 
     const overrides = machineOverrides.concat(
-      R.filter(it => !sameMachine(it), it)
+      R.filter(it => !sameMachine(it), it),
     )
 
     const config = {
-      commissions_overrides: R.prepend(override, overrides)
+      commissions_overrides: R.prepend(override, overrides),
     }
 
     return saveConfig({ variables: { config } })
@@ -92,8 +92,8 @@ const Commissions = ({ name: SCREEN_KEY }) => {
     ? [
         {
           label: 'Override value',
-          icon: <OverrideLabelIcon />
-        }
+          icon: <OverrideLabelIcon />,
+        },
       ]
     : []
 
@@ -107,8 +107,8 @@ const Commissions = ({ name: SCREEN_KEY }) => {
             text: 'List view',
             icon: ListingViewIcon,
             inverseIcon: ReverseListingViewIcon,
-            toggle: setShowMachines
-          }
+            toggle: setShowMachines,
+          },
         ]}
         iconClassName="ml-1"
         appendix={

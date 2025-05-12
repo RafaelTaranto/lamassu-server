@@ -7,7 +7,7 @@ const BN = require('./bn')
 
 const TRANSACTION_EXPIRATION = T.day
 
-function httpError (msg, code) {
+function httpError(msg, code) {
   const err = new Error(msg)
   err.name = 'HTTPError'
   err.code = code || 500
@@ -15,18 +15,18 @@ function httpError (msg, code) {
   return err
 }
 
-function stateChange (deviceId, deviceTime, rec) {
+function stateChange(deviceId, deviceTime, rec) {
   const event = {
     id: rec.uuid,
     deviceId: deviceId,
     eventType: 'stateChange',
     note: JSON.stringify({ state: rec.state, isIdle: rec.isIdle }),
-    deviceTime: deviceTime
+    deviceTime: deviceTime,
   }
   return dbm.machineEvent(event)
 }
 
-function toCashOutTx (row) {
+function toCashOutTx(row) {
   if (!row) return null
 
   const keys = _.keys(row)
@@ -45,18 +45,21 @@ function toCashOutTx (row) {
   return _.set('direction', 'cashOut', newObj)
 }
 
-function fetchEmailOrPhoneTx (data, type) {
+function fetchEmailOrPhoneTx(data, type) {
   const sql = `select * from cash_out_txs
     where ${type === 'email' ? 'email' : 'phone'}=$1 and dispense=$2
     and (extract(epoch from (now() - created))) * 1000 < $3`
 
   const values = [data, false, TRANSACTION_EXPIRATION]
 
-  return db.any(sql, values)
+  return db
+    .any(sql, values)
     .then(_.map(toCashOutTx))
     .then(txs => {
       const seenTxs = _.some(it => it.status !== 'notSeen', txs)
-      const confirmedTxs = txs.filter(tx => _.includes(tx.status, ['instant', 'confirmed']))
+      const confirmedTxs = txs.filter(tx =>
+        _.includes(tx.status, ['instant', 'confirmed']),
+      )
       if (confirmedTxs.length > 0) {
         const reducer = (acc, val) => {
           return !acc || val.cryptoAtoms.gt(acc.cryptoAtoms) ? val : acc
@@ -67,23 +70,26 @@ function fetchEmailOrPhoneTx (data, type) {
         return maxTx
       }
 
-      if (txs.length > 0 && !seenTxs) throw httpError('Transaction not seen', 411)
-      if (txs.length > 0 && seenTxs) throw httpError('Pending transactions', 412)
+      if (txs.length > 0 && !seenTxs)
+        throw httpError('Transaction not seen', 411)
+      if (txs.length > 0 && seenTxs)
+        throw httpError('Pending transactions', 412)
       throw httpError('No transactions', 404)
     })
 }
-function fetchEmailTx (email) {
+function fetchEmailTx(email) {
   return fetchEmailOrPhoneTx(email, 'email')
 }
 
-function fetchPhoneTx (phone) {
+function fetchPhoneTx(phone) {
   return fetchEmailOrPhoneTx(phone, 'phone')
 }
 
-function fetchStatusTx (txId, status) {
+function fetchStatusTx(txId, status) {
   const sql = 'select * from cash_out_txs where id=$1'
 
-  return db.oneOrNone(sql, [txId])
+  return db
+    .oneOrNone(sql, [txId])
     .then(toCashOutTx)
     .then(tx => {
       if (!tx) throw httpError('No transaction', 404)
@@ -97,5 +103,5 @@ module.exports = {
   fetchPhoneTx,
   fetchEmailTx,
   fetchStatusTx,
-  httpError
+  httpError,
 }

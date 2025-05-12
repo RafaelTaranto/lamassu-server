@@ -1,4 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { P, H4 } from 'src/components/typography'
@@ -9,6 +9,7 @@ import { NamespacedTable as EditableTable } from 'src/components/editableTable'
 import { toNamespace, namespaces } from 'src/utils/config'
 
 import classes from './Shared.module.css'
+
 const GET_INFO = gql`
   query getData {
     config
@@ -36,7 +37,7 @@ const SAVE_CONFIG = gql`
 const AllSet = ({ data: currentData, doContinue }) => {
   const { data } = useQuery(GET_INFO)
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    onCompleted: doContinue
+    onCompleted: doContinue,
   })
 
   const [error, setError] = useState(false)
@@ -49,7 +50,7 @@ const AllSet = ({ data: currentData, doContinue }) => {
   const save = () => {
     const adjustedData = {
       zeroConfLimit: 0,
-      ...currentData
+      ...currentData,
     }
     if (!WalletSchema.isValidSync(adjustedData)) return setError(true)
 
@@ -61,16 +62,16 @@ const AllSet = ({ data: currentData, doContinue }) => {
 
   const presentableData = R.pipe(
     R.omit(['coin', 'zeroConf', 'zeroConfLimit']),
-    toNamespace(coin)
+    toNamespace(coin),
   )(currentData)
 
   const presentableElements = R.filter(
     R.pipe(
       R.prop('name'),
       R.flip(R.includes)(['zeroConf', 'zeroConfLimit']),
-      R.not()
+      R.not(),
     ),
-    getElements(cryptoCurrencies, accountsConfig, null, true)
+    getElements(cryptoCurrencies, accountsConfig, null, true),
   )
 
   return (

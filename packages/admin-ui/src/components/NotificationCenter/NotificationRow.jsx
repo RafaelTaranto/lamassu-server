@@ -12,37 +12,36 @@ import classes from './NotificationCenter.module.css'
 const types = {
   transaction: {
     display: 'Transactions',
-    icon: <Transaction height={16} width={16} />
+    icon: <Transaction height={16} width={16} />,
   },
   highValueTransaction: {
     display: 'Transactions',
-    icon: <Transaction height={16} width={16} />
+    icon: <Transaction height={16} width={16} />,
   },
   fiatBalance: {
     display: 'Maintenance',
-    icon: <Wrench height={16} width={16} />
+    icon: <Wrench height={16} width={16} />,
   },
   cryptoBalance: {
     display: 'Maintenance',
-    icon: <Wrench height={16} width={16} />
+    icon: <Wrench height={16} width={16} />,
   },
   compliance: {
     display: 'Compliance',
-    icon: <WarningIcon height={16} width={16} />
+    icon: <WarningIcon height={16} width={16} />,
   },
-  error: { display: 'Error', icon: <WarningIcon height={16} width={16} /> }
+  error: { display: 'Error', icon: <WarningIcon height={16} width={16} /> },
 }
 
 const NotificationRow = ({
   id,
   type,
-  detail,
   message,
   deviceName,
   created,
   read,
   valid,
-  toggleClear
+  toggleClear,
 }) => {
   const typeDisplay = R.path([type, 'display'])(types) ?? null
   const icon = R.path([type, 'icon'])(types) ?? (
@@ -50,7 +49,7 @@ const NotificationRow = ({
   )
   const age = prettyMs(new Date().getTime() - new Date(created).getTime(), {
     compact: true,
-    verbose: true
+    verbose: true,
   })
   const notificationTitle =
     typeDisplay && deviceName
@@ -61,13 +60,13 @@ const NotificationRow = ({
 
   const iconClass = {
     [classes.readIcon]: read,
-    [classes.unreadIcon]: !read
+    [classes.unreadIcon]: !read,
   }
   return (
     <div
       className={classnames(
         classes.notificationRow,
-        !read && valid ? classes.unread : ''
+        !read && valid ? classes.unread : '',
       )}>
       <div className={classes.notificationRowIcon}>
         <div>{icon}</div>

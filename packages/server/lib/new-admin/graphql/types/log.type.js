@@ -16,10 +16,34 @@ const typeDef = gql`
   }
 
   type Query {
-    machineLogs(deviceId: ID!, from: DateTimeISO, until: DateTimeISO, limit: Int, offset: Int): [MachineLog] @auth
-    machineLogsCsv(deviceId: ID!, from: DateTimeISO, until: DateTimeISO, limit: Int, offset: Int, timezone: String): String @auth
-    serverLogs(from: DateTimeISO, until: DateTimeISO, limit: Int, offset: Int): [ServerLog] @auth
-    serverLogsCsv(from: DateTimeISO, until: DateTimeISO, limit: Int, offset: Int, timezone: String): String @auth
+    machineLogs(
+      deviceId: ID!
+      from: DateTimeISO
+      until: DateTimeISO
+      limit: Int
+      offset: Int
+    ): [MachineLog] @auth
+    machineLogsCsv(
+      deviceId: ID!
+      from: DateTimeISO
+      until: DateTimeISO
+      limit: Int
+      offset: Int
+      timezone: String
+    ): String @auth
+    serverLogs(
+      from: DateTimeISO
+      until: DateTimeISO
+      limit: Int
+      offset: Int
+    ): [ServerLog] @auth
+    serverLogsCsv(
+      from: DateTimeISO
+      until: DateTimeISO
+      limit: Int
+      offset: Int
+      timezone: String
+    ): String @auth
   }
 `
 

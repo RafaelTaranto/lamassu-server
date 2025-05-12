@@ -5,22 +5,25 @@ const _ = require('lodash/fp')
 const smsNotices = require('./sms-notices')
 const { RECEIPT } = require('./constants')
 
-function getSms (event, phone, content) {
-  return smsNotices.getSMSNotice(event)
-    .then(msg => {
-      if (!_.isNil(msg)) {
-        var accMsg = msg.message
-        const contentKeys = _.keys(content)
-        const messageContent = _.reduce((acc, it) => _.replace(`#${it}`, content[it], acc), accMsg, contentKeys)
-        return {
-          toNumber: phone,
-          body: messageContent
-        }
+function getSms(event, phone, content) {
+  return smsNotices.getSMSNotice(event).then(msg => {
+    if (!_.isNil(msg)) {
+      var accMsg = msg.message
+      const contentKeys = _.keys(content)
+      const messageContent = _.reduce(
+        (acc, it) => _.replace(`#${it}`, content[it], acc),
+        accMsg,
+        contentKeys,
+      )
+      return {
+        toNumber: phone,
+        body: messageContent,
       }
-    })
+    }
+  })
 }
 
-function getPlugin (settings) {
+function getPlugin(settings) {
   const smsProvider = settings.config.notifications_thirdParty_sms
   const pluginCode = smsProvider ?? 'twilio'
   const plugin = ph.load(ph.SMS, pluginCode)
@@ -29,12 +32,11 @@ function getPlugin (settings) {
   return { plugin, account }
 }
 
-function sendMessage (settings, rec) {
-  return Promise.resolve()
-    .then(() => {
-      const { plugin, account } = getPlugin(settings)
-      return plugin.sendMessage(account, rec)
-    })
+function sendMessage(settings, rec) {
+  return Promise.resolve().then(() => {
+    const { plugin, account } = getPlugin(settings)
+    return plugin.sendMessage(account, rec)
+  })
 }
 
 const toCryptoUnits = (cryptoAtoms, cryptoCode) => {
@@ -42,7 +44,7 @@ const toCryptoUnits = (cryptoAtoms, cryptoCode) => {
   return cryptoAtoms.shiftedBy(-unitScale)
 }
 
-function formatSmsReceipt (data, options) {
+function formatSmsReceipt(data, options) {
   var message = `RECEIPT\n`
   if (data.operatorInfo) {
     message = message.concat(`Operator information:\n`)
@@ -94,22 +96,26 @@ function formatSmsReceipt (data, options) {
     message = message.concat(`Address: ${data.address}\n`)
   }
 
-  const timestamp = `${(new Date()).toISOString().substring(11, 19)} UTC`
+  const timestamp = `${new Date().toISOString().substring(11, 19)} UTC`
 
-  const postReceiptSmsPromise = getSms(RECEIPT, data.customerPhone, { timestamp })
+  const postReceiptSmsPromise = getSms(RECEIPT, data.customerPhone, {
+    timestamp,
+  })
 
-  return Promise.all([smsNotices.getSMSNotice(RECEIPT), postReceiptSmsPromise])
-    .then(([res, postReceiptSms]) => ({
-      sms: {
-        toNumber: data.customerPhone,
-        body: res.enabled ? message.concat('\n\n', postReceiptSms.body) : message
-      }
-    }))
+  return Promise.all([
+    smsNotices.getSMSNotice(RECEIPT),
+    postReceiptSmsPromise,
+  ]).then(([res, postReceiptSms]) => ({
+    sms: {
+      toNumber: data.customerPhone,
+      body: res.enabled ? message.concat('\n\n', postReceiptSms.body) : message,
+    },
+  }))
 }
 
 module.exports = {
   getSms,
   sendMessage,
   formatSmsReceipt,
-  toCryptoUnits
+  toCryptoUnits,
 }

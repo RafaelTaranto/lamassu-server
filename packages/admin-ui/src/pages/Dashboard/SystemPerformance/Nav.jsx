@@ -27,7 +27,7 @@ const Nav = ({ handleSetRange, showPicker }) => {
                 className={classnames({
                   'cursor-pointer text-comet': true,
                   'font-bold text-zodiac border-b-zodiac border-b-2':
-                    isSelected(it)
+                    isSelected(it),
                 })}>
                 {it}
               </div>

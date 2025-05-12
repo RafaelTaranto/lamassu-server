@@ -25,7 +25,7 @@ const partNames = new Map([
   [MAIDEN_NAME, 'maidenName'],
   [PATRONYMIC, 'patronymic'],
   [MATRONYMIC, 'matronymic'],
-  [NICKNAME, 'nickname']
+  [NICKNAME, 'nickname'],
 ])
 
 const filteredWords = [
@@ -34,7 +34,7 @@ const filteredWords = [
 
 // group-id to type-id
 
-function processMasterNamePartGroup (groupNode) {
+function processMasterNamePartGroup(groupNode) {
   const namePartGroupNode = groupNode.NamePartGroup
   const groupId = namePartGroupNode.$.ID
   const typeId = namePartGroupNode.$.NamePartTypeID
@@ -47,7 +47,7 @@ const processDocumentedNamePart = _.curry((groupTypes, namePartNode) => {
   const typeId = groupTypes.get(groupId)
   const partName = partNames.get(typeId)
   const value = _.lowerCase(valueNode.$text)
-  return {partName, value}
+  return { partName, value }
 })
 
 const isLatin = _.matchesProperty(['$', 'DocNameStatusID'], PRIMARY_LATIN)
@@ -72,29 +72,26 @@ const processAlias = _.curry((groupTypes, aliasNode) => {
   const fullName = nameUtils.makeFullName(parts)
   const words = _.flow(
     nameUtils.makeWords,
-    _.reject(_.flow(
-      _.get('value'),
-      word => filteredWords.includes(word)
-    ))
+    _.reject(_.flow(_.get('value'), word => filteredWords.includes(word))),
   )(fullName)
 
   // if (words.length < 2) {
   //   console.log(JSON.stringify(words))
   // }
 
-  return {id, parts, fullName, words}
+  return { id, parts, fullName, words }
 })
 
 // birth date
 
-function processDate (dateNode) {
+function processDate(dateNode) {
   const year = parseInt(dateNode.Year)
   const month = parseInt(dateNode.Month)
   const day = parseInt(dateNode.Day)
-  return {year, month, day}
+  return { year, month, day }
 }
 
-function processFeature (featureNode) {
+function processFeature(featureNode) {
   if (featureNode.$.FeatureTypeID !== BIRTH_DATE) return
 
   const datePeriodNode = featureNode.FeatureVersion.DatePeriod
@@ -103,7 +100,7 @@ function processFeature (featureNode) {
   // By using Start.From and End.To we use the extremes of the date-period.
   const period = {
     start: datePeriodNode.Start.From,
-    end: datePeriodNode.End.To
+    end: datePeriodNode.End.To,
   }
 
   return _.mapValues(processDate, period)
@@ -111,13 +108,16 @@ function processFeature (featureNode) {
 
 // profile
 
-function processProfile (profileNode) {
+function processProfile(profileNode) {
   if (profileNode.$.PartySubTypeID !== INDIVIDUAL) return
 
   const id = profileNode.$.ID
 
   const identityNode = profileNode.Identity
-  const groupTypesEntries = _.map(processMasterNamePartGroup, identityNode.NamePartGroups.MasterNamePartGroup)
+  const groupTypesEntries = _.map(
+    processMasterNamePartGroup,
+    identityNode.NamePartGroups.MasterNamePartGroup,
+  )
   const groupTypes = new Map(groupTypesEntries)
 
   const mapCompact = _.flow(_.map, _.compact)
@@ -128,7 +128,7 @@ function processProfile (profileNode) {
   if (_.isEmpty(aliases)) return
 
   const birthDatePeriods = mapCompact(processFeature, profileNode.Feature)
-  const individual = {id, aliases, birthDatePeriods}
+  const individual = { id, aliases, birthDatePeriods }
 
   return individual
 }
@@ -158,4 +158,4 @@ const parse = (source, callback) => {
   })
 }
 
-module.exports = {parse}
+module.exports = { parse }

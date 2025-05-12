@@ -13,13 +13,13 @@ const icons = {
   error: <WarningIcon style={{ height: 20, width: 20, marginRight: 12 }} />,
   fiatBalance: (
     <CashBoxEmpty style={{ height: 18, width: 18, marginRight: 14 }} />
-  )
+  ),
 }
 
 const links = {
   error: '/maintenance/machine-status',
   fiatBalance: '/maintenance/cash-cassettes',
-  cryptoBalance: '/maintenance/funding'
+  cryptoBalance: '/maintenance/funding',
 }
 
 const AlertsTable = ({ numToRender, alerts, machines }) => {

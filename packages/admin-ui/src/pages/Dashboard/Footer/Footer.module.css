@@ -12,9 +12,9 @@
 }
 
 .footer1:hover {
-   transition: min-height 0.5s ease-in;
-   min-height: 200px;
- }
+  transition: min-height 0.5s ease-in;
+  min-height: 200px;
+}
 
 .content1 {
   width: 1200px;

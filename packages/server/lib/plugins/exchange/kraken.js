@@ -4,27 +4,53 @@ const { ORDER_TYPES } = require('./consts')
 const { COINS } = require('@lamassu/coins')
 
 const ORDER_TYPE = ORDER_TYPES.MARKET
-const { BTC, BCH, DASH, ETH, LTC, ZEC, XMR, USDT, TRX, USDT_TRON, LN, USDC } = COINS
-const CRYPTO = [BTC, ETH, LTC, DASH, ZEC, BCH, XMR, USDT, TRX, USDT_TRON, LN, USDC]
+const { BTC, BCH, DASH, ETH, LTC, ZEC, XMR, USDT, TRX, USDT_TRON, LN, USDC } =
+  COINS
+const CRYPTO = [
+  BTC,
+  ETH,
+  LTC,
+  DASH,
+  ZEC,
+  BCH,
+  XMR,
+  USDT,
+  TRX,
+  USDT_TRON,
+  LN,
+  USDC,
+]
 const FIAT = ['USD', 'EUR']
 const DEFAULT_FIAT_MARKET = 'EUR'
 const AMOUNT_PRECISION = 6
 const REQUIRED_CONFIG_FIELDS = ['apiKey', 'privateKey', 'currencyMarket']
 const USER_REF = 'userref'
 
-const loadConfig = (account) => {
+const loadConfig = account => {
   const mapper = {
-    'privateKey': 'secret'
+    privateKey: 'secret',
   }
-  const mapped = _.mapKeys(key => mapper[key] ? mapper[key] : key)(account)
+  const mapped = _.mapKeys(key => (mapper[key] ? mapper[key] : key))(account)
 
   return {
     ...mapped,
     timeout: 3000,
-    nonce: function () { return this.microseconds() }
+    nonce: function () {
+      return this.microseconds()
+    },
   }
 }
 
 const loadOptions = () => ({ expiretm: '+60' })
 
-module.exports = { USER_REF, loadOptions, loadConfig, DEFAULT_FIAT_MARKET, REQUIRED_CONFIG_FIELDS, CRYPTO, FIAT, ORDER_TYPE, AMOUNT_PRECISION }
+module.exports = {
+  USER_REF,
+  loadOptions,
+  loadConfig,
+  DEFAULT_FIAT_MARKET,
+  REQUIRED_CONFIG_FIELDS,
+  CRYPTO,
+  FIAT,
+  ORDER_TYPE,
+  AMOUNT_PRECISION,
+}

@@ -26,29 +26,29 @@ const REPRESENTING_OPTIONS = [
   { code: 'overTime', display: 'Over time' },
   { code: 'volumeOverTime', display: 'Volume' },
   { code: 'topMachines', display: 'Top machines' },
-  { code: 'hourOfTheDay', display: 'Hour of the day' }
+  { code: 'hourOfTheDay', display: 'Hour of the day' },
 ]
 const PERIOD_OPTIONS = [
   { code: 'day', display: 'Last 24 hours' },
   { code: 'threeDays', display: 'Last 3 days' },
   { code: 'week', display: 'Last 7 days' },
-  { code: 'month', display: 'Last 30 days' }
+  { code: 'month', display: 'Last 30 days' },
 ]
 const TIME_OPTIONS = {
   day: DAY,
   threeDays: 3 * DAY,
   week: WEEK,
-  month: MONTH
+  month: MONTH,
 }
 
 const DAY_OPTIONS = R.map(
   it => ({
     code: R.toLower(it),
-    display: it
+    display: it,
   }),
   Array.from(Array(7)).map((_, i) =>
-    format('EEEE', add({ days: i }, startOfWeek(new Date())))
-  )
+    format('EEEE', add({ days: i }, startOfWeek(new Date()))),
+  ),
 )
 
 const GET_TRANSACTIONS = gql`
@@ -112,7 +112,7 @@ const OverviewEntry = ({ label, value, oldValue, currency }) => {
   const growthClasses = {
     'font-bold': true,
     'text-malachite': R.gt(value, oldValue),
-    'text-tomato': R.gt(oldValue, value)
+    'text-tomato': R.gt(oldValue, value),
   }
 
   return (
@@ -139,8 +139,8 @@ const Analytics = () => {
     variables: {
       from: subDays(65, endOfToday()),
       until: endOfToday(),
-      excludeTestingCustomers: true
-    }
+      excludeTestingCustomers: true,
+    },
   })
   const { data: configResponse, loading: configLoading } = useQuery(GET_DATA)
 
@@ -148,7 +148,7 @@ const Analytics = () => {
   const [period, setPeriod] = useState(PERIOD_OPTIONS[0])
   const [machine, setMachine] = useState(MACHINE_OPTIONS[0])
   const [selectedDay, setSelectedDay] = useState(
-    R.equals(representing.code, 'hourOfTheDay') ? DAY_OPTIONS[0] : null
+    R.equals(representing.code, 'hourOfTheDay') ? DAY_OPTIONS[0] : null,
   )
 
   const loading = txLoading || configLoading
@@ -175,20 +175,20 @@ const Analytics = () => {
         tx =>
           (!tx.dispensed || !tx.expired) &&
           (tx.sendConfirmed || tx.dispense) &&
-          !tx.hasError
-      )
+          !tx.hasError,
+      ),
     ) ?? []
 
   const machineOptions = R.clone(MACHINE_OPTIONS)
 
   R.forEach(
     m => machineOptions.push({ code: m.deviceId, display: m.name }),
-    machines
+    machines,
   )
 
   const machineTxs = R.filter(
     tx => (machine.code === 'all' ? true : tx.deviceId === machine.code),
-    data
+    data,
   )
 
   const filteredData = timeInterval => ({
@@ -213,35 +213,35 @@ const Analytics = () => {
           txDay < Date.now() - TIME_OPTIONS[timeInterval] &&
           txDay >= Date.now() - 2 * TIME_OPTIONS[timeInterval]
         )
-      }) ?? []
+      }) ?? [],
   })
 
   const txs = {
     current: filteredData(period.code).current.length,
-    previous: filteredData(period.code).previous.length
+    previous: filteredData(period.code).previous.length,
   }
 
   const median = values => (values.length === 0 ? 0 : R.median(values))
 
   const medianAmount = {
     current: median(R.map(d => d.fiat, filteredData(period.code).current)),
-    previous: median(R.map(d => d.fiat, filteredData(period.code).previous))
+    previous: median(R.map(d => d.fiat, filteredData(period.code).previous)),
   }
 
   const txVolume = {
     current: R.sum(R.map(d => d.fiat, filteredData(period.code).current)),
-    previous: R.sum(R.map(d => d.fiat, filteredData(period.code).previous))
+    previous: R.sum(R.map(d => d.fiat, filteredData(period.code).previous)),
   }
 
   const commissions = {
     current: R.sum(R.map(d => d.profit, filteredData(period.code).current)),
-    previous: R.sum(R.map(d => d.profit, filteredData(period.code).previous))
+    previous: R.sum(R.map(d => d.profit, filteredData(period.code).previous)),
   }
 
   const handleRepresentationChange = newRepresentation => {
     setRepresenting(newRepresentation)
     setSelectedDay(
-      R.equals(newRepresentation.code, 'hourOfTheDay') ? DAY_OPTIONS[0] : null
+      R.equals(newRepresentation.code, 'hourOfTheDay') ? DAY_OPTIONS[0] : null,
     )
   }
 

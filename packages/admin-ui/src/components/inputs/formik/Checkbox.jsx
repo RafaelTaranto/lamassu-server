@@ -3,20 +3,13 @@ import React, { memo } from 'react'
 import { Checkbox } from '../base'
 
 const CheckboxInput = memo(
-  ({
-    label,
-    textAlign,
-    fullWidth,
-    enabled = true,
-    disabledMessage = '',
-    ...props
-  }) => {
+  ({ label, enabled = true, disabledMessage = '', ...props }) => {
     const { name, onChange, value } = props.field
 
     const settings = {
       enabled: enabled,
       label: label,
-      disabledMessage: disabledMessage
+      disabledMessage: disabledMessage,
     }
 
     return (
@@ -28,7 +21,7 @@ const CheckboxInput = memo(
         {...props}
       />
     )
-  }
+  },
 )
 
 export default CheckboxInput

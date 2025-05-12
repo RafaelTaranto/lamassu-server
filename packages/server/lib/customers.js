@@ -21,7 +21,11 @@ const externalCompliance = require('./compliance-external')
 
 const { APPROVED, RETRY } = require('./plugins/compliance/consts')
 
-const TX_PASSTHROUGH_ERROR_CODES = ['operatorCancel', 'scoreThresholdReached', 'walletScoringError']
+const TX_PASSTHROUGH_ERROR_CODES = [
+  'operatorCancel',
+  'scoreThresholdReached',
+  'walletScoringError',
+]
 
 const ID_PHOTO_CARD_DIR = process.env.ID_PHOTO_CARD_DIR
 const FRONT_CAMERA_DIR = process.env.FRONT_CAMERA_DIR
@@ -37,16 +41,16 @@ const OPERATOR_DATA_DIR = process.env.OPERATOR_DATA_DIR
  *
  * @returns {object} Newly created customer
  */
-function add (customer) {
-  const sql = 'insert into customers (id, phone, phone_at) values ($1, $2, now()) returning *'
-  return db.one(sql, [uuid.v4(), customer.phone])
-    .then(camelize)
+function add(customer) {
+  const sql =
+    'insert into customers (id, phone, phone_at) values ($1, $2, now()) returning *'
+  return db.one(sql, [uuid.v4(), customer.phone]).then(camelize)
 }
 
-function addWithEmail (customer) {
-  const sql = 'insert into customers (id, email, email_at) values ($1, $2, now()) returning *'
-  return db.one(sql, [uuid.v4(), customer.email])
-    .then(camelize)
+function addWithEmail(customer) {
+  const sql =
+    'insert into customers (id, email, email_at) values ($1, $2, now()) returning *'
+  return db.one(sql, [uuid.v4(), customer.email]).then(camelize)
 }
 
 /**
@@ -60,16 +64,14 @@ function addWithEmail (customer) {
  *
  * @returns {object} Customer
  */
-function get (phone) {
+function get(phone) {
   const sql = 'select * from customers where phone=$1'
-  return db.oneOrNone(sql, [phone])
-    .then(camelize)
+  return db.oneOrNone(sql, [phone]).then(camelize)
 }
 
-function getWithEmail (email) {
+function getWithEmail(email) {
   const sql = 'select * from customers where email=$1'
-  return db.oneOrNone(sql, [email])
-    .then(camelize)
+  return db.oneOrNone(sql, [email]).then(camelize)
 }
 
 /**
@@ -84,16 +86,20 @@ function getWithEmail (email) {
  *
  * @returns {Promise} Newly updated Customer
  */
-function update (id, data, userToken) {
+function update(id, data, userToken) {
   const formattedData = _.omit(['id'], _.mapKeys(_.snakeCase, data))
 
-  const enhancedUpdateData = enhanceAtFields(enhanceOverrideFields(formattedData, userToken))
+  const enhancedUpdateData = enhanceAtFields(
+    enhanceOverrideFields(formattedData, userToken),
+  )
   const updateData = updateOverride(enhancedUpdateData)
 
-  const sql = Pgp.helpers.update(updateData, _.keys(updateData), 'customers') +
+  const sql =
+    Pgp.helpers.update(updateData, _.keys(updateData), 'customers') +
     ' where id=$1 returning *'
 
-  return db.one(sql, [id])
+  return db
+    .one(sql, [id])
     .then(assignCustomerData)
     .then(addComplianceOverrides(id, updateData, userToken))
     .then(getCustomInfoRequestsData)
@@ -111,7 +117,7 @@ function update (id, data, userToken) {
  *
  * @returns {Promise} Newly updated Customer
  */
-async function updateCustomer (id, data, userToken) {
+async function updateCustomer(id, data, userToken) {
   const formattedData = _.pick(
     [
       'sanctions',
@@ -123,16 +129,20 @@ async function updateCustomer (id, data, userToken) {
       'sanctions_override',
       'front_camera_override',
       'suspended_until',
-      'phone_override'
+      'phone_override',
     ],
-    _.mapKeys(_.snakeCase, data))
+    _.mapKeys(_.snakeCase, data),
+  )
 
-  const enhancedUpdateData = enhanceAtFields(enhanceOverrideFields(formattedData, userToken))
+  const enhancedUpdateData = enhanceAtFields(
+    enhanceOverrideFields(formattedData, userToken),
+  )
   const updateData = updateOverride(enhancedUpdateData)
-  
+
   if (!_.isEmpty(updateData)) {
-    const sql = Pgp.helpers.update(updateData, _.keys(updateData), 'customers') +
-    ' where id=$1'
+    const sql =
+      Pgp.helpers.update(updateData, _.keys(updateData), 'customers') +
+      ' where id=$1'
 
     await db.none(sql, [id])
   }
@@ -153,32 +163,38 @@ async function updateCustomer (id, data, userToken) {
  * @returns {Promise} Newly updated Customer
  */
 
-function edit (id, data, userToken) {
+function edit(id, data, userToken) {
   const defaults = [
     'front_camera',
     'id_card_data',
     'id_card_photo',
     'us_ssn',
     'subscriber_info',
-    'name'
+    'name',
   ]
-  const filteredData = _.pick(defaults, _.mapKeys(_.snakeCase, _.omitBy(_.isNil, data)))
+  const filteredData = _.pick(
+    defaults,
+    _.mapKeys(_.snakeCase, _.omitBy(_.isNil, data)),
+  )
   if (_.isEmpty(filteredData)) return getCustomerById(id)
-  const formattedData = enhanceEditedPhotos(enhanceEditedFields(filteredData, userToken))
+  const formattedData = enhanceEditedPhotos(
+    enhanceEditedFields(filteredData, userToken),
+  )
 
   const defaultDbData = {
     customer_id: id,
     created: new Date(),
-    ...formattedData
+    ...formattedData,
   }
 
-  const cs = new Pgp.helpers.ColumnSet(_.keys(defaultDbData),
-    { table: 'edited_customer_data' })
-  const onConflict = ' ON CONFLICT (customer_id) DO UPDATE SET ' +
+  const cs = new Pgp.helpers.ColumnSet(_.keys(defaultDbData), {
+    table: 'edited_customer_data',
+  })
+  const onConflict =
+    ' ON CONFLICT (customer_id) DO UPDATE SET ' +
     cs.assignColumns({ from: 'EXCLUDED', skip: ['customer_id', 'created'] })
   const upsert = Pgp.helpers.insert(defaultDbData, cs) + onConflict
-  return db.none(upsert)
-    .then(getCustomerById(id))
+  return db.none(upsert).then(getCustomerById(id))
 }
 
 /**
@@ -193,9 +209,9 @@ function edit (id, data, userToken) {
  * @returns {object} fields enhanced with *_by and *_at fields
  */
 
-function enhanceEditedFields (fields, userToken) {
+function enhanceEditedFields(fields, userToken) {
   if (!userToken) return fields
-  _.mapKeys((field) => {
+  _.mapKeys(field => {
     fields[field + '_by'] = userToken
     fields[field + '_at'] = 'now()^'
   }, fields)
@@ -212,8 +228,8 @@ function enhanceEditedFields (fields, userToken) {
  * @returns {object} fields enhanced with *_path
  */
 
-function enhanceEditedPhotos (fields) {
-  return _.mapKeys((field) => {
+function enhanceEditedPhotos(fields) {
+  return _.mapKeys(field => {
     if (_.includes(field, ['front_camera', 'id_card_photo'])) {
       return field + '_path'
     }
@@ -234,7 +250,7 @@ function enhanceEditedPhotos (fields) {
  *
  */
 
-function deleteEditedData (id, data) {
+function deleteEditedData(id, data) {
   // TODO: NOT IMPLEMENTING THIS FEATURE FOR THE CURRENT VERSION
   const defaults = [
     'front_camera',
@@ -242,13 +258,14 @@ function deleteEditedData (id, data) {
     'id_card_photo',
     'us_ssn',
     'subscriber_info',
-    'name'
+    'name',
   ]
   const filteredData = _.pick(defaults, _.mapKeys(_.snakeCase, data))
   if (_.isEmpty(filteredData)) return getCustomerById(id)
 
-  const cs = new Pgp.helpers.ColumnSet(_.keys(filteredData),
-    { table: 'edited_customer_data' })
+  const cs = new Pgp.helpers.ColumnSet(_.keys(filteredData), {
+    table: 'edited_customer_data',
+  })
   const update = Pgp.helpers.update(filteredData, cs)
   db.none(update)
   return getCustomerById(id)
@@ -267,9 +284,10 @@ function deleteEditedData (id, data) {
  * @returns {object} path New photo path
  *
  */
-async function updateEditedPhoto (id, photo, photoType) {
+async function updateEditedPhoto(id, photo, photoType) {
   const newPatch = {}
-  const baseDir = photoType === 'frontCamera' ? FRONT_CAMERA_DIR : ID_PHOTO_CARD_DIR
+  const baseDir =
+    photoType === 'frontCamera' ? FRONT_CAMERA_DIR : ID_PHOTO_CARD_DIR
   const { createReadStream, filename } = photo
   const stream = createReadStream()
 
@@ -297,11 +315,6 @@ const invalidateCustomerNotifications = (id, data) => {
   return notifierQueries.invalidateNotification(detailB, 'compliance')
 }
 
-const updateSubscriberData = (customerId, data, userToken) => {
-  const sql = `UPDATE customers SET subscriber_info=$1, subscriber_info_at=now(), subscriber_info_by=$2 WHERE id=$3`
-  return db.none(sql, [data, userToken, customerId])
-}
-
 /**
  * Get customer by id
  *
@@ -315,9 +328,10 @@ const updateSubscriberData = (customerId, data, userToken) => {
  *
  * Used for the machine.
  */
-function getById (id) {
+function getById(id) {
   const sql = 'select * from customers where id=$1'
-  return db.oneOrNone(sql, [id])
+  return db
+    .oneOrNone(sql, [id])
     .then(assignCustomerData)
     .then(getCustomInfoRequestsData)
     .then(getExternalComplianceMachine)
@@ -334,19 +348,16 @@ function getById (id) {
  * @param {object} customer Customer with snake_case fields
  * @returns {object} Camelized Customer object
  */
-function camelize (customer) {
+function camelize(customer) {
   return customer ? _.mapKeys(_.camelCase, customer) : null
 }
 
-function camelizeDeep (customer) {
-  return _.flow(
-    camelize,
-    it => ({
-      ...it,
-      notes: (it.notes ?? []).map(camelize),
-      externalCompliance: (it.externalCompliance ?? []).map(camelize)
-    })
-  )(customer)
+function camelizeDeep(customer) {
+  return _.flow(camelize, it => ({
+    ...it,
+    notes: (it.notes ?? []).map(camelize),
+    externalCompliance: (it.externalCompliance ?? []).map(camelize),
+  }))(customer)
 }
 
 /**
@@ -358,7 +369,7 @@ function camelizeDeep (customer) {
  *
  * @returns {array} Array of compliance types' names
  */
-function getComplianceTypes () {
+function getComplianceTypes() {
   return [
     'sms',
     'email',
@@ -367,35 +378,40 @@ function getComplianceTypes () {
     'front_camera',
     'sanctions',
     'authorized',
-    'us_ssn' ]
+    'us_ssn',
+  ]
 }
 
-function updateOverride (fields) {
+function updateOverride(fields) {
   const updateableFields = [
     'id_card_data',
     'id_card_photo_path',
     'front_camera_path',
     'authorized',
-    'us_ssn'
+    'us_ssn',
   ]
 
   const removePathSuffix = _.map(_.replace('_path', ''))
   const getPairs = _.map(f => [`${f}_override`, 'automatic'])
 
   const updatedFields = _.intersection(updateableFields, _.keys(fields))
-  const overrideFields = _.compose(_.fromPairs, getPairs, removePathSuffix)(updatedFields)
+  const overrideFields = _.compose(
+    _.fromPairs,
+    getPairs,
+    removePathSuffix,
+  )(updatedFields)
 
   return _.merge(fields, overrideFields)
 }
 
-function enhanceAtFields (fields) {
+function enhanceAtFields(fields) {
   const updateableFields = [
     'id_card_data',
     'id_card_photo',
     'front_camera',
     'sanctions',
     'authorized',
-    'us_ssn'
+    'us_ssn',
   ]
 
   const updatedFields = _.intersection(updateableFields, _.keys(fields))
@@ -415,17 +431,21 @@ function enhanceAtFields (fields) {
  * @param {string} userToken Acting user's token
  * @returns {object} fields enhanced with *_by and *_at fields
  */
-function enhanceOverrideFields (fields, userToken) {
+function enhanceOverrideFields(fields, userToken) {
   if (!userToken) return fields
   // Populate with computedFields (user who overrode and overridden timestamps date)
-  return _.reduce(_.assign, fields, _.map((type) => {
-    return (fields[type + '_override'])
-      ? {
-        [type + '_override_by']: userToken,
-        [type + '_override_at']: 'now()^'
-      }
-      : {}
-  }, getComplianceTypes()))
+  return _.reduce(
+    _.assign,
+    fields,
+    _.map(type => {
+      return fields[type + '_override']
+        ? {
+            [type + '_override_by']: userToken,
+            [type + '_override_at']: 'now()^',
+          }
+        : {}
+    }, getComplianceTypes()),
+  )
 }
 
 /**
@@ -443,23 +463,25 @@ function enhanceOverrideFields (fields, userToken) {
  *
  * @returns {promise} Result from compliance_overrides creation
  */
-function addComplianceOverrides (id, customer, userToken) {
+function addComplianceOverrides(id, customer, userToken) {
   // Prepare compliance overrides to save
   const overrides = _.map(field => {
     const complianceName = field + '_override'
-    return (customer[complianceName]) ? {
-      customerId: id,
-      complianceType: field,
-      overrideBy: userToken,
-      verification: customer[complianceName]
-    } : null
+    return customer[complianceName]
+      ? {
+          customerId: id,
+          complianceType: field,
+          overrideBy: userToken,
+          verification: customer[complianceName],
+        }
+      : null
   }, getComplianceTypes())
 
   // Save all the updated  override fields
-  return Promise.all(_.map(complianceOverrides.add, _.compact(overrides)))
-    .then(() => customer)
+  return Promise.all(_.map(complianceOverrides.add, _.compact(overrides))).then(
+    () => customer,
+  )
 }
-
 
 /**
  * Query all customers
@@ -470,23 +492,24 @@ function addComplianceOverrides (id, customer, userToken) {
  *
  * @returns {array} Array of customers populated with status field
  */
-function batch () {
+function batch() {
   const sql = `select * from customers
   where id != $1
   order by created desc limit $2`
-  return db.any(sql, [ anonymous.uuid, NUM_RESULTS ])
-    .then(customers => Promise.all(_.map(customer => {
-      return getCustomInfoRequestsData(customer)
-        .then(camelize)
-    }, customers)))
+  return db.any(sql, [anonymous.uuid, NUM_RESULTS]).then(customers =>
+    Promise.all(
+      _.map(customer => {
+        return getCustomInfoRequestsData(customer).then(camelize)
+      }, customers),
+    ),
+  )
 }
 
-function getSlimCustomerByIdBatch (ids) {
+function getSlimCustomerByIdBatch(ids) {
   const sql = `SELECT id, phone, id_card_data 
     FROM customers 
     WHERE id = ANY($1::uuid[])`
-  return db.any(sql, [ids])
-    .then(customers => _.map(camelize, customers))
+  return db.any(sql, [ids]).then(customers => _.map(camelize, customers))
 }
 
 // TODO: getCustomersList and getCustomerById are very similar, so this should be refactored
@@ -499,8 +522,17 @@ function getSlimCustomerByIdBatch (ids) {
  * @returns {array} Array of customers with it's transactions aggregations
  */
 
-function getCustomersList (phone = null, name = null, address = null, id = null, email = null) {
-  const passableErrorCodes = _.map(Pgp.as.text, TX_PASSTHROUGH_ERROR_CODES).join(',')
+function getCustomersList(
+  phone = null,
+  name = null,
+  address = null,
+  id = null,
+  email = null,
+) {
+  const passableErrorCodes = _.map(
+    Pgp.as.text,
+    TX_PASSTHROUGH_ERROR_CODES,
+  ).join(',')
 
   const sql = `SELECT id, authorized_override, days_suspended, is_suspended, front_camera_path, front_camera_override,
   phone, email, sms_override, id_card_data, id_card_data_override, id_card_data_expiration,
@@ -543,11 +575,24 @@ function getCustomersList (phone = null, name = null, address = null, id = null,
   AND ($8 IS NULL OR email = $8)
   ORDER BY last_active DESC
   limit $3`
-  return db.any(sql, [ passableErrorCodes, anonymous.uuid, NUM_RESULTS, phone, name, address, id, email ])
-    .then(customers => Promise.all(_.map(customer =>
-      getCustomInfoRequestsData(customer)
-        .then(camelizeDeep), customers)
-      )
+  return db
+    .any(sql, [
+      passableErrorCodes,
+      anonymous.uuid,
+      NUM_RESULTS,
+      phone,
+      name,
+      address,
+      id,
+      email,
+    ])
+    .then(customers =>
+      Promise.all(
+        _.map(
+          customer => getCustomInfoRequestsData(customer).then(camelizeDeep),
+          customers,
+        ),
+      ),
     )
 }
 
@@ -560,8 +605,11 @@ function getCustomersList (phone = null, name = null, address = null, id = null,
  *
  * Used for the server.
  */
-function getCustomerById (id) {
-  const passableErrorCodes = _.map(Pgp.as.text, TX_PASSTHROUGH_ERROR_CODES).join(',')
+function getCustomerById(id) {
+  const passableErrorCodes = _.map(
+    Pgp.as.text,
+    TX_PASSTHROUGH_ERROR_CODES,
+  ).join(',')
   const sql = `SELECT id, authorized_override, days_suspended, is_suspended, front_camera_path, front_camera_at, front_camera_override,
   phone, phone_at, email, email_at, phone_override, sms_override, id_card_data_at, id_card_data, id_card_data_override, id_card_data_expiration,
   id_card_photo_path, id_card_photo_at, id_card_photo_override, us_ssn_at, us_ssn, us_ssn_override, sanctions, sanctions_at,
@@ -596,7 +644,8 @@ function getCustomerById (id) {
       ) cn ON c.id = cn.customer_id
     WHERE c.id = $2
   ) AS cl WHERE rn = 1`
-  return db.oneOrNone(sql, [passableErrorCodes, id])
+  return db
+    .oneOrNone(sql, [passableErrorCodes, id])
     .then(assignCustomerData)
     .then(getCustomInfoRequestsData)
     .then(getExternalCompliance)
@@ -604,16 +653,17 @@ function getCustomerById (id) {
     .then(formatSubscriberInfo)
 }
 
-function assignCustomerData (customer) {
-  return getEditedData(customer.id)
-    .then(customerEditedData => selectLatestData(customer, customerEditedData))
+function assignCustomerData(customer) {
+  return getEditedData(customer.id).then(customerEditedData =>
+    selectLatestData(customer, customerEditedData),
+  )
 }
 
 function formatSubscriberInfo(customer) {
   const subscriberInfo = customer.subscriberInfo
-  if(!subscriberInfo) return customer
+  if (!subscriberInfo) return customer
   const result = subscriberInfo.result
-  if(_.isEmpty(result)) return _.omit(['subscriberInfo'], customer)
+  if (_.isEmpty(result)) return _.omit(['subscriberInfo'], customer)
 
   const name = _.get('belongs_to.name')(result)
   const street = _.get('current_addresses[0].street_line_1')(result)
@@ -623,7 +673,7 @@ function formatSubscriberInfo(customer) {
 
   customer.subscriberInfo = {
     name,
-    address: `${street ?? ''} ${city ?? ''}${street || city ? ',' : ''} ${stateCode ?? ''} ${postalCode ?? ''}`
+    address: `${street ?? ''} ${city ?? ''}${street || city ? ',' : ''} ${stateCode ?? ''} ${postalCode ?? ''}`,
   }
 
   return customer
@@ -636,33 +686,32 @@ function formatSubscriberInfo(customer) {
  *
  * @returns {array} A single customer instance with the most recent edited data
  */
-function getEditedData (id) {
+function getEditedData(id) {
   const sql = `SELECT * FROM edited_customer_data WHERE customer_id = $1`
-  return db.oneOrNone(sql, [id])
-    .then(_.omitBy(_.isNil))
+  return db.oneOrNone(sql, [id]).then(_.omitBy(_.isNil))
 }
 
-function selectLatestData (customerData, customerEditedData) {
+function selectLatestData(customerData, customerEditedData) {
   const defaults = [
     'front_camera',
     'id_card_data',
     'id_card_photo',
     'us_ssn',
     'subscriber_info',
-    'name'
+    'name',
   ]
   _.map(field => {
     const atField = field + '_at'
     const byField = field + '_by'
-    if (_.includes(field, ['front_camera', 'id_card_photo'])) field = field + '_path'
+    if (_.includes(field, ['front_camera', 'id_card_photo']))
+      field = field + '_path'
     if (!_.has(field, customerData) || !_.has(field, customerEditedData)) return
     if (customerData[atField] < customerEditedData[atField]) {
       customerData[field] = customerEditedData[field]
       customerData[atField] = customerEditedData[atField]
       customerData[byField] = customerEditedData[byField]
     }
-  }
-  , defaults)
+  }, defaults)
   return customerData
 }
 
@@ -671,54 +720,52 @@ function selectLatestData (customerData, customerEditedData) {
  * @param {Object} patch customer update record
  * @returns {Promise<Object>} new patch to be applied
  */
-function updatePhotoCard (id, patch) {
-  return Promise.resolve(patch)
-    .then(patch => {
-      // Base64 encoded image /9j/4AAQSkZJRgABAQAAAQ..
-      const imageData = _.get('idCardPhotoData', patch)
+function updatePhotoCard(id, patch) {
+  return Promise.resolve(patch).then(patch => {
+    // Base64 encoded image /9j/4AAQSkZJRgABAQAAAQ..
+    const imageData = _.get('idCardPhotoData', patch)
 
-      if (_.isEmpty(imageData)) {
-        return patch
-      }
+    if (_.isEmpty(imageData)) {
+      return patch
+    }
 
-      // remove idCardPhotoData from the update record
-      const newPatch = _.omit('idCardPhotoData', patch)
+    // remove idCardPhotoData from the update record
+    const newPatch = _.omit('idCardPhotoData', patch)
 
-      // decode the base64 string to binary data
-      const decodedImageData = Buffer.from(imageData, 'base64')
+    // decode the base64 string to binary data
+    const decodedImageData = Buffer.from(imageData, 'base64')
 
-      // workout the image hash
-      // i.e. 240e85ff2e4bb931f235985dd0134e459239496d2b5af6c5665168d38ef89b50
-      const hash = crypto
-        .createHash('sha256')
-        .update(imageData)
-        .digest('hex')
+    // workout the image hash
+    // i.e. 240e85ff2e4bb931f235985dd0134e459239496d2b5af6c5665168d38ef89b50
+    const hash = crypto.createHash('sha256').update(imageData).digest('hex')
 
-      // workout the image folder
-      // i.e. 24/0e/85
-      const rpath = _.join(path.sep, _.map(_.wrap(_.join, ''), _.take(3, _.chunk(2, _.split('', hash)))))
+    // workout the image folder
+    // i.e. 24/0e/85
+    const rpath = _.join(
+      path.sep,
+      _.map(_.wrap(_.join, ''), _.take(3, _.chunk(2, _.split('', hash)))),
+    )
 
-      // i.e. ../<lamassu-server-home>/idphotocard/24/0e/85
-      const dirname = path.join(ID_PHOTO_CARD_DIR, rpath)
+    // i.e. ../<lamassu-server-home>/idphotocard/24/0e/85
+    const dirname = path.join(ID_PHOTO_CARD_DIR, rpath)
 
-      // create the directory tree if needed
-      _.attempt(() => makeDir.sync(dirname))
+    // create the directory tree if needed
+    _.attempt(() => makeDir.sync(dirname))
 
-      // i.e. ../<lamassu-server-home>/idphotocard/24/0e/85/240e85ff2e4bb931f235985dd01....jpg
-      const filename = path.join(dirname, hash + '.jpg')
+    // i.e. ../<lamassu-server-home>/idphotocard/24/0e/85/240e85ff2e4bb931f235985dd01....jpg
+    const filename = path.join(dirname, hash + '.jpg')
 
-      // update db record patch
-      // i.e. {
-      //   "idCardPhotoPath": "24/0e/85/240e85ff2e4bb931f235985dd01....jpg",
-      //   "idCardPhotoAt": "now()"
-      // }
-      newPatch.idCardPhotoPath = path.join(rpath, hash + '.jpg')
-      newPatch.idCardPhotoAt = 'now()'
+    // update db record patch
+    // i.e. {
+    //   "idCardPhotoPath": "24/0e/85/240e85ff2e4bb931f235985dd01....jpg",
+    //   "idCardPhotoAt": "now()"
+    // }
+    newPatch.idCardPhotoPath = path.join(rpath, hash + '.jpg')
+    newPatch.idCardPhotoAt = 'now()'
 
-      // write image file
-      return writeFile(filename, decodedImageData)
-        .then(() => newPatch)
-    })
+    // write image file
+    return writeFile(filename, decodedImageData).then(() => newPatch)
+  })
 }
 
 /**
@@ -726,32 +773,30 @@ function updatePhotoCard (id, patch) {
  * @param {String} directory directory path of id card data for a certain user
  */
 
-function updatePhotos (imagesData, id, dir) {
-  return Promise.resolve(imagesData)
-    .then(imagesData => {
-      const newPatch = {}
-      if (_.isEmpty(imagesData)) {
-        return newPatch
-      }
-      // i.e. ../<lamassu-server-home>/<operatorid>/<customerid>/idcarddata
-      const dirname = path.join(dir)
-      // create the directory tree if needed
-      _.attempt(() => makeDir.sync(dirname))
-      const promises = imagesData.map((imageData, index) => {
-        // decode the base64 string to binary data
-        const decodedImageData = Buffer.from(imageData, 'base64')
-        // i.e. ../<lamassu-server-home>/<operatorid>/<customerid>/idcarddata/1.jpg
-        const filename = path.join(dirname, index + '.jpg')
-        return writeFile(filename, decodedImageData)
-      })
-
-      return Promise.all(promises)
-        .then(arr => {
-          newPatch.idCardData = path.join(dirname)
-          newPatch.idCardDataAt = 'now()'
-          return newPatch
-        })
+function updatePhotos(imagesData, id, dir) {
+  return Promise.resolve(imagesData).then(imagesData => {
+    const newPatch = {}
+    if (_.isEmpty(imagesData)) {
+      return newPatch
+    }
+    // i.e. ../<lamassu-server-home>/<operatorid>/<customerid>/idcarddata
+    const dirname = path.join(dir)
+    // create the directory tree if needed
+    _.attempt(() => makeDir.sync(dirname))
+    const promises = imagesData.map((imageData, index) => {
+      // decode the base64 string to binary data
+      const decodedImageData = Buffer.from(imageData, 'base64')
+      // i.e. ../<lamassu-server-home>/<operatorid>/<customerid>/idcarddata/1.jpg
+      const filename = path.join(dirname, index + '.jpg')
+      return writeFile(filename, decodedImageData)
     })
+
+    return Promise.all(promises).then(() => {
+      newPatch.idCardData = path.join(dirname)
+      newPatch.idCardDataAt = 'now()'
+      return newPatch
+    })
+  })
 }
 
 /**
@@ -759,192 +804,218 @@ function updatePhotos (imagesData, id, dir) {
  * @param {Object} patch customer latest id card photos
  * @returns {Promise<Object>} new patch to be applied
  */
-function updateIdCardData (patch, id) {
+function updateIdCardData(patch, id) {
   /* TODO: fetch operator id */
   const operatorId = 'id-operator'
   const directory = `${OPERATOR_DATA_DIR}/${operatorId}/${id}/`
 
-  return Promise.resolve(patch)
-    .then(patch => {
-      const imagesData = _.get('photos', patch)
-      return updatePhotos(imagesData, id, directory)
-        .catch(err => logger.error('while saving the image: ', err))
-    })
+  return Promise.resolve(patch).then(patch => {
+    const imagesData = _.get('photos', patch)
+    return updatePhotos(imagesData, id, directory).catch(err =>
+      logger.error('while saving the image: ', err),
+    )
+  })
 }
 
 /**
  * @param {String} imageData customer t&c photo data
  * @returns {Promise<Object>} new patch to be applied
  */
-function updateTxCustomerPhoto (imageData) {
-  return Promise.resolve(imageData)
-    .then(imageData => {
-      const newPatch = {}
-      const directory = `${OPERATOR_DATA_DIR}/customersphotos`
+function updateTxCustomerPhoto(imageData) {
+  return Promise.resolve(imageData).then(imageData => {
+    const newPatch = {}
+    const directory = `${OPERATOR_DATA_DIR}/customersphotos`
 
-      if (_.isEmpty(imageData)) {
-        return
-      }
+    if (_.isEmpty(imageData)) {
+      return
+    }
 
-      // decode the base64 string to binary data
-      const decodedImageData = Buffer.from(imageData, 'base64')
+    // decode the base64 string to binary data
+    const decodedImageData = Buffer.from(imageData, 'base64')
 
-      // workout the image hash
-      // i.e. 240e85ff2e4bb931f235985dd0134e459239496d2b5af6c5665168d38ef89b50
-      const hash = crypto
-        .createHash('sha256')
-        .update(imageData)
-        .digest('hex')
+    // workout the image hash
+    // i.e. 240e85ff2e4bb931f235985dd0134e459239496d2b5af6c5665168d38ef89b50
+    const hash = crypto.createHash('sha256').update(imageData).digest('hex')
 
-      // workout the image folder
-      // i.e. 24/0e/85
-      const rpath = _.join(path.sep, _.map(_.wrap(_.join, ''), _.take(3, _.chunk(2, _.split('', hash)))))
+    // workout the image folder
+    // i.e. 24/0e/85
+    const rpath = _.join(
+      path.sep,
+      _.map(_.wrap(_.join, ''), _.take(3, _.chunk(2, _.split('', hash)))),
+    )
 
-      // i.e. ../<lamassu-server-home>/<operator-dir>/customersphotos/24/0e/85
-      const dirname = path.join(directory, rpath)
+    // i.e. ../<lamassu-server-home>/<operator-dir>/customersphotos/24/0e/85
+    const dirname = path.join(directory, rpath)
 
-      // create the directory tree if needed
-      _.attempt(() => makeDir.sync(dirname))
+    // create the directory tree if needed
+    _.attempt(() => makeDir.sync(dirname))
 
-      // i.e. ../<lamassu-server-home>/<operator-dir>/customersphotos/24/0e/85/240e85ff2e4bb931f235985dd01....jpg
-      const filename = path.join(dirname, hash + '.jpg')
+    // i.e. ../<lamassu-server-home>/<operator-dir>/customersphotos/24/0e/85/240e85ff2e4bb931f235985dd01....jpg
+    const filename = path.join(dirname, hash + '.jpg')
 
-      // update db record patch
-      // i.e. {
-      //   "idCustomerTxPhoto": "24/0e/85/240e85ff2e4bb931f235985dd01....jpg",
-      //   "idCustomerTxPhotoAt": "now()"
-      // }
-      newPatch.txCustomerPhotoPath = path.join(rpath, hash + '.jpg')
-      newPatch.txCustomerPhotoAt = 'now()'
+    // update db record patch
+    // i.e. {
+    //   "idCustomerTxPhoto": "24/0e/85/240e85ff2e4bb931f235985dd01....jpg",
+    //   "idCustomerTxPhotoAt": "now()"
+    // }
+    newPatch.txCustomerPhotoPath = path.join(rpath, hash + '.jpg')
+    newPatch.txCustomerPhotoAt = 'now()'
 
-      // write image file
-      return writeFile(filename, decodedImageData)
-        .then(() => newPatch)
-    })
+    // write image file
+    return writeFile(filename, decodedImageData).then(() => newPatch)
+  })
 }
 
-function updateFrontCamera (id, patch) {
-  return Promise.resolve(patch)
-    .then(patch => {
-      // Base64 encoded image /9j/4AAQSkZJRgABAQAAAQ..
-      const imageData = _.get('frontCameraData', patch)
+function updateFrontCamera(id, patch) {
+  return Promise.resolve(patch).then(patch => {
+    // Base64 encoded image /9j/4AAQSkZJRgABAQAAAQ..
+    const imageData = _.get('frontCameraData', patch)
 
-      if (_.isEmpty(imageData)) {
-        return patch
-      }
+    if (_.isEmpty(imageData)) {
+      return patch
+    }
 
-      // remove idCardPhotoData from the update record
-      const newPatch = _.omit('frontCameraData', patch)
+    // remove idCardPhotoData from the update record
+    const newPatch = _.omit('frontCameraData', patch)
 
-      // decode the base64 string to binary data
-      const decodedImageData = Buffer.from(imageData, 'base64')
+    // decode the base64 string to binary data
+    const decodedImageData = Buffer.from(imageData, 'base64')
 
-      // workout the image hash
-      // i.e. 240e85ff2e4bb931f235985dd0134e459239496d2b5af6c5665168d38ef89b50
-      const hash = crypto
-        .createHash('sha256')
-        .update(imageData)
-        .digest('hex')
+    // workout the image hash
+    // i.e. 240e85ff2e4bb931f235985dd0134e459239496d2b5af6c5665168d38ef89b50
+    const hash = crypto.createHash('sha256').update(imageData).digest('hex')
 
-      // workout the image folder
-      // i.e. 24/0e/85
-      const rpath = _.join(path.sep, _.map(_.wrap(_.join, ''), _.take(3, _.chunk(2, _.split('', hash)))))
+    // workout the image folder
+    // i.e. 24/0e/85
+    const rpath = _.join(
+      path.sep,
+      _.map(_.wrap(_.join, ''), _.take(3, _.chunk(2, _.split('', hash)))),
+    )
 
-      // i.e. ../<lamassu-server-home>/idphotocard/24/0e/85
-      const dirname = path.join(FRONT_CAMERA_DIR, rpath)
+    // i.e. ../<lamassu-server-home>/idphotocard/24/0e/85
+    const dirname = path.join(FRONT_CAMERA_DIR, rpath)
 
-      // create the directory tree if needed
-      _.attempt(() => makeDir.sync(dirname))
+    // create the directory tree if needed
+    _.attempt(() => makeDir.sync(dirname))
 
-      // i.e. ../<lamassu-server-home>/idphotocard/24/0e/85/240e85ff2e4bb931f235985dd01....jpg
-      const filename = path.join(dirname, hash + '.jpg')
+    // i.e. ../<lamassu-server-home>/idphotocard/24/0e/85/240e85ff2e4bb931f235985dd01....jpg
+    const filename = path.join(dirname, hash + '.jpg')
 
-      // update db record patch
-      // i.e. {
-      //   "idCardPhotoPath": "24/0e/85/240e85ff2e4bb931f235985dd01....jpg",
-      //   "idCardPhotoAt": "now()"
-      // }
-      newPatch.frontCameraPath = path.join(rpath, hash + '.jpg')
-      newPatch.frontCameraAt = 'now()'
+    // update db record patch
+    // i.e. {
+    //   "idCardPhotoPath": "24/0e/85/240e85ff2e4bb931f235985dd01....jpg",
+    //   "idCardPhotoAt": "now()"
+    // }
+    newPatch.frontCameraPath = path.join(rpath, hash + '.jpg')
+    newPatch.frontCameraAt = 'now()'
 
-      // write image file
-      return writeFile(filename, decodedImageData)
-        .then(() => newPatch)
-    })
+    // write image file
+    return writeFile(filename, decodedImageData).then(() => newPatch)
+  })
 }
 
-function addCustomField (customerId, label, value) {
+function addCustomField(customerId, label, value) {
   const sql = `SELECT * FROM custom_field_definitions WHERE label=$1 LIMIT 1`
-  return db.oneOrNone(sql, [label])
-    .then(res => db.tx(t => {
-      if (_.isNil(res)) {
-        const fieldId = uuid.v4()
-        const q1 = t.none(`INSERT INTO custom_field_definitions (id, label) VALUES ($1, $2)`, [fieldId, label])
-        const q2 = t.none(`INSERT INTO customer_custom_field_pairs (customer_id, custom_field_id, value) VALUES ($1, $2, $3)`, [customerId, fieldId, value])
-        return t.batch([q1, q2])
-      }
+  return db
+    .oneOrNone(sql, [label])
+    .then(res =>
+      db.tx(t => {
+        if (_.isNil(res)) {
+          const fieldId = uuid.v4()
+          const q1 = t.none(
+            `INSERT INTO custom_field_definitions (id, label) VALUES ($1, $2)`,
+            [fieldId, label],
+          )
+          const q2 = t.none(
+            `INSERT INTO customer_custom_field_pairs (customer_id, custom_field_id, value) VALUES ($1, $2, $3)`,
+            [customerId, fieldId, value],
+          )
+          return t.batch([q1, q2])
+        }
 
-      if (!_.isNil(res) && !res.active) {
-        const q1 = t.none(`UPDATE custom_field_definitions SET active = true WHERE id=$1`, [res.id])
-        const q2 = t.none(`INSERT INTO customer_custom_field_pairs (customer_id, custom_field_id, value) VALUES ($1, $2, $3)`, [customerId, res.id, value])
-        return t.batch([q1, q2])
-      } else if (!_.isNil(res) && res.active) {
-        const q1 = t.none(`INSERT INTO customer_custom_field_pairs (customer_id, custom_field_id, value) VALUES ($1, $2, $3)`, [customerId, res.id, value])
-        return t.batch([q1])
-      }
-    })
+        if (!_.isNil(res) && !res.active) {
+          const q1 = t.none(
+            `UPDATE custom_field_definitions SET active = true WHERE id=$1`,
+            [res.id],
+          )
+          const q2 = t.none(
+            `INSERT INTO customer_custom_field_pairs (customer_id, custom_field_id, value) VALUES ($1, $2, $3)`,
+            [customerId, res.id, value],
+          )
+          return t.batch([q1, q2])
+        } else if (!_.isNil(res) && res.active) {
+          const q1 = t.none(
+            `INSERT INTO customer_custom_field_pairs (customer_id, custom_field_id, value) VALUES ($1, $2, $3)`,
+            [customerId, res.id, value],
+          )
+          return t.batch([q1])
+        }
+      }),
     )
     .then(res => !_.isNil(res))
 }
 
-function saveCustomField (customerId, fieldId, newValue) {
+function saveCustomField(customerId, fieldId, newValue) {
   const sql = `UPDATE customer_custom_field_pairs SET value=$1 WHERE customer_id=$2 AND custom_field_id=$3`
   return db.none(sql, [newValue, customerId, fieldId])
 }
 
-function removeCustomField (customerId, fieldId) {
+function removeCustomField(customerId, fieldId) {
   const sql = `SELECT * FROM customer_custom_field_pairs WHERE custom_field_id=$1`
-  return db.any(sql, [fieldId])
-    .then(res => db.tx(t => {
+  return db.any(sql, [fieldId]).then(res =>
+    db.tx(t => {
       // Is the field to be removed the only one of its kind in the pairs table?
       if (_.size(res) === 1) {
-        const q1 = t.none(`DELETE FROM customer_custom_field_pairs WHERE customer_id=$1 AND custom_field_id=$2`, [customerId, fieldId])
-        const q2 = t.none(`UPDATE custom_field_definitions SET active = false WHERE id=$1`, [fieldId])
+        const q1 = t.none(
+          `DELETE FROM customer_custom_field_pairs WHERE customer_id=$1 AND custom_field_id=$2`,
+          [customerId, fieldId],
+        )
+        const q2 = t.none(
+          `UPDATE custom_field_definitions SET active = false WHERE id=$1`,
+          [fieldId],
+        )
         return t.batch([q1, q2])
       } else {
-        const q1 = t.none(`DELETE FROM customer_custom_field_pairs WHERE customer_id=$1 AND custom_field_id=$2`, [customerId, fieldId])
+        const q1 = t.none(
+          `DELETE FROM customer_custom_field_pairs WHERE customer_id=$1 AND custom_field_id=$2`,
+          [customerId, fieldId],
+        )
         return t.batch([q1])
       }
-    }))
+    }),
+  )
 }
 
-function getCustomInfoRequestsData (customer) {
+function getCustomInfoRequestsData(customer) {
   if (!customer) return
   const sql = `SELECT * FROM customers_custom_info_requests WHERE customer_id = $1`
-  return db.any(sql, [customer.id]).then(res => _.set('custom_info_request_data', res, customer))
+  return db
+    .any(sql, [customer.id])
+    .then(res => _.set('custom_info_request_data', res, customer))
 }
 
-function enableTestCustomer (customerId) {
+function enableTestCustomer(customerId) {
   const sql = `UPDATE customers SET is_test_customer=true WHERE id=$1`
   return db.none(sql, [customerId])
 }
 
-function disableTestCustomer (customerId) {
+function disableTestCustomer(customerId) {
   const sql = `UPDATE customers SET is_test_customer=false WHERE id=$1`
   return db.none(sql, [customerId])
 }
 
-function updateLastAuthAttempt (customerId, deviceId) {
+function updateLastAuthAttempt(customerId, deviceId) {
   const sql = `UPDATE customers SET last_auth_attempt=NOW(), last_used_machine=$2 WHERE id=$1`
   return db.none(sql, [customerId, deviceId])
 }
 
-function getExternalComplianceMachine (customer) {
-  return settingsLoader.loadLatest()
+function getExternalComplianceMachine(customer) {
+  return settingsLoader
+    .loadLatest()
     .then(settings => externalCompliance.getStatusMap(settings, customer.id))
     .then(statusMap => {
       return updateExternalComplianceByMap(customer.id, statusMap)
-        .then(() => customer.externalCompliance = statusMap)
+        .then(() => (customer.externalCompliance = statusMap))
         .then(() => customer)
     })
 }
@@ -963,14 +1034,17 @@ function updateExternalComplianceByMap(customerId, serviceMap) {
     WHERE customer_id=$2 AND service=$3
   `
   const pairs = _.toPairs(serviceMap)
-  const promises = _.map(([service, status]) => db.none(sql, [status.answer, customerId, service]))(pairs)
+  const promises = _.map(([service, status]) =>
+    db.none(sql, [status.answer, customerId, service]),
+  )(pairs)
   return Promise.all(promises)
 }
 
 function getExternalCompliance(customer) {
   const sql = `SELECT external_id, service, last_known_status, last_updated
     FROM customer_external_compliance where customer_id=$1`
-  return db.manyOrNone(sql, [customer.id])
+  return db
+    .manyOrNone(sql, [customer.id])
     .then(compliance => {
       customer.externalCompliance = compliance
     })
@@ -984,49 +1058,59 @@ function getOpenExternalCompliance() {
 
 function notifyRetryExternalCompliance(settings, customerId, service) {
   const sql = 'SELECT phone FROM customers WHERE id=$1'
-  const promises = [db.one(sql, [customerId]), externalCompliance.createLink(settings, service, customerId)]
+  const promises = [
+    db.one(sql, [customerId]),
+    externalCompliance.createLink(settings, service, customerId),
+  ]
 
-  return Promise.all(promises)
-    .then(([toNumber, link]) => {
-      const body = `Your external compliance verification has failed. Please try again. Link for retry: ${link}`
+  return Promise.all(promises).then(([toNumber, link]) => {
+    const body = `Your external compliance verification has failed. Please try again. Link for retry: ${link}`
 
-      return sms.sendMessage(settings, { toNumber, body })
-    })
+    return sms.sendMessage(settings, { toNumber, body })
+  })
 }
 
 function notifyApprovedExternalCompliance(settings, customerId) {
   const sql = 'SELECT phone FROM customers WHERE id=$1'
-  return db.one(sql, [customerId])
-    .then((toNumber) => {
-      const body = 'Your external compliance verification has been approved.'
+  return db.one(sql, [customerId]).then(toNumber => {
+    const body = 'Your external compliance verification has been approved.'
 
-      return sms.sendMessage(settings, { toNumber, body })
-    })
+    return sms.sendMessage(settings, { toNumber, body })
+  })
 }
 
 function checkExternalCompliance(settings) {
-  return getOpenExternalCompliance()
-    .then(externals => {
-      console.log(externals)
-      const promises = _.map(external => {
-        return externalCompliance.getStatus(settings, external.service, external.customer_id)
-          .then(status => {
-            console.log('status', status, external.customer_id, external.service)
-            if (status.status.answer === RETRY) notifyRetryExternalCompliance(settings, external.customer_id, status.service)
-            if (status.status.answer === APPROVED) notifyApprovedExternalCompliance(settings, external.customer_id)
+  return getOpenExternalCompliance().then(externals => {
+    console.log(externals)
+    const promises = _.map(external => {
+      return externalCompliance
+        .getStatus(settings, external.service, external.customer_id)
+        .then(status => {
+          console.log('status', status, external.customer_id, external.service)
+          if (status.status.answer === RETRY)
+            notifyRetryExternalCompliance(
+              settings,
+              external.customer_id,
+              status.service,
+            )
+          if (status.status.answer === APPROVED)
+            notifyApprovedExternalCompliance(settings, external.customer_id)
 
-            return updateExternalCompliance(external.customer_id, external.service, status.status.answer)
-          })
-      }, externals)
-      return Promise.all(promises)
-    })
+          return updateExternalCompliance(
+            external.customer_id,
+            external.service,
+            status.status.answer,
+          )
+        })
+    }, externals)
+    return Promise.all(promises)
+  })
 }
 
 function addExternalCompliance(customerId, service, id) {
   const sql = `INSERT INTO customer_external_compliance (customer_id, external_id, service) VALUES ($1, $2, $3)`
   return db.none(sql, [customerId, id, service])
 }
-
 
 module.exports = {
   add,
@@ -1054,5 +1138,5 @@ module.exports = {
   disableTestCustomer,
   updateLastAuthAttempt,
   addExternalCompliance,
-  checkExternalCompliance
+  checkExternalCompliance,
 }

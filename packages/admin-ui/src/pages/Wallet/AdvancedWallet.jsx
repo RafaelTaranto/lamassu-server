@@ -1,4 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import Section from 'src/components/layout/Section'
@@ -11,7 +11,7 @@ import {
   getAdvancedWalletElements,
   getAdvancedWalletElementsOverrides,
   OverridesDefaults,
-  OverridesSchema
+  OverridesSchema,
 } from './helper'
 
 const SAVE_CONFIG = gql`
@@ -39,12 +39,12 @@ const AdvancedWallet = () => {
   const [isEditingOverrides, setEditingOverrides] = useState(false)
 
   const [saveConfig, { error }] = useMutation(SAVE_CONFIG, {
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const save = rawConfig => {
     const config = toNamespace(SCREEN_KEY)(
-      toNamespace(ADVANCED)(rawConfig.wallets[0])
+      toNamespace(ADVANCED)(rawConfig.wallets[0]),
     )
     return saveConfig({ variables: { config } })
   }
@@ -60,22 +60,22 @@ const AdvancedWallet = () => {
   const cryptoCurrencies = data?.cryptoCurrencies ?? []
 
   const AdvancedWalletSettings = fromNamespace(ADVANCED)(
-    fromNamespace(SCREEN_KEY)(data?.config)
+    fromNamespace(SCREEN_KEY)(data?.config),
   )
 
   const AdvancedWalletSettingsOverrides = AdvancedWalletSettings.overrides ?? []
 
   const overriddenCryptos = R.map(R.prop(CRYPTOCURRENCY_KEY))(
-    AdvancedWalletSettingsOverrides
+    AdvancedWalletSettingsOverrides,
   )
   const suggestionFilter = R.filter(
-    it => !R.contains(it.code, overriddenCryptos)
+    it => !R.contains(it.code, overriddenCryptos),
   )
   const coinSuggestions = suggestionFilter(cryptoCurrencies)
 
   const findSuggestion = it => {
     const coin = R.compose(R.find(R.propEq('code', it?.cryptoCurrency)))(
-      cryptoCurrencies
+      cryptoCurrencies,
     )
     return coin ? [coin] : []
   }
@@ -113,7 +113,7 @@ const AdvancedWallet = () => {
           data={AdvancedWalletSettingsOverrides ?? []}
           elements={getAdvancedWalletElementsOverrides(
             coinSuggestions,
-            findSuggestion
+            findSuggestion,
           )}
           disableAdd={!coinSuggestions?.length}
           setEditing={onEditingOverrides}

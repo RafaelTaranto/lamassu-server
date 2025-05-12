@@ -6,7 +6,6 @@ const BN = require('../../../bn')
 const E = require('../../../error')
 const logger = require('../../../logger')
 const { utils: coinUtils } = require('@lamassu/coins')
-const { isDevMode } = require('../../../environment-helper')
 
 const cryptoRec = coinUtils.getCryptoCurrency('BTC')
 const unitScale = cryptoRec.unitScale
@@ -15,11 +14,11 @@ const rpcConfig = jsonRpc.rpcConfig(cryptoRec)
 
 const SUPPORTS_BATCHING = true
 
-function fetch (method, params) {
+function fetch(method, params) {
   return jsonRpc.fetch(rpcConfig, method, params)
 }
 
-function errorHandle (e) {
+function errorHandle(e) {
   const err = JSON.parse(e.message)
   switch (err.code) {
     case -5:
@@ -31,32 +30,40 @@ function errorHandle (e) {
   }
 }
 
-function checkCryptoCode (cryptoCode) {
-  if (cryptoCode !== 'BTC') return Promise.reject(new Error('Unsupported crypto: ' + cryptoCode))
+function checkCryptoCode(cryptoCode) {
+  if (cryptoCode !== 'BTC')
+    return Promise.reject(new Error('Unsupported crypto: ' + cryptoCode))
   return Promise.resolve()
 }
 
-function accountBalance (cryptoCode) {
+function accountBalance(cryptoCode) {
   return checkCryptoCode(cryptoCode)
     .then(() => fetch('getbalances'))
-    .then(({ mine }) => new BN(mine.trusted).shiftedBy(unitScale).decimalPlaces(0))
+    .then(({ mine }) =>
+      new BN(mine.trusted).shiftedBy(unitScale).decimalPlaces(0),
+    )
     .catch(errorHandle)
 }
 
-function accountUnconfirmedBalance (cryptoCode) {
+function accountUnconfirmedBalance(cryptoCode) {
   return checkCryptoCode(cryptoCode)
     .then(() => fetch('getbalances'))
-    .then(({ mine }) => new BN(mine.untrusted_pending).plus(mine.immature).shiftedBy(unitScale).decimalPlaces(0))
+    .then(({ mine }) =>
+      new BN(mine.untrusted_pending)
+        .plus(mine.immature)
+        .shiftedBy(unitScale)
+        .decimalPlaces(0),
+    )
     .catch(errorHandle)
 }
 
 // We want a balance that includes all spends (0 conf) but only deposits that
 // have at least 1 confirmation. getbalance does this for us automatically.
-function balance (account, cryptoCode, settings, operatorId) {
+function balance(account, cryptoCode) {
   return accountBalance(cryptoCode)
 }
 
-function estimateFee () {
+function estimateFee() {
   return getSatBEstimateFee()
     .then(result => BN(result))
     .catch(err => {
@@ -64,26 +71,29 @@ function estimateFee () {
     })
 }
 
-function calculateFeeDiscount (feeMultiplier = 1, unitScale) {
+function calculateFeeDiscount(feeMultiplier = 1, unitScale) {
   // 0 makes bitcoind do automatic fee selection
   const AUTOMATIC_FEE = 0
-  return estimateFee()
-    .then(estimatedFee => {
-      if (!estimatedFee) {
-        logger.info('failure estimating fee, using bitcoind automatic fee selection')
-        return AUTOMATIC_FEE
-      }
-      // transform from sat/vB to BTC/kvB and apply the multipler
-      const newFee = estimatedFee.shiftedBy(-unitScale+3).times(feeMultiplier)
-      if (newFee.lt(0.00001) || newFee.gt(0.1)) {
-        logger.info('fee outside safety parameters, defaulting to automatic fee selection')
-        return AUTOMATIC_FEE
-      }
-      return newFee.toFixed(8)
-    })
+  return estimateFee().then(estimatedFee => {
+    if (!estimatedFee) {
+      logger.info(
+        'failure estimating fee, using bitcoind automatic fee selection',
+      )
+      return AUTOMATIC_FEE
+    }
+    // transform from sat/vB to BTC/kvB and apply the multipler
+    const newFee = estimatedFee.shiftedBy(-unitScale + 3).times(feeMultiplier)
+    if (newFee.lt(0.00001) || newFee.gt(0.1)) {
+      logger.info(
+        'fee outside safety parameters, defaulting to automatic fee selection',
+      )
+      return AUTOMATIC_FEE
+    }
+    return newFee.toFixed(8)
+  })
 }
 
-function sendCoins (account, tx, settings, operatorId, feeMultiplier) {
+function sendCoins(account, tx, settings, operatorId, feeMultiplier) {
   const { toAddress, cryptoAtoms, cryptoCode } = tx
   const coins = cryptoAtoms.shiftedBy(-unitScale).toFixed(8)
 
@@ -91,102 +101,113 @@ function sendCoins (account, tx, settings, operatorId, feeMultiplier) {
     .then(() => calculateFeeDiscount(feeMultiplier, unitScale))
     .then(newFee => fetch('settxfee', [newFee]))
     .then(() => fetch('sendtoaddress', [toAddress, coins]))
-    .then((txId) => fetch('gettransaction', [txId]))
-    .then((res) => _.pick(['fee', 'txid'], res))
-    .then((pickedObj) => {
+    .then(txId => fetch('gettransaction', [txId]))
+    .then(res => _.pick(['fee', 'txid'], res))
+    .then(pickedObj => {
       return {
         fee: new BN(pickedObj.fee).abs().shiftedBy(unitScale).decimalPlaces(0),
-        txid: pickedObj.txid
+        txid: pickedObj.txid,
       }
     })
     .catch(errorHandle)
 }
 
-function sendCoinsBatch (account, txs, cryptoCode, feeMultiplier) {
+function sendCoinsBatch(account, txs, cryptoCode, feeMultiplier) {
   return checkCryptoCode(cryptoCode)
     .then(() => calculateFeeDiscount(feeMultiplier, unitScale))
     .then(newFee => fetch('settxfee', [newFee]))
-    .then(() => _.reduce((acc, value) => ({
-      ...acc,
-      [value.toAddress]: _.isNil(acc[value.toAddress])
-        ? BN(value.cryptoAtoms).shiftedBy(-unitScale).toFixed(8)
-        : BN(acc[value.toAddress]).plus(BN(value.cryptoAtoms).shiftedBy(-unitScale).toFixed(8))
-    }), {}, txs))
-    .then((obj) => fetch('sendmany', ['', obj]))
-    .then((txId) => fetch('gettransaction', [txId]))
-    .then((res) => _.pick(['fee', 'txid'], res))
-    .then((pickedObj) => ({
+    .then(() =>
+      _.reduce(
+        (acc, value) => ({
+          ...acc,
+          [value.toAddress]: _.isNil(acc[value.toAddress])
+            ? BN(value.cryptoAtoms).shiftedBy(-unitScale).toFixed(8)
+            : BN(acc[value.toAddress]).plus(
+                BN(value.cryptoAtoms).shiftedBy(-unitScale).toFixed(8),
+              ),
+        }),
+        {},
+        txs,
+      ),
+    )
+    .then(obj => fetch('sendmany', ['', obj]))
+    .then(txId => fetch('gettransaction', [txId]))
+    .then(res => _.pick(['fee', 'txid'], res))
+    .then(pickedObj => ({
       fee: new BN(pickedObj.fee).abs().shiftedBy(unitScale).decimalPlaces(0),
-      txid: pickedObj.txid
+      txid: pickedObj.txid,
     }))
     .catch(errorHandle)
 }
 
-function newAddress (account, info, tx, settings, operatorId) {
+function newAddress(account, info) {
   return checkCryptoCode(info.cryptoCode)
     .then(() => fetch('getnewaddress'))
     .catch(errorHandle)
 }
 
-function addressBalance (address, confs) {
+function addressBalance(address, confs) {
   return fetch('getreceivedbyaddress', [address, confs])
     .then(r => new BN(r).shiftedBy(unitScale).decimalPlaces(0))
     .catch(errorHandle)
 }
 
-function confirmedBalance (address, cryptoCode) {
-  return checkCryptoCode(cryptoCode)
-    .then(() => addressBalance(address, 1))
+function confirmedBalance(address, cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(() => addressBalance(address, 1))
 }
 
-function pendingBalance (address, cryptoCode) {
-  return checkCryptoCode(cryptoCode)
-    .then(() => addressBalance(address, 0))
+function pendingBalance(address, cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(() => addressBalance(address, 0))
 }
 
-function getStatus (account, tx, requested, settings, operatorId) {
+function getStatus(account, tx, requested) {
   const { toAddress, cryptoCode } = tx
   return checkCryptoCode(cryptoCode)
     .then(() => confirmedBalance(toAddress, cryptoCode))
     .then(confirmed => {
-      if (confirmed.gte(requested)) return { receivedCryptoAtoms: confirmed, status: 'confirmed' }
+      if (confirmed.gte(requested))
+        return { receivedCryptoAtoms: confirmed, status: 'confirmed' }
 
-      return pendingBalance(toAddress, cryptoCode)
-        .then(pending => {
-          if (pending.gte(requested)) return { receivedCryptoAtoms: pending, status: 'authorized' }
-          if (pending.gt(0)) return { receivedCryptoAtoms: pending, status: 'insufficientFunds' }
-          return { receivedCryptoAtoms: pending, status: 'notSeen' }
-        })
+      return pendingBalance(toAddress, cryptoCode).then(pending => {
+        if (pending.gte(requested))
+          return { receivedCryptoAtoms: pending, status: 'authorized' }
+        if (pending.gt(0))
+          return { receivedCryptoAtoms: pending, status: 'insufficientFunds' }
+        return { receivedCryptoAtoms: pending, status: 'notSeen' }
+      })
     })
 }
 
-function newFunding (account, cryptoCode, settings, operatorId) {
+function newFunding(account, cryptoCode) {
   return checkCryptoCode(cryptoCode)
     .then(() => {
       const promises = [
         accountUnconfirmedBalance(cryptoCode),
         accountBalance(cryptoCode),
-        newAddress(account, { cryptoCode })
+        newAddress(account, { cryptoCode }),
       ]
 
       return Promise.all(promises)
     })
-    .then(([fundingPendingBalance, fundingConfirmedBalance, fundingAddress]) => ({
-      fundingPendingBalance,
-      fundingConfirmedBalance,
-      fundingAddress
-    }))
+    .then(
+      ([fundingPendingBalance, fundingConfirmedBalance, fundingAddress]) => ({
+        fundingPendingBalance,
+        fundingConfirmedBalance,
+        fundingAddress,
+      }),
+    )
     .catch(errorHandle)
 }
 
-function cryptoNetwork (account, cryptoCode, settings, operatorId) {
-  return checkCryptoCode(cryptoCode)
-    .then(() => parseInt(rpcConfig.port, 10) === 18332 ? 'test' : 'main')
+function cryptoNetwork(account, cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(() =>
+    parseInt(rpcConfig.port, 10) === 18332 ? 'test' : 'main',
+  )
 }
 
-function fetchRBF (txId) {
+function fetchRBF(txId) {
   return fetch('getmempoolentry', [txId])
-    .then((res) => {
+    .then(res => {
       return [txId, res['bip125-replaceable']]
     })
     .catch(err => {
@@ -195,16 +216,23 @@ function fetchRBF (txId) {
     })
 }
 
-function checkBlockchainStatus (cryptoCode) {
+function checkBlockchainStatus(cryptoCode) {
   return checkCryptoCode(cryptoCode)
     .then(() => fetch('getblockchaininfo'))
-    .then(res => !!res['initialblockdownload'] ? 'syncing' : 'ready')
+    .then(res => (res['initialblockdownload'] ? 'syncing' : 'ready'))
 }
 
-function getTxHashesByAddress (cryptoCode, address) {
+function getTxHashesByAddress(cryptoCode, address) {
   checkCryptoCode(cryptoCode)
     .then(() => fetch('listreceivedbyaddress', [0, true, true, address]))
-    .then(txsByAddress => Promise.all(_.map(id => fetch('getrawtransaction', [id]), _.flatMap(it => it.txids, txsByAddress))))
+    .then(txsByAddress =>
+      Promise.all(
+        _.map(
+          id => fetch('getrawtransaction', [id]),
+          _.flatMap(it => it.txids, txsByAddress),
+        ),
+      ),
+    )
     .then(_.map(({ hash }) => hash))
 }
 
@@ -220,5 +248,5 @@ module.exports = {
   checkBlockchainStatus,
   getTxHashesByAddress,
   fetch,
-  SUPPORTS_BATCHING
+  SUPPORTS_BATCHING,
 }

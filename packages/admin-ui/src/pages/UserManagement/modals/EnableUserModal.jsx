@@ -28,12 +28,12 @@ const DISABLE_USER = gql`
 const EnableUserModal = ({ state, dispatch, user, requiresConfirmation }) => {
   const [enableUser, { error: enableError }] = useMutation(ENABLE_USER, {
     onCompleted: () => handleClose(),
-    refetchQueries: () => ['users']
+    refetchQueries: () => ['users'],
   })
 
   const [disableUser, { error: disableError }] = useMutation(DISABLE_USER, {
     onCompleted: () => handleClose(),
-    refetchQueries: () => ['users']
+    refetchQueries: () => ['users'],
   })
 
   const [confirmation, setConfirmation] = useState(null)
@@ -42,8 +42,8 @@ const EnableUserModal = ({ state, dispatch, user, requiresConfirmation }) => {
     disableUser({
       variables: {
         confirmationCode: confirmation,
-        id: user.id
-      }
+        id: user.id,
+      },
     })
   }
 
@@ -51,8 +51,8 @@ const EnableUserModal = ({ state, dispatch, user, requiresConfirmation }) => {
     enableUser({
       variables: {
         confirmationCode: confirmation,
-        id: user.id
-      }
+        id: user.id,
+      },
     })
   }
 
@@ -64,7 +64,7 @@ const EnableUserModal = ({ state, dispatch, user, requiresConfirmation }) => {
     setConfirmation(null)
     dispatch({
       type: 'close',
-      payload: 'showEnableUserModal'
+      payload: 'showEnableUserModal',
     })
   }
 

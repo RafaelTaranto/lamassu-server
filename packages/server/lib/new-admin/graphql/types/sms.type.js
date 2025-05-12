@@ -21,7 +21,8 @@ const typeDef = gql`
   }
 
   type Mutation {
-    editSMSNotice(id: ID!, event: SMSNoticeEvent!, message: String!): SMSNotice @auth
+    editSMSNotice(id: ID!, event: SMSNoticeEvent!, message: String!): SMSNotice
+      @auth
     enableSMSNotice(id: ID!): SMSNotice @auth
     disableSMSNotice(id: ID!): SMSNotice @auth
   }

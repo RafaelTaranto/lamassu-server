@@ -47,24 +47,24 @@ const Footer = () => {
     const tickerName = tickerIdx > -1 ? accountsConfig[tickerIdx].display : ''
 
     const cashInNoCommission = parseFloat(
-      R.path(['cryptoRates', 'withoutCommissions', key, 'cashIn'])(data)
+      R.path(['cryptoRates', 'withoutCommissions', key, 'cashIn'])(data),
     )
     const cashOutNoCommission = parseFloat(
-      R.path(['cryptoRates', 'withoutCommissions', key, 'cashOut'])(data)
+      R.path(['cryptoRates', 'withoutCommissions', key, 'cashOut'])(data),
     )
 
     const avgOfAskBid = new BigNumber(
-      (cashInNoCommission + cashOutNoCommission) / 2
+      (cashInNoCommission + cashOutNoCommission) / 2,
     ).toFormat(2)
     const cashIn = new BigNumber(
       parseFloat(
-        R.path(['cryptoRates', 'withCommissions', key, 'cashIn'])(data)
-      )
+        R.path(['cryptoRates', 'withCommissions', key, 'cashIn'])(data),
+      ),
     ).toFormat(2)
     const cashOut = new BigNumber(
       parseFloat(
-        R.path(['cryptoRates', 'withCommissions', key, 'cashOut'])(data)
-      )
+        R.path(['cryptoRates', 'withCommissions', key, 'cashOut'])(data),
+      ),
     ).toFormat(2)
 
     return (

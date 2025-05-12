@@ -1,7 +1,7 @@
 const bip39 = require('bip39')
 const os = require('os')
 
-function fromSeed (seed) {
+function fromSeed(seed) {
   const words = bip39.entropyToMnemonic(seed).split(' ')
 
   let mnemonic = ''
@@ -11,7 +11,7 @@ function fromSeed (seed) {
   return mnemonic
 }
 
-function toEntropyBuffer (mnemonic) {
+function toEntropyBuffer(mnemonic) {
   const hex = bip39.mnemonicToEntropy(mnemonic.split('\n').join(' ').trim())
   return Buffer.from(hex.trim(), 'hex')
 }

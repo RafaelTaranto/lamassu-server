@@ -8,7 +8,7 @@ import {
   getOverridesSchema,
   defaults,
   overridesDefaults,
-  getOrder
+  getOrder,
 } from 'src/pages/Commissions/helper'
 
 import { Table as EditableTable } from 'src/components/editableTable'
@@ -23,7 +23,7 @@ const CommissionsDetails = memo(
 
     const orderedCommissionsOverrides = R.sortWith([
       R.ascend(getOrder),
-      R.ascend(R.prop('machine'))
+      R.ascend(R.prop('machine')),
     ])(commissionOverrides)
 
     const onEditingDefault = (it, editing) => setEditingDefault(editing)
@@ -63,7 +63,7 @@ const CommissionsDetails = memo(
             validationSchema={getOverridesSchema(
               orderedCommissionsOverrides,
               data,
-              locale
+              locale,
             )}
             data={orderedCommissionsOverrides}
             elements={overrides(data, currency, orderedCommissionsOverrides)}
@@ -73,7 +73,7 @@ const CommissionsDetails = memo(
         </Section>
       </>
     )
-  }
+  },
 )
 
 export default CommissionsDetails

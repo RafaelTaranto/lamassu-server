@@ -12,7 +12,7 @@ const SearchFilter = ({
   filters,
   onFilterDelete,
   deleteAllFilters,
-  entries = 0
+  entries = 0,
 }) => {
   return (
     <>
@@ -33,7 +33,7 @@ const SearchFilter = ({
             <Label3 className="text-comet m-auto mr-3">{`${entries} ${singularOrPlural(
               entries,
               `entry`,
-              `entries`
+              `entries`,
             )}`}</Label3>
           }
           <ActionButton

@@ -11,7 +11,7 @@ const uuid = require('uuid')
  *
  * @returns {object} Newly created compliance override
  */
-function add (complianceOverride) {
+function add(complianceOverride) {
   const sql = `insert into compliance_overrides 
   (id, 
    customer_id, 
@@ -25,7 +25,7 @@ function add (complianceOverride) {
     complianceOverride.customerId,
     complianceOverride.complianceType,
     complianceOverride.overrideBy,
-    complianceOverride.verification
+    complianceOverride.verification,
   ])
 }
 

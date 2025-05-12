@@ -17,7 +17,7 @@ const GraphWrapper = ({
   selectedMachine,
   machines,
   selectedDay,
-  log
+  log,
 }) => {
   const [selectionCoords, setSelectionCoords] = useState(null)
   const [selectionDateInterval, setSelectionDateInterval] = useState(null)

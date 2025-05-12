@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import {
   Autocomplete,
   Checkbox,
-  NumberInput
+  NumberInput,
 } from 'src/components/inputs/formik'
 import { CURRENCY_MAX } from 'src/utils/constants'
 import { defaultToZero } from 'src/utils/number'
@@ -16,26 +16,26 @@ const filterCoins = ({ id }) => R.filter(it => R.contains(id)(it.cryptos))
 
 const WalletSchema = Yup.object().shape({
   ticker: Yup.string('The ticker must be a string').required(
-    'The ticker is required'
+    'The ticker is required',
   ),
   wallet: Yup.string('The wallet must be a string').required(
-    'The wallet is required'
+    'The wallet is required',
   ),
   exchange: Yup.string('The exchange must be a string').required(
-    'The exchange is required'
+    'The exchange is required',
   ),
   zeroConf: Yup.string('The confidence checking must be a string'),
   zeroConfLimit: Yup.number('The 0-conf limit must be an integer')
     .integer('The 0-conf limit must be an integer')
     .min(0, 'The 0-conf limit must be a positive integer')
     .max(CURRENCY_MAX)
-    .transform(defaultToZero)
+    .transform(defaultToZero),
 })
 
 const AdvancedWalletSchema = Yup.object().shape({
   cryptoUnits: Yup.string().required(),
   feeMultiplier: Yup.string().required(),
-  allowTransactionBatching: Yup.boolean()
+  allowTransactionBatching: Yup.boolean(),
 })
 
 const OverridesSchema = Yup.object().shape({
@@ -46,14 +46,14 @@ const OverridesSchema = Yup.object().shape({
   cryptoCurrency: Yup.string().required(),
   allowTransactionBatching: Yup.boolean()
     .default(() => false)
-    .required()
+    .required(),
 })
 
 const OverridesDefaults = {
   cryptoUnits: '',
   feeMultiplier: '',
   cryptoCurrency: '',
-  allowTransactionBatching: null
+  allowTransactionBatching: null,
 }
 
 const viewFeeMultiplier = it =>
@@ -72,12 +72,12 @@ const feeOptions = [
   { display: '-30%', code: '0.7' },
   { display: '-40%', code: '0.6' },
   { display: '-50%', code: '0.5' },
-  { display: '-60%', code: '0.4' }
+  { display: '-60%', code: '0.4' },
 ]
 
 const cryptoUnitsDefaultOptions = [
   { display: 'mili', code: 'mili' },
-  { display: 'full', code: 'full' }
+  { display: 'full', code: 'full' },
 ]
 
 const getCryptoUnitsOptions = it => {
@@ -99,8 +99,8 @@ const getAdvancedWalletElements = () => {
       inputProps: {
         options: cryptoUnitsDefaultOptions,
         valueProp: 'code',
-        labelProp: 'display'
-      }
+        labelProp: 'display',
+      },
     },
     {
       name: 'allowTransactionBatching',
@@ -111,7 +111,7 @@ const getAdvancedWalletElements = () => {
       view: (_, ite) => {
         return ite.allowTransactionBatching ? 'Yes' : `No`
       },
-      input: Checkbox
+      input: Checkbox,
     },
     {
       name: 'feeMultiplier',
@@ -124,15 +124,15 @@ const getAdvancedWalletElements = () => {
       inputProps: {
         options: feeOptions,
         valueProp: 'code',
-        labelProp: 'display'
-      }
-    }
+        labelProp: 'display',
+      },
+    },
   ]
 }
 
 const getAdvancedWalletElementsOverrides = (
   coinSuggestions,
-  findSuggestion
+  findSuggestion,
 ) => {
   return [
     {
@@ -143,9 +143,9 @@ const getAdvancedWalletElementsOverrides = (
         options: it => R.concat(coinSuggestions, findSuggestion(it)),
         optionsLimit: null,
         valueProp: 'code',
-        labelProp: 'display'
+        labelProp: 'display',
       },
-      size: 'sm'
+      size: 'sm',
     },
     {
       name: 'cryptoUnits',
@@ -156,8 +156,8 @@ const getAdvancedWalletElementsOverrides = (
       inputProps: {
         options: getCryptoUnitsOptions,
         valueProp: 'code',
-        labelProp: 'display'
-      }
+        labelProp: 'display',
+      },
     },
     {
       name: 'allowTransactionBatching',
@@ -170,7 +170,7 @@ const getAdvancedWalletElementsOverrides = (
         return ite.allowTransactionBatching ? 'Yes' : 'No'
       },
       input: Checkbox,
-      editable: it => it.cryptoCurrency === 'BTC'
+      editable: it => it.cryptoCurrency === 'BTC',
     },
     {
       name: 'feeMultiplier',
@@ -187,16 +187,16 @@ const getAdvancedWalletElementsOverrides = (
       inputProps: {
         options: feeOptions,
         valueProp: 'code',
-        labelProp: 'display'
+        labelProp: 'display',
       },
-      editable: it => it.cryptoCurrency === 'BTC'
-    }
+      editable: it => it.cryptoCurrency === 'BTC',
+    },
   ]
 }
 
 const has0Conf = R.complement(
   /* NOTE: List of coins without 0conf settings. */
-  R.pipe(R.prop('id'), R.flip(R.includes)(['ETH', 'USDT', 'USDC']))
+  R.pipe(R.prop('id'), R.flip(R.includes)(['ETH', 'USDT', 'USDC'])),
 )
 
 const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
@@ -204,7 +204,7 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
   const viewCryptoCurrency = it => {
     const currencyDisplay = R.compose(
       it => `${R.prop(['display'])(it)} ${it?.isBeta ? '(Beta)' : ''}`,
-      R.find(R.propEq('code', it))
+      R.find(R.propEq('code', it)),
     )(cryptoCurrencies)
     return currencyDisplay
   }
@@ -213,11 +213,11 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
   const getDisplayName = type => it =>
     R.compose(
       R.prop('display'),
-      R.find(R.propEq('code', it))
+      R.find(R.propEq('code', it)),
     )(filterOptions(type))
 
   const getOptions = R.curry((option, it) =>
-    filterCoins(it)(filterOptions(option))
+    filterCoins(it)(filterOptions(option)),
   )
 
   return [
@@ -227,7 +227,7 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
       width: 150 - widthAdjust,
       view: viewCryptoCurrency,
       size: 'sm',
-      editable: false
+      editable: false,
     },
     {
       name: 'ticker',
@@ -240,8 +240,8 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
         options: getOptions('ticker'),
         valueProp: 'code',
         labelProp: 'display',
-        optionsLimit: null
-      }
+        optionsLimit: null,
+      },
     },
     {
       name: 'wallet',
@@ -255,8 +255,8 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
         valueProp: 'code',
         labelProp: 'display',
         optionsLimit: null,
-        onChange
-      }
+        onChange,
+      },
     },
     {
       name: 'exchange',
@@ -270,8 +270,8 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
         valueProp: 'code',
         labelProp: 'display',
         optionsLimit: null,
-        onChange
-      }
+        onChange,
+      },
     },
     {
       name: 'zeroConf',
@@ -293,9 +293,9 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
         valueProp: 'code',
         labelProp: 'display',
         optionsLimit: null,
-        onChange
+        onChange,
       },
-      editable: has0Conf
+      editable: has0Conf,
     },
     {
       name: 'zeroConfLimit',
@@ -307,10 +307,10 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
       input: NumberInput,
       width: 145 - widthAdjust,
       inputProps: {
-        decimalPlaces: 0
+        decimalPlaces: 0,
       },
-      editable: has0Conf
-    }
+      editable: has0Conf,
+    },
   ]
 }
 
@@ -323,5 +323,5 @@ export {
   getAdvancedWalletElementsOverrides,
   OverridesDefaults,
   OverridesSchema,
-  has0Conf
+  has0Conf,
 }

@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import { getEquivalentCode } from '@lamassu/coins/lightUtils'
 import * as R from 'ramda'
 import React, { useState } from 'react'

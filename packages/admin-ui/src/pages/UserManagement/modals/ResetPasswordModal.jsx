@@ -27,7 +27,7 @@ const ResetPasswordModal = ({
   state,
   dispatch,
   user,
-  requiresConfirmation
+  requiresConfirmation,
 }) => {
   const [resetPasswordUrl, setResetPasswordUrl] = useState('')
 
@@ -36,8 +36,8 @@ const ResetPasswordModal = ({
     {
       onCompleted: ({ createResetPasswordToken: token }) => {
         setResetPasswordUrl(urlResolver(`/resetpassword?t=${token.token}`))
-      }
-    }
+      },
+    },
   )
 
   const [confirmation, setConfirmation] = useState(null)
@@ -48,22 +48,22 @@ const ResetPasswordModal = ({
       createResetPasswordToken({
         variables: {
           confirmationCode: confirmation,
-          userID: user?.id
-        }
+          userID: user?.id,
+        },
       })
   }, [
     confirmation,
     createResetPasswordToken,
     requiresConfirmation,
     state.showResetPasswordModal,
-    user?.id
+    user?.id,
   ])
 
   const handleClose = () => {
     setConfirmation(null)
     dispatch({
       type: 'close',
-      payload: 'showResetPasswordModal'
+      payload: 'showResetPasswordModal',
     })
   }
 

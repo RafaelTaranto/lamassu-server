@@ -10,43 +10,43 @@ const PSQL_URL = `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HO
 
 const anonymousCustomer = {
   uuid: '47ac1184-8102-11e7-9079-8f13a7117867',
-  name: 'anonymous'
+  name: 'anonymous',
 }
 
 const CASH_UNIT_CAPACITY = {
   default: {
     cashbox: 600,
-    cassette: 500
+    cassette: 500,
   },
   douro: {
     cashbox: 600,
-    cassette: 500
+    cassette: 500,
   },
   grandola: {
     cashbox: 2000,
-    recycler: 2800
+    recycler: 2800,
   },
   aveiro: {
     cashbox: 1500,
     recycler: 60,
-    cassette: 500
+    cassette: 500,
   },
   tejo: {
     // TODO: add support for the different cashbox configuration in Tejo
     cashbox: 1000,
-    cassette: 500
+    cassette: 500,
   },
   gaia: {
-    cashbox: 600
+    cashbox: 600,
   },
   sintra: {
     cashbox: 1000,
-    cassette: 500
+    cassette: 500,
   },
   gmuk1: {
     cashbox: 2200,
-    cassette: 2000
-  }
+    cassette: 2000,
+  },
 }
 
 const CASH_OUT_MINIMUM_AMOUNT_OF_CASSETTES = 2
@@ -69,7 +69,7 @@ const WALLET_SCORE_THRESHOLD = 9
 
 const BALANCE_FETCH_SPEED_MULTIPLIER = {
   NORMAL: 1,
-  SLOW: 3
+  SLOW: 3,
 }
 
 module.exports = {
@@ -90,5 +90,5 @@ module.exports = {
   WALLET_SCORE_THRESHOLD,
   RECEIPT,
   PSQL_URL,
-  BALANCE_FETCH_SPEED_MULTIPLIER
+  BALANCE_FETCH_SPEED_MULTIPLIER,
 }

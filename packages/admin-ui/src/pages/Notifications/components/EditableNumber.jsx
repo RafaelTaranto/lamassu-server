@@ -13,13 +13,13 @@ const EditableNumber = ({
   decoration,
   className,
   decimalPlaces = 0,
-  width = 80
+  width = 80,
 }) => {
   const { values } = useFormikContext()
 
   const classNames = {
     'h-13': true,
-    className
+    className,
   }
 
   return (

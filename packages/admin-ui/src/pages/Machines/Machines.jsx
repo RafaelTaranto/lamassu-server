@@ -79,9 +79,9 @@ const MachineRoute = () => {
       deviceId: id,
       billFilters: {
         deviceId: id,
-        batch: 'none'
-      }
-    }
+        batch: 'none',
+      },
+    },
   })
 
   const reload = () => {

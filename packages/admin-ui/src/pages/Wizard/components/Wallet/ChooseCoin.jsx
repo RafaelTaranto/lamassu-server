@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import { Formik, Form, Field } from 'formik'
 import React, { useState } from 'react'
 import PromptWhenDirty from 'src/components/PromptWhenDirty'
@@ -20,7 +20,7 @@ const GET_CONFIG = gql`
 `
 
 const schema = Yup.object().shape({
-  coin: Yup.string().required()
+  coin: Yup.string().required(),
 })
 
 const ChooseCoin = ({ addData }) => {

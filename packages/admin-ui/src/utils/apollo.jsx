@@ -1,6 +1,11 @@
-import { ApolloClient, ApolloProvider, InMemoryCache, ApolloLink } from "@apollo/client";
-import { onError } from "@apollo/client/link/error"
-import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  ApolloLink,
+} from '@apollo/client'
+import { onError } from '@apollo/client/link/error'
+import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'
 import React, { useContext } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
@@ -8,7 +13,7 @@ import AppContext from 'src/AppContext'
 
 const uploadLink = createUploadLink({
   credentials: 'include',
-  uri: `/graphql`
+  uri: `/graphql`,
 })
 
 const getClient = (history, location, getUserData, setUserData, setRole) =>
@@ -22,7 +27,7 @@ const getClient = (history, location, getUserData, setUserData, setRole) =>
               if (location.pathname !== '/login') history.push('/login')
             }
             console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
             )
           })
         if (networkError) console.log(`[Network error]: ${networkError}`)
@@ -31,7 +36,7 @@ const getClient = (history, location, getUserData, setUserData, setRole) =>
         return forward(operation).map(response => {
           const context = operation.getContext()
           const {
-            response: { headers }
+            response: { headers },
           } = context
 
           if (headers) {
@@ -42,22 +47,22 @@ const getClient = (history, location, getUserData, setUserData, setRole) =>
           return response
         })
       }),
-      uploadLink
+      uploadLink,
     ]),
     cache: new InMemoryCache(),
     defaultOptions: {
       watchQuery: {
         fetchPolicy: 'no-cache',
-        errorPolicy: 'ignore'
+        errorPolicy: 'ignore',
       },
       query: {
         fetchPolicy: 'no-cache',
-        errorPolicy: 'all'
+        errorPolicy: 'all',
       },
       mutate: {
-        errorPolicy: 'all'
-      }
-    }
+        errorPolicy: 'all',
+      },
+    },
   })
 
 const Provider = ({ children }) => {
@@ -69,7 +74,7 @@ const Provider = ({ children }) => {
     location,
     () => userData,
     setUserData,
-    setRole
+    setRole,
   )
 
   return <ApolloProvider client={client}>{children}</ApolloProvider>

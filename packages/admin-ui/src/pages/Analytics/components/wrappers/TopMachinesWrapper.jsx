@@ -8,7 +8,7 @@ import classes from './wrappers.module.css'
 
 const options = [
   { code: 'topMachinesTransactions', display: 'Transactions' },
-  { code: 'topMachinesVolume', display: 'Volume' }
+  { code: 'topMachinesVolume', display: 'Volume' },
 ]
 
 const TopMachinesBarGraphHeader = ({
@@ -18,13 +18,13 @@ const TopMachinesBarGraphHeader = ({
   machines,
   selectedMachine,
   timezone,
-  currency
+  currency,
 }) => {
   const [graphType /*, setGraphType */] = useState(options[0].code)
 
   const legend = {
     cashIn: <div className={classes.cashInIcon}></div>,
-    cashOut: <div className={classes.cashOutIcon}></div>
+    cashOut: <div className={classes.cashOutIcon}></div>,
   }
 
   return (

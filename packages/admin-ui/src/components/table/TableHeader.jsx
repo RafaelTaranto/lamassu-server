@@ -5,7 +5,7 @@ const TableHeaderCell = memo(
   ({ rightAlign, children, className, ...props }) => {
     const styles = {
       'bg-zodiac text-white py-0 px-6 h-8 text-sm text-left': true,
-      'text-right': rightAlign
+      'text-right': rightAlign,
     }
 
     return (
@@ -13,7 +13,7 @@ const TableHeaderCell = memo(
         {children}
       </th>
     )
-  }
+  },
 )
 
 export default TableHeaderCell

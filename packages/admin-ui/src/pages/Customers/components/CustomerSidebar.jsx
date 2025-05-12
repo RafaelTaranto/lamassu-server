@@ -17,26 +17,26 @@ const CustomerSidebar = ({ isSelected, onClick }) => {
       code: 'overview',
       display: 'Overview',
       Icon: OverviewIcon,
-      InverseIcon: OverviewReversedIcon
+      InverseIcon: OverviewReversedIcon,
     },
     {
       code: 'customerData',
       display: 'Customer data',
       Icon: CustomerDataIcon,
-      InverseIcon: CustomerDataReversedIcon
+      InverseIcon: CustomerDataReversedIcon,
     },
     {
       code: 'notes',
       display: 'Notes',
       Icon: NoteIcon,
-      InverseIcon: NoteReversedIcon
+      InverseIcon: NoteReversedIcon,
     },
     {
       code: 'photos',
       display: 'Photos & files',
       Icon: Photos,
-      InverseIcon: PhotosReversedIcon
-    }
+      InverseIcon: PhotosReversedIcon,
+    },
   ]
 
   return (
@@ -46,7 +46,7 @@ const CustomerSidebar = ({ isSelected, onClick }) => {
           key={idx}
           className={classnames({
             'gap-4 p-4 cursor-pointer flex items-center': true,
-            'bg-comet2': isSelected(code)
+            'bg-comet2': isSelected(code),
           })}
           onClick={() => onClick(code)}>
           {isSelected(code) ? <Icon /> : <InverseIcon />}
@@ -54,7 +54,7 @@ const CustomerSidebar = ({ isSelected, onClick }) => {
             noMargin
             className={classnames({
               'text-comet2': true,
-              'text-white font-bold': isSelected(code)
+              'text-white font-bold': isSelected(code),
             })}>
             {display}
           </P>

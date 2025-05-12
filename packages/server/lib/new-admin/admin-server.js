@@ -9,8 +9,12 @@ const nocache = require('nocache')
 const cookieParser = require('cookie-parser')
 const { ApolloServer } = require('@apollo/server')
 const { expressMiddleware } = require('@apollo/server/express4')
-const { ApolloServerPluginLandingPageDisabled } = require('@apollo/server/plugin/disabled')
-const { ApolloServerPluginLandingPageLocalDefault } = require('@apollo/server/plugin/landingPage/default')
+const {
+  ApolloServerPluginLandingPageDisabled,
+} = require('@apollo/server/plugin/disabled')
+const {
+  ApolloServerPluginLandingPageLocalDefault,
+} = require('@apollo/server/plugin/landingPage/default')
 
 const { mergeResolvers } = require('@graphql-tools/merge')
 const { makeExecutableSchema } = require('@graphql-tools/schema')
@@ -23,7 +27,11 @@ const { authDirectiveTransformer } = require('./graphql/directives')
 const { typeDefs, resolvers } = require('./graphql/schema')
 const findOperatorId = require('../middlewares/operatorId')
 const { USER_SESSIONS_CLEAR_INTERVAL } = require('../constants')
-const { session, cleanUserSessions, buildApolloContext } = require('./middlewares')
+const {
+  session,
+  cleanUserSessions,
+  buildApolloContext,
+} = require('./middlewares')
 
 const devMode = require('minimist')(process.argv.slice(2)).dev
 
@@ -55,8 +63,12 @@ const loadRoutes = async () => {
   app.use(session)
 
   // Dynamic import for graphql-upload since it's not a CommonJS module
-  const { default: graphqlUploadExpress } = await import('graphql-upload/graphqlUploadExpress.mjs')
-  const { default: GraphQLUpload } = await import('graphql-upload/GraphQLUpload.mjs')
+  const { default: graphqlUploadExpress } = await import(
+    'graphql-upload/graphqlUploadExpress.mjs'
+  )
+  const { default: GraphQLUpload } = await import(
+    'graphql-upload/GraphQLUpload.mjs'
+  )
 
   app.use(graphqlUploadExpress())
 
@@ -75,29 +87,33 @@ const loadRoutes = async () => {
       return formattedError
     },
     plugins: [
-      devMode 
-        ? ApolloServerPluginLandingPageLocalDefault() 
-        : ApolloServerPluginLandingPageDisabled()
-    ]
+      devMode
+        ? ApolloServerPluginLandingPageLocalDefault()
+        : ApolloServerPluginLandingPageDisabled(),
+    ],
   })
 
-  await apolloServer.start();
+  await apolloServer.start()
 
   app.use(
     '/graphql',
     express.json(),
     expressMiddleware(apolloServer, {
-      context: async ({ req, res }) => buildApolloContext({ req, res })
-    })
-  );
-
+      context: async ({ req, res }) => buildApolloContext({ req, res }),
+    }),
+  )
 
   app.use('/id-card-photo', serveStatic(ID_PHOTO_CARD_DIR, { index: false }))
-  app.use('/front-camera-photo', serveStatic(FRONT_CAMERA_DIR, { index: false }))
+  app.use(
+    '/front-camera-photo',
+    serveStatic(FRONT_CAMERA_DIR, { index: false }),
+  )
   app.use('/operator-data', serveStatic(OPERATOR_DATA_DIR, { index: false }))
 
   // Everything not on graphql or api/register is redirected to the front-end
-  app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'index.html')))
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, '..', '..', 'public', 'index.html')),
+  )
 
   return app
 }
@@ -105,10 +121,10 @@ const loadRoutes = async () => {
 const certOptions = {
   key: fs.readFileSync(KEY_PATH),
   cert: fs.readFileSync(CERT_PATH),
-  ca: fs.readFileSync(CA_PATH)
+  ca: fs.readFileSync(CA_PATH),
 }
 
-async function run () {
+async function run() {
   const app = await loadRoutes()
   const serverPort = devMode ? 8070 : 443
 

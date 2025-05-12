@@ -7,7 +7,7 @@ import classnames from 'classnames'
 const cardState = Object.freeze({
   DEFAULT: 'default',
   SHRUNK: 'shrunk',
-  EXPANDED: 'expanded'
+  EXPANDED: 'expanded',
 })
 
 const CollapsibleCard = ({ className, state, shrunkComponent, children }) => {
@@ -19,7 +19,7 @@ const CollapsibleCard = ({ className, state, shrunkComponent, children }) => {
 }
 
 CollapsibleCard.propTypes = {
-  shrunkComponent: PropTypes.node.isRequired
+  shrunkComponent: PropTypes.node.isRequired,
 }
 
 export default CollapsibleCard

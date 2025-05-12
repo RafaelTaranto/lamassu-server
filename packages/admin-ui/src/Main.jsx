@@ -34,7 +34,7 @@ const Main = () => {
     onCompleted: userResponse => {
       if (!userData && userResponse?.userData)
         setUserData(userResponse.userData)
-    }
+    },
   })
 
   const route = location.pathname

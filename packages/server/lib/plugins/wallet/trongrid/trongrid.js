@@ -3,7 +3,7 @@ const base = require('../tron/base')
 
 const NAME = 'trongrid'
 
-function run (account) {
+function run(account) {
   const endpoint = 'https://api.trongrid.io'
 
   base.connect({ ...account, endpoint })

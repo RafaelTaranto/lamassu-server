@@ -4,30 +4,6 @@ import React, { useState, memo } from 'react'
 import Popper from 'src/components/Popper'
 import HelpIcon from 'src/styling/icons/action/help/zodiac.svg?react'
 
-const useStyles = {
-  transparentButton: {
-    border: 'none',
-    backgroundColor: 'transparent',
-    outline: 'none',
-    cursor: 'pointer',
-    marginTop: 4
-  },
-  relativelyPositioned: {
-    position: 'relative'
-  },
-  safeSpace: {
-    position: 'absolute',
-    backgroundColor: '#0000',
-    height: 40,
-    left: '-50%',
-    width: '200%'
-  },
-  popoverContent: ({ width }) => ({
-    width,
-    padding: [[10, 15]]
-  })
-}
-
 const usePopperHandler = () => {
   const [helpPopperAnchorEl, setHelpPopperAnchorEl] = useState(null)
 
@@ -50,7 +26,7 @@ const usePopperHandler = () => {
     helpPopperOpen,
     handleOpenHelpPopper,
     openHelpPopper,
-    handleCloseHelpPopper
+    handleCloseHelpPopper,
   }
 }
 

@@ -32,7 +32,7 @@ const Field = ({
 }) => {
   const info3ClassNames = {
     'overflow-hidden whitespace-nowrap text-ellipsis h-6': !multiline,
-    'wrap-anywhere overflow-y-auto h-32 mt-4 leading-[23px]': multiline
+    'wrap-anywhere overflow-y-auto h-32 mt-4 leading-[23px]': multiline,
   }
 
   return (
@@ -88,7 +88,7 @@ const TermsConditions = () => {
       setEditing(false)
     },
     refetchQueries: () => ['getData'],
-    onError: e => setError(e)
+    onError: e => setError(e),
   })
 
   const { data } = useQuery(GET_CONFIG)
@@ -102,7 +102,7 @@ const TermsConditions = () => {
 
   const save = it =>
     saveConfig({
-      variables: { config: toNamespace(namespaces.TERMS_CONDITIONS, it) }
+      variables: { config: toNamespace(namespaces.TERMS_CONDITIONS, it) },
     })
 
   const fields = [
@@ -110,7 +110,7 @@ const TermsConditions = () => {
       name: 'title',
       label: 'Screen title',
       value: formData.title ?? '',
-      width: 282
+      width: 282,
     },
     {
       name: 'text',
@@ -118,22 +118,22 @@ const TermsConditions = () => {
       value: formData.text ?? '',
       width: 502,
       multiline: true,
-      rows: 6
+      rows: 6,
     },
     {
       name: 'acceptButtonText',
       label: 'Accept button text',
       value: formData.acceptButtonText ?? '',
       placeholder: 'I accept',
-      width: 282
+      width: 282,
     },
     {
       name: 'cancelButtonText',
       label: 'Cancel button text',
       value: formData.cancelButtonText ?? '',
       placeholder: 'Cancel',
-      width: 282
-    }
+      width: 282,
+    },
   ]
 
   const findField = name => R.find(R.propEq('name', name))(fields)
@@ -143,7 +143,7 @@ const TermsConditions = () => {
     title: findValue('title'),
     text: findValue('text'),
     acceptButtonText: findValue('acceptButtonText'),
-    cancelButtonText: findValue('cancelButtonText')
+    cancelButtonText: findValue('cancelButtonText'),
   }
 
   const validationSchema = Yup.object().shape({
@@ -151,14 +151,14 @@ const TermsConditions = () => {
       .required('The screen title is required')
       .max(50, 'Too long'),
     text: Yup.string('The text content must be a string').required(
-      'The text content is required'
+      'The text content is required',
     ),
     acceptButtonText: Yup.string('The accept button text must be a string')
       .required('The accept button text is required')
       .max(50, 'The accept button text is too long'),
     cancelButtonText: Yup.string('The cancel button text must be a string')
       .required('The cancel button text is required')
-      .max(50, 'The cancel button text is too long')
+      .max(50, 'The cancel button text is too long'),
   })
 
   return (

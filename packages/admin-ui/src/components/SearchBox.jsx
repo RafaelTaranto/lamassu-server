@@ -12,7 +12,6 @@ const SearchBox = memo(
     filters = [],
     options = [],
     inputPlaceholder = '',
-    size,
     onChange,
     ...props
   }) => {
@@ -20,7 +19,7 @@ const SearchBox = memo(
 
     const inputClasses = {
       'flex flex-1 h-8 px-2 py-2 font-md items-center rounded-2xl bg-zircon text-comet': true,
-      'rounded-b-none': popupOpen
+      'rounded-b-none': popupOpen,
     }
 
     const innerOnChange = filters => onChange(filters)
@@ -57,7 +56,7 @@ const SearchBox = memo(
               placeholder={inputPlaceholder}
               inputProps={{
                 className: 'font-bold',
-                ...params.inputProps
+                ...params.inputProps,
               }}
             />
           )
@@ -74,10 +73,11 @@ const SearchBox = memo(
               <div className="w-[88%] h-[1px] my-p mx-auto border-1 border-comet" />
               {children}
             </Paper>
-          )
-        }} />
-    );
-  }
+          ),
+        }}
+      />
+    )
+  },
 )
 
 export default SearchBox

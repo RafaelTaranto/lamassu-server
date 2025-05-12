@@ -13,7 +13,6 @@ const TextInput = memo(
     onBlur,
     value,
     error,
-    suffix,
     textAlign,
     width,
     inputClasses,
@@ -29,7 +28,7 @@ const TextInput = memo(
 
     const style = {
       width: width,
-      textAlign: textAlign
+      textAlign: textAlign,
     }
 
     const sizeClass =
@@ -40,7 +39,7 @@ const TextInput = memo(
           : styles.size
 
     const divClass = {
-      [styles.bold]: bold
+      [styles.bold]: bold,
     }
 
     return (
@@ -60,15 +59,16 @@ const TextInput = memo(
             classes: {
               root: sizeClass,
               underline: filled ? styles.underline : null,
-              input: inputClasses
+              input: inputClasses,
             },
-            ...InputProps
+            ...InputProps,
           },
 
-          htmlInput: { style: { textAlign } }
-        }} />
-    );
-  }
+          htmlInput: { style: { textAlign } },
+        }}
+      />
+    )
+  },
 )
 
 export default TextInput

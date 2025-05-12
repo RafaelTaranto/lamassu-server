@@ -1,9 +1,7 @@
 const logger = require('../logger')
 
-function errorHandler (err, req, res, next) {
-  const statusCode = err.name === 'HTTPError'
-    ? err.code || 500
-    : 500
+function errorHandler(err, req, res) {
+  const statusCode = err.name === 'HTTPError' ? err.code || 500 : 500
 
   const json = { error: err.message }
 

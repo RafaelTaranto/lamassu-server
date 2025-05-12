@@ -14,13 +14,13 @@
 .buttonXl {
   composes: h1 from '../typography/typography.module.css';
   height: 61px;
-  border-radius: 15px
+  border-radius: 15px;
 }
 
 .buttonSm {
   height: 32px;
   padding: 0 16px;
-  border-radius: 8px
+  border-radius: 8px;
 }
 
 .button:disabled {

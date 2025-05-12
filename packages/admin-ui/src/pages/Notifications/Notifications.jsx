@@ -1,4 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import Modal from 'src/components/Modal'
@@ -70,7 +70,7 @@ const Notifications = ({
   displayOverrides = true,
   displayTitle = true,
   displayThirdPartyProvider = true,
-  wizard = false
+  wizard = false,
 }) => {
   const [section, setSection] = useState(null)
   const [error, setError] = useState(null)
@@ -83,7 +83,7 @@ const Notifications = ({
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     refetchQueries: ['getData'],
     onCompleted: () => setEditingKey(null),
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const [saveAccount] = useMutation(SAVE_ACCOUNT, {
@@ -92,7 +92,7 @@ const Notifications = ({
       setEmailSetupPopup(false)
     },
     refetchQueries: ['getData'],
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const config = fromNamespace(SCREEN_KEY)(data?.config)
@@ -103,7 +103,7 @@ const Notifications = ({
   const mailgunAvailable = R.has('mailgun', data?.accounts || {})
 
   const currency = R.path(['fiatCurrency'])(
-    fromNamespace(namespaces.LOCALE)(data?.config)
+    fromNamespace(namespaces.LOCALE)(data?.config),
   )
 
   const save = R.curry((section, rawConfig) => {
@@ -123,14 +123,14 @@ const Notifications = ({
   const twilioSave = it => {
     setError(null)
     return saveAccount({
-      variables: { accounts: { twilio: it } }
+      variables: { accounts: { twilio: it } },
     }).then(() => R.compose(save(null), toNamespace('sms'))({ active: true }))
   }
 
   const mailgunSave = it => {
     setError(null)
     return saveAccount({
-      variables: { accounts: { mailgun: it } }
+      variables: { accounts: { mailgun: it } },
     }).then(() => R.compose(save(null), toNamespace('email'))({ active: true }))
   }
 
@@ -153,7 +153,7 @@ const Notifications = ({
     twilioAvailable,
     setSmsSetupPopup,
     mailgunAvailable,
-    setEmailSetupPopup
+    setEmailSetupPopup,
   }
 
   return (

@@ -7,20 +7,19 @@ import Arrowdown from 'src/styling/icons/action/arrow/regular.svg?react'
 import styles from './Select.module.css'
 
 function Select({ className, label, items, ...props }) {
-
   const {
     isOpen,
     selectedItem,
     getToggleButtonProps,
     getLabelProps,
     getMenuProps,
-    getItemProps
+    getItemProps,
   } = useSelect({
     items,
     selectedItem: props.selectedItem,
     onSelectedItemChange: item => {
       props.onSelectedItemChange(item.selectedItem)
-    }
+    },
   })
 
   const selectClassNames = {
@@ -28,7 +27,7 @@ function Select({ className, label, items, ...props }) {
     [styles.selectFiltered]: props.defaultAsFilter
       ? true
       : !R.equals(selectedItem, props.default),
-    [styles.open]: isOpen
+    [styles.open]: isOpen,
   }
 
   return (

@@ -46,7 +46,7 @@ const Input2FAState = ({ state, dispatch }) => {
     onCompleted: ({ userData }) => {
       setUserData(userData)
       history.push('/')
-    }
+    },
   })
 
   const [input2FA, { error: mutationError }] = useMutation(INPUT_2FA, {
@@ -55,15 +55,15 @@ const Input2FAState = ({ state, dispatch }) => {
         return getUserData()
       }
       return setInvalidToken(true)
-    }
+    },
   })
 
   const handle2FAChange = value => {
     dispatch({
       type: STATES.INPUT_2FA,
       payload: {
-        twoFAField: value
-      }
+        twoFAField: value,
+      },
     })
     setInvalidToken(false)
   }
@@ -79,8 +79,8 @@ const Input2FAState = ({ state, dispatch }) => {
         username: state.clientField,
         password: state.passwordField,
         code: state.twoFAField,
-        rememberMe: state.rememberMeField
-      }
+        rememberMe: state.rememberMeField,
+      },
     }
 
     input2FA(options)

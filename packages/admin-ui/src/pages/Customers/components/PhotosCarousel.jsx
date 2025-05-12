@@ -43,7 +43,7 @@ const PhotosCarousel = memo(({ photosData, timezone }) => {
                 formatDate(
                   photosData[currentIndex]?.date,
                   timezone,
-                  'yyyy-MM-dd HH:mm'
+                  'yyyy-MM-dd HH:mm',
                 )}
             </div>
           </>

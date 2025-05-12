@@ -33,17 +33,17 @@ const validationSchema = Yup.object().shape({
     .test(
       'len',
       'New password must contain more than 8 characters',
-      val => val.length >= 8
+      val => val.length >= 8,
     ),
   confirmPassword: Yup.string().oneOf(
     [Yup.ref('password'), null],
-    'Passwords must match'
-  )
+    'Passwords must match',
+  ),
 })
 
 const initialValues = {
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
 }
 
 const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
@@ -78,13 +78,13 @@ const ResetPassword = () => {
     onError: () => {
       setLoading(false)
       setSuccess(false)
-    }
+    },
   })
 
   const [resetPassword, { error }] = useMutation(RESET_PASSWORD, {
     onCompleted: ({ resetPassword: success }) => {
       if (success) history.push('/')
-    }
+    },
   })
 
   return (
@@ -112,8 +112,8 @@ const ResetPassword = () => {
                       variables: {
                         token: token,
                         userID: userID,
-                        newPassword: values.confirmPassword
-                      }
+                        newPassword: values.confirmPassword,
+                      },
                     })
                   }}>
                   {({ errors, touched }) => (

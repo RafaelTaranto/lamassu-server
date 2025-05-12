@@ -20,7 +20,7 @@ const MakeIcon = IconSvg => (
       maxWidth: 104,
       maxHeight: 64,
       minWidth: 104,
-      minHeight: 64
+      minHeight: 64,
     }}>
     <IconSvg style={{ maxWidth: 80 }} />
   </div>
@@ -33,21 +33,21 @@ const ChooseType = () => {
       title: 'Numerical entry',
       description:
         'User will enter information with a keypad. Good for dates, ID numbers, etc.',
-      icon: () => MakeIcon(Keypad)
+      icon: () => MakeIcon(Keypad),
     },
     {
       value: 'text',
       title: 'Text entry',
       description:
         'User will entry information with a keyboard. Good for names, email, address, etc.',
-      icon: () => MakeIcon(Keyboard)
+      icon: () => MakeIcon(Keyboard),
     },
     {
       value: 'choiceList',
       title: 'Choice list',
       description: 'Gives user multiple options to choose from.',
-      icon: () => MakeIcon(List)
-    }
+      icon: () => MakeIcon(List),
+    },
   ]
 
   return (
@@ -65,11 +65,11 @@ const ChooseType = () => {
 }
 
 const validationSchema = Yup.object().shape({
-  inputType: Yup.string().label('Input type').required()
+  inputType: Yup.string().label('Input type').required(),
 })
 
 const defaultValues = {
-  inputType: ''
+  inputType: '',
 }
 
 export default ChooseType

@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import { TextInput } from 'src/components/inputs/formik'
 import {
   OVERRIDE_AUTHORIZED,
-  OVERRIDE_REJECTED
+  OVERRIDE_REJECTED,
 } from 'src/pages/Customers/components/consts'
 import { onlyFirstToUpper } from 'src/utils/string'
 
@@ -20,7 +20,7 @@ import {
   customerDataSchemas,
   formatDates,
   tryFormatDate,
-  getFormattedPhone
+  getFormattedPhone,
 } from './helper'
 
 const IMAGE_WIDTH = 165
@@ -50,7 +50,7 @@ const CustomerData = ({
   updateCustomRequest,
   authorizeCustomRequest,
   updateCustomEntry,
-  checkAgainstSanctions
+  checkAgainstSanctions,
 }) => {
   const [previewPhoto, setPreviewPhoto] = useState(null)
   const [previewCard, setPreviewCard] = useState(null)
@@ -68,20 +68,21 @@ const CustomerData = ({
       : 'Failed'
 
   const sortByName = R.sortBy(
-    R.compose(R.toLower, R.path(['customInfoRequest', 'customRequest', 'name']))
+    R.compose(
+      R.toLower,
+      R.path(['customInfoRequest', 'customRequest', 'name']),
+    ),
   )
 
   const customFields = []
   const customRequirements = []
   const customInfoRequests = sortByName(
-    R.path(['customInfoRequests'])(customer) ?? []
+    R.path(['customInfoRequests'])(customer) ?? [],
   )
 
   const phone = R.path(['phone'])(customer)
   const email = R.path(['email'])(customer)
   const smsData = R.path(['subscriberInfo'])(customer)
-
-  const isEven = elem => elem % 2 === 0
 
   const getVisibleCards = R.filter(elem => elem.isAvailable)
 
@@ -93,23 +94,23 @@ const CustomerData = ({
       dateOfBirth: tryFormatDate(rawDob),
       gender: R.path(['gender'])(idData) ?? '',
       country: R.path(['country'])(idData) ?? '',
-      expirationDate: tryFormatDate(rawExpirationDate)
+      expirationDate: tryFormatDate(rawExpirationDate),
     },
     usSsn: {
-      usSsn: customer.usSsn ?? ''
+      usSsn: customer.usSsn ?? '',
     },
     frontCamera: {
-      frontCamera: null
+      frontCamera: null,
     },
     idCardPhoto: {
-      idCardPhoto: null
+      idCardPhoto: null,
     },
     email: {
-      email
+      email,
     },
     smsData: {
-      phoneNumber: getFormattedPhone(phone, locale.country)
-    }
+      phoneNumber: getFormattedPhone(phone, locale.country),
+    },
   }
 
   const smsDataElements = [
@@ -117,8 +118,8 @@ const CustomerData = ({
       name: 'phoneNumber',
       label: 'Phone number',
       component: TextInput,
-      editable: false
-    }
+      editable: false,
+    },
   ]
 
   const smsDataSchema = {
@@ -128,10 +129,10 @@ const CustomerData = ({
       if (R.length(fields) === 2) {
         return Yup.object().shape({
           [R.head(fields)]: Yup.string().required(),
-          [R.last(fields)]: Yup.string().required()
+          [R.last(fields)]: Yup.string().required(),
         })
       }
-    })
+    }),
   }
 
   const cards = [
@@ -146,18 +147,18 @@ const CustomerData = ({
       deleteEditedData: () => deleteEditedData({ idCardData: null }),
       save: values =>
         editCustomer({
-          idCardData: R.merge(idData, formatDates(values))
+          idCardData: R.merge(idData, formatDates(values)),
         }),
       validationSchema: customerDataSchemas.idCardData,
       checkAgainstSanctions: () =>
         checkAgainstSanctions({
           variables: {
-            customerId: R.path(['id'])(customer)
-          }
+            customerId: R.path(['id'])(customer),
+          },
         }),
       initialValues: initialValues.idCardData,
       isAvailable: !R.isNil(idData),
-      editable: true
+      editable: true,
     },
     {
       fields: smsDataElements,
@@ -169,15 +170,15 @@ const CustomerData = ({
       save: values => {
         editCustomer({
           subscriberInfo: {
-            result: R.merge(smsData, R.omit(['phoneNumber'])(values))
-          }
+            result: R.merge(smsData, R.omit(['phoneNumber'])(values)),
+          },
         })
       },
       validationSchema: smsDataSchema.smsData,
       initialValues: initialValues.smsData,
       isAvailable: !R.isNil(phone),
       hasAdditionalData: !R.isNil(smsData) && !R.isEmpty(smsData),
-      editable: false
+      editable: false,
     },
     {
       title: 'Email',
@@ -190,13 +191,13 @@ const CustomerData = ({
       deleteEditedData: () => deleteEditedData({ email: null }),
       initialValues: initialValues.email,
       isAvailable: !R.isNil(customer.email),
-      editable: false
+      editable: false,
     },
     {
       title: 'Name',
       titleIcon: <EditIcon />,
       isAvailable: false,
-      editable: true
+      editable: true,
     },
     {
       title: 'Sanctions check',
@@ -207,7 +208,7 @@ const CustomerData = ({
       reject: () => updateCustomer({ sanctionsOverride: OVERRIDE_REJECTED }),
       children: () => <Info3>{sanctionsDisplay}</Info3>,
       isAvailable: !R.isNil(sanctions),
-      editable: true
+      editable: true,
     },
     {
       fields: customerDataElements.frontCamera,
@@ -221,7 +222,7 @@ const CustomerData = ({
         setPreviewPhoto(null)
         return replacePhoto({
           newPhoto: values.frontCamera,
-          photoType: 'frontCamera'
+          photoType: 'frontCamera',
         })
       },
       cancel: () => setPreviewPhoto(null),
@@ -245,7 +246,7 @@ const CustomerData = ({
       validationSchema: customerDataSchemas.frontCamera,
       initialValues: initialValues.frontCamera,
       isAvailable: !R.isNil(customer.frontCameraPath),
-      editable: true
+      editable: true,
     },
     {
       fields: customerDataElements.idCardPhoto,
@@ -259,7 +260,7 @@ const CustomerData = ({
         setPreviewCard(null)
         return replacePhoto({
           newPhoto: values.idCardPhoto,
-          photoType: 'idCardPhoto'
+          photoType: 'idCardPhoto',
         })
       },
       cancel: () => setPreviewCard(null),
@@ -283,7 +284,7 @@ const CustomerData = ({
       validationSchema: customerDataSchemas.idCardPhoto,
       initialValues: initialValues.idCardPhoto,
       isAvailable: !R.isNil(customer.idCardPhotoPath),
-      editable: true
+      editable: true,
     },
     {
       fields: customerDataElements.usSsn,
@@ -298,8 +299,8 @@ const CustomerData = ({
       validationSchema: customerDataSchemas.usSsn,
       initialValues: initialValues.usSsn,
       isAvailable: !R.isNil(customer.usSsn),
-      editable: true
-    }
+      editable: true,
+    },
   ]
 
   R.forEach(it => {
@@ -310,8 +311,8 @@ const CustomerData = ({
           label: it.customInfoRequest.customRequest.name,
           value: it.customerData.data ?? '',
           component: TextInput,
-          editable: true
-        }
+          editable: true,
+        },
       ],
       title: it.customInfoRequest.customRequest.name,
       titleIcon: <CardIcon />,
@@ -321,16 +322,16 @@ const CustomerData = ({
           variables: {
             customerId: it.customerId,
             infoRequestId: it.customInfoRequest.id,
-            override: OVERRIDE_AUTHORIZED
-          }
+            override: OVERRIDE_AUTHORIZED,
+          },
         }),
       reject: () =>
         authorizeCustomRequest({
           variables: {
             customerId: it.customerId,
             infoRequestId: it.customInfoRequest.id,
-            override: OVERRIDE_REJECTED
-          }
+            override: OVERRIDE_REJECTED,
+          },
         }),
       save: values => {
         updateCustomRequest({
@@ -339,18 +340,18 @@ const CustomerData = ({
             infoRequestId: it.customInfoRequest.id,
             data: {
               info_request_id: it.customInfoRequest.id,
-              data: values[it.customInfoRequest.id]
-            }
-          }
+              data: values[it.customInfoRequest.id],
+            },
+          },
         })
       },
       deleteEditedData: () => {},
       validationSchema: Yup.object().shape({
-        [it.customInfoRequest.id]: Yup.string()
+        [it.customInfoRequest.id]: Yup.string(),
       }),
       initialValues: {
-        [it.customInfoRequest.id]: it.customerData.data ?? ''
-      }
+        [it.customInfoRequest.id]: it.customerData.data ?? '',
+      },
     })
   }, customInfoRequests)
 
@@ -363,27 +364,27 @@ const CustomerData = ({
             label: it.label,
             value: it.value ?? '',
             component: TextInput,
-            editable: true
-          }
+            editable: true,
+          },
         ],
         title: it.label,
         titleIcon: <EditIcon />,
         save: values => {
           updateCustomEntry({
             fieldId: it.id,
-            value: values[it.label]
+            value: values[it.label],
           })
         },
         deleteEditedData: () => {},
         validationSchema: Yup.object().shape({
-          [it.label]: Yup.string()
+          [it.label]: Yup.string(),
         }),
         initialValues: {
-          [it.label]: it.value ?? ''
-        }
+          [it.label]: it.value ?? '',
+        },
       })
     },
-    R.path(['customFields'])(customer) ?? []
+    R.path(['customFields'])(customer) ?? [],
   )
 
   R.forEach(
@@ -393,10 +394,10 @@ const CustomerData = ({
         name: it,
         label: onlyFirstToUpper(it),
         component: TextInput,
-        editable: false
+        editable: false,
       })
     },
-    R.keys(smsData) ?? []
+    R.keys(smsData) ?? [],
   )
 
   const externalCompliance = R.map(it => ({
@@ -404,26 +405,26 @@ const CustomerData = ({
       {
         name: 'externalId',
         label: 'Third Party ID',
-        editable: false
+        editable: false,
       },
       {
         name: 'lastKnownStatus',
         label: 'Last Known Status',
-        editable: false
+        editable: false,
       },
       {
         name: 'lastUpdated',
         label: 'Last Updated',
-        editable: false
-      }
+        editable: false,
+      },
     ],
     titleIcon: <CardIcon />,
     title: `External Info [${it.service}]`,
     initialValues: it ?? {
       externalId: '',
       lastKnownStatus: '',
-      lastUpdated: ''
-    }
+      lastUpdated: '',
+    },
   }))(customer.externalCompliance ?? [])
 
   const editableCard = (
@@ -443,9 +444,9 @@ const CustomerData = ({
       hasImage,
       hasAdditionalData,
       editable,
-      checkAgainstSanctions
+      checkAgainstSanctions,
     },
-    idx
+    idx,
   ) => {
     return (
       <div className="mb-4">
@@ -474,7 +475,7 @@ const CustomerData = ({
 
   const nonEditableCard = (
     { title, state, titleIcon, fields, hasImage, initialValues, children },
-    idx
+    idx,
   ) => {
     return (
       <div className="mb-4">

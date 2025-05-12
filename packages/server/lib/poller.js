@@ -31,7 +31,6 @@ const PRUNE_MACHINES_HEARTBEAT = 1 * T.day
 const TRANSACTION_BATCH_LIFECYCLE = 20 * T.minutes
 const TICKER_RATES_INTERVAL = 59 * T.seconds
 const FAILED_SCANS_INTERVAL = 1 * T.day
-const EXTERNAL_COMPLIANCE_INTERVAL = 1 * T.minutes
 
 const CHECK_NOTIFICATION_INTERVAL = 20 * T.seconds
 const PENDING_INTERVAL = 10 * T.seconds
@@ -44,24 +43,24 @@ const OPERATOR_DATA_DIR = process.env.OPERATOR_DATA_DIR
 
 const FAST_QUEUE = new Queue({
   concurrent: 600,
-  interval: FAST_QUEUE_WAIT
+  interval: FAST_QUEUE_WAIT,
 })
 
 const SLOW_QUEUE = new Queue({
   concurrent: 10,
-  interval: SLOW_QUEUE_WAIT
+  interval: SLOW_QUEUE_WAIT,
 })
 
 const QUEUE = {
   FAST: FAST_QUEUE,
-  SLOW: SLOW_QUEUE
+  SLOW: SLOW_QUEUE,
 }
 
 const cachedVariables = new NodeCache({
   stdTTL: CACHE_ENTRY_TTL,
   checkperiod: CACHE_ENTRY_TTL,
   deleteOnExpire: false,
-  useClones: false // pass values by reference instead of cloning
+  useClones: false, // pass values by reference instead of cloning
 })
 
 cachedVariables.on('expired', (key, val) => {
@@ -72,61 +71,74 @@ cachedVariables.on('expired', (key, val) => {
   }
 })
 
-db.connect({ direct: true }).then(sco => {
-  sco.client.on('notification', () => {
-    return reload()
-  })
-  return sco.none('LISTEN $1:name', 'reload')
-}).catch(console.error)
-
-function reload () {
-  return settingsLoader.loadLatest()
-    .then(settings => {
-      const pi = plugins(settings)
-      cachedVariables.set('public', { settings, pi, isReloading: false })
-      logger.debug(`Settings for schema 'public' reloaded in poller`)
-      return updateAndLoadSanctions()
+db.connect({ direct: true })
+  .then(sco => {
+    sco.client.on('notification', () => {
+      return reload()
     })
+    return sco.none('LISTEN $1:name', 'reload')
+  })
+  .catch(console.error)
+
+function reload() {
+  return settingsLoader.loadLatest().then(settings => {
+    const pi = plugins(settings)
+    cachedVariables.set('public', { settings, pi, isReloading: false })
+    logger.debug(`Settings for schema 'public' reloaded in poller`)
+    return updateAndLoadSanctions()
+  })
 }
 
-function pi () { return cachedVariables.get('public').pi }
-function settings () { return cachedVariables.get('public').settings }
+function pi() {
+  return cachedVariables.get('public').pi
+}
+function settings() {
+  return cachedVariables.get('public').settings
+}
 
-function initialSanctionsDownload () {
+function initialSanctionsDownload() {
   const structs = sanctions.getStructs()
-  const isEmptyStructs = _.isNil(structs) || _.flow(_.values, _.all(_.isEmpty))(structs)
+  const isEmptyStructs =
+    _.isNil(structs) || _.flow(_.values, _.all(_.isEmpty))(structs)
 
   if (!isEmptyStructs) return Promise.resolve()
 
   return updateAndLoadSanctions()
 }
 
-function updateAndLoadSanctions () {
+function updateAndLoadSanctions() {
   const triggers = configManager.getTriggers(settings().config)
   const hasSanctions = complianceTriggers.hasSanctions(triggers)
 
   if (!hasSanctions) return Promise.resolve()
 
   logger.info('Updating sanctions database...')
-  return sanctionsUpdater.update()
+  return sanctionsUpdater
+    .update()
     .then(sanctions.load)
     .then(() => logger.info('Sanctions database updated.'))
 }
 
-function updateCoinAtmRadar () {
-  return pi().getRawRates()
+function updateCoinAtmRadar() {
+  return pi()
+    .getRawRates()
     .then(rates => coinAtmRadar.update(rates, settings()))
 }
 
 const readdir = dirpath =>
-  fs.readdir(dirpath, { withFileTypes: true })
+  fs
+    .readdir(dirpath, { withFileTypes: true })
     .then(_.map(entry => _.set('path', path.join(dirpath, entry.name), entry)))
 
 const readdirRec = rootPath =>
   readdir(rootPath)
-    .then(entries => Promise.all(
-      entries.map(entry => entry.isDirectory() ? readdirRec(entry.path) : [entry])
-    ))
+    .then(entries =>
+      Promise.all(
+        entries.map(entry =>
+          entry.isDirectory() ? readdirRec(entry.path) : [entry],
+        ),
+      ),
+    )
     .then(_.flatten)
 
 const stat = path => fs.stat(path).then(_.set('path', path))
@@ -134,15 +146,19 @@ const pathComponents = p => path.normalize(p).split(path.sep)
 
 // @see lib/customers.js:updateIdCardData()
 const cleanOldFailedPDF417Scans = () => {
-  const matcher = (c, pat) => typeof pat === 'function' ? pat(c) : c === pat
-  const PDF417ScanPathPattern = _.concat(
-    pathComponents(OPERATOR_DATA_DIR),
-    ["id-operator", s => /* customerid*/ true, "idcarddata", fname => path.extname(fname) === 'jpg']
-  )
+  const matcher = (c, pat) => (typeof pat === 'function' ? pat(c) : c === pat)
+  const PDF417ScanPathPattern = _.concat(pathComponents(OPERATOR_DATA_DIR), [
+    'id-operator',
+    () => /* customerid*/ true,
+    'idcarddata',
+    fname => path.extname(fname) === 'jpg',
+  ])
   const isPDF417Scan = entry => {
     entry = pathComponents(entry.path)
-    return entry.length === PDF417ScanPathPattern.length
-      && _.isMatchWith(matcher, PDF417ScanPathPattern, pathComponents(entry.path))
+    return (
+      entry.length === PDF417ScanPathPattern.length &&
+      _.isMatchWith(matcher, PDF417ScanPathPattern, pathComponents(entry.path))
+    )
   }
 
   let old = new Date()
@@ -153,18 +169,20 @@ const cleanOldFailedPDF417Scans = () => {
   const isOld = filestat => filestat.mtimeMs < old
 
   return readdirRec(path.join(OPERATOR_DATA_DIR, 'id-operator'))
-    .then(entries => Promise.all(
-      entries
-        .filter(entry => entry.isFile() && isPDF417Scan(entry))
-        .map(entry => stat(entry.path))
-    ))
-    .then(filestats => Promise.all(
-      filestats
-        .filter(isOld)
-        .map(_.flow(_.get(['path']), fs.unlink))
-    ))
+    .then(entries =>
+      Promise.all(
+        entries
+          .filter(entry => entry.isFile() && isPDF417Scan(entry))
+          .map(entry => stat(entry.path)),
+      ),
+    )
+    .then(filestats =>
+      Promise.all(
+        filestats.filter(isOld).map(_.flow(_.get(['path']), fs.unlink)),
+      ),
+    )
     .catch(err => {
-      console.log("Error cleaning up failed PDF417 scans:", err)
+      console.log('Error cleaning up failed PDF417 scans:', err)
     })
 }
 
@@ -179,25 +197,30 @@ const cleanOldFailedQRScans = () => {
   }
 
   return readdirRec(path.join(OPERATOR_DATA_DIR, 'failedQRScans'))
-    .then(entries => Promise.all(
-      entries
-        .filter(entry => entry.isFile() && isOld(entry.path))
-        .map(entry => fs.unlink(entry.path))
-    ))
+    .then(entries =>
+      Promise.all(
+        entries
+          .filter(entry => entry.isFile() && isOld(entry.path))
+          .map(entry => fs.unlink(entry.path)),
+      ),
+    )
     .catch(err => {
-      console.log("Error cleaning up failed QR scans:", err)
+      console.log('Error cleaning up failed QR scans:', err)
     })
 }
 
-function setup () {
-  return settingsLoader.loadLatest().then(settings => {
-    const pi = plugins(settings)
-    cachedVariables.set('public', { settings, pi, isReloading: false })
-    return doPolling()
-  }).catch(console.error)
+function setup() {
+  return settingsLoader
+    .loadLatest()
+    .then(settings => {
+      const pi = plugins(settings)
+      cachedVariables.set('public', { settings, pi, isReloading: false })
+      return doPolling()
+    })
+    .catch(console.error)
 }
 
-function recursiveTimeout (func, timeout, ...vars) {
+function recursiveTimeout(func, timeout, ...vars) {
   setTimeout(() => {
     let promise = null
 
@@ -216,11 +239,11 @@ function recursiveTimeout (func, timeout, ...vars) {
   }, timeout)
 }
 
-function addToQueue (func, interval, queue, ...vars) {
+function addToQueue(func, interval, queue, ...vars) {
   recursiveTimeout(func, interval, ...vars)
 }
 
-function doPolling () {
+function doPolling() {
   pi().executeTrades()
   pi().clearOldLogs()
   cashOutTx.monitorLiveIncoming(settings())
@@ -232,20 +255,60 @@ function doPolling () {
 
   addToQueue(pi().getRawRates, TICKER_RATES_INTERVAL, QUEUE.FAST)
   addToQueue(pi().executeTrades, TRADE_INTERVAL, QUEUE.FAST)
-  addToQueue(cashOutTx.monitorLiveIncoming, LIVE_INCOMING_TX_INTERVAL, QUEUE.FAST, settings)
-  addToQueue(cashOutTx.monitorStaleIncoming, INCOMING_TX_INTERVAL, QUEUE.FAST, settings)
-  addToQueue(cashOutTx.monitorUnnotified, UNNOTIFIED_INTERVAL, QUEUE.FAST, settings)
+  addToQueue(
+    cashOutTx.monitorLiveIncoming,
+    LIVE_INCOMING_TX_INTERVAL,
+    QUEUE.FAST,
+    settings,
+  )
+  addToQueue(
+    cashOutTx.monitorStaleIncoming,
+    INCOMING_TX_INTERVAL,
+    QUEUE.FAST,
+    settings,
+  )
+  addToQueue(
+    cashOutTx.monitorUnnotified,
+    UNNOTIFIED_INTERVAL,
+    QUEUE.FAST,
+    settings,
+  )
   addToQueue(cashInTx.monitorPending, PENDING_INTERVAL, QUEUE.FAST, settings)
-  addToQueue(processBatches, UNNOTIFIED_INTERVAL, QUEUE.FAST, settings, TRANSACTION_BATCH_LIFECYCLE)
+  addToQueue(
+    processBatches,
+    UNNOTIFIED_INTERVAL,
+    QUEUE.FAST,
+    settings,
+    TRANSACTION_BATCH_LIFECYCLE,
+  )
   addToQueue(pi().sweepHd, SWEEP_HD_INTERVAL, QUEUE.FAST, settings)
   addToQueue(pi().clearOldLogs, LOGS_CLEAR_INTERVAL, QUEUE.SLOW)
-  addToQueue(notifier.checkNotification, CHECK_NOTIFICATION_INTERVAL, QUEUE.FAST, pi)
-  addToQueue(initialSanctionsDownload, SANCTIONS_INITIAL_DOWNLOAD_INTERVAL, QUEUE.SLOW)
+  addToQueue(
+    notifier.checkNotification,
+    CHECK_NOTIFICATION_INTERVAL,
+    QUEUE.FAST,
+    pi,
+  )
+  addToQueue(
+    initialSanctionsDownload,
+    SANCTIONS_INITIAL_DOWNLOAD_INTERVAL,
+    QUEUE.SLOW,
+  )
   addToQueue(updateAndLoadSanctions, SANCTIONS_UPDATE_INTERVAL, QUEUE.SLOW)
   addToQueue(updateCoinAtmRadar, RADAR_UPDATE_INTERVAL, QUEUE.SLOW)
-  addToQueue(pi().pruneMachinesHeartbeat, PRUNE_MACHINES_HEARTBEAT, QUEUE.SLOW, settings)
+  addToQueue(
+    pi().pruneMachinesHeartbeat,
+    PRUNE_MACHINES_HEARTBEAT,
+    QUEUE.SLOW,
+    settings,
+  )
   addToQueue(cleanOldFailedQRScans, FAILED_SCANS_INTERVAL, QUEUE.SLOW, settings)
-  addToQueue(cleanOldFailedPDF417Scans, FAILED_SCANS_INTERVAL, QUEUE.SLOW, settings)
+  addToQueue(
+    cleanOldFailedPDF417Scans,
+    FAILED_SCANS_INTERVAL,
+    QUEUE.SLOW,
+    settings,
+  )
 }
 
 module.exports = { setup, reload }

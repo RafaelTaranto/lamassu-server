@@ -6,20 +6,20 @@ const BLOCKCHAIN_DIR = process.env.BLOCKCHAIN_DIR
 
 const MOUNT_POINT = BLOCKCHAIN_DIR
 
-module.exports = {prepareVolume}
+module.exports = { prepareVolume }
 
 const logger = common.logger
 
-function isMounted () {
+function isMounted() {
   return fs.existsSync(MOUNT_POINT)
 }
 
-function isFormatted (volumePath) {
+function isFormatted(volumePath) {
   const res = common.es(`file --dereference -s ${volumePath}`).trim()
   return res !== `${volumePath}: data`
 }
 
-function formatVolume (volumePath) {
+function formatVolume(volumePath) {
   if (isFormatted(volumePath)) {
     logger.info('Volume is already formatted.')
     return
@@ -29,7 +29,7 @@ function formatVolume (volumePath) {
   common.es(`sudo mkfs.ext4 ${volumePath}`)
 }
 
-function mountVolume (volumePath) {
+function mountVolume(volumePath) {
   if (isMounted()) {
     logger.info('Volume is already mounted.')
     return
@@ -38,10 +38,12 @@ function mountVolume (volumePath) {
   logger.info('Mounting...')
   common.es(`sudo mkdir -p ${MOUNT_POINT}`)
   common.es(`sudo mount -o discard,defaults ${volumePath} ${MOUNT_POINT}`)
-  common.es(`echo ${volumePath} ${MOUNT_POINT} ext4 defaults,nofail,discard 0 0 | sudo tee -a /etc/fstab`)
+  common.es(
+    `echo ${volumePath} ${MOUNT_POINT} ext4 defaults,nofail,discard 0 0 | sudo tee -a /etc/fstab`,
+  )
 }
 
-function locateVolume () {
+function locateVolume() {
   const res = common.es('ls /dev/disk/by-id/*')
   const lines = res.trim().split('\n')
 
@@ -58,7 +60,7 @@ function locateVolume () {
   return lines[0].trim()
 }
 
-function prepareVolume () {
+function prepareVolume() {
   if (isMounted()) {
     logger.info('Volume is already mounted.')
     return true

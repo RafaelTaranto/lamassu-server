@@ -34,7 +34,7 @@ export const DeleteDialog = ({
   item = 'item',
   confirmationMessage = `Are you sure you want to delete this ${item}?`,
   extraMessage,
-  errorMessage = ''
+  errorMessage = '',
 }) => {
   return (
     <Dialog open={open} aria-labelledby="form-dialog-title">

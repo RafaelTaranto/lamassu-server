@@ -11,7 +11,6 @@ const IDButton = memo(
     className,
     Icon,
     InverseIcon,
-    popoverWidth = 152,
     children,
     popoverClassname,
     ...props
@@ -25,11 +24,11 @@ const IDButton = memo(
       [classes.idButton]: true,
       [classes.primary]: true,
       [classes.open]: open,
-      [classes.closed]: !open
+      [classes.closed]: !open,
     }
 
     const iconClassNames = {
-      [classes.buttonIcon]: true
+      [classes.buttonIcon]: true,
     }
 
     const handleClick = event => {
@@ -74,7 +73,7 @@ const IDButton = memo(
         </Popover>
       </>
     )
-  }
+  },
 )
 
 export default IDButton

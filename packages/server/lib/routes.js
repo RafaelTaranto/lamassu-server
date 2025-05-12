@@ -47,7 +47,7 @@ const loadRoutes = async () => {
     '/customer',
     '/tx',
     '/verify_promo_code',
-    '/graphql'
+    '/graphql',
   ]
 
   // middleware setup
@@ -59,11 +59,16 @@ const loadRoutes = async () => {
 
   morgan.token('bytesRead', (_req, res) => res.bytesRead)
   morgan.token('bytesWritten', (_req, res) => res.bytesWritten)
-  app.use(morgan(':method :url :status :response-time ms -- :bytesRead/:bytesWritten B', { stream: logger.stream }))
+  app.use(
+    morgan(
+      ':method :url :status :response-time ms -- :bytesRead/:bytesWritten B',
+      { stream: logger.stream },
+    ),
+  )
 
   app.use('/robots.txt', (req, res) => {
     res.type('text/plain')
-    res.send("User-agent: *\nDisallow: /")
+    res.send('User-agent: *\nDisallow: /')
   })
 
   app.get('/', (req, res) => {
@@ -106,12 +111,13 @@ const loadRoutes = async () => {
   // rejecting poll is enough to render the machine "stuck"
   app.use(rejectIncompatibleMachines)
   await graphQLServer.start()
-  app.use('/graphql',
+  app.use(
+    '/graphql',
     express.json(),
     expressMiddleware(graphQLServer, {
       context,
     }),
-  );
+  )
 
   app.use(errorHandler)
   app.use((req, res) => {
@@ -120,6 +126,5 @@ const loadRoutes = async () => {
 
   return app
 }
-
 
 module.exports = { loadRoutes }

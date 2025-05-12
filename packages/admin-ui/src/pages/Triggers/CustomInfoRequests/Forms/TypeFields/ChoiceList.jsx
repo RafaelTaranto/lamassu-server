@@ -13,7 +13,7 @@ const nonEmptyStr = obj => obj.text && obj.text.length
 
 const options = [
   { display: 'Select just one', code: 'selectOne' },
-  { display: 'Select multiple', code: 'selectMultiple' }
+  { display: 'Select multiple', code: 'selectMultiple' },
 ]
 
 const ChoiceList = () => {
@@ -26,7 +26,7 @@ const ChoiceList = () => {
     'mb-0': true,
     'text-tomato':
       !R.path(['values', 'constraintType'])(context) &&
-      R.path(['errors', 'constraintType'])(context)
+      R.path(['errors', 'constraintType'])(context),
   }
 
   const hasError = choice => {

@@ -23,5 +23,5 @@ module.exports = {
   weeks,
   week,
   years,
-  year
+  year,
 }

@@ -20,23 +20,23 @@ const DEFAULT_NUMBER_OF_RECYCLERS = 0
 const notesMin = 0
 const notesMax = 9999999
 
-const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
+const FiatBalance = ({ section, fieldWidth = 80 }) => {
   const {
     isEditing,
     isDisabled,
     setEditing,
     data,
     save,
-    machines = []
+    machines = [],
   } = useContext(NotificationsCtx)
   const maxNumberOfCassettes = Math.max(
     ...R.map(it => it.numberOfCassettes, machines),
-    DEFAULT_NUMBER_OF_CASSETTES
+    DEFAULT_NUMBER_OF_CASSETTES,
   )
 
   const maxNumberOfRecyclers = Math.max(
     ...R.map(it => it.numberOfRecyclers, machines),
-    DEFAULT_NUMBER_OF_RECYCLERS
+    DEFAULT_NUMBER_OF_RECYCLERS,
   )
 
   const percentValidation = Yup.number()
@@ -62,7 +62,7 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
     fillingPercentageRecycler3: percentValidation,
     fillingPercentageRecycler4: percentValidation,
     fillingPercentageRecycler5: percentValidation,
-    fillingPercentageRecycler6: percentValidation
+    fillingPercentageRecycler6: percentValidation,
   })
 
   return (
@@ -81,7 +81,7 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
         fillingPercentageRecycler3: data?.fillingPercentageRecycler3 ?? '',
         fillingPercentageRecycler4: data?.fillingPercentageRecycler4 ?? '',
         fillingPercentageRecycler5: data?.fillingPercentageRecycler5 ?? '',
-        fillingPercentageRecycler6: data?.fillingPercentageRecycler6 ?? ''
+        fillingPercentageRecycler6: data?.fillingPercentageRecycler6 ?? '',
       }}
       validationSchema={schema}
       onSubmit={it => save(section, schema.cast(it))}
@@ -145,7 +145,7 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
                     </div>
                   </>
                 ),
-                R.times(R.identity, maxNumberOfCassettes)
+                R.times(R.identity, maxNumberOfCassettes),
               )}
             </div>
           </Form>
@@ -210,9 +210,9 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
                         />
                       </div>
                     </div>
-                  </>
+                  </>,
                 ],
-                R.times(R.identity, maxNumberOfRecyclers / 2)
+                R.times(R.identity, maxNumberOfRecyclers / 2),
               )}
             </div>
           </Form>

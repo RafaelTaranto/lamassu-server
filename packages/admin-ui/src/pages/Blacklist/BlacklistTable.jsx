@@ -13,7 +13,7 @@ const BlacklistTable = ({
   errorMessage,
   setErrorMessage,
   deleteDialog,
-  setDeleteDialog
+  setDeleteDialog,
 }) => {
   const [toBeDeleted, setToBeDeleted] = useState()
 
@@ -28,7 +28,7 @@ const BlacklistTable = ({
         <div className="ml-2">
           <CopyToClipboard>{R.path(['address'], it)}</CopyToClipboard>
         </div>
-      )
+      ),
     },
     {
       name: 'deleteButton',
@@ -47,8 +47,8 @@ const BlacklistTable = ({
             <DeleteIcon />
           </SvgIcon>
         </IconButton>
-      )
-    }
+      ),
+    },
   ]
 
   return (

@@ -13,7 +13,7 @@ import {
   Td,
   THead,
   TBody,
-  Table
+  Table,
 } from 'src/components/fake-table/Table.jsx'
 import Sidebar from 'src/components/layout/Sidebar.jsx'
 import {
@@ -22,7 +22,7 @@ import {
   Info2,
   Info3,
   Label1,
-  Label3
+  Label3,
 } from 'src/components/typography/index.jsx'
 import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 
@@ -36,7 +36,7 @@ const NODE_NOT_CONNECTED_ERR =
 const sizes = {
   big: 165,
   time: 140,
-  date: 130
+  date: 130,
 }
 
 const GET_FUNDING = gql`
@@ -67,7 +67,7 @@ const getConfirmedTotal = list => {
     list
       .filter(it => !it.errorMsg)
       .map(it => new BigNumber(it.fiatConfirmedBalance))
-      .reduce(sumReducer, new BigNumber(0))
+      .reduce(sumReducer, new BigNumber(0)),
   )
 }
 
@@ -76,7 +76,7 @@ const getPendingTotal = list => {
     list
       .filter(it => !it.errorMsg)
       .map(it => new BigNumber(it.fiatPending))
-      .reduce(sumReducer, new BigNumber(0))
+      .reduce(sumReducer, new BigNumber(0)),
   )
 }
 
@@ -90,22 +90,22 @@ const Funding = () => {
       fiatValue: 1000.0,
       date: new Date(),
       performedBy: null,
-      pending: true
+      pending: true,
     },
     {
       cryptoAmount: 10.0,
       balance: 12.23,
       fiatValue: 12000.0,
       date: new Date(),
-      performedBy: null
+      performedBy: null,
     },
     {
       cryptoAmount: 5.0,
       balance: 5.0,
       fiatValue: 50000.0,
       date: new Date(),
-      performedBy: null
-    }
+      performedBy: null,
+    },
   ]
 
   const isSelected = it => {
@@ -122,11 +122,11 @@ const Funding = () => {
   const itemRender = (it, active) => {
     const itemClass = {
       [classes.item]: true,
-      [classes.inactiveItem]: !active
+      [classes.inactiveItem]: !active,
     }
     const wrapperClass = {
       [classes.itemWrapper]: true,
-      [classes.error]: it.errorMsg
+      [classes.error]: it.errorMsg,
     }
 
     return (
@@ -212,7 +212,7 @@ const Funding = () => {
                 </Info3>
                 <Label3 inline noMargin className="ml-2">
                   {`(${signIfPositive(selected.fiatPending)} ${formatNumber(
-                    selected.fiatPending
+                    selected.fiatPending,
                   )} pending)`}
                 </Label3>
               </div>
@@ -226,7 +226,7 @@ const Funding = () => {
                       key={selected.cryptoCode}>
                       {formatAddress(
                         selected.cryptoCode,
-                        selected.fundingAddress
+                        selected.fundingAddress,
                       )}
                     </CopyToClipboard>
                   </strong>

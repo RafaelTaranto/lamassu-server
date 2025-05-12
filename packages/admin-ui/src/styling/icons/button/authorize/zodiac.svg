@@ -6,6 +6,7 @@
         <g id="Group-9" stroke="#1B2559">
             <circle id="Oval" cx="6" cy="6" r="5"></circle>
         </g>
-        <polyline id="Stroke-13" stroke="#1B2559" stroke-linecap="round" stroke-linejoin="round" points="4 6.66666667 5 8 8 4"></polyline>
+        <polyline id="Stroke-13" stroke="#1B2559" stroke-linecap="round" stroke-linejoin="round"
+                  points="4 6.66666667 5 8 8 4"></polyline>
     </g>
 </svg>

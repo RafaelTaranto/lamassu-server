@@ -9,7 +9,7 @@ import { TL1, H4 } from 'src/components/typography'
 const options = [
   { display: 'None', code: 'none' },
   { display: 'Date', code: 'date' },
-  { display: 'Length', code: 'length' }
+  { display: 'Length', code: 'length' },
 ]
 
 const NumericalEntry = () => {
@@ -23,7 +23,7 @@ const NumericalEntry = () => {
     'mb-0': true,
     'text-tomat':
       !R.path(['values', 'constraintType'])(context) &&
-      R.path(['errors', 'constraintType'])(context)
+      R.path(['errors', 'constraintType'])(context),
   }
 
   return (

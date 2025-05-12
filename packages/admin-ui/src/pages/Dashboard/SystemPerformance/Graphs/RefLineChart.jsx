@@ -23,14 +23,14 @@ const reducer = (acc, tx) => {
 const timeFrameMS = {
   Day: 24 * 3600 * 1000,
   Week: 7 * 24 * 3600 * 1000,
-  Month: 30 * 24 * 3600 * 1000
+  Month: 30 * 24 * 3600 * 1000,
 }
 
 const RefLineChart = ({
   data: realData,
   previousTimeData,
   previousProfit,
-  timeFrame
+  timeFrame,
 }) => {
   const svgRef = useRef()
 
@@ -55,7 +55,7 @@ const RefLineChart = ({
       if (!aggregatedTX.length && previousTimeData.length) {
         const mockPoint1 = {
           created: new Date().toISOString(),
-          profit: 0
+          profit: 0,
         }
         const mockPoint2 = mockPoint(mockPoint1, -timeFrameMS[timeFrame], 1)
         return [[mockPoint1, mockPoint2], false]
@@ -64,7 +64,7 @@ const RefLineChart = ({
       if (aggregatedTX.length && !previousTimeData.length) {
         const mockPoint1 = {
           created: new Date().toISOString(),
-          profit: 1
+          profit: 1,
         }
         const mockPoint2 = mockPoint(mockPoint1, -timeFrameMS[timeFrame], 0)
         return [[mockPoint1, mockPoint2], false]
@@ -75,13 +75,13 @@ const RefLineChart = ({
           R.append(
             {
               created: new Date(
-                Date.now() - timeFrameMS[timeFrame]
+                Date.now() - timeFrameMS[timeFrame],
               ).toISOString(),
-              profit: previousProfit
+              profit: previousProfit,
             },
-            aggregatedTX
+            aggregatedTX,
           ),
-          false
+          false,
         ]
       }
       // the boolean value is for zeroProfit. It makes the line render at y = 0 instead of y = 50% of container height
@@ -120,7 +120,7 @@ const RefLineChart = ({
       .data([
         { offset: '0%', color: 'var(--zircon)' },
         { offset: '25%', color: 'var(--zircon)' },
-        { offset: '100%', color: 'var(--ghost)' }
+        { offset: '100%', color: 'var(--ghost)' },
       ])
       .enter()
       .append('stop')

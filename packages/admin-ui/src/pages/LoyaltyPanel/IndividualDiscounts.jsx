@@ -69,8 +69,8 @@ const IndividualDiscounts = () => {
   const [createDiscount, { error: creationError }] = useMutation(
     CREATE_DISCOUNT,
     {
-      refetchQueries: () => ['individualDiscounts']
-    }
+      refetchQueries: () => ['individualDiscounts'],
+    },
   )
 
   const [deleteDiscount] = useMutation(DELETE_DISCOUNT, {
@@ -79,7 +79,7 @@ const IndividualDiscounts = () => {
       setErrorMsg(errorMessage)
     },
     onCompleted: () => setDeleteDialog(false),
-    refetchQueries: () => ['individualDiscounts']
+    refetchQueries: () => ['individualDiscounts'],
   })
 
   const elements = [
@@ -95,7 +95,7 @@ const IndividualDiscounts = () => {
             <span>{t.customer.phone}</span>
           </div>
         )
-      }
+      },
     },
     {
       header: 'Name',
@@ -115,7 +115,7 @@ const IndividualDiscounts = () => {
               : ``
           }${customer.idCardData.lastName ?? ``}`}</>
         )
-      }
+      },
     },
     {
       header: 'Discount rate',
@@ -126,7 +126,7 @@ const IndividualDiscounts = () => {
         <>
           <TL1 inline>{t.discount}</TL1> %
         </>
-      )
+      ),
     },
     {
       header: 'Revoke',
@@ -143,8 +143,8 @@ const IndividualDiscounts = () => {
             <DeleteIcon />
           </SvgIcon>
         </IconButton>
-      )
-    }
+      ),
+    },
   ]
 
   return (

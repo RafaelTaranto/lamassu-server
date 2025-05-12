@@ -58,7 +58,7 @@ const QrCodeComponent = ({ qrCode, name, count, onPaired }) => {
   if (hasNewMachine) {
     timeout.current = setTimeout(
       () => onPaired(addedMachine),
-      CLOSE_SCREEN_TIMEOUT
+      CLOSE_SCREEN_TIMEOUT,
     )
   }
 
@@ -111,7 +111,7 @@ const QrCodeComponent = ({ qrCode, name, count, onPaired }) => {
 }
 
 const initialValues = {
-  name: ''
+  name: '',
 }
 
 const validationSchema = Yup.object().shape({
@@ -124,9 +124,9 @@ const validationSchema = Yup.object().shape({
       (value, context) =>
         !R.includes(
           R.toLower(value),
-          R.map(R.toLower, context.options.context.machineNames)
-        )
-    )
+          R.map(R.toLower, context.options.context.machineNames),
+        ),
+    ),
 })
 
 const MachineNameComponent = ({ nextStep, setQrCode, setName }) => {
@@ -138,7 +138,7 @@ const MachineNameComponent = ({ nextStep, setQrCode, setName }) => {
       setQrCode(createPairingTotem)
       nextStep()
     },
-    onError: e => console.log(e)
+    onError: e => console.log(e),
   })
 
   const { data } = useQuery(GET_MACHINES)
@@ -147,7 +147,7 @@ const MachineNameComponent = ({ nextStep, setQrCode, setName }) => {
   const uniqueNameValidator = value => {
     try {
       validationSchema.validateSync(value, {
-        context: { machineNames: machineNames }
+        context: { machineNames: machineNames },
       })
     } catch (error) {
       return error
@@ -189,12 +189,12 @@ const MachineNameComponent = ({ nextStep, setQrCode, setName }) => {
 const steps = [
   {
     label: 'Machine name',
-    component: MachineNameComponent
+    component: MachineNameComponent,
   },
   {
     label: 'Scan QR code',
-    component: QrCodeComponent
-  }
+    component: QrCodeComponent,
+  },
 ]
 
 const renderStepper = (step, it, idx) => {
@@ -208,7 +208,7 @@ const renderStepper = (step, it, idx) => {
         className={classnames({
           'mr-6 text-comet': true,
           'text-zodiac font-bold': active,
-          'text-zodiac': past
+          'text-zodiac': past,
         })}>
         {it.label}
       </span>
@@ -219,7 +219,7 @@ const renderStepper = (step, it, idx) => {
         <div
           className={classnames({
             'absolute h-7 w-px border border-comet border-solid right-2 top-[18px]': true,
-            'border-zodiac': past
+            'border-zodiac': past,
           })}></div>
       )}
     </div>

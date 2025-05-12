@@ -28,7 +28,7 @@ const CHANGE_USER_ROLE = gql`
 const ChangeRoleModal = ({ state, dispatch, user, requiresConfirmation }) => {
   const [changeUserRole, { error }] = useMutation(CHANGE_USER_ROLE, {
     onCompleted: () => handleClose(),
-    refetchQueries: () => ['users']
+    refetchQueries: () => ['users'],
   })
 
   const [confirmation, setConfirmation] = useState(null)
@@ -38,8 +38,8 @@ const ChangeRoleModal = ({ state, dispatch, user, requiresConfirmation }) => {
       variables: {
         confirmationCode: confirmation,
         id: user.id,
-        newRole: user.role === 'superuser' ? 'user' : 'superuser'
-      }
+        newRole: user.role === 'superuser' ? 'user' : 'superuser',
+      },
     })
   }
 
@@ -47,7 +47,7 @@ const ChangeRoleModal = ({ state, dispatch, user, requiresConfirmation }) => {
     setConfirmation(null)
     dispatch({
       type: 'close',
-      payload: 'showRoleModal'
+      payload: 'showRoleModal',
     })
   }
 

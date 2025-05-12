@@ -25,27 +25,27 @@ const BooleanPropertiesTable = memo(
     const [editing, setEditing] = useState(forcedEditing)
 
     const initialValues = R.fromPairs(
-      elements.map(it => [it.name, data[it.name]?.toString() ?? 'false'])
+      elements.map(it => [it.name, data[it.name]?.toString() ?? 'false']),
     )
 
     const validationSchema = Yup.object().shape(
       R.fromPairs(
         elements.map(it => [
           it.name,
-          Yup.mixed().oneOf(['true', 'false', true, false]).required()
-        ])
-      )
+          Yup.mixed().oneOf(['true', 'false', true, false]).required(),
+        ]),
+      ),
     )
 
     const innerSave = async values => {
-      const toBoolean = (num, _) => R.equals(num, 'true')
+      const toBoolean = num => R.equals(num, 'true')
       save(R.mapObjIndexed(toBoolean, R.filter(R.complement(R.isNil))(values)))
       setEditing(false)
     }
 
     const radioButtonOptions = [
       { display: 'Yes', code: 'true' },
-      { display: 'No', code: 'false' }
+      { display: 'No', code: 'false' },
     ]
     return (
       <div className="flex w-sm flex-col ">
@@ -117,7 +117,7 @@ const BooleanPropertiesTable = memo(
         </Formik>
       </div>
     )
-  }
+  },
 )
 
 export default BooleanPropertiesTable

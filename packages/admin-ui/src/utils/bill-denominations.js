@@ -9,9 +9,9 @@ export default {
       100: [0xa5, 0x91],
       200: [0xa7, 0x93],
       500: [0xa9, 0x95],
-      1000: [0xad, 0x99]
+      1000: [0xad, 0x99],
     },
-    polymer: false
+    polymer: false,
   },
   ANG: {
     thickness: 0x0c,
@@ -19,9 +19,9 @@ export default {
       10: [0x98, 0x8e],
       25: [0x98, 0x8e],
       50: [0x98, 0x8e],
-      100: [0x98, 0x8e]
+      100: [0x98, 0x8e],
     },
-    polymer: false
+    polymer: false,
   },
   AUD: {
     thickness: 0x0d,
@@ -30,9 +30,9 @@ export default {
       10: [0x93, 0x7f],
       20: [0x9a, 0x86],
       50: [0xa1, 0x8d],
-      100: [0xa8, 0x94]
+      100: [0xa8, 0x94],
     },
-    polymer: true
+    polymer: true,
   },
   BGN: {
     thickness: 0x0d,
@@ -43,9 +43,9 @@ export default {
       10: [0x83, 0x79],
       20: [0x88, 0x7e],
       50: [0x8d, 0x83],
-      100: [0x92, 0x88]
+      100: [0x92, 0x88],
     },
-    polymer: false
+    polymer: false,
   },
   CAD: {
     thickness: 0x0d,
@@ -54,9 +54,9 @@ export default {
       10: [0xa2, 0x8e],
       20: [0xa2, 0x8e],
       50: [0xa2, 0x8e],
-      100: [0xa2, 0x8e]
+      100: [0xa2, 0x8e],
     },
-    polymer: true
+    polymer: true,
   },
   CHF: {
     thickness: 0x0d,
@@ -66,9 +66,9 @@ export default {
       50: [0x93, 0x7f],
       100: [0x9a, 0x86],
       200: [0xa1, 0x8d],
-      1000: [0xa8, 0x94]
+      1000: [0xa8, 0x94],
     },
-    polymer: false
+    polymer: false,
   },
   CNY: {
     thickness: 0x0d,
@@ -78,9 +78,9 @@ export default {
       10: [0x96, 0x82],
       20: [0x9b, 0x87],
       50: [0xa0, 0x8c],
-      100: [0x91, 0xa5]
+      100: [0x91, 0xa5],
     },
-    polymer: false
+    polymer: false,
   },
   COP: {
     thickness: 0x0d,
@@ -90,9 +90,9 @@ export default {
       10000: [0x94, 0x80],
       20000: [0x99, 0x85],
       50000: [0x9e, 0x8a],
-      100000: [0xa3, 0x8f]
+      100000: [0xa3, 0x8f],
     },
-    polymer: false
+    polymer: false,
   },
   CRC: {
     thickness: 0x0d,
@@ -102,9 +102,9 @@ export default {
       5000: [0x90, 0x86],
       10000: [0x97, 0x8d],
       20000: [0x9e, 0x94],
-      50000: [0xaa, 0x96]
+      50000: [0xaa, 0x96],
     },
-    polymer: true
+    polymer: true,
   },
   CZK: {
     thickness: 0x0c,
@@ -114,9 +114,9 @@ export default {
       500: [0xa2, 0x8e],
       1000: [0xa8, 0x94],
       2000: [0xae, 0x9a],
-      5000: [0xb4, 0xa0]
+      5000: [0xb4, 0xa0],
     },
-    polymer: false
+    polymer: false,
   },
   EUR: {
     thickness: 0x0c,
@@ -127,9 +127,9 @@ export default {
       50: [0x96, 0x82],
       100: [0x9d, 0x89],
       200: [0xa3, 0x8f],
-      500: [0xaa, 0x96]
+      500: [0xaa, 0x96],
     },
-    polymer: false
+    polymer: false,
   },
   GBP: {
     thickness: 0x0d,
@@ -137,9 +137,9 @@ export default {
       5: [0x91, 0x7d],
       10: [0x98, 0x84],
       20: [0x95, 0x81],
-      50: [0xa6, 0x92]
+      50: [0xa6, 0x92],
     },
-    polymer: true
+    polymer: true,
   },
   GHS: {
     thickness: 0x0c,
@@ -149,9 +149,9 @@ export default {
       5: [0x97, 0x83],
       10: [0x9b, 0x87],
       20: [0x9f, 0x8b],
-      50: [0xa3, 0x8f]
+      50: [0xa3, 0x8f],
     },
-    polymer: false
+    polymer: false,
   },
   GIP: {
     thickness: 0x0c,
@@ -160,9 +160,9 @@ export default {
       10: [0x92, 0x88],
       20: [0x9b, 0x91],
       50: [0xa2, 0x98],
-      100: [0xa9, 0x9f]
+      100: [0xa9, 0x9f],
     },
-    polymer: false
+    polymer: false,
   },
   GTQ: {
     thickness: 0x0c,
@@ -172,9 +172,9 @@ export default {
       20: [0xa3, 0x99],
       50: [0xa1, 0x97],
       100: [0xa1, 0x97],
-      200: [0xa1, 0x97]
+      200: [0xa1, 0x97],
     },
-    polymer: false
+    polymer: false,
   },
   HKD: {
     thickness: 0x0d,
@@ -184,9 +184,9 @@ export default {
       50: [0x9e, 0x8a],
       100: [0xa3, 0x8f],
       500: [0xa8, 0x94],
-      1000: [0xae, 0x9a]
+      1000: [0xae, 0x9a],
     },
-    polymer: false
+    polymer: false,
   },
   HNL: {
     thickness: 0x0c,
@@ -199,9 +199,9 @@ export default {
       50: [0xa6, 0x92],
       100: [0xa6, 0x92],
       200: [0xa6, 0x92],
-      500: [0xa6, 0x92]
+      500: [0xa6, 0x92],
     },
-    polymer: false
+    polymer: false,
   },
   HRK: {
     thickness: 0x0c,
@@ -213,9 +213,9 @@ export default {
       100: [0x8f, 0x85],
       200: [0x93, 0x89],
       500: [0x97, 0x8d],
-      1000: [0x9b, 0x91]
+      1000: [0x9b, 0x91],
     },
-    polymer: false
+    polymer: false,
   },
   ILS: {
     thickness: 0x0d,
@@ -223,9 +223,9 @@ export default {
       20: [0x8b, 0x77],
       50: [0x92, 0x7e],
       100: [0x99, 0x85],
-      200: [0xa0, 0x8c]
+      200: [0xa0, 0x8c],
     },
-    polymer: false
+    polymer: false,
   },
   JPY: {
     thickness: 0x0d,
@@ -233,9 +233,9 @@ export default {
       1000: [0x99, 0x93],
       2000: [0x9c, 0x98],
       5000: [0x9d, 0x9a],
-      10000: [0xa3, 0x9e]
+      10000: [0xa3, 0x9e],
     },
-    polymer: false
+    polymer: false,
   },
   KRW: {
     thickness: 0x0d,
@@ -244,9 +244,9 @@ export default {
       2000: [0x96, 0x82],
       5000: [0x98, 0x84],
       10000: [0x9e, 0x8a],
-      50000: [0xa4, 0x90]
+      50000: [0xa4, 0x90],
     },
-    polymer: false
+    polymer: false,
   },
   MDL: {
     thickness: 0x0c,
@@ -259,9 +259,9 @@ export default {
       100: [0x83, 0x6f],
       200: [0x8f, 0x7b],
       500: [0x8f, 0x7b],
-      1000: [0x8f, 0x7b]
+      1000: [0x8f, 0x7b],
     },
-    polymer: false
+    polymer: false,
   },
   MKD: {
     thickness: 0x0c,
@@ -273,9 +273,9 @@ export default {
       500: [0x9a, 0x90],
       1000: [0x9d, 0x93],
       2000: [0x9d, 0x93],
-      5000: [0xa0, 0x96]
+      5000: [0xa0, 0x96],
     },
-    polymer: true
+    polymer: true,
   },
   MXN: {
     thickness: 0x0c,
@@ -285,9 +285,9 @@ export default {
       100: [0x89, 0x7f],
       200: [0x90, 0x86],
       500: [0x97, 0x8d],
-      1000: [0x9e, 0x94]
+      1000: [0x9e, 0x94],
     },
-    polymer: true
+    polymer: true,
   },
   MYR: {
     thickness: 0x0c,
@@ -297,9 +297,9 @@ export default {
       10: [0x96, 0x82],
       20: [0x9b, 0x87],
       50: [0x9b, 0x87],
-      100: [0xa0, 0x8c]
+      100: [0xa0, 0x8c],
     },
-    polymer: false
+    polymer: false,
   },
   NAD: {
     thickness: 0x0c,
@@ -308,9 +308,9 @@ export default {
       20: [0x8b, 0x81],
       50: [0x91, 0x87],
       100: [0x97, 0x8d],
-      200: [0x9d, 0x93]
+      200: [0x9d, 0x93],
     },
-    polymer: false
+    polymer: false,
   },
   NZD: {
     thickness: 0x0c,
@@ -319,9 +319,9 @@ export default {
       10: [0x91, 0x87],
       20: [0x96, 0x8c],
       50: [0x9b, 0x91],
-      100: [0xa0, 0x96]
+      100: [0xa0, 0x96],
     },
-    polymer: true
+    polymer: true,
   },
   PHP: {
     thickness: 0x0c,
@@ -330,9 +330,9 @@ export default {
       100: [0xaa, 0x96],
       200: [0xaa, 0x96],
       500: [0xaa, 0x96],
-      1000: [0xaa, 0x96]
+      1000: [0xaa, 0x96],
     },
-    polymer: false
+    polymer: false,
   },
   PLN: {
     thickness: 0x0c,
@@ -342,9 +342,9 @@ export default {
       50: [0x89, 0x7f],
       100: [0x8f, 0x85],
       200: [0x95, 0x8b],
-      500: [0x9b, 0x91]
+      500: [0x9b, 0x91],
     },
-    polymer: false
+    polymer: false,
   },
   RON: {
     thickness: 0x0c,
@@ -355,9 +355,9 @@ export default {
       50: [0x96, 0x82],
       100: [0x9d, 0x89],
       200: [0xa0, 0x8c],
-      500: [0xa3, 0x8f]
+      500: [0xa3, 0x8f],
     },
-    polymer: true
+    polymer: true,
   },
   SGD: {
     thickness: 0x0c,
@@ -367,9 +367,9 @@ export default {
       10: [0x97, 0x83],
       50: [0xa6, 0x92],
       100: [0xac, 0x98],
-      1000: [0xb4, 0xa0]
+      1000: [0xb4, 0xa0],
     },
-    polymer: false
+    polymer: false,
   },
   TWD: {
     thickness: 0x0d,
@@ -378,9 +378,9 @@ export default {
       200: [0xa0, 0x8c],
       500: [0xa5, 0x91],
       1000: [0xaa, 0x96],
-      2000: [0xaf, 0x9b]
+      2000: [0xaf, 0x9b],
     },
-    polymer: false
+    polymer: false,
   },
   USD: {
     thickness: 0x0d,
@@ -391,9 +391,9 @@ export default {
       10: [0xa6, 0x92],
       20: [0xa6, 0x92],
       50: [0xa6, 0x92],
-      100: [0xa6, 0x92]
+      100: [0xa6, 0x92],
     },
-    polymer: false
+    polymer: false,
   },
   UYU: {
     thickness: 0x0d,
@@ -404,9 +404,9 @@ export default {
       200: [0xa4, 0x9a],
       500: [0xa4, 0x9a],
       1000: [0xa4, 0x9a],
-      2000: [0xa4, 0x9a]
+      2000: [0xa4, 0x9a],
     },
-    polymer: false
+    polymer: false,
   },
   XCD: {
     thickness: 0x0c,
@@ -415,9 +415,9 @@ export default {
       10: [0x9b, 0x87],
       20: [0x9b, 0x87],
       50: [0x9b, 0x87],
-      100: [0x9b, 0x87]
+      100: [0x9b, 0x87],
     },
-    polymer: true
+    polymer: true,
   },
   ZAR: {
     thickness: 0x0c,
@@ -426,8 +426,8 @@ export default {
       20: [0x90, 0x7c],
       50: [0x96, 0x82],
       100: [0x9c, 0x88],
-      200: [0xa2, 0x8e]
+      200: [0xa2, 0x8e],
     },
-    polymer: false
-  }
+    polymer: false,
+  },
 }

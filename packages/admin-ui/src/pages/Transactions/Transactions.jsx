@@ -138,7 +138,7 @@ const Transactions = () => {
 
   const [filters, setFilters] = useState([])
   const { data: filtersResponse, loading: filtersLoading } = useQuery(
-    GET_TRANSACTION_FILTERS
+    GET_TRANSACTION_FILTERS,
   )
   const [variables, setVariables] = useState({ limit: NUM_LOG_RESULTS })
   const {
@@ -146,7 +146,7 @@ const Transactions = () => {
     loading: transactionsLoading,
     refetch,
     startPolling,
-    stopPolling
+    stopPolling,
   } = useQuery(GET_TRANSACTIONS, { variables })
 
   useEffect(() => {
@@ -168,14 +168,14 @@ const Transactions = () => {
       header: '',
       width: 32,
       size: 'sm',
-      view: it => (it.txClass === 'cashOut' ? <TxOutIcon /> : <TxInIcon />)
+      view: it => (it.txClass === 'cashOut' ? <TxOutIcon /> : <TxInIcon />),
     },
     {
       header: 'Machine',
       name: 'machineName',
       width: 160,
       size: 'sm',
-      view: R.path(['machineName'])
+      view: R.path(['machineName']),
     },
     {
       header: 'Customer',
@@ -198,14 +198,14 @@ const Transactions = () => {
             </div>
           )}
         </div>
-      )
+      ),
     },
     {
       header: 'Cash',
       width: 144,
       textAlign: 'right',
       size: 'sm',
-      view: it => `${Number.parseFloat(it.fiat)} ${it.fiatCode}`
+      view: it => `${Number.parseFloat(it.fiat)} ${it.fiatCode}`,
     },
     {
       header: 'Crypto',
@@ -215,14 +215,14 @@ const Transactions = () => {
       view: it =>
         `${toUnit(new BigNumber(it.cryptoAtoms), it.cryptoCode)} ${
           it.cryptoCode
-        }`
+        }`,
     },
     {
       header: 'Address',
       view: it => formatCryptoAddress(it.cryptoCode, it.toAddress),
       className: 'overflow-hidden whitespace-nowrap text-ellipsis',
       size: 'sm',
-      width: 140
+      width: 140,
     },
     {
       header: 'Date',
@@ -230,7 +230,7 @@ const Transactions = () => {
         timezone && formatDate(it.created, timezone, 'yyyy-MM-dd HH:mm'),
       textAlign: 'right',
       size: 'sm',
-      width: 195
+      width: 195,
     },
     {
       header: 'Status',
@@ -252,8 +252,8 @@ const Transactions = () => {
       },
       textAlign: 'left',
       size: 'sm',
-      width: 80
-    }
+      width: 80,
+    },
   ]
 
   const onFilterChange = filters => {
@@ -270,7 +270,7 @@ const Transactions = () => {
       cryptoCode: filtersObject.crypto,
       toAddress: filtersObject.address,
       status: filtersObject.status,
-      swept: filtersObject.swept && filtersObject.swept === 'Swept'
+      swept: filtersObject.swept && filtersObject.swept === 'Swept',
     })
 
     refetch && refetch()
@@ -278,7 +278,7 @@ const Transactions = () => {
 
   const onFilterDelete = filter => {
     const newFilters = R.filter(
-      f => !R.whereEq(R.pick(['type', 'value'], f), filter)
+      f => !R.whereEq(R.pick(['type', 'value'], f), filter),
     )(filters)
 
     setFilters(newFilters)
@@ -294,7 +294,7 @@ const Transactions = () => {
       cryptoCode: filtersObject.crypto,
       toAddress: filtersObject.address,
       status: filtersObject.status,
-      swept: filtersObject.swept && filtersObject.swept === 'Swept'
+      swept: filtersObject.swept && filtersObject.swept === 'Swept',
     })
 
     refetch && refetch()
@@ -313,7 +313,7 @@ const Transactions = () => {
       cryptoCode: filtersObject.crypto,
       toAddress: filtersObject.address,
       status: filtersObject.status,
-      swept: filtersObject.swept && filtersObject.swept === 'Swept'
+      swept: filtersObject.swept && filtersObject.swept === 'Swept',
     })
 
     refetch && refetch()
@@ -336,7 +336,7 @@ const Transactions = () => {
         labels={[
           { icon: <TxInIcon />, label: 'Cash-in' },
           { icon: <TxOutIcon />, label: 'Cash-out' },
-          { icon: errorLabel, label: 'Transaction error' }
+          { icon: errorLabel, label: 'Transaction error' },
         ]}
         appendix={
           <div className="flex ml-4 gap-4">

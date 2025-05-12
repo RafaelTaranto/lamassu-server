@@ -7,7 +7,7 @@ module.exports = (function () {
     needsSettingsReload: {},
     settingsCache: new NodeCache({
       stdTTL: SETTINGS_CACHE_REFRESH,
-      checkperiod: SETTINGS_CACHE_REFRESH // Clear cache every hour
+      checkperiod: SETTINGS_CACHE_REFRESH, // Clear cache every hour
     }),
     canLogClockSkewMap: {},
     canGetLastSeenMap: {},
@@ -18,6 +18,6 @@ module.exports = (function () {
     emptyUnit: {},
     refillUnit: {},
     diagnostics: {},
-    mnemonic: null
+    mnemonic: null,
   }
-}())
+})()

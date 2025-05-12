@@ -5,7 +5,7 @@ const _ = require('lodash/fp')
 
 const subscriptions = {}
 
-function subscribe (eventType, callback) {
+function subscribe(eventType, callback) {
   const id = uuid.v1()
 
   if (!subscriptions[eventType]) subscriptions[eventType] = {}
@@ -15,15 +15,18 @@ function subscribe (eventType, callback) {
   return {
     unsubscribe: () => {
       delete subscriptions[eventType][id]
-      if (_.keys(subscriptions[eventType]).length === 0) delete subscriptions[eventType]
-    }
+      if (_.keys(subscriptions[eventType]).length === 0)
+        delete subscriptions[eventType]
+    },
   }
 }
 
-function publish (eventType, arg) {
+function publish(eventType, arg) {
   if (!subscriptions[eventType]) return
 
-  _.keys(subscriptions[eventType]).forEach(key => subscriptions[eventType][key](arg))
+  _.keys(subscriptions[eventType]).forEach(key =>
+    subscriptions[eventType][key](arg),
+  )
 }
 
 module.exports = { subscribe, publish }

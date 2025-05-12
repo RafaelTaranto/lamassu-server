@@ -1,6 +1,6 @@
 const { getOperatorId } = require('../operator')
 
-function findOperatorId (req, res, next) {
+function findOperatorId(req, res, next) {
   return getOperatorId('middleware')
     .then(operatorId => {
       res.locals.operatorId = operatorId

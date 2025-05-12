@@ -12,5 +12,5 @@ export {
   CustomerSidebar,
   EditableCard,
   Wizard,
-  Upload
+  Upload,
 }

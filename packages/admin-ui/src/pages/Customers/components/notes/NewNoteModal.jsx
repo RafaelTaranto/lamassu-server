@@ -9,12 +9,12 @@ import { TextInput } from 'src/components/inputs/formik'
 
 const initialValues = {
   title: '',
-  content: ''
+  content: '',
 }
 
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().trim().max(25),
-  content: Yup.string().required()
+  content: Yup.string().required(),
 })
 
 const NewNoteModal = ({ showModal, onClose, onSubmit, errorMsg }) => {

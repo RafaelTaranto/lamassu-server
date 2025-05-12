@@ -51,7 +51,7 @@ const CashOut = ({ name: SCREEN_KEY }) => {
 
   const [saveConfig, { error }] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const save = (rawConfig, accounts) => {

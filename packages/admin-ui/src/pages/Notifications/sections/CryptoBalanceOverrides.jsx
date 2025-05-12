@@ -23,27 +23,27 @@ const CryptoBalanceOverrides = ({ section }) => {
     error,
     currency,
     isDisabled,
-    setEditing
+    setEditing,
   } = useContext(NotificationsCtx)
   const setupValues = data?.cryptoBalanceOverrides ?? []
   const innerSetEditing = it => setEditing(NAME, it)
 
   const onDelete = id => {
     const newOverrides = {
-      cryptoBalanceOverrides: R.reject(it => it.id === id, setupValues)
+      cryptoBalanceOverrides: R.reject(it => it.id === id, setupValues),
     }
     return save(newOverrides)
   }
 
   const overriddenCryptos = R.map(R.prop(CRYPTOCURRENCY_KEY))(setupValues)
   const suggestionFilter = R.filter(
-    it => !R.contains(it.code, overriddenCryptos)
+    it => !R.contains(it.code, overriddenCryptos),
   )
   const suggestions = suggestionFilter(cryptoCurrencies)
 
   const findSuggestion = it => {
     const coin = R.compose(R.find(R.propEq('code', it?.cryptoCurrency)))(
-      cryptoCurrencies
+      cryptoCurrencies,
     )
     return coin ? [coin] : []
   }
@@ -51,7 +51,7 @@ const CryptoBalanceOverrides = ({ section }) => {
   const initialValues = {
     [CRYPTOCURRENCY_KEY]: null,
     [LOW_BALANCE_KEY]: '',
-    [HIGH_BALANCE_KEY]: ''
+    [HIGH_BALANCE_KEY]: '',
   }
 
   const notesMin = 0
@@ -65,7 +65,7 @@ const CryptoBalanceOverrides = ({ section }) => {
         .label('Low balance')
         .when(HIGH_BALANCE_KEY, {
           is: HIGH_BALANCE_KEY => !HIGH_BALANCE_KEY,
-          then: schema => schema.required()
+          then: schema => schema.required(),
         })
         .transform(transformNumber)
         .integer()
@@ -76,21 +76,21 @@ const CryptoBalanceOverrides = ({ section }) => {
         .label('High balance')
         .when(LOW_BALANCE_KEY, {
           is: LOW_BALANCE_KEY => !LOW_BALANCE_KEY,
-          then: schema => schema.required()
+          then: schema => schema.required(),
         })
         .transform(transformNumber)
         .integer()
         .min(notesMin)
         .max(CURRENCY_MAX)
-        .nullable()
+        .nullable(),
     },
-    [LOW_BALANCE_KEY, HIGH_BALANCE_KEY]
+    [LOW_BALANCE_KEY, HIGH_BALANCE_KEY],
   )
 
   const viewCrypto = it =>
     R.compose(
       R.path(['display']),
-      R.find(R.propEq('code', it))
+      R.find(R.propEq('code', it)),
     )(cryptoCurrencies)
 
   const elements = [
@@ -105,8 +105,8 @@ const CryptoBalanceOverrides = ({ section }) => {
         options: it => R.concat(suggestions, findSuggestion(it)),
         optionsLimit: null,
         valueProp: 'code',
-        labelProp: 'display'
-      }
+        labelProp: 'display',
+      },
     },
     {
       name: LOW_BALANCE_KEY,
@@ -116,8 +116,8 @@ const CryptoBalanceOverrides = ({ section }) => {
       input: NumberInput,
       suffix: currency,
       inputProps: {
-        decimalPlaces: 2
-      }
+        decimalPlaces: 2,
+      },
     },
     {
       name: HIGH_BALANCE_KEY,
@@ -127,9 +127,9 @@ const CryptoBalanceOverrides = ({ section }) => {
       input: NumberInput,
       suffix: currency,
       inputProps: {
-        decimalPlaces: 2
-      }
-    }
+        decimalPlaces: 2,
+      },
+    },
   ]
 
   return (

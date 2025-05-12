@@ -61,7 +61,7 @@ const MachineStatus = () => {
   const {
     data: machinesResponse,
     refetch,
-    loading: machinesLoading
+    loading: machinesLoading,
   } = useQuery(GET_MACHINES)
   const { data: configResponse, configLoading } = useQuery(GET_DATA)
   const timezone = R.path(['config', 'locale_timezone'], configResponse)
@@ -82,14 +82,14 @@ const MachineStatus = () => {
             <MachineRedirectIcon />
           </div>
         </div>
-      )
+      ),
     },
     {
       header: 'Status',
       width: 350,
       size: 'sm',
       textAlign: 'left',
-      view: m => <MainStatus statuses={m.statuses} />
+      view: m => <MainStatus statuses={m.statuses} />,
     },
     {
       header: 'Last ping',
@@ -99,22 +99,22 @@ const MachineStatus = () => {
       view: m =>
         m.lastPing
           ? formatDistance(new Date(m.lastPing), new Date(), {
-              addSuffix: true
+              addSuffix: true,
             })
-          : 'unknown'
+          : 'unknown',
     },
     {
       header: 'Software version',
       width: 200,
       size: 'sm',
       textAlign: 'left',
-      view: m => m.version || 'unknown'
-    }
+      view: m => m.version || 'unknown',
+    },
   ]
 
   const machines = R.path(['machines'])(machinesResponse) ?? []
   const expandedIndex = R.findIndex(R.propEq('deviceId', addedMachineId))(
-    machines
+    machines,
   )
 
   const InnerMachineDetailsRow = ({ it }) => (

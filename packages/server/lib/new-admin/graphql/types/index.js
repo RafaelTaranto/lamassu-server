@@ -47,7 +47,7 @@ const types = [
   status,
   transaction,
   user,
-  version
+  version,
 ]
 
 module.exports = mergeTypeDefs(types)

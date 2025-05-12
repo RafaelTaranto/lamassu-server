@@ -7,7 +7,7 @@ import {
   TBody,
   Td,
   Th,
-  Tr
+  Tr,
 } from 'src/components/fake-table/Table'
 import EditIcon from 'src/styling/icons/action/edit/white.svg?react'
 
@@ -19,7 +19,7 @@ const SingleRowTable = ({
   title,
   items,
   onEdit,
-  className
+  className,
 }) => {
   return (
     <>

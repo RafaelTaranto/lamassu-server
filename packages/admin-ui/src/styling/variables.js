@@ -168,5 +168,5 @@ export {
   tableCellHeight,
   tableHeaderColor,
   tableErrorColor,
-  tableSuccessColor
+  tableSuccessColor,
 }

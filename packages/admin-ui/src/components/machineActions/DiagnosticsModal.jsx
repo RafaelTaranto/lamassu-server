@@ -12,7 +12,7 @@ const STATES = {
   EMPTY: 'EMPTY',
   RUNNING: 'RUNNING',
   FAILURE: 'FAILURE',
-  FILLED: 'FILLED'
+  FILLED: 'FILLED',
 }
 
 const MACHINE = gql`
@@ -47,7 +47,7 @@ const MACHINE_LOGS = gql`
 
 const createCsv = async ({ machineLogsCsv }) => {
   const machineLogs = new Blob([machineLogsCsv], {
-    type: 'text/plain;charset=utf-8'
+    type: 'text/plain;charset=utf-8',
   })
 
   FileSaver.saveAs(machineLogs, 'machineLogs.csv')
@@ -59,11 +59,11 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
   let timeout = null
 
   const [fetchSummary, { loading }] = useLazyQuery(MACHINE_LOGS, {
-    onCompleted: data => createCsv(data)
+    onCompleted: data => createCsv(data),
   })
 
   const { data, stopPolling, startPolling } = useQuery(MACHINE, {
-    variables: { deviceId }
+    variables: { deviceId },
   })
 
   useEffect(() => {
@@ -168,8 +168,8 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
               variables: {
                 from: subMinutes(new Date(timestamp), 5),
                 deviceId,
-                limit: 500
-              }
+                limit: 500,
+              },
             })
           }}
           className="mt-auto ml-auto mr-2 mb-0">

@@ -9,23 +9,23 @@ import { Button } from 'src/components/buttons'
 
 import ChooseType, {
   validationSchema as chooseTypeSchema,
-  defaultValues as chooseTypeDefaults
+  defaultValues as chooseTypeDefaults,
 } from './Forms/ChooseType'
 import NameOfRequirement, {
   validationSchema as nameOfReqSchema,
-  defaultValues as nameOfReqDefaults
+  defaultValues as nameOfReqDefaults,
 } from './Forms/NameOfRequirement'
 import Screen1Information, {
   validationSchema as screen1InfoSchema,
-  defaultValues as screen1InfoDefaults
+  defaultValues as screen1InfoDefaults,
 } from './Forms/Screen1Information'
 import Screen2Information, {
   validationSchema as screen2InfoSchema,
-  defaultValues as screen2InfoDefaults
+  defaultValues as screen2InfoDefaults,
 } from './Forms/Screen2Information'
 import TypeFields, {
   defaultValues as typeFieldsDefaults,
-  validationSchema as typeFieldsValidationSchema
+  validationSchema as typeFieldsValidationSchema,
 } from './Forms/TypeFields'
 import WizardSplash from './WizardSplash'
 
@@ -35,21 +35,21 @@ const getStep = (step, existingRequirements) =>
   [
     {
       validationSchema: nameOfReqSchema(existingRequirements),
-      Component: NameOfRequirement
+      Component: NameOfRequirement,
     },
     {
       validationSchema: screen1InfoSchema,
-      Component: Screen1Information
+      Component: Screen1Information,
     },
     { validationSchema: chooseTypeSchema, Component: ChooseType },
     {
       validationSchema: screen2InfoSchema,
-      Component: Screen2Information
+      Component: Screen2Information,
     },
     {
       validationSchema: typeFieldsValidationSchema,
-      Component: TypeFields
-    }
+      Component: TypeFields,
+    },
   ][step - 1]
 
 const nonEmptyStr = obj => obj.text && obj.text.length
@@ -69,16 +69,16 @@ const formatValues = (values, isEditing) => {
     name: values.requirementName,
     screen1: {
       text: values.screen1Text,
-      title: values.screen1Title
+      title: values.screen1Title,
     },
     screen2: {
       title: values.screen2Title,
-      text: values.screen2Text
+      text: values.screen2Text,
     },
     input: {
       type: values.inputType,
-      constraintType: values.constraintType
-    }
+      constraintType: values.constraintType,
+    },
   }
 
   if (isChoiceList) {
@@ -117,7 +117,7 @@ const makeEditingValues = ({ customRequest, id }) => {
     inputLabel2: customRequest.input.label2,
     listChoices: customRequest.input.choiceList,
     constraintType: customRequest.input.constraintType,
-    inputLength: customRequest.input.numDigits
+    inputLength: customRequest.input.numDigits,
   }
 }
 
@@ -125,11 +125,10 @@ const chooseNotNull = (a, b) => (R.isNil(b) ? a : b)
 
 const Wizard = ({
   onClose,
-  error = false,
   toBeEdited,
   onSave,
   hasError,
-  existingRequirements
+  existingRequirements,
 }) => {
   const isEditing = !R.isNil(toBeEdited)
   const [step, setStep] = useState(isEditing ? 1 : 0)
@@ -139,7 +138,7 @@ const Wizard = ({
     ...screen1InfoDefaults,
     ...screen2InfoDefaults,
     ...chooseTypeDefaults,
-    ...typeFieldsDefaults
+    ...typeFieldsDefaults,
   }
 
   // If we're editing, filter out the requirement being edited so that validation schemas don't enter in circular conflicts
@@ -149,7 +148,7 @@ const Wizard = ({
   const stepOptions = getStep(step, existingRequirements)
   const isLastStep = step === LAST_STEP
 
-  const onContinue = (values, actions) => {
+  const onContinue = values => {
     const showScreen2 =
       values.inputType === 'numerical' || values.inputType === 'choiceList'
     if (isEditing && step === 2) {

@@ -11,7 +11,7 @@ const CodeInput = ({
   numInputs,
   error,
   inputStyle,
-  containerStyle
+  containerStyle,
 }) => {
   return (
     <OtpInput
@@ -26,7 +26,7 @@ const CodeInput = ({
         inputStyle,
         classes.input,
         'font-museo font-black text-4xl',
-        error && 'border-tomato'
+        error && 'border-tomato',
       )}
       inputType={'tel'}
       renderInput={props => <input {...props} />}

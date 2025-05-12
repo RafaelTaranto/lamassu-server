@@ -32,16 +32,16 @@ const validationSchema = existingRequirements =>
       .test(
         'unique-name',
         'A custom information requirement with that name already exists',
-        (value, _context) =>
+        value =>
           !R.includes(
             R.toLower(R.defaultTo('', value)),
-            R.map(it => R.toLower(it.customRequest.name), existingRequirements)
-          )
-      )
+            R.map(it => R.toLower(it.customRequest.name), existingRequirements),
+          ),
+      ),
   })
 
 const defaultValues = {
-  requirementName: ''
+  requirementName: '',
 }
 
 export default NameOfRequirement

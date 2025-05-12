@@ -18,29 +18,29 @@ const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
     {
       header: 'Phone number',
       size: 172,
-      value: getFormattedPhone(customer.phone, locale.country)
-    }
+      value: getFormattedPhone(customer.phone, locale.country),
+    },
   ]
 
   if (idNumber)
     elements.push({
       header: 'ID number',
       size: 172,
-      value: idNumber
+      value: idNumber,
     })
 
   if (usSsn)
     elements.push({
       header: 'US SSN',
       size: 127,
-      value: usSsn
+      value: usSsn,
     })
 
   if (email)
     elements.push({
       header: 'Email',
       size: 190,
-      value: email
+      value: email,
     })
 
   return (

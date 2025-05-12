@@ -26,10 +26,14 @@ const loyalty = require('../loyalty')
 const logger = require('../logger')
 const externalCompliance = require('../compliance-external')
 
-function updateCustomerCustomInfoRequest (customerId, patch) {
-  const promise = _.isNil(patch.data) ?
-    Promise.resolve(null) :
-    customInfoRequestQueries.setCustomerDataViaMachine(customerId, patch.infoRequestId, patch)
+function updateCustomerCustomInfoRequest(customerId, patch) {
+  const promise = _.isNil(patch.data)
+    ? Promise.resolve(null)
+    : customInfoRequestQueries.setCustomerDataViaMachine(
+        customerId,
+        patch.infoRequestId,
+        patch,
+      )
   return promise.then(() => customers.getById(customerId))
 }
 
@@ -37,21 +41,24 @@ const createPendingManualComplianceNotifs = (settings, customer, deviceId) => {
   const customInfoRequests = _.reduce(
     (reqs, req) => _.set(req.info_request_id, req, reqs),
     {},
-    _.get(['customInfoRequestData'], customer)
+    _.get(['customInfoRequestData'], customer),
   )
 
   const isPending = field =>
-    uuid.validate(field) ?
-      _.get([field, 'override'], customInfoRequests) === 'automatic' :
-      customer[`${field}At`]
-        && (!customer[`${field}OverrideAt`]
-            || customer[`${field}OverrideAt`].getTime() < customer[`${field}At`].getTime())
+    uuid.validate(field)
+      ? _.get([field, 'override'], customInfoRequests) === 'automatic'
+      : customer[`${field}At`] &&
+        (!customer[`${field}OverrideAt`] ||
+          customer[`${field}OverrideAt`].getTime() <
+            customer[`${field}At`].getTime())
 
   const unnestCustomTriggers = triggersAutomation => {
-    const customTriggers = _.fromPairs(_.map(({ id, type }) => [id, type], triggersAutomation.custom))
+    const customTriggers = _.fromPairs(
+      _.map(({ id, type }) => [id, type], triggersAutomation.custom),
+    )
     return _.flow(
       _.unset('custom'),
-      _.mapKeys(k => k === 'facephoto' ? 'frontCamera' : k),
+      _.mapKeys(k => (k === 'facephoto' ? 'frontCamera' : k)),
       _.assign(customTriggers),
     )(triggersAutomation)
   }
@@ -61,22 +68,31 @@ const createPendingManualComplianceNotifs = (settings, customer, deviceId) => {
   const hasManualAutomation = triggersAutomation =>
     _.any(isManual, _.values(triggersAutomation))
 
-  configManager.getTriggersAutomation(customInfoRequestQueries.getCustomInfoRequests(true), settings.config)
+  configManager
+    .getTriggersAutomation(
+      customInfoRequestQueries.getCustomInfoRequests(true),
+      settings.config,
+    )
     .then(triggersAutomation => {
       triggersAutomation = unnestCustomTriggers(triggersAutomation)
       if (!hasManualAutomation(triggersAutomation)) return
 
       const pendingFields = _.filter(
         field => isManual(triggersAutomation[field]) && isPending(field),
-        _.keys(triggersAutomation)
+        _.keys(triggersAutomation),
       )
 
       if (!_.isEmpty(pendingFields))
-        notifier.complianceNotify(settings, customer, deviceId, 'PENDING_COMPLIANCE')
+        notifier.complianceNotify(
+          settings,
+          customer,
+          deviceId,
+          'PENDING_COMPLIANCE',
+        )
     })
 }
 
-function updateCustomer (req, res, next) {
+function updateCustomer(req, res, next) {
   const id = req.params.id
   const patch = req.body
   const deviceId = req.deviceId
@@ -91,8 +107,11 @@ function updateCustomer (req, res, next) {
       .catch(next)
   }
 
-  customers.getById(id)
-    .then(customer => !customer ? Promise.reject(httpError('Not Found', 404)) : {})
+  customers
+    .getById(id)
+    .then(customer =>
+      !customer ? Promise.reject(httpError('Not Found', 404)) : {},
+    )
     .then(_.merge(patch))
     .then(newPatch => customers.updatePhotoCard(id, newPatch))
     .then(newPatch => customers.updateFrontCamera(id, newPatch))
@@ -104,37 +123,44 @@ function updateCustomer (req, res, next) {
     .catch(next)
 }
 
-function updateIdCardData (req, res, next) {
+function updateIdCardData(req, res, next) {
   const id = req.params.id
   const patch = req.body
-  customers.getById(id)
+  customers
+    .getById(id)
     .then(customer => {
-      if (!customer) { throw httpError('Not Found', 404) }
-      return customers.updateIdCardData(patch, id)
-        .then(() => customer)
+      if (!customer) {
+        throw httpError('Not Found', 404)
+      }
+      return customers.updateIdCardData(patch, id).then(() => customer)
     })
     .then(customer => respond(req, res, { customer }))
     .catch(next)
 }
 
-function triggerSanctions (req, res, next) {
+function triggerSanctions(req, res, next) {
   const id = req.params.id
 
-  customers.getById(id)
+  customers
+    .getById(id)
     .then(customer => {
-      if (!customer) { throw httpError('Not Found', 404) }
-      return compliance.validationPatch(req.deviceId, customer)
+      if (!customer) {
+        throw httpError('Not Found', 404)
+      }
+      return compliance
+        .validationPatch(req.deviceId, customer)
         .then(patch => customers.update(id, patch))
     })
     .then(customer => respond(req, res, { customer }))
     .catch(next)
 }
 
-function triggerBlock (req, res, next) {
+function triggerBlock(req, res, next) {
   const id = req.params.id
   const settings = req.settings
 
-  customers.update(id, { authorizedOverride: 'blocked' })
+  customers
+    .update(id, { authorizedOverride: 'blocked' })
     .then(customer => {
       notifier.complianceNotify(settings, customer, req.deviceId, 'BLOCKED')
       return respond(req, res, { customer })
@@ -142,27 +168,39 @@ function triggerBlock (req, res, next) {
     .catch(next)
 }
 
-function triggerSuspend (req, res, next) {
+function triggerSuspend(req, res, next) {
   const id = req.params.id
   const triggerId = req.body.triggerId
   const settings = req.settings
 
   const triggers = configManager.getTriggers(req.settings.config)
-  const getSuspendDays = _.compose(_.get('suspensionDays'), _.find(_.matches({ id: triggerId })))
+  const getSuspendDays = _.compose(
+    _.get('suspensionDays'),
+    _.find(_.matches({ id: triggerId })),
+  )
 
-  const days = _.includes(triggerId, ['no-ff-camera', 'id-card-photo-disabled']) ? 1 : getSuspendDays(triggers)
+  const days = _.includes(triggerId, ['no-ff-camera', 'id-card-photo-disabled'])
+    ? 1
+    : getSuspendDays(triggers)
 
   const suspensionDuration = intervalToDuration({ start: 0, end: T.day * days })
 
-  customers.update(id, { suspendedUntil: add(suspensionDuration, new Date()) })
+  customers
+    .update(id, { suspendedUntil: add(suspensionDuration, new Date()) })
     .then(customer => {
-      notifier.complianceNotify(settings, customer, req.deviceId, 'SUSPENDED', days)
+      notifier.complianceNotify(
+        settings,
+        customer,
+        req.deviceId,
+        'SUSPENDED',
+        days,
+      )
       return respond(req, res, { customer })
     })
     .catch(next)
 }
 
-function updateTxCustomerPhoto (req, res, next) {
+function updateTxCustomerPhoto(req, res, next) {
   const customerId = req.params.id
   const txId = req.params.txId
   const tcPhotoData = req.body.tcPhotoData
@@ -171,63 +209,81 @@ function updateTxCustomerPhoto (req, res, next) {
   Promise.all([customers.getById(customerId), txs.getTx(txId, direction)])
     .then(([customer, tx]) => {
       if (!customer || !tx) return
-      return customers.updateTxCustomerPhoto(tcPhotoData)
-        .then(newPatch => txs.updateTxCustomerPhoto(customerId, txId, direction, newPatch))
+      return customers
+        .updateTxCustomerPhoto(tcPhotoData)
+        .then(newPatch =>
+          txs.updateTxCustomerPhoto(customerId, txId, direction, newPatch),
+        )
     })
     .then(() => respond(req, res, {}))
     .catch(next)
 }
 
-function buildSms (data, receiptOptions) {
-  return Promise.all([getTx(data.session, data.txClass), loadLatestConfig()])
-    .then(([tx, config]) => {
-      return Promise.all([customers.getCustomerById(tx.customer_id), machineLoader.getMachine(tx.device_id, config)])
-        .then(([customer, deviceConfig]) => {
-          const formattedTx = _.mapKeys(_.camelCase)(tx)
-          const localeConfig = configManager.getLocale(formattedTx.deviceId, config)
-          const timezone = localeConfig.timezone
+function buildSms(data, receiptOptions) {
+  return Promise.all([
+    getTx(data.session, data.txClass),
+    loadLatestConfig(),
+  ]).then(([tx, config]) => {
+    return Promise.all([
+      customers.getCustomerById(tx.customer_id),
+      machineLoader.getMachine(tx.device_id, config),
+    ]).then(([customer, deviceConfig]) => {
+      const formattedTx = _.mapKeys(_.camelCase)(tx)
+      const localeConfig = configManager.getLocale(formattedTx.deviceId, config)
+      const timezone = localeConfig.timezone
 
-          const cashInCommission = new BN(1).plus(new BN(formattedTx.commissionPercentage))
+      const cashInCommission = new BN(1).plus(
+        new BN(formattedTx.commissionPercentage),
+      )
 
-          const rate = new BN(formattedTx.rawTickerPrice).multipliedBy(cashInCommission).decimalPlaces(2)
-          const date = utcToZonedTime(timezone, zonedTimeToUtc(process.env.TZ, new Date()))
-          const dateString = `${date.toISOString().replace('T', ' ').slice(0, 19)}`
+      const rate = new BN(formattedTx.rawTickerPrice)
+        .multipliedBy(cashInCommission)
+        .decimalPlaces(2)
+      const date = utcToZonedTime(
+        timezone,
+        zonedTimeToUtc(process.env.TZ, new Date()),
+      )
+      const dateString = `${date.toISOString().replace('T', ' ').slice(0, 19)}`
 
-          const data = {
-            operatorInfo: configManager.getOperatorInfo(config),
-            location: deviceConfig.machineLocation,
-            customerName: customer.name,
-            customerPhone: customer.phone,
-            session: formattedTx.id,
-            time: dateString,
-            direction: formattedTx.txClass === 'cashIn' ? 'Cash-in' : 'Cash-out',
-            fiat: `${formattedTx.fiat.toString()} ${formattedTx.fiatCode}`,
-            crypto: `${sms.toCryptoUnits(BN(formattedTx.cryptoAtoms), formattedTx.cryptoCode)} ${formattedTx.cryptoCode}`,
-            rate: `1 ${formattedTx.cryptoCode} = ${rate} ${formattedTx.fiatCode}`,
-            address: formattedTx.toAddress,
-            txId: formattedTx.txHash
-          }
+      const data = {
+        operatorInfo: configManager.getOperatorInfo(config),
+        location: deviceConfig.machineLocation,
+        customerName: customer.name,
+        customerPhone: customer.phone,
+        session: formattedTx.id,
+        time: dateString,
+        direction: formattedTx.txClass === 'cashIn' ? 'Cash-in' : 'Cash-out',
+        fiat: `${formattedTx.fiat.toString()} ${formattedTx.fiatCode}`,
+        crypto: `${sms.toCryptoUnits(BN(formattedTx.cryptoAtoms), formattedTx.cryptoCode)} ${formattedTx.cryptoCode}`,
+        rate: `1 ${formattedTx.cryptoCode} = ${rate} ${formattedTx.fiatCode}`,
+        address: formattedTx.toAddress,
+        txId: formattedTx.txHash,
+      }
 
-          return sms.formatSmsReceipt(data, receiptOptions)
-        })
+      return sms.formatSmsReceipt(data, receiptOptions)
     })
+  })
 }
 
-function sendSmsReceipt (req, res, next) {
-  const receiptOptions = _.omit(['active', 'sms'], configManager.getReceipt(req.settings.config))
-  buildSms(req.body.data, receiptOptions)
-    .then(smsRequest => {
-      sms.sendMessage(req.settings, smsRequest)
-        .then(() => respond(req, res, {}))
-        .catch(next)
-    })
+function sendSmsReceipt(req, res, next) {
+  const receiptOptions = _.omit(
+    ['active', 'sms'],
+    configManager.getReceipt(req.settings.config),
+  )
+  buildSms(req.body.data, receiptOptions).then(smsRequest => {
+    sms
+      .sendMessage(req.settings, smsRequest)
+      .then(() => respond(req, res, {}))
+      .catch(next)
+  })
 }
 
-function getExternalComplianceLink (req, res, next) {
+function getExternalComplianceLink(req, res, next) {
   const customerId = req.query.customer
   const triggerId = req.query.trigger
   const isRetry = req.query.isRetry
-  if (_.isNil(customerId) || _.isNil(triggerId)) return next(httpError('Not Found', 404))
+  if (_.isNil(customerId) || _.isNil(triggerId))
+    return next(httpError('Not Found', 404))
 
   const settings = req.settings
   const triggers = configManager.getTriggers(settings.config)
@@ -235,17 +291,27 @@ function getExternalComplianceLink (req, res, next) {
   const externalService = trigger.externalService
 
   if (isRetry) {
-    return externalCompliance.createLink(settings, externalService, customerId)
+    return externalCompliance
+      .createLink(settings, externalService, customerId)
       .then(url => respond(req, res, { url }))
   }
 
-  return externalCompliance.createApplicant(settings, externalService, customerId)
-    .then(applicant => customers.addExternalCompliance(customerId, externalService, applicant.id))
-    .then(() => externalCompliance.createLink(settings, externalService, customerId))
+  return externalCompliance
+    .createApplicant(settings, externalService, customerId)
+    .then(applicant =>
+      customers.addExternalCompliance(
+        customerId,
+        externalService,
+        applicant.id,
+      ),
+    )
+    .then(() =>
+      externalCompliance.createLink(settings, externalService, customerId),
+    )
     .then(url => respond(req, res, { url }))
 }
 
-function addOrUpdateCustomer (customerData, deviceId, config, isEmailAuth) {
+function addOrUpdateCustomer(customerData, deviceId, config, isEmailAuth) {
   const triggers = configManager.getTriggers(config)
   const maxDaysThreshold = complianceTriggers.maxDaysThreshold(triggers)
 
@@ -262,34 +328,42 @@ function addOrUpdateCustomer (customerData, deviceId, config, isEmailAuth) {
     .then(customer => customers.getById(customer.id))
     .then(customer => {
       customers.updateLastAuthAttempt(customer.id, deviceId).catch(() => {
-        logger.info('failure updating last auth attempt for customer ', customer.id)
+        logger.info(
+          'failure updating last auth attempt for customer ',
+          customer.id,
+        )
       })
       return customer
     })
     .then(customer => {
-      return Tx.customerHistory(customer.id, maxDaysThreshold)
-        .then(result => {
-          customer.txHistory = result
-          return customer
-        })
+      return Tx.customerHistory(customer.id, maxDaysThreshold).then(result => {
+        customer.txHistory = result
+        return customer
+      })
     })
     .then(customer => {
-      return loyalty.getCustomerActiveIndividualDiscount(customer.id)
+      return loyalty
+        .getCustomerActiveIndividualDiscount(customer.id)
         .then(discount => ({ ...customer, discount }))
     })
 }
 
-function getOrAddCustomerPhone (req, res, next) {
+function getOrAddCustomerPhone(req, res, next) {
   const deviceId = req.deviceId
   const customerData = req.body
 
   const pi = plugins(req.settings, deviceId)
   const phone = req.body.phone
 
-  return pi.getPhoneCode(phone)
+  return pi
+    .getPhoneCode(phone)
     .then(code => {
-      return addOrUpdateCustomer(customerData, deviceId, req.settings.config, false)
-        .then(customer => respond(req, res, { code, customer }))
+      return addOrUpdateCustomer(
+        customerData,
+        deviceId,
+        req.settings.config,
+        false,
+      ).then(customer => respond(req, res, { code, customer }))
     })
     .catch(err => {
       if (err.name === 'BadNumberError') throw httpError('Bad number', 401)
@@ -298,17 +372,22 @@ function getOrAddCustomerPhone (req, res, next) {
     .catch(next)
 }
 
-function getOrAddCustomerEmail (req, res, next) {
+function getOrAddCustomerEmail(req, res, next) {
   const deviceId = req.deviceId
   const customerData = req.body
 
   const pi = plugins(req.settings, req.deviceId)
   const email = req.body.email
 
-  return pi.getEmailCode(email)
+  return pi
+    .getEmailCode(email)
     .then(code => {
-      return addOrUpdateCustomer(customerData, deviceId, req.settings.config, true)
-        .then(customer => respond(req, res, { code, customer }))
+      return addOrUpdateCustomer(
+        customerData,
+        deviceId,
+        req.settings.config,
+        true,
+      ).then(customer => respond(req, res, { code, customer }))
     })
     .catch(err => {
       if (err.name === 'BadNumberError') throw httpError('Bad number', 401)

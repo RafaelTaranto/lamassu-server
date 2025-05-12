@@ -13,25 +13,25 @@ export default {
       code: 'username',
       display: 'InforU username',
       component: TextInputFormik,
-      face: true
+      face: true,
     },
     {
       code: 'apiKey',
       display: 'API Key',
-      component: SecretInputFormik
+      component: SecretInputFormik,
     },
     {
       code: 'fromNumber',
       display: 'InforU sender',
       component: TextInputFormik,
-      face: true
+      face: true,
     },
     {
       code: 'toNumber',
       display: 'Notifications Number (international format)',
       component: TextInputFormik,
-      face: true
-    }
+      face: true,
+    },
   ],
   getValidationSchema: account => {
     return Yup.object().shape({
@@ -46,7 +46,7 @@ export default {
         .required('The InforU sender is required'),
       toNumber: Yup.string('The notifications number must be a string')
         .max(100, 'The notifications number is too long')
-        .required('The notifications number is required')
+        .required('The notifications number is required'),
     })
-  }
+  },
 }

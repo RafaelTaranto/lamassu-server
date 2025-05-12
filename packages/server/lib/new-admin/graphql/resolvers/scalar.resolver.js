@@ -1,9 +1,13 @@
-const { DateTimeISOResolver, JSONResolver, JSONObjectResolver } = require('graphql-scalars')
+const {
+  DateTimeISOResolver,
+  JSONResolver,
+  JSONObjectResolver,
+} = require('graphql-scalars')
 
 const resolvers = {
   JSON: JSONResolver,
   JSONObject: JSONObjectResolver,
-  DateTimeISO: DateTimeISOResolver
+  DateTimeISO: DateTimeISOResolver,
 }
 
 module.exports = resolvers

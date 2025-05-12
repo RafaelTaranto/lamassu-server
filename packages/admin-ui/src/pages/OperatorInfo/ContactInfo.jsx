@@ -71,14 +71,14 @@ const ContactInfo = ({ wizard }) => {
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setEditing(false),
     refetchQueries: () => ['getData'],
-    onError: e => setError(e)
+    onError: e => setError(e),
   })
 
   const { data } = useQuery(GET_CONFIG)
 
   const save = it => {
     return saveConfig({
-      variables: { config: toNamespace(namespaces.OPERATOR_INFO, it) }
+      variables: { config: toNamespace(namespaces.OPERATOR_INFO, it) },
     })
   }
 
@@ -95,7 +95,7 @@ const ContactInfo = ({ wizard }) => {
       .email('Please enter a valid email address')
       .required('An email is required'),
     website: Yup.string(),
-    companyNumber: Yup.string()
+    companyNumber: Yup.string(),
   })
 
   const fields = [
@@ -103,32 +103,32 @@ const ContactInfo = ({ wizard }) => {
       name: 'name',
       label: 'Company name',
       value: info.name ?? '',
-      component: TextInput
+      component: TextInput,
     },
     {
       name: 'phone',
       label: 'Phone number',
       value: info.phone,
-      component: TextInput
+      component: TextInput,
     },
     {
       name: 'email',
       label: 'Email',
       value: info.email ?? '',
-      component: TextInput
+      component: TextInput,
     },
     {
       name: 'website',
       label: 'Website',
       value: info.website ?? '',
-      component: TextInput
+      component: TextInput,
     },
     {
       name: 'companyNumber',
       label: 'Company registration number',
       value: info.companyNumber ?? '',
-      component: TextInput
-    }
+      component: TextInput,
+    },
   ]
 
   const findField = name => R.find(R.propEq('name', name))(fields)
@@ -143,8 +143,8 @@ const ContactInfo = ({ wizard }) => {
       phone: findValue('phone'),
       email: findValue('email'),
       website: findValue('website'),
-      companyNumber: findValue('companyNumber')
-    }
+      companyNumber: findValue('companyNumber'),
+    },
   }
 
   const getErrorMsg = formikErrors =>

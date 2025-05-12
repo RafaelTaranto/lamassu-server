@@ -2,7 +2,8 @@ const pairing = require('../pairing')
 const logger = require('../logger')
 
 const authorize = function (req, res, next) {
-  return pairing.isPaired(req.deviceId)
+  return pairing
+    .isPaired(req.deviceId)
     .then(deviceName => {
       if (deviceName) {
         req.deviceName = deviceName

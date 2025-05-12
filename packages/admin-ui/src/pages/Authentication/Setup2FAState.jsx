@@ -47,7 +47,7 @@ const GET_USER_DATA = gql`
   }
 `
 
-const Setup2FAState = ({ state, dispatch }) => {
+const Setup2FAState = ({ state }) => {
   const history = useHistory()
   const { setUserData } = useContext(AppContext)
 
@@ -68,7 +68,7 @@ const Setup2FAState = ({ state, dispatch }) => {
     onCompleted: ({ get2FASecret }) => {
       setSecret(get2FASecret.secret)
       setOtpauth(get2FASecret.otpauth)
-    }
+    },
   }
 
   const mutationOptions = {
@@ -76,8 +76,8 @@ const Setup2FAState = ({ state, dispatch }) => {
       username: state.clientField,
       password: state.passwordField,
       rememberMe: state.rememberMeField,
-      codeConfirmation: twoFAConfirmation
-    }
+      codeConfirmation: twoFAConfirmation,
+    },
   }
 
   const { error: queryError } = useQuery(GET_2FA_SECRET, queryOptions)
@@ -86,13 +86,13 @@ const Setup2FAState = ({ state, dispatch }) => {
     onCompleted: ({ userData }) => {
       setUserData(userData)
       history.push('/')
-    }
+    },
   })
 
   const [setup2FA, { error: mutationError }] = useMutation(SETUP_2FA, {
     onCompleted: ({ setup2FA: success }) => {
       success ? getUserData() : setInvalidToken(true)
-    }
+    },
   })
 
   const getErrorMsg = () => {

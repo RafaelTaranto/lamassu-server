@@ -108,7 +108,7 @@ const widths = {
   name: 250,
   cashbox: 200,
   cassettes: 575,
-  edit: 90
+  edit: 90,
 }
 
 const CashCassettes = () => {
@@ -119,9 +119,9 @@ const CashCassettes = () => {
   const { data, loading: dataLoading } = useQuery(GET_MACHINES_AND_CONFIG, {
     variables: {
       billFilters: {
-        batch: 'none'
-      }
-    }
+        batch: 'none',
+      },
+    },
   })
   const [wizard, setWizard] = useState(false)
   const [machineId, setMachineId] = useState('')
@@ -130,18 +130,18 @@ const CashCassettes = () => {
   const unpairedMachines = R.path(['unpairedMachines'])(data) ?? []
   const config = R.path(['config'])(data) ?? {}
   const [setCassetteBills, { error }] = useMutation(SET_CASSETTE_BILLS, {
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setEditingSchema(false),
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const timezone = R.path(['config', 'locale_timezone'], data)
 
   const bills = R.groupBy(bill => bill.deviceId)(R.path(['bills'])(data) ?? [])
   const deviceIds = R.uniq(
-    R.map(R.prop('deviceId'))(R.path(['bills'])(data) ?? [])
+    R.map(R.prop('deviceId'))(R.path(['bills'])(data) ?? []),
   )
   const cashout = data?.config && fromNamespace('cashOut')(data.config)
   const locale = data?.config && fromNamespace('locale')(data.config)
@@ -154,8 +154,8 @@ const CashCassettes = () => {
       variables: {
         action: 'setCassetteBills',
         deviceId: id,
-        cashUnits
-      }
+        cashUnits,
+      },
     })
   }
 
@@ -176,7 +176,7 @@ const CashCassettes = () => {
 
   const radioButtonOptions = [
     { display: 'Automatic', code: AUTOMATIC },
-    { display: 'Manual', code: MANUAL }
+    { display: 'Manual', code: MANUAL },
   ]
 
   const handleRadioButtons = evt => {
@@ -189,7 +189,7 @@ const CashCassettes = () => {
     bills,
     setWizard,
     widths,
-    setMachineId
+    setMachineId,
   )
 
   const InnerCashUnitDetails = ({ it }) => (
@@ -211,7 +211,7 @@ const CashCassettes = () => {
               text: 'Cash box history',
               icon: HistoryIcon,
               inverseIcon: ReverseHistoryIcon,
-              toggle: setShowHistory
+              toggle: setShowHistory,
             },
             {
               component: showHistory ? (
@@ -226,8 +226,8 @@ const CashCassettes = () => {
                 />
               ) : (
                 <></>
-              )
-            }
+              ),
+            },
           ]}
           className="flex items-center mr-[1px]"
           appendix={

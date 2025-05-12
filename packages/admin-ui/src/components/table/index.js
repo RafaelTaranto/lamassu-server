@@ -15,5 +15,5 @@ export {
   TableHead,
   TableHeader,
   TableRow,
-  TableBody
+  TableBody,
 }

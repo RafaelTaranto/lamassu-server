@@ -28,7 +28,7 @@ import {
   primaryColor,
   subheaderColor,
   errorColor,
-  offErrorColor
+  offErrorColor,
 } from 'src/styling/variables'
 import { SWEEPABLE_CRYPTOS } from 'src/utils/constants'
 import * as Customer from 'src/utils/customer'
@@ -113,7 +113,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
   const zip = new JSZip()
 
   const [fetchSummary] = useLazyQuery(TX_SUMMARY, {
-    onCompleted: data => createCsv(R.filter(it => !R.isEmpty(it), data))
+    onCompleted: data => createCsv(R.filter(it => !R.isEmpty(it), data)),
   })
 
   const [cancelTransaction] = useMutation(
@@ -121,13 +121,13 @@ const DetailsRow = ({ it: tx, timezone }) => {
     {
       onError: ({ message }) =>
         setErrorMessage(message ?? 'An error occurred.'),
-      refetchQueries: () => ['transactions']
-    }
+      refetchQueries: () => ['transactions'],
+    },
   )
 
   const commission = BigNumber(tx.profit).toFixed(2, 1) // ROUND_DOWN
   const commissionPercentage = BigNumber(
-    Number.parseFloat(tx.commissionPercentage, 2) * 100
+    Number.parseFloat(tx.commissionPercentage, 2) * 100,
   ).toFixed(2, 1) // ROUND_DOWN
   const fixedFee = Number.parseFloat(tx.fixedFee) || 0
   const fiat = BigNumber(tx.fiat).minus(fixedFee).toFixed(2, 1) // ROUND_DOWN
@@ -145,7 +145,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
       (tx.customerIdCardData.dateOfBirth &&
         differenceInYears(
           parseDateString(tx.customerIdCardData.dateOfBirth),
-          new Date()
+          new Date(),
         )) ??
       '',
     country: tx.customerIdCardData.country,
@@ -153,9 +153,9 @@ const DetailsRow = ({ it: tx, timezone }) => {
     idCardExpirationDate:
       (tx.customerIdCardData.expirationDate &&
         format('yyyy-MM-dd')(
-          parseDateString(tx.customerIdCardData.expirationDate)
+          parseDateString(tx.customerIdCardData.expirationDate),
         )) ??
-      ''
+      '',
   }
 
   const from = sub({ minutes: MINUTES_OFFSET }, new Date(tx.created))
@@ -163,7 +163,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
 
   const downloadRawLogs = ({ id: txId, deviceId, txClass }, timezone) => {
     fetchSummary({
-      variables: { txId, from, until, deviceId, txClass, timezone }
+      variables: { txId, from, until, deviceId, txClass, timezone },
     })
   }
 
@@ -220,7 +220,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
         noMargin
         className={classNames({
           'font-bold ml-1': true,
-          'text-tomato': hasChainAnalysisError(tx)
+          'text-tomato': hasChainAnalysisError(tx),
         })}>
         {tx.walletScore}
       </P>
@@ -396,7 +396,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
               className="w-40"
               onClick={() =>
                 setAction({
-                  command: 'cancelTx'
+                  command: 'cancelTx',
                 })
               }>
               Cancel transaction
@@ -434,8 +434,8 @@ const DetailsRow = ({ it: tx, timezone }) => {
           setAction({ command: null })
           cancelTransaction({
             variables: {
-              id: tx.id
-            }
+              id: tx.id,
+            },
           })
         }}
         onDismissed={() => {
@@ -453,5 +453,5 @@ export default memo(
     prev.it.id === next.it.id &&
     prev.it.hasError === next.it.hasError &&
     prev.it.batchError === next.it.batchError &&
-    getStatus(prev.it) === getStatus(next.it)
+    getStatus(prev.it) === getStatus(next.it),
 )

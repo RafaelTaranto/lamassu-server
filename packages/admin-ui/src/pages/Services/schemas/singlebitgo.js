@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import {
   TextInput,
   SecretInput,
-  Autocomplete
+  Autocomplete,
 } from 'src/components/inputs/formik'
 
 const singleBitgo = code => ({
@@ -16,7 +16,7 @@ const singleBitgo = code => ({
       display: 'API token',
       component: TextInput,
       face: true,
-      long: true
+      long: true,
     },
     {
       code: 'environment',
@@ -25,23 +25,23 @@ const singleBitgo = code => ({
       inputProps: {
         options: [
           { code: 'prod', display: 'prod' },
-          { code: 'test', display: 'test' }
+          { code: 'test', display: 'test' },
         ],
         labelProp: 'display',
-        valueProp: 'code'
+        valueProp: 'code',
       },
-      face: true
+      face: true,
     },
     {
       code: `${code}WalletId`,
       display: `${code} wallet ID`,
-      component: TextInput
+      component: TextInput,
     },
     {
       code: `${code}WalletPassphrase`,
       display: `${code} wallet passphrase`,
-      component: SecretInput
-    }
+      component: SecretInput,
+    },
   ],
   validationSchema: Yup.object().shape({
     token: Yup.string('The token must be a string')
@@ -54,11 +54,11 @@ const singleBitgo = code => ({
       .max(100, `The ${code} wallet ID is too long`)
       .required(`The ${code} wallet ID is required`),
     [`${code}WalletPassphrase`]: Yup.string(
-      `The ${code} passphrase must be a string`
+      `The ${code} passphrase must be a string`,
     )
       .max(100, `The ${code} wallet passphrase is too long`)
-      .required(`The ${code} wallet passphrase is required`)
-  })
+      .required(`The ${code} wallet passphrase is required`),
+  }),
 })
 
 export default singleBitgo

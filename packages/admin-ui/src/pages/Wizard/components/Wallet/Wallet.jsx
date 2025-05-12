@@ -13,28 +13,28 @@ import ChooseWallet from './ChooseWallet'
 const steps = [
   {
     label: 'Choose cryptocurrency',
-    component: ChooseCoin
+    component: ChooseCoin,
   },
   {
     label: 'Choose wallet',
-    component: ChooseWallet
+    component: ChooseWallet,
   },
   {
     label: 'Choose ticker',
-    component: ChooseTicker
+    component: ChooseTicker,
   },
   {
     label: 'Exchange',
-    component: ChooseExchange
+    component: ChooseExchange,
   },
   {
     label: 'Blockcypher',
-    component: Blockcypher
+    component: Blockcypher,
   },
   {
     label: 'All set',
-    component: AllSet
-  }
+    component: AllSet,
+  },
 ]
 
 const Wallet = ({ doContinue }) => {

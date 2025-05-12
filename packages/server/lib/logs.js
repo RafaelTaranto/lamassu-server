@@ -7,7 +7,6 @@ const logger = require('./logger')
 const pgp = require('pg-promise')()
 
 const getMachineName = require('./machine-loader').getMachineName
-const NUM_RESULTS = 500
 
 /**
  * Get the latest log's timestamp
@@ -20,12 +19,15 @@ const NUM_RESULTS = 500
  *
  * @returns {date} Last timestamp
  */
-function getLastSeen (deviceId) {
+function getLastSeen(deviceId) {
   const sql = `select id, timestamp, serial from logs
   where device_id=$1
   order by timestamp desc, serial desc limit 1`
-  return db.oneOrNone(sql, [deviceId])
-    .then(log => log ? {timestamp: log.timestamp, serial: log.serial, id: log.id} : null)
+  return db
+    .oneOrNone(sql, [deviceId])
+    .then(log =>
+      log ? { timestamp: log.timestamp, serial: log.serial, id: log.id } : null,
+    )
 }
 
 /**
@@ -40,10 +42,11 @@ function getLastSeen (deviceId) {
  *
  * @returns {null}
  */
-function update (deviceId, logLines) {
-  const cs = new pgp.helpers.ColumnSet([
-    'id', 'device_id', 'log_level', 'timestamp', 'serial', 'message'],
-  {table: 'logs'})
+function update(deviceId, logLines) {
+  const cs = new pgp.helpers.ColumnSet(
+    ['id', 'device_id', 'log_level', 'timestamp', 'serial', 'message'],
+    { table: 'logs' },
+  )
 
   const logs = _.map(log => {
     const formatted = {
@@ -52,7 +55,7 @@ function update (deviceId, logLines) {
       message: log.msg,
       logLevel: _.contains('error', _.lowerCase(log.msg)) ? 'error' : 'info',
       timestamp: log.timestamp,
-      serial: log.serial || 0
+      serial: log.serial || 0,
     }
     return _.mapKeys(_.snakeCase, formatted)
   }, logLines)
@@ -61,7 +64,7 @@ function update (deviceId, logLines) {
   return db.none(sql)
 }
 
-function clearOldLogs () {
+function clearOldLogs() {
   const sqls = `delete from logs
     where timestamp < now() - interval '3 days';
     delete from server_logs
@@ -69,7 +72,7 @@ function clearOldLogs () {
   return db.multi(sqls)
 }
 
-function getUnlimitedMachineLogs (deviceId, until = new Date().toISOString()) {
+function getUnlimitedMachineLogs(deviceId, until = new Date().toISOString()) {
   // Note: sql is a little confusing here, since timestamp is used both as a column
   // and a reserved word, but it works.
   const sql = `select id, log_level, timestamp, message from logs
@@ -78,14 +81,21 @@ function getUnlimitedMachineLogs (deviceId, until = new Date().toISOString()) {
   and timestamp > (timestamp $2 - interval '2 days')
   order by timestamp desc, serial desc`
 
-  return Promise.all([db.any(sql, [ deviceId, until ]), getMachineName(deviceId)])
-    .then(([logs, machineName]) => ({
-      logs: _.map(_.mapKeys(_.camelCase), logs),
-      currentMachine: {deviceId, name: machineName}
-    }))
+  return Promise.all([
+    db.any(sql, [deviceId, until]),
+    getMachineName(deviceId),
+  ]).then(([logs, machineName]) => ({
+    logs: _.map(_.mapKeys(_.camelCase), logs),
+    currentMachine: { deviceId, name: machineName },
+  }))
 }
 
-function getMachineLogs (deviceId, until = new Date().toISOString(), limit = null, offset = 0) {
+function getMachineLogs(
+  deviceId,
+  until = new Date().toISOString(),
+  limit = null,
+  offset = 0,
+) {
   const sql = `select id, log_level, timestamp, message from logs
   where device_id=$1
   and timestamp <= $2
@@ -93,14 +103,22 @@ function getMachineLogs (deviceId, until = new Date().toISOString(), limit = nul
   limit $3
   offset $4`
 
-  return Promise.all([db.any(sql, [ deviceId, until, limit, offset ]), getMachineName(deviceId)])
-    .then(([logs, machineName]) => ({
-      logs: _.map(_.mapKeys(_.camelCase), logs),
-      currentMachine: {deviceId, name: machineName}
-    }))
+  return Promise.all([
+    db.any(sql, [deviceId, until, limit, offset]),
+    getMachineName(deviceId),
+  ]).then(([logs, machineName]) => ({
+    logs: _.map(_.mapKeys(_.camelCase), logs),
+    currentMachine: { deviceId, name: machineName },
+  }))
 }
 
-function simpleGetMachineLogs (deviceId, from = new Date(0).toISOString(), until = new Date().toISOString(), limit = null, offset = 0) {
+function simpleGetMachineLogs(
+  deviceId,
+  from = new Date(0).toISOString(),
+  until = new Date().toISOString(),
+  limit = null,
+  offset = 0,
+) {
   const sql = `select id, log_level, timestamp, message from logs
   where device_id=$1
   and timestamp >= $2
@@ -109,31 +127,38 @@ function simpleGetMachineLogs (deviceId, from = new Date(0).toISOString(), until
   limit $4
   offset $5`
 
-  return db.any(sql, [ deviceId, from, until, limit, offset ])
+  return db
+    .any(sql, [deviceId, from, until, limit, offset])
     .then(_.map(_.mapKeys(_.camelCase)))
 }
 
-function logDateFormat (timezone, logs, fields) {
+function logDateFormat(timezone, logs, fields) {
   return _.map(log => {
-    const values = _.map(
-      field =>
-        {
-          if (_.isNil(log[field])) return null
-          if (!isValid(log[field])) {
-            logger.warn(`Tried to convert to ${timezone} timezone the value ${log[field]} and failed. Returning original value...`)
-            return log[field]
-          }
-          const date = utcToZonedTime(timezone, log[field])
-          return `${format('yyyy-MM-dd', date)}T${format('HH:mm:ss.SSS', date)}`
-        },
-        fields
-      )
+    const values = _.map(field => {
+      if (_.isNil(log[field])) return null
+      if (!isValid(log[field])) {
+        logger.warn(
+          `Tried to convert to ${timezone} timezone the value ${log[field]} and failed. Returning original value...`,
+        )
+        return log[field]
+      }
+      const date = utcToZonedTime(timezone, log[field])
+      return `${format('yyyy-MM-dd', date)}T${format('HH:mm:ss.SSS', date)}`
+    }, fields)
     const fieldsToOverride = _.zipObject(fields, values)
     return {
       ...log,
-      ...fieldsToOverride
+      ...fieldsToOverride,
     }
   }, logs)
 }
 
-module.exports = { getUnlimitedMachineLogs, getMachineLogs, simpleGetMachineLogs, update, getLastSeen, clearOldLogs, logDateFormat }
+module.exports = {
+  getUnlimitedMachineLogs,
+  getMachineLogs,
+  simpleGetMachineLogs,
+  update,
+  getLastSeen,
+  clearOldLogs,
+  logDateFormat,
+}

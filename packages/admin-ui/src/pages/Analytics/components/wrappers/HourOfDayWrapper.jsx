@@ -12,7 +12,7 @@ import classes from './wrappers.module.css'
 
 const options = [
   { code: 'hourOfDayTransactions', display: 'Transactions' },
-  { code: 'hourOfDayVolume', display: 'Volume' }
+  { code: 'hourOfDayVolume', display: 'Volume' },
 ]
 
 const HourOfDayBarGraphHeader = ({
@@ -26,13 +26,13 @@ const HourOfDayBarGraphHeader = ({
   dayOptions,
   handleDayChange,
   timezone,
-  currency
+  currency,
 }) => {
   const [graphType /*, setGraphType */] = useState(options[0].code)
 
   const legend = {
     cashIn: <div className={classes.cashInIcon}></div>,
-    cashOut: <div className={classes.cashOutIcon}></div>
+    cashOut: <div className={classes.cashOutIcon}></div>,
   }
 
   const offset = getTimezoneOffset(timezone)
@@ -41,7 +41,7 @@ const HourOfDayBarGraphHeader = ({
     (acc, value) => {
       const created = new Date(value.created)
       created.setTime(
-        created.getTime() + created.getTimezoneOffset() * MINUTE + offset
+        created.getTime() + created.getTimezoneOffset() * MINUTE + offset,
       )
       switch (created.getDay()) {
         case 0:
@@ -71,7 +71,7 @@ const HourOfDayBarGraphHeader = ({
       return acc
     },
     R.fromPairs(R.map(it => [it.code, []], dayOptions)),
-    data
+    data,
   )
 
   return (

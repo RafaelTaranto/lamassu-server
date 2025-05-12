@@ -14,7 +14,11 @@ const typeDef = gql`
 
   type Query {
     cashboxBatches: [CashboxBatch] @auth
-    cashboxBatchesCsv(from: DateTimeISO, until: DateTimeISO, timezone: String): String @auth
+    cashboxBatchesCsv(
+      from: DateTimeISO
+      until: DateTimeISO
+      timezone: String
+    ): String @auth
   }
 
   type Mutation {

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, gql } from "@apollo/client";
+import { useMutation, useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import Section from 'src/components/layout/Section'
@@ -12,7 +12,7 @@ import {
   defaults,
   overridesDefaults,
   getDefaultSettings,
-  getOverrides
+  getOverrides,
 } from './helper'
 
 const SAVE_CONFIG = gql`
@@ -50,21 +50,21 @@ const AdvancedTriggersSettings = memo(() => {
   const customInfoRequests =
     R.path(['customInfoRequests'])(customInfoReqData) ?? []
   const enabledCustomInfoRequests = R.filter(R.propEq('enabled', true))(
-    customInfoRequests
+    customInfoRequests,
   )
 
   const loading = configLoading || customInfoLoading
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const saveDefaults = it => {
     const newConfig = toNamespace(SCREEN_KEY)(it.triggersConfig[0])
     setError(null)
     return saveConfig({
-      variables: { config: newConfig }
+      variables: { config: newConfig },
     })
   }
 
@@ -117,7 +117,7 @@ const AdvancedTriggersSettings = memo(() => {
             save={saveOverrides}
             validationSchema={getOverridesSchema(
               requirementsOverrides,
-              enabledCustomInfoRequests
+              enabledCustomInfoRequests,
             )}
             data={requirementsOverrides}
             elements={getOverrides(enabledCustomInfoRequests)}

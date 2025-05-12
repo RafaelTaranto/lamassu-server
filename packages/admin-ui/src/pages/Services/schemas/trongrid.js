@@ -11,14 +11,14 @@ export default {
       display: 'API Key',
       component: TextInputFormik,
       face: true,
-      long: true
-    }
+      long: true,
+    },
   ],
-  getValidationSchema: account => {
+  getValidationSchema: () => {
     return Yup.object().shape({
       apiKey: Yup.string('The project ID must be a string')
         .max(100, 'The project ID is too long')
-        .required('The project ID is required')
+        .required('The project ID is required'),
     })
-  }
+  },
 }

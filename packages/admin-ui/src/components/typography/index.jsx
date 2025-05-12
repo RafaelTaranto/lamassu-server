@@ -7,7 +7,7 @@ function H1({ children, noMargin, className, ...props }) {
   const classNames = {
     [styles.h1]: true,
     [styles.noMargin]: noMargin,
-    [className]: !!className
+    [className]: !!className,
   }
 
   return (
@@ -21,7 +21,7 @@ function H2({ children, noMargin, className, ...props }) {
   const classNames = {
     [styles.h2]: true,
     [styles.noMargin]: noMargin,
-    [className]: !!className
+    [className]: !!className,
   }
 
   return (
@@ -35,7 +35,7 @@ function H3({ children, noMargin, className, ...props }) {
   const classNames = {
     [styles.h3]: true,
     [styles.noMargin]: noMargin,
-    [className]: !!className
+    [className]: !!className,
   }
 
   return (
@@ -49,7 +49,7 @@ function H4({ children, noMargin, className, ...props }) {
   const classNames = {
     [styles.h4]: true,
     [styles.noMargin]: noMargin,
-    [className]: !!className
+    [className]: !!className,
   }
 
   return (
@@ -63,7 +63,7 @@ function H5({ children, noMargin, className, ...props }) {
   const classNames = {
     [styles.h5]: true,
     [styles.noMargin]: noMargin,
-    [className]: !!className
+    [className]: !!className,
   }
 
   return (
@@ -90,7 +90,7 @@ function pBuilder(elementClass) {
       [className]: !!className,
       [styles[elementClass]]: elementClass,
       [styles.inline]: inline,
-      [styles.noMargin]: noMargin
+      [styles.noMargin]: noMargin,
     }
     return (
       <p className={classnames(classNames)} {...props}>
@@ -115,5 +115,5 @@ export {
   Mono,
   Label1,
   Label2,
-  Label3
+  Label3,
 }

@@ -11,12 +11,12 @@ import { primaryColor as zodiac, tomato } from '../../../styling/variables.js'
 const colors = {
   cashOut: {
     empty: tomato,
-    full: zodiac
+    full: zodiac,
   },
   cashIn: {
     empty: zodiac,
-    full: tomato
-  }
+    full: tomato,
+  },
 }
 
 const Cashbox = ({
@@ -28,7 +28,7 @@ const Cashbox = ({
   emptyPartClassName,
   labelClassName,
   omitInnerPercentage,
-  isLow
+  isLow,
 }) => {
   const ltHalf = percent <= 51
   const color =
@@ -72,7 +72,7 @@ const CashIn = ({
   width,
   height,
   total,
-  omitInnerPercentage
+  omitInnerPercentage,
 }) => {
   const percent = (100 * notes) / capacity
   const isLow = percent < threshold
@@ -117,7 +117,7 @@ const CashOut = ({
   threshold,
   width,
   height,
-  omitInnerPercentage
+  omitInnerPercentage,
 }) => {
   const percent = (100 * notes) / capacity
   const isLow = percent < threshold
@@ -159,7 +159,7 @@ const CashOutLite = ({
   currency,
   notes,
   threshold,
-  width
+  width,
 }) => {
   const percent = (100 * notes) / capacity
   const isLow = percent < threshold

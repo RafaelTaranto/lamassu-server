@@ -14,118 +14,150 @@ const SUPPORTED_COINS = coinUtils.cryptoCurrencies()
 
 let t0
 
-const checkCryptoCode = (cryptoCode) => !_.includes(cryptoCode, SUPPORTED_COINS)
-  ? Promise.reject(new Error('Unsupported crypto: ' + cryptoCode))
-  : Promise.resolve()
+const checkCryptoCode = cryptoCode =>
+  !_.includes(cryptoCode, SUPPORTED_COINS)
+    ? Promise.reject(new Error('Unsupported crypto: ' + cryptoCode))
+    : Promise.resolve()
 
-function _balance (cryptoCode) {
+function _balance(cryptoCode) {
   const cryptoRec = coinUtils.getCryptoCurrency(cryptoCode)
   const unitScale = cryptoRec.unitScale
   return new BN(10).shiftedBy(unitScale).decimalPlaces(0)
 }
 
-function balance (account, cryptoCode, settings, operatorId) {
-  return Promise.resolve()
-    .then(() => _balance(cryptoCode))
+function balance(account, cryptoCode) {
+  return Promise.resolve().then(() => _balance(cryptoCode))
 }
 
-function pendingBalance (account, cryptoCode) {
-  return balance(account, cryptoCode)
-    .then(b => b.times(1.1))
+function pendingBalance(account, cryptoCode) {
+  return balance(account, cryptoCode).then(b => b.times(1.1))
 }
 
-function confirmedBalance (account, cryptoCode) {
+function confirmedBalance(account, cryptoCode) {
   return balance(account, cryptoCode)
 }
 
 // Note: This makes it easier to test insufficient funds errors
 let sendCount = 100
 
-function isInsufficient (cryptoAtoms, cryptoCode) {
+function isInsufficient(cryptoAtoms, cryptoCode) {
   const b = _balance(cryptoCode)
   return cryptoAtoms.gt(b.div(1000).times(sendCount))
 }
 
-function sendCoins (account, tx, settings, operatorId) {
+function sendCoins(account, tx) {
   const { toAddress, cryptoAtoms, cryptoCode } = tx
   sendCount++
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (isInsufficient(cryptoAtoms, cryptoCode)) {
-        console.log('[%s] DEBUG: Mock wallet insufficient funds: %s',
-          cryptoCode, cryptoAtoms.toString())
+        console.log(
+          '[%s] DEBUG: Mock wallet insufficient funds: %s',
+          cryptoCode,
+          cryptoAtoms.toString(),
+        )
         return reject(new E.InsufficientFundsError())
       }
 
-      console.log('[%s] DEBUG: Mock wallet sending %s cryptoAtoms to %s',
-        cryptoCode, cryptoAtoms.toString(), toAddress)
+      console.log(
+        '[%s] DEBUG: Mock wallet sending %s cryptoAtoms to %s',
+        cryptoCode,
+        cryptoAtoms.toString(),
+        toAddress,
+      )
       return resolve({ txid: '<txHash>', fee: new BN(0) })
     }, 2000)
   })
 }
 
-function sendCoinsBatch (account, txs, cryptoCode) {
+function sendCoinsBatch(account, txs, cryptoCode) {
   sendCount = sendCount + txs.length
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      const cryptoSum = _.reduce((acc, value) => acc.plus(value.crypto_atoms), BN(0), txs)
+      const cryptoSum = _.reduce(
+        (acc, value) => acc.plus(value.crypto_atoms),
+        BN(0),
+        txs,
+      )
       if (isInsufficient(cryptoSum, cryptoCode)) {
-        console.log('[%s] DEBUG: Mock wallet insufficient funds: %s',
-          cryptoCode, cryptoSum.toString())
+        console.log(
+          '[%s] DEBUG: Mock wallet insufficient funds: %s',
+          cryptoCode,
+          cryptoSum.toString(),
+        )
         return reject(new E.InsufficientFundsError())
       }
 
-      console.log('[%s] DEBUG: Mock wallet sending %s cryptoAtoms in a batch',
-        cryptoCode, cryptoSum.toString())
+      console.log(
+        '[%s] DEBUG: Mock wallet sending %s cryptoAtoms in a batch',
+        cryptoCode,
+        cryptoSum.toString(),
+      )
       return resolve({ txid: '<txHash>', fee: BN(0) })
     }, 2000)
   })
 }
 
-function newAddress () {
+function newAddress() {
   t0 = Date.now()
-  return Promise.resolve('<Fake address, don\'t send>')
+  return Promise.resolve("<Fake address, don't send>")
 }
 
-function newFunding (account, cryptoCode, settings, operatorId) {
+function newFunding(account, cryptoCode) {
   const promises = [
     pendingBalance(account, cryptoCode),
     confirmedBalance(account, cryptoCode),
-    newAddress(account, { cryptoCode })
+    newAddress(account, { cryptoCode }),
   ]
 
-  return Promise.all(promises)
-    .then(([fundingPendingBalance, fundingConfirmedBalance, fundingAddress]) => ({
+  return Promise.all(promises).then(
+    ([fundingPendingBalance, fundingConfirmedBalance, fundingAddress]) => ({
       fundingPendingBalance,
       fundingConfirmedBalance,
-      fundingAddress
-    }))
+      fundingAddress,
+    }),
+  )
 }
 
-function getStatus (account, tx, requested, settings, operatorId) {
+function getStatus(account, tx, requested) {
   const { toAddress, cryptoCode } = tx
   const elapsed = Date.now() - t0
 
-  if (elapsed < PUBLISH_TIME) return Promise.resolve({ receivedCryptoAtoms: new BN(0), status: 'notSeen' })
-  if (elapsed < AUTHORIZE_TIME) return Promise.resolve({ receivedCryptoAtoms: requested, status: 'published' })
-  if (elapsed < CONFIRM_TIME) return Promise.resolve({ receivedCryptoAtoms: requested, status: 'authorized' })
+  if (elapsed < PUBLISH_TIME)
+    return Promise.resolve({
+      receivedCryptoAtoms: new BN(0),
+      status: 'notSeen',
+    })
+  if (elapsed < AUTHORIZE_TIME)
+    return Promise.resolve({
+      receivedCryptoAtoms: requested,
+      status: 'published',
+    })
+  if (elapsed < CONFIRM_TIME)
+    return Promise.resolve({
+      receivedCryptoAtoms: requested,
+      status: 'authorized',
+    })
 
-  console.log('[%s] DEBUG: Mock wallet has confirmed transaction [%s]', cryptoCode, toAddress.slice(0, 5))
+  console.log(
+    '[%s] DEBUG: Mock wallet has confirmed transaction [%s]',
+    cryptoCode,
+    toAddress.slice(0, 5),
+  )
 
   return Promise.resolve({ status: 'confirmed' })
 }
 
-function getTxHashesByAddress (cryptoCode, address) {
-  return new Promise((resolve, reject) => {
+function getTxHashesByAddress() {
+  return new Promise(resolve => {
     setTimeout(() => {
       return resolve([]) // TODO: should return something other than empty list?
     }, 100)
   })
 }
 
-function checkBlockchainStatus (cryptoCode) {
-  return checkCryptoCode(cryptoCode)
-    .then(() => Promise.resolve('ready'))
+function checkBlockchainStatus(cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(() => Promise.resolve('ready'))
 }
 
 module.exports = {
@@ -137,5 +169,5 @@ module.exports = {
   getStatus,
   newFunding,
   checkBlockchainStatus,
-  getTxHashesByAddress
+  getTxHashesByAddress,
 }

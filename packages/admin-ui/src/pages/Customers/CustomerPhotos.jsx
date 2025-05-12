@@ -49,7 +49,7 @@ export const PhotoCard = ({
   date,
   src,
   setPhotosDialog,
-  setPhotoClickIndex
+  setPhotoClickIndex,
 }) => {
   return (
     <Paper

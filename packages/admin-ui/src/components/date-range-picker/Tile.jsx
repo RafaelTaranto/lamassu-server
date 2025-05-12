@@ -8,24 +8,24 @@ const Tile = ({
   isUpperBound,
   isBetween,
   isDisabled,
-  children
+  children,
 }) => {
   const selected = isLowerBound || isUpperBound
 
   const rangeClasses = {
     [classes.between]: isBetween && !(isLowerBound && isUpperBound),
     [classes.lowerBound]: isLowerBound && !isUpperBound,
-    [classes.upperBound]: isUpperBound && !isLowerBound
+    [classes.upperBound]: isUpperBound && !isLowerBound,
   }
 
   const buttonWrapperClasses = {
     [classes.wrapper]: true,
-    [classes.selected]: selected
+    [classes.selected]: selected,
   }
 
   const buttonClasses = {
     [classes.button]: true,
-    [classes.disabled]: isDisabled
+    [classes.disabled]: isDisabled,
   }
 
   return (

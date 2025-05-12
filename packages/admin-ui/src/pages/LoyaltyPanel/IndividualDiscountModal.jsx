@@ -12,7 +12,7 @@ import { NumberInput, Autocomplete } from 'src/components/inputs/formik'
 
 const initialValues = {
   customer: '',
-  discount: ''
+  discount: '',
 }
 
 const validationSchema = Yup.object().shape({
@@ -20,7 +20,7 @@ const validationSchema = Yup.object().shape({
   discount: Yup.number()
     .required('A discount rate is required!')
     .min(0, 'Discount rate should be a positive number!')
-    .max(100, 'Discount rate should have a maximum value of 100%!')
+    .max(100, 'Discount rate should have a maximum value of 100%!'),
 })
 
 const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
@@ -39,14 +39,14 @@ const IndividualDiscountModal = ({
   onClose,
   creationError,
   addDiscount,
-  customers
+  customers,
 }) => {
   const handleAddDiscount = (customer, discount) => {
     addDiscount({
       variables: {
         customerId: customer,
-        discount: parseInt(discount)
-      }
+        discount: parseInt(discount),
+      },
     })
     setShowModal(false)
   }
@@ -85,7 +85,7 @@ const IndividualDiscountModal = ({
                         it?.idCardData?.firstName && it?.idCardData?.lastName
                           ? ` `
                           : ``
-                      }${it?.idCardData?.lastName ?? ``} (${it.phone})`
+                      }${it?.idCardData?.lastName ?? ``} (${it.phone})`,
                     }))(customers)}
                     labelProp="display"
                     valueProp="code"

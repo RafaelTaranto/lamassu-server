@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import {
   SecretInput,
   TextInput,
-  Autocomplete
+  Autocomplete,
 } from 'src/components/inputs/formik'
 
 import { secretTest } from './helper'
@@ -16,7 +16,7 @@ export default {
     {
       code: 'apiSecret',
       display: 'API Secret',
-      component: SecretInput
+      component: SecretInput,
     },
     {
       code: 'environment',
@@ -25,23 +25,23 @@ export default {
       inputProps: {
         options: [
           { code: 'main', display: 'prod' },
-          { code: 'test', display: 'test' }
+          { code: 'test', display: 'test' },
         ],
         labelProp: 'display',
-        valueProp: 'code'
+        valueProp: 'code',
       },
-      face: true
+      face: true,
     },
     {
       code: 'endpoint',
       display: 'Endpoint',
-      component: TextInput
+      component: TextInput,
     },
     {
       code: 'walletId',
       display: 'Wallet ID',
-      component: SecretInput
-    }
+      component: SecretInput,
+    },
   ],
   getValidationSchema: account => {
     return Yup.object().shape({
@@ -56,7 +56,7 @@ export default {
         .required('The environment is required'),
       endpoint: Yup.string('The endpoint must be a string')
         .max(100, 'The endpoint is too long')
-        .required('The endpoint is required')
-    });
-  }
+        .required('The endpoint is required'),
+    })
+  },
 }

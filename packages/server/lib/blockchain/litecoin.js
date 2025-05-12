@@ -8,7 +8,7 @@ module.exports = { setup, updateCore }
 
 const coinRec = coinUtils.getCryptoCurrency('LTC')
 
-function setup (dataDir) {
+function setup(dataDir) {
   common.firewall([coinRec.defaultPort])
   const config = buildConfig()
   common.writeFile(path.resolve(dataDir, coinRec.configFile), config)
@@ -16,12 +16,17 @@ function setup (dataDir) {
   common.writeSupervisorConfig(coinRec, cmd)
 }
 
-function updateCore (coinRec, isCurrentlyRunning) {
+function updateCore(coinRec, isCurrentlyRunning) {
   common.logger.info('Updating Litecoin Core. This may take a minute...')
   common.es(`sudo supervisorctl stop litecoin`)
   common.es(`curl -#o /tmp/litecoin.tar.gz ${coinRec.url}`)
-  if (common.es(`sha256sum /tmp/litecoin.tar.gz | awk '{print $1}'`).trim() !== coinRec.urlHash) {
-    common.logger.info('Failed to update Litecoin Core: Package signature do not match!')
+  if (
+    common.es(`sha256sum /tmp/litecoin.tar.gz | awk '{print $1}'`).trim() !==
+    coinRec.urlHash
+  ) {
+    common.logger.info(
+      'Failed to update Litecoin Core: Package signature do not match!',
+    )
     return
   }
   common.es(`tar -xzf /tmp/litecoin.tar.gz -C /tmp/`)
@@ -31,25 +36,43 @@ function updateCore (coinRec, isCurrentlyRunning) {
   common.es(`rm -r /tmp/${coinRec.dir.replace('/bin', '')}`)
   common.es(`rm /tmp/litecoin.tar.gz`)
 
-  if (common.es(`grep "changetype=" /mnt/blockchains/litecoin/litecoin.conf || true`)) {
+  if (
+    common.es(
+      `grep "changetype=" /mnt/blockchains/litecoin/litecoin.conf || true`,
+    )
+  ) {
     common.logger.info(`changetype already defined, skipping...`)
   } else {
     common.logger.info(`Enabling bech32 change addresses in config file..`)
-    common.es(`echo "\nchangetype=bech32" >> /mnt/blockchains/litecoin/litecoin.conf`)
+    common.es(
+      `echo "\nchangetype=bech32" >> /mnt/blockchains/litecoin/litecoin.conf`,
+    )
   }
 
-  if (common.es(`grep "blockfilterindex=" /mnt/blockchains/litecoin/litecoin.conf || true`)) {
+  if (
+    common.es(
+      `grep "blockfilterindex=" /mnt/blockchains/litecoin/litecoin.conf || true`,
+    )
+  ) {
     common.logger.info(`blockfilterindex already defined, skipping...`)
   } else {
     common.logger.info(`Disabling blockfilterindex in config file..`)
-    common.es(`echo "\nblockfilterindex=0" >> /mnt/blockchains/litecoin/litecoin.conf`)
+    common.es(
+      `echo "\nblockfilterindex=0" >> /mnt/blockchains/litecoin/litecoin.conf`,
+    )
   }
 
-  if (common.es(`grep "peerblockfilters=" /mnt/blockchains/litecoin/litecoin.conf || true`)) {
+  if (
+    common.es(
+      `grep "peerblockfilters=" /mnt/blockchains/litecoin/litecoin.conf || true`,
+    )
+  ) {
     common.logger.info(`peerblockfilters already defined, skipping...`)
   } else {
     common.logger.info(`Disabling peerblockfilters in config file..`)
-    common.es(`echo "\npeerblockfilters=0" >> /mnt/blockchains/litecoin/litecoin.conf`)
+    common.es(
+      `echo "\npeerblockfilters=0" >> /mnt/blockchains/litecoin/litecoin.conf`,
+    )
   }
 
   if (isCurrentlyRunning) {
@@ -60,7 +83,7 @@ function updateCore (coinRec, isCurrentlyRunning) {
   common.logger.info('Litecoin Core is updated!')
 }
 
-function buildConfig () {
+function buildConfig() {
   return `rpcuser=lamassuserver
 rpcpassword=${common.randomPass()}
 dbcache=500

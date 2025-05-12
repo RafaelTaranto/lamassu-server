@@ -1,4 +1,4 @@
-import { useMutation, useQuery, gql } from "@apollo/client";
+import { useMutation, useQuery, gql } from '@apollo/client'
 import React, { useState, useEffect } from 'react'
 import { H4, Info3 } from 'src/components/typography'
 import FormRenderer from 'src/pages/Services/FormRenderer'
@@ -33,12 +33,12 @@ const SAVE_ACCOUNTS = gql`
 const options = [
   {
     code: 'enabled',
-    display: 'Yes, send notifications to my email'
+    display: 'Yes, send notifications to my email',
   },
   {
     code: 'disabled',
-    display: "No, don't send email notifications"
-  }
+    display: "No, don't send email notifications",
+  },
 ]
 
 const Mailgun = () => {
@@ -111,7 +111,9 @@ const Mailgun = () => {
             value={accounts.mailgun}
             save={saveAccount}
             elements={mailgunSchema.elements}
-            validationSchema={mailgunSchema.getValidationSchema(accounts.mailgun)}
+            validationSchema={mailgunSchema.getValidationSchema(
+              accounts.mailgun,
+            )}
             buttonLabel={'Save'}
           />
         </>

@@ -52,28 +52,28 @@ const NotificationCenter = ({
   hasUnreadProp,
   buttonCoords,
   popperRef,
-  refetchHasUnreadHeader
+  refetchHasUnreadHeader,
 }) => {
   const { data, loading } = useQuery(GET_NOTIFICATIONS, {
-    pollInterval: 60000
+    pollInterval: 60000,
   })
   const [xOffset, setXoffset] = useState(300)
 
   const [showingUnread, setShowingUnread] = useState(false)
   const machines = R.compose(
     R.map(R.prop('name')),
-    R.indexBy(R.prop('deviceId'))
+    R.indexBy(R.prop('deviceId')),
   )(R.path(['machines'])(data) ?? [])
   const notifications = R.path(['notifications'])(data) ?? []
   const [hasUnread, setHasUnread] = useState(hasUnreadProp)
 
   const [toggleClearNotification] = useMutation(TOGGLE_CLEAR_NOTIFICATION, {
     onError: () => console.error('Error while clearing notification'),
-    refetchQueries: () => ['getNotifications']
+    refetchQueries: () => ['getNotifications'],
   })
   const [clearAllNotifications] = useMutation(CLEAR_ALL_NOTIFICATIONS, {
     onError: () => console.error('Error while clearing all notifications'),
-    refetchQueries: () => ['getNotifications']
+    refetchQueries: () => ['getNotifications'],
   })
 
   useEffect(() => {
@@ -103,7 +103,7 @@ const NotificationCenter = ({
           valid={n.valid}
           toggleClear={() =>
             toggleClearNotification({
-              variables: { id: n.id, read: !n.read }
+              variables: { id: n.id, read: !n.read },
             })
           }
         />
@@ -121,7 +121,7 @@ const NotificationCenter = ({
             className={classes.notificationIcon}
             style={{
               top: buttonCoords?.y ?? 0,
-              left: buttonCoords?.x ? buttonCoords.x - xOffset : 0
+              left: buttonCoords?.x ? buttonCoords.x - xOffset : 0,
             }}>
             <NotificationIconZodiac />
             {hasUnread && <div className={classes.hasUnread} />}

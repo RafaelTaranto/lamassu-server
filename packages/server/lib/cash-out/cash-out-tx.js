@@ -20,7 +20,7 @@ module.exports = {
   monitorLiveIncoming,
   monitorStaleIncoming,
   monitorUnnotified,
-  cancel
+  cancel,
 }
 
 const STALE_INCOMING_TX_AGE = T.day
@@ -31,38 +31,40 @@ const INSUFFICIENT_FUNDS_CODE = 570
 
 const toObj = helper.toObj
 
-function selfPost (tx, pi) {
+function selfPost(tx, pi) {
   return post(tx, pi, false)
 }
 
-function post (tx, pi, fromClient = true) {
+function post(tx, pi, fromClient = true) {
   logger.silly('Updating cashout -- tx:', JSON.stringify(tx))
   logger.silly('Updating cashout -- fromClient:', JSON.stringify(fromClient))
-  return cashOutAtomic.atomic(tx, pi, fromClient)
-    .then(txVector => {
-      const [, newTx, justAuthorized] = txVector
-      return postProcess(txVector, justAuthorized, pi)
-        .then(changes => cashOutLow.update(db, newTx, changes))
-    })
+  return cashOutAtomic.atomic(tx, pi, fromClient).then(txVector => {
+    const [, newTx, justAuthorized] = txVector
+    return postProcess(txVector, justAuthorized, pi).then(changes =>
+      cashOutLow.update(db, newTx, changes),
+    )
+  })
 }
 
-function postProcess (txVector, justAuthorized, pi) {
+function postProcess(txVector, justAuthorized, pi) {
   const [oldTx, newTx] = txVector
 
   if (justAuthorized) {
     pi.sell(newTx)
-    pi.notifyOperator(newTx, { isRedemption: false })
-      .catch((err) => logger.error('Failure sending transaction notification', err))
+    pi.notifyOperator(newTx, { isRedemption: false }).catch(err =>
+      logger.error('Failure sending transaction notification', err),
+    )
   }
 
   if ((newTx.dispense && !oldTx.dispense) || (newTx.redeem && !oldTx.redeem)) {
-    return pi.buildAvailableUnits(newTx.id)
+    return pi
+      .buildAvailableUnits(newTx.id)
       .then(units => {
         units = _.concat(units.cassettes, units.recyclers)
         logger.silly('Computing bills to dispense:', {
           txId: newTx.id,
           units: units,
-          fiat: newTx.fiat
+          fiat: newTx.fiat,
         })
         const bills = billMath.makeChange(units, newTx.fiat)
         logger.silly('Bills to dispense:', JSON.stringify(bills))
@@ -73,27 +75,38 @@ function postProcess (txVector, justAuthorized, pi) {
       .then(bills => {
         const rec = {}
 
-        _.forEach(it => {
-          const suffix = _.snakeCase(bills[it].name.replace(/cassette/gi, ''))
-          rec[`provisioned_${suffix}`] = bills[it].provisioned
-          rec[`denomination_${suffix}`] = bills[it].denomination
-        }, _.times(_.identity(), _.size(bills)))
+        _.forEach(
+          it => {
+            const suffix = _.snakeCase(bills[it].name.replace(/cassette/gi, ''))
+            rec[`provisioned_${suffix}`] = bills[it].provisioned
+            rec[`denomination_${suffix}`] = bills[it].denomination
+          },
+          _.times(_.identity(), _.size(bills)),
+        )
 
-        return cashOutActions.logAction(db, 'provisionNotes', rec, newTx)
+        return cashOutActions
+          .logAction(db, 'provisionNotes', rec, newTx)
           .then(_.constant({ bills }))
       })
       .catch(err => {
-        pi.notifyOperator(newTx, { error: err.message, isRedemption: true })
-          .catch((err) => logger.error('Failure sending transaction notification', err))
-        return cashOutActions.logError(db, 'provisionNotesError', err, newTx)
-          .then(() => { throw err })
+        pi.notifyOperator(newTx, {
+          error: err.message,
+          isRedemption: true,
+        }).catch(err =>
+          logger.error('Failure sending transaction notification', err),
+        )
+        return cashOutActions
+          .logError(db, 'provisionNotesError', err, newTx)
+          .then(() => {
+            throw err
+          })
       })
   }
 
   return Promise.resolve({})
 }
 
-function fetchOpenTxs (statuses, fromAge, toAge) {
+function fetchOpenTxs(statuses, fromAge, toAge) {
   const sql = `select *
   from cash_out_txs
   where ((extract(epoch from (now() - created))) * 1000)>$1
@@ -103,20 +116,27 @@ function fetchOpenTxs (statuses, fromAge, toAge) {
 
   const statusClause = _.map(pgp.as.text, statuses).join(',')
 
-  return db.any(sql, [fromAge, toAge, statusClause])
+  return db
+    .any(sql, [fromAge, toAge, statusClause])
     .then(rows => rows.map(toObj))
 }
 
-function processTxStatus (tx, settings) {
+function processTxStatus(tx, settings) {
   const pi = plugins(settings, tx.deviceId)
 
-  return pi.getStatus(tx)
-    .then(res => _.assign(tx, { receivedCryptoAtoms: res.receivedCryptoAtoms, status: res.status }))
+  return pi
+    .getStatus(tx)
+    .then(res =>
+      _.assign(tx, {
+        receivedCryptoAtoms: res.receivedCryptoAtoms,
+        status: res.status,
+      }),
+    )
     .then(_tx => getWalletScore(_tx, pi))
     .then(_tx => selfPost(_tx, pi))
 }
 
-function getWalletScore (tx, pi) {
+function getWalletScore(tx, pi) {
   const statuses = ['published', 'authorized', 'confirmed', 'insufficientFunds']
 
   if (!_.includes(tx.status, statuses) || !_.isNil(tx.walletScore)) {
@@ -124,40 +144,54 @@ function getWalletScore (tx, pi) {
   }
 
   // Transaction shows up on the blockchain, we can request the sender address
-  return pi.isWalletScoringEnabled(tx)
-    .then(isEnabled => {
-      if (!isEnabled) return tx
-      return pi.rateTransaction(tx)
-        .then(res =>
-          res.isValid
-            ? _.assign(tx, { walletScore: res.score })
-            : _.assign(tx, {
+  return pi.isWalletScoringEnabled(tx).then(isEnabled => {
+    if (!isEnabled) return tx
+    return pi
+      .rateTransaction(tx)
+      .then(res =>
+        res.isValid
+          ? _.assign(tx, { walletScore: res.score })
+          : _.assign(tx, {
               walletScore: res.score,
               error: 'Chain analysis score is above defined threshold',
               errorCode: 'scoreThresholdReached',
-              dispense: true
-            })
-        )
-        .catch(error => _.assign(tx, {
+              dispense: true,
+            }),
+      )
+      .catch(error =>
+        _.assign(tx, {
           walletScore: 10,
           error: `Failure getting address score: ${error.message}`,
           errorCode: 'walletScoringError',
-          dispense: true
-        }))
-    })
+          dispense: true,
+        }),
+      )
+  })
 }
 
-function monitorLiveIncoming (settings) {
+function monitorLiveIncoming(settings) {
   const statuses = ['notSeen', 'published', 'insufficientFunds']
   return monitorIncoming(settings, statuses, 0, STALE_LIVE_INCOMING_TX_AGE)
 }
 
-function monitorStaleIncoming (settings) {
-  const statuses = ['notSeen', 'published', 'authorized', 'instant', 'rejected', 'insufficientFunds']
-  return monitorIncoming(settings, statuses, STALE_LIVE_INCOMING_TX_AGE, STALE_INCOMING_TX_AGE)
+function monitorStaleIncoming(settings) {
+  const statuses = [
+    'notSeen',
+    'published',
+    'authorized',
+    'instant',
+    'rejected',
+    'insufficientFunds',
+  ]
+  return monitorIncoming(
+    settings,
+    statuses,
+    STALE_LIVE_INCOMING_TX_AGE,
+    STALE_INCOMING_TX_AGE,
+  )
 }
 
-function monitorIncoming (settings, statuses, fromAge, toAge) {
+function monitorIncoming(settings, statuses, fromAge, toAge) {
   return fetchOpenTxs(statuses, fromAge, toAge)
     .then(txs => pEachSeries(txs, tx => processTxStatus(tx, settings)))
     .catch(err => {
@@ -169,7 +203,7 @@ function monitorIncoming (settings, statuses, fromAge, toAge) {
     })
 }
 
-function monitorUnnotified (settings) {
+function monitorUnnotified(settings) {
   const sql = `select *
   from cash_out_txs
   where ((extract(epoch from (now() - created))) * 1000)<$1
@@ -179,23 +213,26 @@ function monitorUnnotified (settings) {
   and (redeem=$4 or ((extract(epoch from (now() - created))) * 1000)>$5)`
 
   const notify = tx => plugins(settings, tx.deviceId).notifyConfirmation(tx)
-  return db.any(sql, [MAX_NOTIFY_AGE, false, false, true, MIN_NOTIFY_AGE])
+  return db
+    .any(sql, [MAX_NOTIFY_AGE, false, false, true, MIN_NOTIFY_AGE])
     .then(rows => _.map(toObj, rows))
     .then(txs => Promise.all(txs.map(notify)))
     .catch(logger.error)
 }
 
-function cancel (txId) {
+function cancel(txId) {
   const updateRec = {
     error: 'Operator cancel',
     error_code: 'operatorCancel',
-    dispense: true
+    dispense: true,
   }
 
   return Promise.resolve()
     .then(() => {
-      return pgp.helpers.update(updateRec, null, 'cash_out_txs') +
-      pgp.as.format(' where id=$1', [txId])
+      return (
+        pgp.helpers.update(updateRec, null, 'cash_out_txs') +
+        pgp.as.format(' where id=$1', [txId])
+      )
     })
     .then(sql => db.result(sql, false))
     .then(res => {

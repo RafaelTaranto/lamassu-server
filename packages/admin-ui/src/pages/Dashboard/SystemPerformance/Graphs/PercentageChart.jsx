@@ -12,7 +12,7 @@ const PercentageChart = ({ cashIn, cashOut }) => {
 
   const percentageClasses = {
     'h-35 rounded-sm flex items-center justify-center': true,
-    'min-w-2 rounded-xs': value < 5 && value > 0
+    'min-w-2 rounded-xs': value < 5 && value > 0,
   }
 
   return (

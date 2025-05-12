@@ -29,7 +29,7 @@ const SecretInput = memo(
         placeholder={isPasswordFilled ? placeholder : ''}
       />
     )
-  }
+  },
 )
 
 export default SecretInput

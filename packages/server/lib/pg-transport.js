@@ -6,7 +6,7 @@ const eventBus = require('./event-bus')
 // of the base functionality and `.exceptions.handle()`.
 //
 module.exports = class CustomTransport extends Transport {
-  constructor (opts) {
+  constructor(opts) {
     super(opts)
 
     //
@@ -24,7 +24,7 @@ module.exports = class CustomTransport extends Transport {
     this.connectionString = opts.connectionString
   }
 
-  log (level, message, meta, callback) {
+  log(level, message, meta, callback) {
     if (!callback) callback = () => {}
 
     setImmediate(() => {
@@ -37,7 +37,7 @@ module.exports = class CustomTransport extends Transport {
     callback()
   }
 
-  logException (msg, meta, callback) {
+  logException(msg, meta, callback) {
     this.log('error', msg, meta, callback)
   }
 }

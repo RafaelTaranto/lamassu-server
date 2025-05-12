@@ -7,55 +7,65 @@ const ticker = require('../../ticker')
 const txBatching = require('../../tx-batching')
 const { utils: coinUtils } = require('@lamassu/coins')
 
-function computeCrypto (cryptoCode, _balance) {
+function computeCrypto(cryptoCode, _balance) {
   const cryptoRec = coinUtils.getCryptoCurrency(cryptoCode)
   const unitScale = cryptoRec.unitScale
 
   return new BN(_balance).shiftedBy(-unitScale).decimalPlaces(5)
 }
 
-function computeFiat (rate, cryptoCode, _balance) {
+function computeFiat(rate, cryptoCode, _balance) {
   const cryptoRec = coinUtils.getCryptoCurrency(cryptoCode)
   const unitScale = cryptoRec.unitScale
 
   return new BN(_balance).shiftedBy(-unitScale).times(rate).decimalPlaces(5)
 }
 
-function getSingleCoinFunding (settings, fiatCode, cryptoCode) {
+function getSingleCoinFunding(settings, fiatCode, cryptoCode) {
   const promises = [
     wallet.newFunding(settings, cryptoCode),
     ticker.getRates(settings, fiatCode, cryptoCode),
-    txBatching.getOpenBatchCryptoValue(cryptoCode)
+    txBatching.getOpenBatchCryptoValue(cryptoCode),
   ]
 
-  return Promise.all(promises)
-    .then(([fundingRec, ratesRec, batchRec]) => {
-      const rates = ratesRec.rates
-      const rate = (rates.ask.plus(rates.bid)).div(2)
-      const fundingConfirmedBalance = fundingRec.fundingConfirmedBalance
-      const fiatConfirmedBalance = computeFiat(rate, cryptoCode, fundingConfirmedBalance)
-      const pending = fundingRec.fundingPendingBalance.minus(batchRec)
-      const fiatPending = computeFiat(rate, cryptoCode, pending)
-      const fundingAddress = fundingRec.fundingAddress
-      const fundingAddressUrl = coinUtils.buildUrl(cryptoCode, fundingAddress)
+  return Promise.all(promises).then(([fundingRec, ratesRec, batchRec]) => {
+    const rates = ratesRec.rates
+    const rate = rates.ask.plus(rates.bid).div(2)
+    const fundingConfirmedBalance = fundingRec.fundingConfirmedBalance
+    const fiatConfirmedBalance = computeFiat(
+      rate,
+      cryptoCode,
+      fundingConfirmedBalance,
+    )
+    const pending = fundingRec.fundingPendingBalance.minus(batchRec)
+    const fiatPending = computeFiat(rate, cryptoCode, pending)
+    const fundingAddress = fundingRec.fundingAddress
+    const fundingAddressUrl = coinUtils.buildUrl(cryptoCode, fundingAddress)
 
-      return {
+    return {
+      cryptoCode,
+      fundingAddress,
+      fundingAddressUrl,
+      confirmedBalance: computeCrypto(
         cryptoCode,
-        fundingAddress,
-        fundingAddressUrl,
-        confirmedBalance: computeCrypto(cryptoCode, fundingConfirmedBalance).toFormat(5),
-        pending: computeCrypto(cryptoCode, pending).toFormat(5),
-        fiatConfirmedBalance: fiatConfirmedBalance,
-        fiatPending: fiatPending,
-        fiatCode
-      }
-    })
+        fundingConfirmedBalance,
+      ).toFormat(5),
+      pending: computeCrypto(cryptoCode, pending).toFormat(5),
+      fiatConfirmedBalance: fiatConfirmedBalance,
+      fiatPending: fiatPending,
+      fiatCode,
+    }
+  })
 }
 
 // Promise.allSettled not running on current version of node
-const reflect = p => p.then(value => ({ value, status: 'fulfilled' }), error => ({ error: error.toString(), status: 'rejected' }))
+const reflect = p =>
+  p.then(
+    value => ({ value, status: 'fulfilled' }),
+    error => ({ error: error.toString(), status: 'rejected' }),
+  )
 
-function getFunding () {
+function getFunding() {
   return settingsLoader.loadLatest().then(settings => {
     const cryptoCodes = configManager.getAllCryptoCurrencies(settings.config)
     const fiatCode = configManager.getGlobalLocale(settings.config).fiatCurrency
@@ -63,12 +73,15 @@ function getFunding () {
     const cryptoCurrencies = coinUtils.cryptoCurrencies()
     const cryptoDisplays = _.filter(pareCoins, cryptoCurrencies)
 
-    const promises = cryptoDisplays.map(it => getSingleCoinFunding(settings, fiatCode, it.cryptoCode))
-    return Promise.all(promises.map(reflect))
-      .then((response) => {
-        const mapped = response.map(it => _.merge({ errorMsg: it.error }, it.value))
-        return _.toArray(_.merge(mapped, cryptoDisplays))
-      })
+    const promises = cryptoDisplays.map(it =>
+      getSingleCoinFunding(settings, fiatCode, it.cryptoCode),
+    )
+    return Promise.all(promises.map(reflect)).then(response => {
+      const mapped = response.map(it =>
+        _.merge({ errorMsg: it.error }, it.value),
+      )
+      return _.toArray(_.merge(mapped, cryptoDisplays))
+    })
   })
 }
 

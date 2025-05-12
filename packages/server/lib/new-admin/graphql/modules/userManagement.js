@@ -14,11 +14,16 @@ const credentials = require('../../../hardware-credentials')
 const REMEMBER_ME_AGE = 90 * T.day
 
 const authenticateUser = (username, password) => {
-  return users.getUserByUsername(username)
+  return users
+    .getUserByUsername(username)
     .then(user => {
       const hashedPassword = user.password
-      if (!hashedPassword || !user.enabled) throw new authErrors.InvalidCredentialsError()
-      return Promise.all([argon2.verify(hashedPassword, password), hashedPassword])
+      if (!hashedPassword || !user.enabled)
+        throw new authErrors.InvalidCredentialsError()
+      return Promise.all([
+        argon2.verify(hashedPassword, password),
+        hashedPassword,
+      ])
     })
     .then(([isMatch, hashedPassword]) => {
       if (!isMatch) throw new authErrors.InvalidCredentialsError()
@@ -32,7 +37,9 @@ const authenticateUser = (username, password) => {
 
 const destroySessionIfSameUser = (context, user) => {
   const sessionUser = getUserFromCookie(context)
-  if (sessionUser && user.id === sessionUser.id) { context.req.session.destroy() }
+  if (sessionUser && user.id === sessionUser.id) {
+    context.req.session.destroy()
+  }
 }
 
 const destroySessionIfBeingUsed = (sessID, context) => {
@@ -56,15 +63,13 @@ const initializeSession = (context, user, rememberMe) => {
 }
 
 const executeProtectedAction = (code, id, context, action) => {
-  return users.getUserById(id)
-    .then(user => {
-      if (user.role !== 'superuser') {
-        return action()
-      }
+  return users.getUserById(id).then(user => {
+    if (user.role !== 'superuser') {
+      return action()
+    }
 
-      return confirm2FA(code, context)
-        .then(() => action())
-    })
+    return confirm2FA(code, context).then(() => action())
+  })
 }
 
 const getUserData = context => {
@@ -79,10 +84,18 @@ const get2FASecret = (username, password) => {
   return authenticateUser(username, password)
     .then(user => {
       const secret = otplib.authenticator.generateSecret()
-      const otpauth = otplib.authenticator.keyuri(user.username, constants.AUTHENTICATOR_ISSUER_ENTITY, secret)
-      return Promise.all([users.saveTemp2FASecret(user.id, secret), secret, otpauth])
+      const otpauth = otplib.authenticator.keyuri(
+        user.username,
+        constants.AUTHENTICATOR_ISSUER_ENTITY,
+        secret,
+      )
+      return Promise.all([
+        users.saveTemp2FASecret(user.id, secret),
+        secret,
+        otpauth,
+      ])
     })
-    .then(([_, secret, otpauth]) => {
+    .then(([, secret, otpauth]) => {
       return { secret, otpauth }
     })
 }
@@ -103,35 +116,43 @@ const confirm2FA = (token, context) => {
 
 const validateRegisterLink = token => {
   if (!token) throw new authErrors.InvalidUrlError()
-  return users.validateUserRegistrationToken(token)
-    .then(r => {
-      if (!r.success) throw new authErrors.InvalidUrlError()
-      return { username: r.username, role: r.role }
-    })
+  return users.validateUserRegistrationToken(token).then(r => {
+    if (!r.success) throw new authErrors.InvalidUrlError()
+    return { username: r.username, role: r.role }
+  })
 }
 
 const validateResetPasswordLink = token => {
   if (!token) throw new authErrors.InvalidUrlError()
-  return users.validateAuthToken(token, 'reset_password')
-    .then(r => {
-      if (!r.success) throw new authErrors.InvalidUrlError()
-      return { id: r.userID }
-    })
+  return users.validateAuthToken(token, 'reset_password').then(r => {
+    if (!r.success) throw new authErrors.InvalidUrlError()
+    return { id: r.userID }
+  })
 }
 
 const validateReset2FALink = token => {
   if (!token) throw new authErrors.InvalidUrlError()
-  return users.validateAuthToken(token, 'reset_twofa')
+  return users
+    .validateAuthToken(token, 'reset_twofa')
     .then(r => {
       if (!r.success) throw new authErrors.InvalidUrlError()
       return users.getUserById(r.userID)
     })
     .then(user => {
       const secret = otplib.authenticator.generateSecret()
-      const otpauth = otplib.authenticator.keyuri(user.username, constants.AUTHENTICATOR_ISSUER_ENTITY, secret)
-      return Promise.all([users.saveTemp2FASecret(user.id, secret), user, secret, otpauth])
+      const otpauth = otplib.authenticator.keyuri(
+        user.username,
+        constants.AUTHENTICATOR_ISSUER_ENTITY,
+        secret,
+      )
+      return Promise.all([
+        users.saveTemp2FASecret(user.id, secret),
+        user,
+        secret,
+        otpauth,
+      ])
     })
-    .then(([_, user, secret, otpauth]) => {
+    .then(([, user, secret, otpauth]) => {
       return { user_id: user.id, secret, otpauth }
     })
 }
@@ -144,7 +165,10 @@ const deleteSession = (sessionID, context) => {
 const login = (username, password) => {
   return authenticateUser(username, password)
     .then(user => {
-      return Promise.all([credentials.getHardwareCredentialsByUserId(user.id), user.twofa_code])
+      return Promise.all([
+        credentials.getHardwareCredentialsByUserId(user.id),
+        user.twofa_code,
+      ])
     })
     .then(([devices, twoFASecret]) => {
       if (!_.isEmpty(devices)) return 'FIDO'
@@ -153,21 +177,32 @@ const login = (username, password) => {
 }
 
 const input2FA = (username, password, rememberMe, code, context) => {
-  return authenticateUser(username, password)
-    .then(user => {
-      const secret = user.twofa_code
-      const isCodeValid = otplib.authenticator.verify({ token: code, secret: secret })
-      if (!isCodeValid) throw new authErrors.InvalidTwoFactorError()
-
-      initializeSession(context, user, rememberMe)
-      return true
+  return authenticateUser(username, password).then(user => {
+    const secret = user.twofa_code
+    const isCodeValid = otplib.authenticator.verify({
+      token: code,
+      secret: secret,
     })
+    if (!isCodeValid) throw new authErrors.InvalidTwoFactorError()
+
+    initializeSession(context, user, rememberMe)
+    return true
+  })
 }
 
-const setup2FA = (username, password, rememberMe, codeConfirmation, context) => {
+const setup2FA = (
+  username,
+  password,
+  rememberMe,
+  codeConfirmation,
+  context,
+) => {
   return authenticateUser(username, password)
     .then(user => {
-      const isCodeValid = otplib.authenticator.verify({ token: codeConfirmation, secret: user.temp_twofa_code })
+      const isCodeValid = otplib.authenticator.verify({
+        token: codeConfirmation,
+        secret: user.temp_twofa_code,
+      })
       if (!isCodeValid) throw new authErrors.InvalidTwoFactorError()
 
       initializeSession(context, user, rememberMe)
@@ -202,24 +237,23 @@ const createReset2FAToken = (code, userID, context) => {
 }
 
 const createRegisterToken = (username, role) => {
-  return users.getUserByUsername(username)
-    .then(user => {
-      if (user) throw new authErrors.UserAlreadyExistsError()
+  return users.getUserByUsername(username).then(user => {
+    if (user) throw new authErrors.UserAlreadyExistsError()
 
-      return users.createUserRegistrationToken(username, role)
-    })
+    return users.createUserRegistrationToken(username, role)
+  })
 }
 
 const register = (token, username, password, role) => {
-  return users.getUserByUsername(username)
-    .then(user => {
-      if (user) throw new authErrors.UserAlreadyExistsError()
-      return users.register(token, username, password, role).then(() => true)
-    })
+  return users.getUserByUsername(username).then(user => {
+    if (user) throw new authErrors.UserAlreadyExistsError()
+    return users.register(token, username, password, role).then(() => true)
+  })
 }
 
 const resetPassword = (token, userID, newPassword, context) => {
-  return users.getUserById(userID)
+  return users
+    .getUserById(userID)
     .then(user => {
       destroySessionIfSameUser(context, user)
       return users.updatePassword(token, user.id, newPassword)
@@ -228,9 +262,13 @@ const resetPassword = (token, userID, newPassword, context) => {
 }
 
 const reset2FA = (token, userID, code, context) => {
-  return users.getUserById(userID)
+  return users
+    .getUserById(userID)
     .then(user => {
-      const isCodeValid = otplib.authenticator.verify({ token: code, secret: user.temp_twofa_code })
+      const isCodeValid = otplib.authenticator.verify({
+        token: code,
+        secret: user.temp_twofa_code,
+      })
       if (!isCodeValid) throw new authErrors.InvalidTwoFactorError()
 
       destroySessionIfSameUser(context, user)
@@ -240,7 +278,10 @@ const reset2FA = (token, userID, code, context) => {
 }
 
 const getToken = context => {
-  if (_.isNil(context.req.cookies['lamassu_sid']) || _.isNil(context.req.session.user.id))
+  if (
+    _.isNil(context.req.cookies['lamassu_sid']) ||
+    _.isNil(context.req.session.user.id)
+  )
     throw new authErrors.AuthenticationError('Authentication failed')
 
   return context.req.session.user.id
@@ -267,5 +308,5 @@ module.exports = {
   register,
   resetPassword,
   reset2FA,
-  getToken
+  getToken,
 }

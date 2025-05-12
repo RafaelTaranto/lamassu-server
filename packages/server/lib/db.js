@@ -16,9 +16,8 @@ const pgp = Pgp({
     else if (e.query) {
       logger.error(e.query)
       e.params && logger.error(e.params)
-    }
-    else logger.error(err)
-  }
+    } else logger.error(err)
+  },
 })
 
 const db = pgp(PSQL_URL)

@@ -39,7 +39,7 @@ const RightSide = () => {
         <CollapsibleCard
           className={classnames({
             'flex-[0.1]': alertsSize === cardState.SHRUNK,
-            'flex-[0.9]': alertsSize === cardState.EXPANDED
+            'flex-[0.9]': alertsSize === cardState.EXPANDED,
           })}
           state={alertsSize}
           shrunkComponent={
@@ -62,7 +62,7 @@ const RightSide = () => {
           className={classnames({
             'flex-[0.1]': systemStatusSize === cardState.SHRUNK,
             'flex-1': systemStatusSize === cardState.DEFAULT,
-            'flex-[0.9]': systemStatusSize === cardState.EXPANDED
+            'flex-[0.9]': systemStatusSize === cardState.EXPANDED,
           })}
           state={systemStatusSize}
           shrunkComponent={

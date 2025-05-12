@@ -9,7 +9,6 @@ import { P } from 'src/components/typography'
 import TextInput from './TextInput'
 
 const Autocomplete = ({
-  optionsLimit = 5, // set limit = null for no limit
   limit,
   options,
   label,
@@ -17,7 +16,6 @@ const Autocomplete = ({
   multiple,
   onChange,
   labelProp,
-  shouldStayOpen,
   value: outsideValue,
   error,
   fullWidth,
@@ -61,11 +59,11 @@ const Autocomplete = ({
   const filterOptions = (array, { inputValue }) =>
     R.union(
       R.isEmpty(inputValue) ? valueArray() : [],
-      filter(array, inputValue)
+      filter(array, inputValue),
     ).slice(
       0,
       R.defaultTo(undefined)(limit) &&
-        Math.max(limit, R.isEmpty(inputValue) ? valueArray().length : 0)
+        Math.max(limit, R.isEmpty(inputValue) ? valueArray().length : 0),
     )
 
   return (
@@ -105,7 +103,7 @@ const Autocomplete = ({
           'flex w-4 h-4 rounded-md': true,
           'bg-spring4': props.warning === 'clean',
           'bg-orange-yellow': props.warning === 'partial',
-          'bg-tomato': props.warning === 'important'
+          'bg-tomato': props.warning === 'important',
         }
 
         const hoverableElement = <div className={classnames(className)} />
@@ -122,9 +120,10 @@ const Autocomplete = ({
         )
       }}
       slotProps={{
-        chip: { onDelete: null }
-      }} />
-  );
+        chip: { onDelete: null },
+      }}
+    />
+  )
 }
 
 export default Autocomplete

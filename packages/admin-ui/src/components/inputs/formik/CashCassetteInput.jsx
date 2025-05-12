@@ -33,7 +33,7 @@ const CashCassetteInput = memo(
         />
       </div>
     )
-  }
+  },
 )
 
 export default CashCassetteInput

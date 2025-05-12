@@ -82,13 +82,13 @@ const TOOLTIPS = {
   cashOutDispenseReady: ``,
   smsReceipt:
     formatContent(`The contents of this notice will be appended to the end of the SMS receipt sent, and not replace it.\n
-  To edit the contents of the SMS receipt, please go to the 'Receipt' tab`)
+  To edit the contents of the SMS receipt, please go to the 'Receipt' tab`),
 }
 
 const SMSPreview = ({ sms, coords, timezone }) => {
   const matches = {
     '#code': 123,
-    '#timestamp': formatDate(new Date(), timezone, 'HH:mm')
+    '#timestamp': formatDate(new Date(), timezone, 'HH:mm'),
   }
 
   return (
@@ -128,17 +128,17 @@ const SMSNotices = () => {
 
   const [editMessage] = useMutation(EDIT_SMS_NOTICE, {
     onError: ({ msg }) => setErrorMsg(msg),
-    refetchQueries: () => ['SMSNotices']
+    refetchQueries: () => ['SMSNotices'],
   })
 
   const [enableMessage] = useMutation(ENABLE_SMS_NOTICE, {
     onError: ({ msg }) => setErrorMsg(msg),
-    refetchQueries: () => ['SMSNotices']
+    refetchQueries: () => ['SMSNotices'],
   })
 
   const [disableMessage] = useMutation(DISABLE_SMS_NOTICE, {
     onError: ({ msg }) => setErrorMsg(msg),
-    refetchQueries: () => ['SMSNotices']
+    refetchQueries: () => ['SMSNotices'],
   })
 
   const loading = messagesLoading
@@ -164,7 +164,7 @@ const SMSNotices = () => {
           </div>
         ) : (
           R.prop('messageName', it)
-        )
+        ),
     },
     {
       header: 'Edit',
@@ -182,7 +182,7 @@ const SMSNotices = () => {
             <EditIcon />
           </SvgIcon>
         </IconButton>
-      )
+      ),
     },
     {
       header: 'Enable',
@@ -199,7 +199,7 @@ const SMSNotices = () => {
           }}
           checked={it.enabled}
         />
-      )
+      ),
     },
     {
       header: '',
@@ -215,7 +215,7 @@ const SMSNotices = () => {
               y:
                 window.innerHeight -
                 5 -
-                e.currentTarget.getBoundingClientRect().bottom
+                e.currentTarget.getBoundingClientRect().bottom,
             })
             R.equals(selectedSMS, it)
               ? setPreviewOpen(!previewOpen)
@@ -229,8 +229,8 @@ const SMSNotices = () => {
             )}
           </SvgIcon>
         </IconButton>
-      )
-    }
+      ),
+    },
   ]
 
   return (

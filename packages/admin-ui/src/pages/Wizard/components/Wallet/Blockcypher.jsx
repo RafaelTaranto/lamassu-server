@@ -1,4 +1,4 @@
-import { useMutation, useQuery, gql } from "@apollo/client";
+import { useMutation, useQuery, gql } from '@apollo/client'
 import React, { useState } from 'react'
 import { P, H4 } from 'src/components/typography'
 import FormRenderer from 'src/pages/Services/FormRenderer'
@@ -23,18 +23,18 @@ const SAVE_ACCOUNTS = gql`
 const options = [
   {
     code: 'enable',
-    display: 'I will enable cash-out'
+    display: 'I will enable cash-out',
   },
   {
     code: 'disable',
-    display: "I won't enable cash-out"
-  }
+    display: "I won't enable cash-out",
+  },
 ]
 
 const Blockcypher = ({ addData }) => {
   const { data } = useQuery(GET_CONFIG)
   const [saveConfig] = useMutation(SAVE_ACCOUNTS, {
-    onCompleted: () => addData({ zeroConf: 'blockcypher' })
+    onCompleted: () => addData({ zeroConf: 'blockcypher' }),
   })
 
   const [selected, setSelected] = useState(null)

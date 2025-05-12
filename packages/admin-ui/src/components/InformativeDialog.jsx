@@ -7,7 +7,7 @@ import { H1 } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 
 export const InformativeDialog = memo(
-  ({ title = '', open, onDissmised, disabled = false, data, ...props }) => {
+  ({ title = '', open, onDissmised, data, ...props }) => {
     const innerOnClose = () => {
       onDissmised()
     }
@@ -16,8 +16,8 @@ export const InformativeDialog = memo(
       <Dialog
         PaperProps={{
           style: {
-            borderRadius: 8
-          }
+            borderRadius: 8,
+          },
         }}
         fullWidth
         open={open}
@@ -35,5 +35,5 @@ export const InformativeDialog = memo(
         <DialogContent>{data}</DialogContent>
       </Dialog>
     )
-  }
+  },
 )

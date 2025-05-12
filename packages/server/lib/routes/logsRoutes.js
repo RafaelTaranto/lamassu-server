@@ -6,15 +6,17 @@ const logs = require('../logs')
 
 const THROTTLE_LOGS_QUERY = 30 * 1000
 
-function getLastSeen (req, res, next) {
+function getLastSeen(req, res, next) {
   const deviceId = req.deviceId
   const timestamp = Date.now()
-  const shouldTrigger = !state.canGetLastSeenMap[deviceId] ||
+  const shouldTrigger =
+    !state.canGetLastSeenMap[deviceId] ||
     timestamp - state.canGetLastSeenMap[deviceId] >= THROTTLE_LOGS_QUERY
 
   if (shouldTrigger) {
     state.canGetLastSeenMap[deviceId] = timestamp
-    return logs.getLastSeen(deviceId)
+    return logs
+      .getLastSeen(deviceId)
       .then(r => res.json(r))
       .catch(next)
   }
@@ -22,8 +24,9 @@ function getLastSeen (req, res, next) {
   return res.status(408).json({})
 }
 
-function updateLogs (req, res, next) {
-  return logs.update(req.deviceId, req.body.logs)
+function updateLogs(req, res, next) {
+  return logs
+    .update(req.deviceId, req.body.logs)
     .then(status => res.json({ success: status }))
     .catch(next)
 }

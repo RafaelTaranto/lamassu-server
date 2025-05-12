@@ -21,7 +21,7 @@ const Wizard = ({ machine, locale, onClose, save, error }) => {
   const LAST_STEP = machine.numberOfCassettes + machine.numberOfRecyclers + 1
   const [{ step, config }, setState] = useState({
     step: 0,
-    config: { active: true }
+    config: { active: true },
   })
 
   const options = getBillOptions(locale, denominations)
@@ -34,8 +34,8 @@ const Wizard = ({ machine, locale, onClose, save, error }) => {
       return save(
         toNamespace(
           machine.deviceId,
-          DenominationsSchema.cast(config, { assert: false })
-        )
+          DenominationsSchema.cast(config, { assert: false }),
+        ),
       )
     }
 
@@ -43,7 +43,7 @@ const Wizard = ({ machine, locale, onClose, save, error }) => {
 
     setState({
       step: step + 1,
-      config: newConfig
+      config: newConfig,
     })
   }
 
@@ -57,10 +57,10 @@ const Wizard = ({ machine, locale, onClose, save, error }) => {
         inputProps: {
           options: options,
           labelProp: 'display',
-          valueProp: 'code'
-        }
+          valueProp: 'code',
+        },
       }),
-      R.range(1, machine.numberOfCassettes + 1)
+      R.range(1, machine.numberOfCassettes + 1),
     ),
     R.map(
       it => ({
@@ -71,11 +71,11 @@ const Wizard = ({ machine, locale, onClose, save, error }) => {
         inputProps: {
           options: options,
           labelProp: 'display',
-          valueProp: 'code'
-        }
+          valueProp: 'code',
+        },
       }),
-      R.range(1, machine.numberOfRecyclers + 1)
-    )
+      R.range(1, machine.numberOfRecyclers + 1),
+    ),
   )
 
   const schema = () =>
@@ -119,7 +119,7 @@ const Wizard = ({ machine, locale, onClose, save, error }) => {
       recycler6:
         machine.numberOfRecyclers >= 6 && step >= machine.numberOfCassettes + 6
           ? Yup.number().required()
-          : Yup.number().transform(transformNumber).nullable()
+          : Yup.number().transform(transformNumber).nullable(),
     })
 
   return (

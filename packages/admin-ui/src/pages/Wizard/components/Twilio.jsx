@@ -29,12 +29,12 @@ const SAVE_ACCOUNTS = gql`
 const options = [
   {
     code: 'enable',
-    display: 'Yes, I will'
+    display: 'Yes, I will',
   },
   {
     code: 'disable',
-    display: 'No, not for now'
-  }
+    display: 'No, not for now',
+  },
 ]
 
 function Twilio({ doContinue }) {
@@ -43,7 +43,7 @@ function Twilio({ doContinue }) {
 
   const { data, refetch } = useQuery(GET_CONFIG)
   const [saveAccounts] = useMutation(SAVE_ACCOUNTS, {
-    onCompleted: doContinue
+    onCompleted: doContinue,
   })
 
   const accounts = data?.accounts ?? []
@@ -65,7 +65,7 @@ function Twilio({ doContinue }) {
 
   const titleClasses = {
     'ml-2 mb-2': true,
-    [sharedClasses.error]: error
+    [sharedClasses.error]: error,
   }
 
   return (

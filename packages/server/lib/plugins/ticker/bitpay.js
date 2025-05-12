@@ -7,16 +7,17 @@ const { BTC, BCH, LN } = COINS
 const CRYPTO = [BTC, BCH, LN]
 const FIAT = 'ALL_CURRENCIES'
 
-function ticker (fiatCode, cryptoCode) {
-  return axios.get('https://bitpay.com/rates/' + cryptoCode + '/' + fiatCode)
+function ticker(fiatCode, cryptoCode) {
+  return axios
+    .get('https://bitpay.com/rates/' + cryptoCode + '/' + fiatCode)
     .then(r => {
       const data = r.data.data
       const price = new BN(data.rate.toString())
       return {
         rates: {
           ask: price,
-          bid: price
-        }
+          bid: price,
+        },
       }
     })
 }
@@ -25,5 +26,5 @@ module.exports = {
   ticker,
   name: 'BitPay',
   CRYPTO,
-  FIAT
+  FIAT,
 }

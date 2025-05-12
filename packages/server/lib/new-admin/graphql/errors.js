@@ -5,8 +5,8 @@ class AuthenticationError extends GraphQLError {
   constructor() {
     super('Authentication failed', {
       extensions: {
-        code: 'UNAUTHENTICATED'
-      }
+        code: 'UNAUTHENTICATED',
+      },
     })
   }
 }
@@ -15,8 +15,8 @@ class InvalidCredentialsError extends GraphQLError {
   constructor() {
     super('Invalid credentials', {
       extensions: {
-        code: 'INVALID_CREDENTIALS'
-      }
+        code: 'INVALID_CREDENTIALS',
+      },
     })
   }
 }
@@ -25,8 +25,8 @@ class UserAlreadyExistsError extends GraphQLError {
   constructor() {
     super('User already exists', {
       extensions: {
-        code: 'USER_ALREADY_EXISTS'
-      }
+        code: 'USER_ALREADY_EXISTS',
+      },
     })
   }
 }
@@ -35,8 +35,8 @@ class InvalidTwoFactorError extends GraphQLError {
   constructor() {
     super('Invalid two-factor code', {
       extensions: {
-        code: 'INVALID_TWO_FACTOR_CODE'
-      }
+        code: 'INVALID_TWO_FACTOR_CODE',
+      },
     })
   }
 }
@@ -45,8 +45,8 @@ class InvalidUrlError extends GraphQLError {
   constructor() {
     super('Invalid URL token', {
       extensions: {
-        code: 'INVALID_URL_TOKEN'
-      }
+        code: 'INVALID_URL_TOKEN',
+      },
     })
   }
 }
@@ -55,8 +55,8 @@ class UserInputError extends GraphQLError {
   constructor() {
     super('User input error', {
       extensions: {
-        code: ApolloServerErrorCode.BAD_USER_INPUT
-      }
+        code: ApolloServerErrorCode.BAD_USER_INPUT,
+      },
     })
   }
 }
@@ -67,5 +67,5 @@ module.exports = {
   UserAlreadyExistsError,
   InvalidTwoFactorError,
   InvalidUrlError,
-  UserInputError
+  UserInputError,
 }

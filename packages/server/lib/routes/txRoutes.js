@@ -10,7 +10,7 @@ const logger = require('../logger')
 const plugins = require('../plugins')
 const Tx = require('../tx')
 
-function postTx (req, res, next) {
+function postTx(req, res, next) {
   const pi = plugins(req.settings, req.deviceId)
 
   return Tx.post(_.set('deviceId', req.deviceId, req.body), pi)
@@ -38,17 +38,20 @@ function postTx (req, res, next) {
         logger.warn('Harmless DB conflict, the query will be retried.')
         return res.status(204).json({})
       }
-      if (err instanceof E.StaleTxError) return res.status(409).json({ errorType: 'stale' })
-      if (err instanceof E.RatchetError) return res.status(409).json({ errorType: 'ratchet' })
+      if (err instanceof E.StaleTxError)
+        return res.status(409).json({ errorType: 'stale' })
+      if (err instanceof E.RatchetError)
+        return res.status(409).json({ errorType: 'ratchet' })
 
       throw err
     })
     .catch(next)
 }
 
-function getTx (req, res, next) {
+function getTx(req, res, next) {
   if (req.query.status) {
-    return helpers.fetchStatusTx(req.params.id, req.query.status)
+    return helpers
+      .fetchStatusTx(req.params.id, req.query.status)
       .then(r => res.json(r))
       .catch(next)
   }
@@ -56,9 +59,10 @@ function getTx (req, res, next) {
   return next(httpError('Not Found', 404))
 }
 
-function getPhoneTx (req, res, next) {
+function getPhoneTx(req, res, next) {
   if (req.query.phone) {
-    return helpers.fetchPhoneTx(req.query.phone)
+    return helpers
+      .fetchPhoneTx(req.query.phone)
       .then(r => res.json(r))
       .catch(next)
   }
@@ -66,9 +70,10 @@ function getPhoneTx (req, res, next) {
   return next(httpError('Not Found', 404))
 }
 
-function getEmailTx (req, res, next) {
+function getEmailTx(req, res, next) {
   if (req.query.email) {
-    return helpers.fetchEmailTx(req.query.email)
+    return helpers
+      .fetchEmailTx(req.query.email)
       .then(r => res.json(r))
       .catch(next)
   }

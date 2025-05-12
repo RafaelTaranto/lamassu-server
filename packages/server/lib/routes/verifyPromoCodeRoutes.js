@@ -7,26 +7,35 @@ const configManager = require('../new-config-manager')
 const loyalty = require('../loyalty')
 const respond = require('../respond')
 
-function verifyPromoCode (req, res, next) {
-  loyalty.getPromoCode(req.body.codeInput)
+function verifyPromoCode(req, res, next) {
+  loyalty
+    .getPromoCode(req.body.codeInput)
     .then(promoCode => {
       if (!promoCode) return next()
 
       const transaction = req.body.tx
-      const commissions = configManager.getCommissions(transaction.cryptoCode, req.deviceId, req.settings.config)
+      const commissions = configManager.getCommissions(
+        transaction.cryptoCode,
+        req.deviceId,
+        req.settings.config,
+      )
       const tickerRate = new BN(transaction.rawTickerPrice)
-      const discount = commissionMath.getDiscountRate(promoCode.discount, commissions[transaction.direction])
+      const discount = commissionMath.getDiscountRate(
+        promoCode.discount,
+        commissions[transaction.direction],
+      )
       const rates = {
         [transaction.cryptoCode]: {
-          [transaction.direction]: (transaction.direction === 'cashIn')
-            ? tickerRate.times(discount).decimalPlaces(5)
-            : tickerRate.div(discount).decimalPlaces(5)
-        }
+          [transaction.direction]:
+            transaction.direction === 'cashIn'
+              ? tickerRate.times(discount).decimalPlaces(5)
+              : tickerRate.div(discount).decimalPlaces(5),
+        },
       }
 
       respond(req, res, {
         promoCode: promoCode,
-        newRates: rates
+        newRates: rates,
       })
     })
     .catch(next)

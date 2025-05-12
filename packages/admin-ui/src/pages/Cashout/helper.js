@@ -14,7 +14,7 @@ const widthsByNumberOfUnits = {
   4: { machine: 205, cassette: 200 },
   5: { machine: 180, cassette: 165 },
   6: { machine: 165, cassette: 140 },
-  7: { machine: 130, cassette: 125 }
+  7: { machine: 130, cassette: 125 },
 }
 
 const denominationKeys = [
@@ -27,7 +27,7 @@ const denominationKeys = [
   'recycler3',
   'recycler4',
   'recycler5',
-  'recycler6'
+  'recycler6',
 ]
 
 const DenominationsSchema = Yup.object()
@@ -90,7 +90,7 @@ const DenominationsSchema = Yup.object()
       .min(1)
       .max(CURRENCY_MAX)
       .nullable()
-      .transform(transformNumber)
+      .transform(transformNumber),
   })
   .test((values, context) =>
     R.any(key => !R.isNil(values[key]), denominationKeys)
@@ -98,19 +98,19 @@ const DenominationsSchema = Yup.object()
       : context.createError({
           path: '',
           message:
-            'The recyclers or at least one of the cassettes must have a value'
-        })
+            'The recyclers or at least one of the cassettes must have a value',
+        }),
   )
 
 const getElements = (machines, locale = {}) => {
   const fiatCurrency = R.prop('fiatCurrency')(locale)
   const maxNumberOfCassettes = Math.max(
     ...R.map(it => it.numberOfCassettes, machines),
-    0
+    0,
   )
   const maxNumberOfRecyclers = Math.max(
     ...R.map(it => it.numberOfRecyclers, machines),
-    0
+    0,
   )
   const numberOfCashUnits =
     maxNumberOfCassettes + Math.ceil(maxNumberOfRecyclers / 2)
@@ -122,7 +122,7 @@ const getElements = (machines, locale = {}) => {
           options: options,
           labelProp: 'display',
           valueProp: 'code',
-          className: 'w-full'
+          className: 'w-full',
         }
       : { decimalPlaces: 0 }
 
@@ -133,8 +133,8 @@ const getElements = (machines, locale = {}) => {
       width: widthsByNumberOfUnits[numberOfCashUnits]?.machine,
       view: it => machines.find(({ deviceId }) => deviceId === it).name,
       size: 'sm',
-      editable: false
-    }
+      editable: false,
+    },
   ]
 
   R.until(
@@ -156,11 +156,11 @@ const getElements = (machines, locale = {}) => {
         isHidden: machine =>
           it >
           machines.find(({ deviceId }) => deviceId === machine.id)
-            .numberOfCassettes
+            .numberOfCassettes,
       })
       return R.add(1, it)
     },
-    1
+    1,
   )
 
   R.until(
@@ -182,12 +182,12 @@ const getElements = (machines, locale = {}) => {
           it >
           Math.ceil(
             machines.find(({ deviceId }) => deviceId === machine.id)
-              .numberOfRecyclers / 2
-          )
+              .numberOfRecyclers / 2,
+          ),
       })
       return R.add(1, it)
     },
-    1
+    1,
   )
 
   return elements

@@ -9,25 +9,25 @@ export default {
     {
       code: 'apiKey',
       display: 'API key',
-      component: TextInputFormik
+      component: TextInputFormik,
     },
     {
       code: 'domain',
       display: 'Domain',
-      component: TextInputFormik
+      component: TextInputFormik,
     },
     {
       code: 'fromEmail',
       display: 'From email',
       component: TextInputFormik,
-      face: true
+      face: true,
     },
     {
       code: 'toEmail',
       display: 'To email',
       component: TextInputFormik,
-      face: true
-    }
+      face: true,
+    },
   ],
   getValidationSchema: () => {
     return Yup.object().shape({
@@ -44,7 +44,7 @@ export default {
       toEmail: Yup.string('The to email must be a string')
         .max(100, 'The to email is too long')
         .email('The to email must be a valid email address')
-        .required('The to email is required')
+        .required('The to email is required'),
     })
-  }
+  },
 }

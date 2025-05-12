@@ -1,6 +1,3 @@
-const path = require('path')
-const fs = require('fs')
-
 const _ = require('lodash/fp')
 
 const pluginCodes = {
@@ -12,12 +9,12 @@ const pluginCodes = {
   SMS: 'sms',
   EMAIL: 'email',
   ZERO_CONF: 'zero-conf',
-  COMPLIANCE: 'compliance'
+  COMPLIANCE: 'compliance',
 }
 
-module.exports = _.assign({load}, pluginCodes)
+module.exports = _.assign({ load }, pluginCodes)
 
-function load (type, pluginCode) {
+function load(type, pluginCode) {
   if (!_.includes(type, _.values(pluginCodes))) {
     throw new Error(`Unallowed plugin type: ${type}`)
   }

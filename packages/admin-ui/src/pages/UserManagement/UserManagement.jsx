@@ -65,7 +65,7 @@ const initialState = {
   showResetPasswordModal: false,
   showReset2FAModal: false,
   showRoleModal: false,
-  showEnableUserModal: false
+  showEnableUserModal: false,
 }
 
 const reducer = (_, action) => {
@@ -82,7 +82,7 @@ const reducer = (_, action) => {
 
 const roleMapper = {
   user: 'Regular',
-  superuser: 'Superuser'
+  superuser: 'Superuser',
 }
 
 const Users = () => {
@@ -94,9 +94,9 @@ const Users = () => {
   const [userInfo, setUserInfo] = useState(null)
 
   const [validateAttestation] = useMutation(VALIDATE_ATTESTATION, {
-    onCompleted: res => {
+    onCompleted: () => {
       // TODO: show a brief popup to have UX feedback?
-    }
+    },
   })
 
   const [generateAttestationOptions] = useLazyQuery(GENERATE_ATTESTATION, {
@@ -106,11 +106,11 @@ const Users = () => {
           variables: {
             userID: userInfo.id,
             attestationResponse: res,
-            domain: window.location.hostname
-          }
+            domain: window.location.hostname,
+          },
         })
       })
-    }
+    },
   })
 
   const elements = [
@@ -128,7 +128,7 @@ const Users = () => {
             </div>
           )
         return <span className={classes.username}>{u.username}</span>
-      }
+      },
     },
     {
       header: 'Role',
@@ -146,13 +146,13 @@ const Users = () => {
               setUserInfo(u)
               dispatch({
                 type: 'open',
-                payload: 'showRoleModal'
+                payload: 'showRoleModal',
               })
             }}
             value={u.role === 'superuser'}
           />
         </div>
-      )
+      ),
     },
     {
       header: 'Actions',
@@ -170,7 +170,7 @@ const Users = () => {
                 setUserInfo(u)
                 dispatch({
                   type: 'open',
-                  payload: 'showResetPasswordModal'
+                  payload: 'showResetPasswordModal',
                 })
               }}>
               Reset password
@@ -183,7 +183,7 @@ const Users = () => {
                 setUserInfo(u)
                 dispatch({
                   type: 'open',
-                  payload: 'showReset2FAModal'
+                  payload: 'showReset2FAModal',
                 })
               }}>
               Reset 2FA
@@ -196,15 +196,15 @@ const Users = () => {
                 if (IP_CHECK_REGEX.test(window.location.hostname)) {
                   dispatch({
                     type: 'open',
-                    payload: 'showFIDOModal'
+                    payload: 'showFIDOModal',
                   })
                 } else {
                   setUserInfo(u)
                   generateAttestationOptions({
                     variables: {
                       userID: u.id,
-                      domain: window.location.hostname
-                    }
+                      domain: window.location.hostname,
+                    },
                   })
                 }
               }}>
@@ -212,7 +212,7 @@ const Users = () => {
             </ActionButton>
           </div>
         )
-      }
+      },
     },
     {
       header: 'Enabled',
@@ -227,13 +227,13 @@ const Users = () => {
             setUserInfo(u)
             dispatch({
               type: 'open',
-              payload: 'showEnableUserModal'
+              payload: 'showEnableUserModal',
             })
           }}
           value={u.enabled}
         />
-      )
-    }
+      ),
+    },
   ]
 
   return (
@@ -246,7 +246,7 @@ const Users = () => {
             onClick={() => {
               dispatch({
                 type: 'open',
-                payload: 'showCreateUserModal'
+                payload: 'showCreateUserModal',
               })
             }}>
             Add new user

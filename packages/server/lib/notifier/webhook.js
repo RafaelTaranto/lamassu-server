@@ -12,10 +12,10 @@ const sendMessage = (settings, rec) => {
   return axios({
     method: 'POST',
     url: WEBHOOK_URL,
-    data: body
+    data: body,
   })
 }
 
 module.exports = {
-  sendMessage
+  sendMessage,
 }

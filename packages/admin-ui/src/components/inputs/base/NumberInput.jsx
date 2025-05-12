@@ -18,7 +18,6 @@ const NumberInput = memo(
     bold,
     className,
     decimalPlaces,
-    InputProps,
     ...props
   }) => {
     return (
@@ -41,14 +40,14 @@ const NumberInput = memo(
           onChange({
             target: {
               id: name,
-              value: values.floatValue
-            }
+              value: values.floatValue,
+            },
           })
         }}
         {...props}
       />
     )
-  }
+  },
 )
 
 export default NumberInput

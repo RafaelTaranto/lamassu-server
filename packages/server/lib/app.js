@@ -19,8 +19,8 @@ const CA_PATH = process.env.CA_PATH
 const version = require('../package.json').version
 logger.info('Version: %s', version)
 
-function run () {
-  return new Promise((resolve, reject) => {
+function run() {
+  return new Promise(resolve => {
     let count = 0
     let handler
 
@@ -31,12 +31,11 @@ function run () {
     }
 
     const runner = () => {
-      settingsLoader.loadLatest()
+      settingsLoader
+        .loadLatest()
         .then(settings => {
           clearInterval(handler)
-          return loadSanctions(settings)
-            .then(startServer)
-            .then(resolve)
+          return loadSanctions(settings).then(startServer).then(resolve)
         })
         .catch(errorHandler)
     }
@@ -46,23 +45,23 @@ function run () {
   })
 }
 
-function loadSanctions (settings) {
-  return Promise.resolve()
-    .then(() => {
-      const triggers = configManager.getTriggers(settings.config)
-      const hasSanctions = complianceTriggers.hasSanctions(triggers)
+function loadSanctions(settings) {
+  return Promise.resolve().then(() => {
+    const triggers = configManager.getTriggers(settings.config)
+    const hasSanctions = complianceTriggers.hasSanctions(triggers)
 
-      if (!hasSanctions) return
+    if (!hasSanctions) return
 
-      logger.info('Loading sanctions DB...')
-      return ofacUpdate.update()
-        .then(() => logger.info('Sanctions DB updated'))
-        .then(ofac.load)
-        .then(() => logger.info('Sanctions DB loaded'))
-    })
+    logger.info('Loading sanctions DB...')
+    return ofacUpdate
+      .update()
+      .then(() => logger.info('Sanctions DB updated'))
+      .then(ofac.load)
+      .then(() => logger.info('Sanctions DB loaded'))
+  })
 }
 
-async function startServer () {
+async function startServer() {
   const app = await loadRoutes()
 
   poller.setup()
@@ -72,16 +71,14 @@ async function startServer () {
     cert: fs.readFileSync(CERT_PATH),
     ca: fs.readFileSync(CA_PATH),
     requestCert: true,
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
   }
 
   const server = https.createServer(httpsServerOptions, app)
 
   const port = argv.port || 3000
 
-  await new Promise((resolve) =>
-    server.listen({ port }, resolve),
-  )
+  await new Promise(resolve => server.listen({ port }, resolve))
   logger.info(`lamassu-server listening on port ${port}`)
 }
 

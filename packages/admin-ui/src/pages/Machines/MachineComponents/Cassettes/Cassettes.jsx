@@ -37,7 +37,7 @@ const widths = {
   name: 0,
   cashbox: 175,
   cassettes: 585,
-  edit: 90
+  edit: 90,
 }
 
 const CashCassettes = ({ machine, config, refetchData, bills }) => {
@@ -50,11 +50,11 @@ const CashCassettes = ({ machine, config, refetchData, bills }) => {
   const getCashoutSettings = deviceId => fromNamespace(deviceId)(cashout)
 
   const elements = R.filter(it => it.name !== 'name')(
-    helper.getElements(config, bills, setWizard, widths)
+    helper.getElements(config, bills, setWizard, widths),
   )
 
   const [setCassetteBills, { error }] = useMutation(SET_CASSETTE_BILLS, {
-    refetchQueries: () => refetchData()
+    refetchQueries: () => refetchData(),
   })
 
   const onSave = (_, cashUnits) =>
@@ -62,8 +62,8 @@ const CashCassettes = ({ machine, config, refetchData, bills }) => {
       variables: {
         action: 'setCassetteBills',
         deviceId: machine.deviceId,
-        cashUnits
-      }
+        cashUnits,
+      },
     })
 
   const InnerCashUnitDetails = ({ it }) => (

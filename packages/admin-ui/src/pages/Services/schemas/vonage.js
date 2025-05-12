@@ -12,25 +12,25 @@ export default {
     {
       code: 'apiKey',
       display: 'API Key',
-      component: TextInputFormik
+      component: TextInputFormik,
     },
     {
       code: 'apiSecret',
       display: 'API Secret',
-      component: SecretInputFormik
+      component: SecretInputFormik,
     },
     {
       code: 'fromNumber',
       display: 'Vonage Number (international format)',
       component: TextInputFormik,
-      face: true
+      face: true,
     },
     {
       code: 'toNumber',
       display: 'Notifications Number (international format)',
       component: TextInputFormik,
-      face: true
-    }
+      face: true,
+    },
   ],
   getValidationSchema: account => {
     return Yup.object().shape({
@@ -45,7 +45,7 @@ export default {
         .required('The Vonage number is required'),
       toNumber: Yup.string('The notifications number must be a string')
         .max(100, 'The notifications number is too long')
-        .required('The notifications number is required')
+        .required('The notifications number is required'),
     })
-  }
+  },
 }

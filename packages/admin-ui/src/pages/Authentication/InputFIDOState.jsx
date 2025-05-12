@@ -24,12 +24,12 @@ const validationSchema = Yup.object().shape({
   localClient: Yup.string()
     .required('Client field is required!')
     .email('Username field should be in an email format!'),
-  localRememberMe: Yup.boolean()
+  localRememberMe: Yup.boolean(),
 })
 
 const initialValues = {
   localClient: '',
-  localRememberMe: false
+  localRememberMe: false,
 }
 
 const InputFIDOState = ({ state, strategy }) => {
@@ -74,8 +74,8 @@ const InputFIDOState = ({ state, strategy }) => {
     {
       onCompleted: ({ validateAssertion: success }) => {
         success ? getUserData() : setInvalidToken(true)
-      }
-    }
+      },
+    },
   )
 
   const [assertionOptions, { error: assertionQueryError }] = useLazyQuery(
@@ -86,11 +86,11 @@ const InputFIDOState = ({ state, strategy }) => {
           ? {
               username: state.clientField,
               password: state.passwordField,
-              domain: window.location.hostname
+              domain: window.location.hostname,
             }
           : {
               username: localClientField,
-              domain: window.location.hostname
+              domain: window.location.hostname,
             },
       onCompleted: ({ generateAssertionOptions: options }) => {
         startAssertion(options)
@@ -102,31 +102,31 @@ const InputFIDOState = ({ state, strategy }) => {
                     password: state.passwordField,
                     rememberMe: state.rememberMeField,
                     assertionResponse: res,
-                    domain: window.location.hostname
+                    domain: window.location.hostname,
                   }
                 : {
                     username: localClientField,
                     rememberMe: localRememberMeField,
                     assertionResponse: res,
-                    domain: window.location.hostname
+                    domain: window.location.hostname,
                   }
             validateAssertion({
-              variables
+              variables,
             })
           })
           .catch(err => {
             console.error(err)
             setInvalidToken(true)
           })
-      }
-    }
+      },
+    },
   )
 
   const [getUserData, { error: queryError }] = useLazyQuery(GET_USER_DATA, {
     onCompleted: ({ userData }) => {
       setUserData(userData)
       history.push('/')
-    }
+    },
   })
 
   const getErrorMsg = (formikErrors, formikTouched) => {

@@ -9,16 +9,13 @@
  */
 const prepare_denominations = denominations =>
   JSON.parse(JSON.stringify(denominations))
-    .sort(([d1, c1], [d2, c2]) => d1 < d2)
+    .sort(([d1], [d2]) => d1 < d2)
     .reduce(
       ([csum, denoms], [denom, count]) => {
-        csum += denom*count
-        return [
-          csum,
-          [{ denom, count, csum }].concat(denoms)
-        ]
+        csum += denom * count
+        return [csum, [{ denom, count, csum }].concat(denoms)]
       },
-      [0, []]
+      [0, []],
     )[1] /* ([csum, denoms]) => denoms */
 
 const max_denomination_multiplicity = (denom, count, target) =>
@@ -38,18 +35,18 @@ const memo_get = (memo, target, denom) => {
 
 const memo_set = (memo, target, denom, solution) => {
   let denom_solutions = memo[target]
-  if (denom_solutions === undefined)
-    memo[target] = denom_solutions = {}
-  return denom_solutions[denom] = solution
+  if (denom_solutions === undefined) memo[target] = denom_solutions = {}
+  return (denom_solutions[denom] = solution)
 }
 
 const check = (solution, target) =>
-  !solution
-  || target === solution.reduce((sum, [denom, provisioned]) => sum + denom*provisioned, 0)
+  !solution ||
+  target ===
+    solution.reduce((sum, [denom, provisioned]) => sum + denom * provisioned, 0)
 
 const model = denominations => ({
   denominations: prepare_denominations(denominations),
-  memo: {}
+  memo: {},
 })
 
 /*
@@ -73,16 +70,19 @@ const solve = (model, target) => {
        * of the denominations, or if the target is not divisible by any of the
        * denominations
        */
-      if (target > csum)
-        return memo_set(memo, target, denom, false)
+      if (target > csum) return memo_set(memo, target, denom, false)
 
       let solution = memo_get(memo, target, denom)
       if (solution === false) continue /* not here, keep looking */
       if (solution) return solution /* we've previously computed a solution */
 
       /* solution === null */
-      for (let nd = max_denomination_multiplicity(denom, count, target); nd >= 0; nd--) {
-        solution = coin_change(didx+1, target - denom*nd)
+      for (
+        let nd = max_denomination_multiplicity(denom, count, target);
+        nd >= 0;
+        nd--
+      ) {
+        solution = coin_change(didx + 1, target - denom * nd)
         if (solution)
           return memo_set(memo, target, denom, [[denom, nd]].concat(solution))
       }

@@ -18,7 +18,7 @@ import SvgIcon from '@mui/material/SvgIcon'
 const inputTypeDisplay = {
   numerical: 'Numerical',
   text: 'Text',
-  choiceList: 'Choice list'
+  choiceList: 'Choice list',
 }
 
 const constraintTypeDisplay = {
@@ -28,7 +28,7 @@ const constraintTypeDisplay = {
   length: 'Length',
   selectOne: 'Select one',
   selectMultiple: 'Select multiple',
-  spaceSeparation: 'Space separation'
+  spaceSeparation: 'Space separation',
 }
 
 const GET_DATA = gql`
@@ -72,7 +72,7 @@ const REMOVE_ROW = gql`
 const CustomInfoRequests = ({
   showWizard,
   toggleWizard,
-  data: customRequests
+  data: customRequests,
 }) => {
   const [toBeDeleted, setToBeDeleted] = useState()
   const [toBeEdited, setToBeEdited] = useState()
@@ -83,7 +83,7 @@ const CustomInfoRequests = ({
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
-    onError: () => setHasError(true)
+    onError: () => setHasError(true),
   })
 
   const [addEntry] = useMutation(ADD_ROW, {
@@ -95,7 +95,7 @@ const CustomInfoRequests = ({
       setHasError(false)
       toggleWizard()
     },
-    refetchQueries: () => ['customInfoRequests']
+    refetchQueries: () => ['customInfoRequests'],
   })
 
   const [editEntry] = useMutation(EDIT_ROW, {
@@ -108,7 +108,7 @@ const CustomInfoRequests = ({
       setToBeEdited(null)
       toggleWizard()
     },
-    refetchQueries: () => ['getData', 'customInfoRequests']
+    refetchQueries: () => ['getData', 'customInfoRequests'],
   })
 
   const [removeEntry] = useMutation(REMOVE_ROW, {
@@ -120,7 +120,7 @@ const CustomInfoRequests = ({
       setDeleteDialog(false)
       setHasError(false)
     },
-    refetchQueries: () => ['getData', 'customInfoRequests']
+    refetchQueries: () => ['getData', 'customInfoRequests'],
   })
 
   const config = R.path(['config'])(configData) ?? []
@@ -128,16 +128,16 @@ const CustomInfoRequests = ({
   const handleDelete = id => {
     removeEntry({
       variables: {
-        id
-      }
+        id,
+      },
     }).then(() => {
       const triggersConfig =
         (config && fromNamespace(namespaces.TRIGGERS)(config)) ?? []
       const cleanConfig = {
         overrides: R.reject(
           it => it.requirement === id,
-          triggersConfig.overrides
-        )
+          triggersConfig.overrides,
+        ),
       }
       const newConfig = toNamespace(namespaces.TRIGGERS)(cleanConfig)
       saveConfig({ variables: { config: newConfig } })
@@ -149,16 +149,16 @@ const CustomInfoRequests = ({
       return editEntry({
         variables: {
           id: values.id,
-          customRequest: R.omit(['id'])(values)
-        }
+          customRequest: R.omit(['id'])(values),
+        },
       })
     }
     return addEntry({
       variables: {
         customRequest: {
-          ...values
-        }
-      }
+          ...values,
+        },
+      },
     })
   }
 
@@ -186,14 +186,14 @@ const CustomInfoRequests = ({
                 width: 300,
                 textAlign: 'left',
                 size: 'sm',
-                view: it => it.customRequest.name
+                view: it => it.customRequest.name,
               },
               {
                 header: 'Data entry type',
                 width: 300,
                 textAlign: 'left',
                 size: 'sm',
-                view: it => inputTypeDisplay[it.customRequest.input.type]
+                view: it => inputTypeDisplay[it.customRequest.input.type],
               },
               {
                 header: 'Constraints',
@@ -201,7 +201,7 @@ const CustomInfoRequests = ({
                 textAlign: 'left',
                 size: 'sm',
                 view: it =>
-                  constraintTypeDisplay[it.customRequest.input.constraintType]
+                  constraintTypeDisplay[it.customRequest.input.constraintType],
               },
               {
                 header: 'Edit',
@@ -220,7 +220,7 @@ const CustomInfoRequests = ({
                       </SvgIcon>
                     </IconButton>
                   )
-                }
+                },
               },
               {
                 header: 'Delete',
@@ -239,8 +239,8 @@ const CustomInfoRequests = ({
                       </SvgIcon>
                     </IconButton>
                   )
-                }
-              }
+                },
+              },
             ]}
             data={customRequests}
             Details={DetailsRow}

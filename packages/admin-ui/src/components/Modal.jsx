@@ -17,14 +17,12 @@ const Modal = ({
   infoPanel,
   handleClose,
   children,
-  secondaryModal,
   className,
   closeOnEscape,
   closeOnBackdropClick,
   ...props
 }) => {
   const TitleCase = small ? H4 : H1
-  const closeSize = xl ? 28 : small ? 16 : 20
 
   const innerClose = (evt, reason) => {
     if (!closeOnBackdropClick && reason === 'backdropClick') return
@@ -44,7 +42,7 @@ const Modal = ({
           style={{ width, height, minHeight: height ?? 400 }}
           className={classnames(
             'flex flex-col max-h-[90vh] rounded-lg outline-0',
-            className
+            className,
           )}>
           <div className="flex">
             {title && (
@@ -78,11 +76,11 @@ const Modal = ({
             style={{
               width,
               height: infoPanelHeight,
-              minHeight: infoPanelHeight ?? 200
+              minHeight: infoPanelHeight ?? 200,
             }}
             className={classnames(
               'mt-4 flex flex-col max-h-[90vh] overflow-y-auto rounded-lg outline-0',
-              className
+              className,
             )}>
             <div className="w-full flex flex-col flex-1 py-0 px-6">
               {infoPanel}

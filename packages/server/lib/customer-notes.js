@@ -5,7 +5,9 @@ const db = require('./db')
 
 const getCustomerNotes = customerId => {
   const sql = `SELECT * FROM customer_notes WHERE customer_id=$1`
-  return db.oneOrNone(sql, [customerId]).then(res => _.mapKeys((_, key) => _.camelize(key), res))
+  return db
+    .oneOrNone(sql, [customerId])
+    .then(res => _.mapKeys((_, key) => _.camelize(key), res))
 }
 
 const createCustomerNote = (customerId, userId, title, content) => {
@@ -27,5 +29,5 @@ module.exports = {
   getCustomerNotes,
   createCustomerNote,
   deleteCustomerNote,
-  updateCustomerNote
+  updateCustomerNote,
 }

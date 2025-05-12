@@ -5,7 +5,7 @@ const formatLong = value => {
 
   return `${value.slice(0, 8)}(...)${value.slice(
     value.length - 8,
-    value.length
+    value.length,
   )}`
 }
 
@@ -18,7 +18,7 @@ const onlyFirstToUpper = R.compose(toFirstUpper, R.toLower)
 const splitOnUpper = R.compose(
   R.split(' '),
   R.replace(/([A-Z])/g, ' $1'),
-  toFirstLower
+  toFirstLower,
 )
 const startCase = R.compose(R.join(' '), R.map(onlyFirstToUpper), splitOnUpper)
 
@@ -32,5 +32,5 @@ export {
   onlyFirstToUpper,
   formatLong,
   singularOrPlural,
-  sentenceCase
+  sentenceCase,
 }

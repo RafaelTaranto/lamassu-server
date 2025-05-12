@@ -18,7 +18,7 @@ const SingleFieldEditableNumber = ({
   max = 9999999,
   name,
   section,
-  className
+  className,
 }) => {
   const [saving, setSaving] = useState(false)
 
@@ -42,7 +42,7 @@ const SingleFieldEditableNumber = ({
       .integer()
       .min(min)
       .max(max)
-      .nullable()
+      .nullable(),
   })
 
   return (

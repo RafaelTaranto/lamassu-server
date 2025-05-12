@@ -9,12 +9,12 @@ const buildAdvancedRequirementOptions = customInfoRequests => {
     { display: 'ID card image', code: 'idCardPhoto' },
     { display: 'ID data', code: 'idCardData' },
     { display: 'Customer camera', code: 'facephoto' },
-    { display: 'US SSN', code: 'usSsn' }
+    { display: 'US SSN', code: 'usSsn' },
   ]
 
   const custom = R.map(it => ({
     display: it.customRequest.name,
-    code: it.id
+    code: it.id,
   }))(customInfoRequests)
 
   return R.concat(base, custom)
@@ -24,8 +24,8 @@ const displayRequirement = (code, customInfoRequests) => {
   return R.prop(
     'display',
     R.find(R.propEq('code', code))(
-      buildAdvancedRequirementOptions(customInfoRequests)
-    )
+      buildAdvancedRequirementOptions(customInfoRequests),
+    ),
   )
 }
 
@@ -34,7 +34,7 @@ const defaultSchema = Yup.object().shape({
   automation: Yup.string()
     .label('Automation')
     .matches(/(Manual|Automatic)/)
-    .required()
+    .required(),
 })
 
 const getOverridesSchema = (values, customInfoRequests) => {
@@ -51,19 +51,19 @@ const getOverridesSchema = (values, customInfoRequests) => {
             return this.createError({
               message: `Requirement '${displayRequirement(
                 requirement,
-                customInfoRequests
-              )}' already overridden`
+                customInfoRequests,
+              )}' already overridden`,
             })
           }
           return true
-        }
+        },
       }),
     expirationTime: Yup.string().label('Expiration time').required(),
     automation: Yup.string()
       .label('Automation')
       .matches(/(Manual|Automatic)/)
-      .required()
-  });
+      .required(),
+  })
 }
 
 const getDefaultSettings = () => {
@@ -73,7 +73,7 @@ const getDefaultSettings = () => {
       header: 'Expiration time',
       width: 196,
       size: 'sm',
-      editable: false
+      editable: false,
     },
     {
       name: 'automation',
@@ -84,11 +84,11 @@ const getDefaultSettings = () => {
       inputProps: {
         options: [
           { code: 'Automatic', display: 'Automatic' },
-          { code: 'Manual', display: 'Manual' }
+          { code: 'Manual', display: 'Manual' },
         ],
         labelProp: 'display',
-        valueProp: 'code'
-      }
+        valueProp: 'code',
+      },
     },
     {
       name: 'customerAuthentication',
@@ -99,12 +99,12 @@ const getDefaultSettings = () => {
       inputProps: {
         options: [
           { code: 'SMS', display: 'SMS' },
-          { code: 'EMAIL', display: 'EMAIL' }
+          { code: 'EMAIL', display: 'EMAIL' },
         ],
         labelProp: 'display',
-        valueProp: 'code'
-      }
-    }
+        valueProp: 'code',
+      },
+    },
   ]
 }
 
@@ -117,21 +117,21 @@ const getOverrides = customInfoRequests => {
       size: 'sm',
       view: getView(
         buildAdvancedRequirementOptions(customInfoRequests),
-        'display'
+        'display',
       ),
       input: Autocomplete,
       inputProps: {
         options: buildAdvancedRequirementOptions(customInfoRequests),
         labelProp: 'display',
-        valueProp: 'code'
-      }
+        valueProp: 'code',
+      },
     },
     {
       name: 'expirationTime',
       header: 'Expiration time',
       width: 196,
       size: 'sm',
-      editable: false
+      editable: false,
     },
     {
       name: 'automation',
@@ -142,12 +142,12 @@ const getOverrides = customInfoRequests => {
       inputProps: {
         options: [
           { code: 'Automatic', display: 'Automatic' },
-          { code: 'Manual', display: 'Manual' }
+          { code: 'Manual', display: 'Manual' },
         ],
         labelProp: 'display',
-        valueProp: 'code'
-      }
-    }
+        valueProp: 'code',
+      },
+    },
   ]
 }
 
@@ -155,14 +155,14 @@ const defaults = [
   {
     expirationTime: 'Forever',
     automation: 'Automatic',
-    customerAuth: 'SMS'
-  }
+    customerAuth: 'SMS',
+  },
 ]
 
 const overridesDefaults = {
   requirement: '',
   expirationTime: 'Forever',
-  automation: 'Automatic'
+  automation: 'Automatic',
 }
 
 export {
@@ -171,5 +171,5 @@ export {
   defaults,
   overridesDefaults,
   getDefaultSettings,
-  getOverrides
+  getOverrides,
 }

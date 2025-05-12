@@ -30,7 +30,7 @@ const BlacklistAdvanced = ({
   data,
   editBlacklistMessage,
   onClose,
-  mutationError
+  mutationError,
 }) => {
   const [selectedMessage, setSelectedMessage] = useState(null)
 
@@ -41,7 +41,7 @@ const BlacklistAdvanced = ({
       width: 250,
       textAlign: 'left',
       size: 'sm',
-      view: it => R.path(['label'], it)
+      view: it => R.path(['label'], it),
     },
     {
       name: 'content',
@@ -49,7 +49,7 @@ const BlacklistAdvanced = ({
       width: 690,
       textAlign: 'left',
       size: 'sm',
-      view: it => R.path(['content'], it)
+      view: it => R.path(['content'], it),
     },
     {
       name: 'edit',
@@ -63,7 +63,7 @@ const BlacklistAdvanced = ({
             <EditIcon />
           </SvgIcon>
         </IconButton>
-      )
+      ),
     },
     {
       name: 'deleteButton',
@@ -86,8 +86,8 @@ const BlacklistAdvanced = ({
             )}
           </SvgIcon>
         </IconButton>
-      )
-    }
+      ),
+    },
   ]
 
   const handleModalClose = () => {
@@ -102,12 +102,12 @@ const BlacklistAdvanced = ({
 
   const initialValues = {
     label: !R.isNil(selectedMessage) ? selectedMessage.label : '',
-    content: !R.isNil(selectedMessage) ? selectedMessage.content : ''
+    content: !R.isNil(selectedMessage) ? selectedMessage.content : '',
   }
 
   const validationSchema = Yup.object().shape({
     label: Yup.string().required('A label is required!'),
-    content: Yup.string().required('The message content is required!').trim()
+    content: Yup.string().required('The message content is required!').trim(),
   })
 
   return (

@@ -23,13 +23,13 @@ const CASSETTE_LIST = [
   CASSETTE_1_KEY,
   CASSETTE_2_KEY,
   CASSETTE_3_KEY,
-  CASSETTE_4_KEY
+  CASSETTE_4_KEY,
 ]
 
 const widthsByNumberOfCassettes = {
   2: { machine: 230, cashbox: 150, cassette: 250 },
   3: { machine: 216, cashbox: 150, cassette: 270 },
-  4: { machine: 210, cashbox: 150, cassette: 204 }
+  4: { machine: 210, cashbox: 150, cassette: 204 },
 }
 
 const FiatBalanceOverrides = ({ config, section }) => {
@@ -39,7 +39,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
     save,
     isDisabled,
     setEditing,
-    error
+    error,
   } = useContext(NotificationsCtx)
 
   const setupValues = data?.fiatBalanceOverrides ?? []
@@ -50,7 +50,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
   const suggestions = R.differenceWith(
     (it, m) => it.deviceId === m,
     machines,
-    overriddenMachines
+    overriddenMachines,
   )
 
   const findSuggestion = it => {
@@ -64,7 +64,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
     [CASSETTE_1_KEY]: '',
     [CASSETTE_2_KEY]: '',
     [CASSETTE_3_KEY]: '',
-    [CASSETTE_4_KEY]: ''
+    [CASSETTE_4_KEY]: '',
   }
 
   const notesMin = 0
@@ -72,7 +72,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
 
   const maxNumberOfCassettes = Math.max(
     ...R.map(it => it.numberOfCassettes, machines),
-    DEFAULT_NUMBER_OF_CASSETTES
+    DEFAULT_NUMBER_OF_CASSETTES,
   )
 
   const percentMin = 0
@@ -114,7 +114,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
         .integer()
         .min(percentMin)
         .max(percentMax)
-        .nullable()
+        .nullable(),
     })
     .test((values, context) =>
       R.any(key => !R.isNil(values[key]), R.prepend(CASHBOX_KEY, CASSETTE_LIST))
@@ -122,8 +122,8 @@ const FiatBalanceOverrides = ({ config, section }) => {
         : context.createError({
             path: CASHBOX_KEY,
             message:
-              'The cash box or at least one of the cassettes must have a value'
-          })
+              'The cash box or at least one of the cassettes must have a value',
+          }),
     )
 
   const viewMachine = it =>
@@ -141,8 +141,8 @@ const FiatBalanceOverrides = ({ config, section }) => {
         inputProps: {
           options: it => R.concat(suggestions, findSuggestion(it)),
           valueProp: 'deviceId',
-          labelProp: 'name'
-        }
+          labelProp: 'name',
+        },
       },
       {
         name: CASHBOX_KEY,
@@ -153,9 +153,9 @@ const FiatBalanceOverrides = ({ config, section }) => {
         input: NumberInput,
         suffix: 'notes',
         inputProps: {
-          decimalPlaces: 0
-        }
-      }
+          decimalPlaces: 0,
+        },
+      },
     ],
     R.map(
       it => ({
@@ -168,7 +168,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
         input: NumberInput,
         suffix: '%',
         inputProps: {
-          decimalPlaces: 0
+          decimalPlaces: 0,
         },
         view: el => el?.toString() ?? '—',
         isHidden: value =>
@@ -177,11 +177,11 @@ const FiatBalanceOverrides = ({ config, section }) => {
             R.defaultTo(
               0,
               machines.find(({ deviceId }) => deviceId === value.machine)
-                ?.numberOfCassettes
-            )
+                ?.numberOfCassettes,
+            ),
       }),
-      R.range(1, maxNumberOfCassettes + 1)
-    )
+      R.range(1, maxNumberOfCassettes + 1),
+    ),
   )
 
   return (

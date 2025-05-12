@@ -11,7 +11,7 @@ const FeatureButton = memo(
           classes.baseButton,
           classes.roundButton,
           classes.primary,
-          className
+          className,
         )}
         {...props}>
         {Icon && (
@@ -23,7 +23,7 @@ const FeatureButton = memo(
           <div
             className={classnames(
               classes.buttonIcon,
-              classes.buttonIconActive
+              classes.buttonIconActive,
             )}>
             <InverseIcon />
           </div>
@@ -31,7 +31,7 @@ const FeatureButton = memo(
         {children}
       </button>
     )
-  }
+  },
 )
 
 export default FeatureButton

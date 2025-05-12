@@ -1,5 +1,6 @@
 import React from 'react'
 import { Info1, Label1 } from 'src/components/typography/index'
+
 const InfoWithLabel = ({ info, label }) => {
   return (
     <div className="flex flex-col">

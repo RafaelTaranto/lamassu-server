@@ -5,7 +5,7 @@ import {
   AutoSizer,
   List,
   CellMeasurer,
-  CellMeasurerCache
+  CellMeasurerCache,
 } from 'react-virtualized'
 import {
   Table,
@@ -13,7 +13,7 @@ import {
   THead,
   Tr,
   Td,
-  Th
+  Th,
 } from 'src/components/fake-table/Table'
 import { H4 } from 'src/components/typography'
 import ExpandClosedIcon from 'src/styling/icons/action/expand/closed.svg?react'
@@ -40,7 +40,7 @@ const Row = ({
   const trClasses = {
     'cursor-pointer': hasPointer,
     'border-2 border-transparent': true,
-    'border-2 border-zircon shadow-md': expanded
+    'border-2 border-zircon shadow-md': expanded,
   }
 
   return (
@@ -79,7 +79,7 @@ const Row = ({
         <div className="pb-3">
           <Tr
             className={classnames({
-              'border-2 border-zircon shadow-md': expanded
+              'border-2 border-zircon shadow-md': expanded,
             })}>
             <Td width={width}>
               <Details it={data} timezone={props.timezone} />
@@ -126,7 +126,7 @@ const DataTable = ({
 
   const cache = new CellMeasurerCache({
     defaultHeight: 58,
-    fixedWidth: true
+    fixedWidth: true,
   })
 
   function rowRenderer({ index, key, parent, style }) {
@@ -168,12 +168,12 @@ const DataTable = ({
     <div
       className={classnames({
         'flex flex-1 flex-col': true,
-        [className]: !!className
+        [className]: !!className,
       })}>
       <Table
         className={classnames(
           'mb-12 min-h-50 flex-1 flex flex-col',
-          tableClassName
+          tableClassName,
         )}
         style={{ width }}>
         <THead>

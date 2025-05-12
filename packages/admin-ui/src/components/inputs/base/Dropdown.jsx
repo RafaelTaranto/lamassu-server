@@ -23,7 +23,7 @@ const Dropdown = ({ label, name, options, onChange, value, className }) => {
         ))}
       </Select>
     </FormControl>
-  );
+  )
 }
 
 export default Dropdown

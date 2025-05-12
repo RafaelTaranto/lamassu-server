@@ -12,7 +12,7 @@ import { TextInput, NumberInput } from 'src/components/inputs/formik'
 
 const initialValues = {
   code: '',
-  discount: ''
+  discount: '',
 }
 
 const validationSchema = Yup.object().shape({
@@ -21,7 +21,7 @@ const validationSchema = Yup.object().shape({
     .trim()
     .max(25)
     .matches(/^\S*$/, 'No whitespace allowed'),
-  discount: Yup.number().required().min(0).max(100)
+  discount: Yup.number().required().min(0).max(100),
 })
 
 const PromoCodesModal = ({ showModal, onClose, errorMsg, addCode }) => {

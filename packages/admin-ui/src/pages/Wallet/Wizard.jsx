@@ -44,12 +44,12 @@ const Wizard = ({
   accounts,
   fiatCurrency,
   save,
-  error
+  error,
 }) => {
   const [{ step, config, accountsToSave }, setState] = useState({
     step: 0,
     config: { active: true },
-    accountsToSave: {}
+    accountsToSave: {},
   })
 
   const title = `Enable ${coin.display}`
@@ -64,7 +64,7 @@ const Wizard = ({
   const commonWizardSteps = [
     { type: 'ticker', ...tickers },
     { type: 'wallet', ...wallets },
-    { type: 'exchange', ...exchanges }
+    { type: 'exchange', ...exchanges },
   ]
 
   const hasZeroConfs =
@@ -75,14 +75,14 @@ const Wizard = ({
     type: 'zeroConf',
     name: 'confidence checking',
     schema: Yup.object().shape({
-      zeroConfLimit: Yup.number().required()
+      zeroConfLimit: Yup.number().required(),
     }),
-    ...zeroConfs
+    ...zeroConfs,
   }
 
   const zeroConfLimitStep = {
     type: 'zeroConfLimit',
-    name: '0-conf limit'
+    name: '0-conf limit',
   }
 
   const wizardSteps = hasZeroConfs
@@ -90,7 +90,7 @@ const Wizard = ({
         commonWizardSteps,
         has0Conf(coin)
           ? [confidenceCheckingStep]
-          : [confidenceCheckingStep, zeroConfLimitStep]
+          : [confidenceCheckingStep, zeroConfLimitStep],
       )
     : commonWizardSteps
 
@@ -111,7 +111,7 @@ const Wizard = ({
     setState({
       step: step + 1,
       config: newConfig,
-      accountsToSave: newAccounts
+      accountsToSave: newAccounts,
     })
   }
 

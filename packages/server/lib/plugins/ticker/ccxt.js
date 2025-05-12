@@ -1,7 +1,11 @@
 const ccxt = require('ccxt')
 
 const BN = require('../../bn')
-const { buildMarket, verifyFiatSupport, defaultFiatMarket } = require('../common/ccxt')
+const {
+  buildMarket,
+  verifyFiatSupport,
+  defaultFiatMarket,
+} = require('../common/ccxt')
 const { getRate } = require('../../../lib/forex')
 
 const RETRIES = 2
@@ -16,7 +20,7 @@ const sanityCheckRates = (ask, bid, tickerName) => {
   }
 }
 
-function ticker (fiatCode, cryptoCode, tickerName) {
+function ticker(fiatCode, cryptoCode, tickerName) {
   if (!tickerObjects[tickerName]) {
     tickerObjects[tickerName] = new ccxt[tickerName]({
       timeout: 3000,
@@ -30,37 +34,40 @@ function ticker (fiatCode, cryptoCode, tickerName) {
     return getCurrencyRates(ticker, fiatCode, cryptoCode)
   }
 
-  return getRate(RETRIES, tickerName, defaultFiatMarket(tickerName))
-    .then(({ fxRate }) => {
+  return getRate(RETRIES, tickerName, defaultFiatMarket(tickerName)).then(
+    ({ fxRate }) => {
       try {
-        return getCurrencyRates(ticker, defaultFiatMarket(tickerName), cryptoCode)
-          .then(res => ({
-            rates: {
-              ask: res.rates.ask.times(fxRate),
-              bid: res.rates.bid.times(fxRate)
-            }
-          }))
+        return getCurrencyRates(
+          ticker,
+          defaultFiatMarket(tickerName),
+          cryptoCode,
+        ).then(res => ({
+          rates: {
+            ask: res.rates.ask.times(fxRate),
+            bid: res.rates.bid.times(fxRate),
+          },
+        }))
       } catch (e) {
         return Promise.reject(e)
       }
-    })
+    },
+  )
 }
 
-function getCurrencyRates (ticker, fiatCode, cryptoCode) {
+function getCurrencyRates(ticker, fiatCode, cryptoCode) {
   try {
     if (!ticker.has['fetchTicker']) {
       throw new Error('Ticker not available')
     }
     const symbol = buildMarket(fiatCode, cryptoCode, ticker.id)
-    return ticker.fetchTicker(symbol)
-      .then(res => {
-        sanityCheckRates(res.ask, res.bid, cryptoCode)
-        return {
-          rates: {
-            ask: new BN(res.ask),
-            bid: new BN(res.bid)
-          }
-        }
+    return ticker.fetchTicker(symbol).then(res => {
+      sanityCheckRates(res.ask, res.bid, cryptoCode)
+      return {
+        rates: {
+          ask: new BN(res.ask),
+          bid: new BN(res.bid),
+        },
+      }
     })
   } catch (e) {
     return Promise.reject(e)

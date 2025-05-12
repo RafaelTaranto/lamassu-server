@@ -40,18 +40,31 @@ const SNAKE_CASE_BILL_FIELDS = [
   'provisioned_recycler_3',
   'provisioned_recycler_4',
   'provisioned_recycler_5',
-  'provisioned_recycler_6'
+  'provisioned_recycler_6',
 ]
 
 const BILL_FIELDS = _.map(_.camelCase, SNAKE_CASE_BILL_FIELDS)
 
-module.exports = { redeemableTxs, toObj, toDb, REDEEMABLE_AGE, CASH_OUT_TRANSACTION_STATES }
+module.exports = {
+  redeemableTxs,
+  toObj,
+  toDb,
+  REDEEMABLE_AGE,
+  CASH_OUT_TRANSACTION_STATES,
+}
 
-const mapValuesWithKey = _.mapValues.convert({cap: false})
+const mapValuesWithKey = _.mapValues.convert({ cap: false })
 
-function convertBigNumFields (obj) {
+function convertBigNumFields(obj) {
   const convert = (value, key) => {
-    if (_.includes(key, [ 'cryptoAtoms', 'receivedCryptoAtoms', 'fiat', 'fixedFee' ])) {
+    if (
+      _.includes(key, [
+        'cryptoAtoms',
+        'receivedCryptoAtoms',
+        'fiat',
+        'fixedFee',
+      ])
+    ) {
       // BACKWARDS_COMPATIBILITY 10.1
       // bills before 10.2 don't have fixedFee
       if (key === 'fixedFee' && !value) return new BN(0).toString()
@@ -59,62 +72,62 @@ function convertBigNumFields (obj) {
     }
 
     // Only test isNil for these fields since the others should not be empty.
-    if (_.includes(key, [ 'commissionPercentage', 'rawTickerPrice' ]) && !_.isNil(value)) {
+    if (
+      _.includes(key, ['commissionPercentage', 'rawTickerPrice']) &&
+      !_.isNil(value)
+    ) {
       return value.toString()
     }
 
     return value
   }
 
-  const convertKey = key => _.includes(key, ['cryptoAtoms', 'fiat'])
-    ? key + '#'
-    : key
+  const convertKey = key =>
+    _.includes(key, ['cryptoAtoms', 'fiat']) ? key + '#' : key
 
   return _.mapKeys(convertKey, mapValuesWithKey(convert, obj))
 }
 
-function convertField (key) {
+function convertField(key) {
   return _.snakeCase(key)
 }
 
-function addDbBills (tx) {
+function addDbBills(tx) {
   const bills = tx.bills
   if (_.isEmpty(bills)) return tx
 
   const billsObj = _.flow(
-    _.reduce(
-      (acc, value) => {
-        const suffix = _.snakeCase(value.name.replace(/cassette/gi, ''))
-        return {
-          ...acc,
-          [`provisioned_${suffix}`]: value.provisioned,
-          [`denomination_${suffix}`]: value.denomination
-        }
-      },
-      {}
-    ),
+    _.reduce((acc, value) => {
+      const suffix = _.snakeCase(value.name.replace(/cassette/gi, ''))
+      return {
+        ...acc,
+        [`provisioned_${suffix}`]: value.provisioned,
+        [`denomination_${suffix}`]: value.denomination,
+      }
+    }, {}),
     it => {
-      const missingKeys = _.reduce(
-        (acc, value) => {
-          return _.assign({ [value]: 0 })(acc)
-        },
-        {}
-      )(_.difference(SNAKE_CASE_BILL_FIELDS, _.keys(it)))
+      const missingKeys = _.reduce((acc, value) => {
+        return _.assign({ [value]: 0 })(acc)
+      }, {})(_.difference(SNAKE_CASE_BILL_FIELDS, _.keys(it)))
       return _.assign(missingKeys, it)
-    }
+    },
   )(bills)
 
   return _.assign(tx, billsObj)
 }
 
-function toDb (tx) {
-  const massager = _.flow(convertBigNumFields, addDbBills,
-    _.omit(['direction', 'bills', 'promoCodeApplied']), _.mapKeys(convertField))
+function toDb(tx) {
+  const massager = _.flow(
+    convertBigNumFields,
+    addDbBills,
+    _.omit(['direction', 'bills', 'promoCodeApplied']),
+    _.mapKeys(convertField),
+  )
 
   return massager(tx)
 }
 
-function toObj (row) {
+function toObj(row) {
   if (!row) return null
 
   const keys = _.keys(row)
@@ -126,7 +139,14 @@ function toObj (row) {
       newObj[objKey] = new BN(row[key])
       return
     }
-    if (_.includes(key, ['crypto_atoms', 'fiat', 'commission_percentage', 'raw_ticker_price'])) {
+    if (
+      _.includes(key, [
+        'crypto_atoms',
+        'fiat',
+        'commission_percentage',
+        'raw_ticker_price',
+      ])
+    ) {
       newObj[objKey] = new BN(row[key])
       return
     }
@@ -137,11 +157,20 @@ function toObj (row) {
   newObj.direction = 'cashOut'
 
   if (_.every(_.isNil, _.at(BILL_FIELDS, newObj))) return newObj
-  if (_.some(_.isNil, _.at(BILL_FIELDS, newObj))) throw new Error('Missing cassette values')
+  if (_.some(_.isNil, _.at(BILL_FIELDS, newObj)))
+    throw new Error('Missing cassette values')
 
   const billFieldsArr = _.concat(
-    _.map(it => ({ name: `cassette${it + 1}`, denomination: newObj[`denomination${it + 1}`], provisioned: newObj[`provisioned${it + 1}`] }))(_.range(0, MAX_CASSETTES)),
-    _.map(it => ({ name: `recycler${it + 1}`, denomination: newObj[`denominationRecycler${it + 1}`], provisioned: newObj[`provisionedRecycler${it + 1}`] }))(_.range(0, MAX_RECYCLERS)),
+    _.map(it => ({
+      name: `cassette${it + 1}`,
+      denomination: newObj[`denomination${it + 1}`],
+      provisioned: newObj[`provisioned${it + 1}`],
+    }))(_.range(0, MAX_CASSETTES)),
+    _.map(it => ({
+      name: `recycler${it + 1}`,
+      denomination: newObj[`denominationRecycler${it + 1}`],
+      provisioned: newObj[`provisionedRecycler${it + 1}`],
+    }))(_.range(0, MAX_RECYCLERS)),
   )
 
   // There can't be bills with denomination === 0.
@@ -151,7 +180,7 @@ function toObj (row) {
   return _.set('bills', bills, _.omit(BILL_FIELDS, newObj))
 }
 
-function redeemableTxs (deviceId) {
+function redeemableTxs(deviceId) {
   const sql = `select * from cash_out_txs
   where device_id=$1
   and redeem=$2
@@ -164,6 +193,5 @@ function redeemableTxs (deviceId) {
   )
   and extract(epoch from (now() - greatest(created, confirmed_at))) < $4`
 
-  return db.any(sql, [deviceId, true, false, REDEEMABLE_AGE])
-    .then(_.map(toObj))
+  return db.any(sql, [deviceId, true, false, REDEEMABLE_AGE]).then(_.map(toObj))
 }

@@ -8,7 +8,7 @@ const EmptyTable = memo(({ message, className }) => {
     <div
       className={classNames(
         className,
-        'flex flex-col items-center w-full mt-13 text-sm font-bold font-museo'
+        'flex flex-col items-center w-full mt-13 text-sm font-bold font-museo',
       )}>
       <EmptyTableIcon />
       <H4>{message}</H4>

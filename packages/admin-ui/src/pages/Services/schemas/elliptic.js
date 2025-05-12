@@ -13,19 +13,19 @@ export default {
     {
       code: 'apiKey',
       display: 'API Key',
-      component: SecretInputFormik
+      component: SecretInputFormik,
     },
     {
       code: 'apiSecret',
       display: 'API Secret',
-      component: SecretInputFormik
+      component: SecretInputFormik,
     },
     {
       code: 'scoreThreshold',
       display: 'Score threshold',
       component: NumberInputFormik,
       face: true,
-      long: false
+      long: false,
     },
     {
       code: 'enabled',
@@ -35,10 +35,10 @@ export default {
         disabledMessage: 'This plugin is disabled',
         label: 'Enabled',
         requirement: null,
-        rightSideLabel: true
+        rightSideLabel: true,
       },
-      face: true
-    }
+      face: true,
+    },
   ],
   getValidationSchema: account => {
     return Yup.object().shape({
@@ -56,8 +56,8 @@ export default {
         .test(
           'no-leading-zeros',
           'The score threshold must not have leading zeros',
-          leadingZerosTest
-        )
+          leadingZerosTest,
+        ),
     })
-  }
+  },
 }

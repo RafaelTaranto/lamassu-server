@@ -35,20 +35,20 @@ const Td = ({
   size,
   bold,
   textAlign,
-  action
+  action,
 }) => {
   const inlineStyle = {
     ...style,
     width,
     textAlign,
-    fontSize: size === 'sm' ? '14px' : size === 'lg' ? '24px' : ''
+    fontSize: size === 'sm' ? '14px' : size === 'lg' ? '24px' : '',
   }
 
   const cssClasses = {
     [styles.td]: !header,
     [styles.tdHeader]: header,
     'font-bold': !header && (bold || size === 'lg'),
-    [styles.actionCol]: action
+    [styles.actionCol]: action,
   }
 
   return (
@@ -88,21 +88,21 @@ const Tr = ({
   children,
   className,
   size,
-  newRow
+  newRow,
 }) => {
   const inlineStyle = {
-    minHeight: size === 'sm' ? '34px' : size === 'lg' ? '68px' : '48px'
+    minHeight: size === 'sm' ? '34px' : size === 'lg' ? '68px' : '48px',
   }
   const cardClasses = {
     [styles.card]: true,
     [styles.trError]: error,
-    [styles.trAdding]: newRow
+    [styles.trAdding]: newRow,
   }
 
   const mainContentClasses = {
     [styles.mainContent]: true,
     [styles.sizeSm]: size === 'sm',
-    [styles.sizeLg]: size === 'lg'
+    [styles.sizeLg]: size === 'lg',
   }
 
   return (
@@ -141,5 +141,5 @@ export {
   Td,
   Th,
   ThDoubleLevel,
-  EditCell
+  EditCell,
 }

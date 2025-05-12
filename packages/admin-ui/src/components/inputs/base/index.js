@@ -7,6 +7,7 @@ import RadioGroup from './RadioGroup'
 import SecretInput from './SecretInput'
 import TextInput from './TextInput'
 import ToggleButtonGroup from './ToggleButtonGroup'
+
 export {
   Checkbox,
   CodeInput,
@@ -16,5 +17,5 @@ export {
   RadioGroup,
   Autocomplete,
   ToggleButtonGroup,
-  Dropdown
+  Dropdown,
 }
