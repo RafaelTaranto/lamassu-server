@@ -1,7 +1,5 @@
-import { useLazyQuery, useMutation, gql } from "@apollo/client";
+import { useLazyQuery, useMutation, gql } from '@apollo/client'
 import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { add, differenceInYears, format, sub, parse } from 'date-fns/fp'
@@ -35,11 +33,9 @@ import {
 import { SWEEPABLE_CRYPTOS } from 'src/utils/constants'
 import * as Customer from 'src/utils/customer'
 
-import CopyToClipboard from './CopyToClipboard'
-import styles from './DetailsCard.styles'
+import CopyToClipboard from '../../components/CopyToClipboard.jsx'
 import { getStatus, getStatusDetails } from './helper'
 
-const useStyles = makeStyles(styles)
 const MINUTES_OFFSET = 3
 const TX_SUMMARY = gql`
   query txSummaryAndLogs(
@@ -101,12 +97,14 @@ const formatAddress = (cryptoCode = '', address = '') =>
   formatCryptoAddress(cryptoCode, address).replace(/(.{5})/g, '$1 ')
 
 const Label = ({ children }) => {
-  const classes = useStyles()
-  return <Label1 className={classes.label}>{children}</Label1>
+  return (
+    <Label1 noMargin className="text-comet mb-1">
+      {children}
+    </Label1>
+  )
 }
 
 const DetailsRow = ({ it: tx, timezone }) => {
-  const classes = useStyles()
   const [action, setAction] = useState({ command: null })
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -184,9 +182,11 @@ const DetailsRow = ({ it: tx, timezone }) => {
   const errorElements = (
     <>
       <Label>Transaction status</Label>
-      <span className={classes.bold}>{getStatus(tx)}</span>
+      <span className="font-bold">{getStatus(tx)}</span>
       {getStatusDetails(tx) ? (
-        <CopyToClipboard removeSpace={false} className={classes.errorCopy}>
+        <CopyToClipboard
+          removeSpace={false}
+          className="font-museo break-normal max-w-45">
           {getStatusDetails(tx)}
         </CopyToClipboard>
       ) : (
@@ -196,7 +196,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
   )
 
   const walletScoreEl = (
-    <div className={classes.walletScore}>
+    <div className="flex flex-row items-center">
       <svg width={103} height={10}>
         {R.range(0, 10).map((it, idx) => (
           <circle
@@ -219,8 +219,8 @@ const DetailsRow = ({ it: tx, timezone }) => {
       <P
         noMargin
         className={classNames({
-          [classes.bold]: true,
-          [classes.error]: hasChainAnalysisError(tx)
+          'font-bold ml-1': true,
+          'text-tomato': hasChainAnalysisError(tx)
         })}>
         {tx.walletScore}
       </P>
@@ -235,24 +235,23 @@ const DetailsRow = ({ it: tx, timezone }) => {
   }
 
   return (
-    <div data-cy="details" className={classes.wrapper}>
-      <div className={classes.row}>
-        <div data-cy="direction" className={classes.direction}>
+    <div data-cy="details" className="flex flex-col mt-6">
+      <div className="flex flex-row mb-9">
+        <div data-cy="direction" className="w-59">
           <Label>Direction</Label>
           <div>
-            <span className={classes.txIcon}>
+            <span className="mr-3">
               {!isCashIn ? <TxOutIcon /> : <TxInIcon />}
             </span>
             <span>{!isCashIn ? 'Cash-out' : 'Cash-in'}</span>
           </div>
         </div>
 
-        <div data-cy="availableIds" className={classes.availableIds}>
+        <div data-cy="availableIds" className="w-58">
           <Label>Available IDs</Label>
-          <Box display="flex" flexDirection="row">
+          <div className="flex gap-1">
             {tx.customerPhone && (
               <IDButton
-                className={classes.idButton}
                 name="phone"
                 Icon={PhoneIdIcon}
                 InverseIcon={PhoneIdInverseIcon}>
@@ -261,13 +260,11 @@ const DetailsRow = ({ it: tx, timezone }) => {
             )}
             {tx.customerIdCardPhotoPath && !tx.customerIdCardData && (
               <IDButton
-                popoverClassname={classes.clipboardPopover}
-                className={classes.idButton}
+                popoverClassname="h-41 w-54"
                 name="card"
                 Icon={CardIdIcon}
                 InverseIcon={CardIdInverseIcon}>
                 <img
-                  className={classes.idCardPhoto}
                   src={`/id-card-photo/${tx.customerIdCardPhotoPath}`}
                   alt=""
                 />
@@ -275,33 +272,32 @@ const DetailsRow = ({ it: tx, timezone }) => {
             )}
             {tx.customerIdCardData && (
               <IDButton
-                className={classes.idButton}
                 name="card"
                 Icon={CardIdIcon}
                 InverseIcon={CardIdInverseIcon}>
-                <div className={classes.idCardDataCard}>
-                  <div>
+                <div className="font-museo flex py-3 px-2 gap-16">
+                  <div className="flex flex-col gap-4">
                     <div>
                       <Label>Name</Label>
-                      <div>{customer.name}</div>
+                      <P noMargin>{customer.name}</P>
                     </div>
                     <div>
                       <Label>Age</Label>
-                      <div>{customer.age}</div>
+                      <P noMargin>{customer.age}</P>
                     </div>
                     <div>
                       <Label>Country</Label>
-                      <div>{customer.country}</div>
+                      <P noMargin>{customer.country}</P>
                     </div>
                   </div>
                   <div>
                     <div>
                       <Label>ID number</Label>
-                      <div>{customer.idCardNumber}</div>
+                      <P noMargin>{customer.idCardNumber}</P>
                     </div>
                     <div>
                       <Label>Expiration date</Label>
-                      <div>{customer.idCardExpirationDate}</div>
+                      <P noMargin>{customer.idCardExpirationDate}</P>
                     </div>
                   </div>
                 </div>
@@ -309,7 +305,6 @@ const DetailsRow = ({ it: tx, timezone }) => {
             )}
             {tx.customerFrontCameraPath && (
               <IDButton
-                className={classes.idButton}
                 name="cam"
                 Icon={CamIdIcon}
                 InverseIcon={CamIdInverseIcon}>
@@ -330,19 +325,19 @@ const DetailsRow = ({ it: tx, timezone }) => {
                 />
               </IDButton>
             )}
-          </Box>
+          </div>
         </div>
-        <div data-cy="exchangeRate" className={classes.exchangeRate}>
+        <div data-cy="exchangeRate" className="w-62">
           <Label>Exchange rate</Label>
           <div>{crypto > 0 ? displayExRate : '-'}</div>
         </div>
-        <div data-cy="commission" className={classes.commission}>
+        <div data-cy="commission" className="w-54">
           <Label>Commission</Label>
-          <div className={classes.container}>
+          <div className="flex">
             {`${commission} ${tx.fiatCode} (${commissionPercentage} %)`}
             {discount && (
-              <div className={classes.chip}>
-                <Label1 className={classes.chipLabel}>{discount}</Label1>
+              <div className="flex items-center py-1 px-2 bg-comet text-white h-6 -mb-6 -mt-1 ml-2 rounded-sm">
+                <Label1 className="text-white">{discount}</Label1>
               </div>
             )}
           </div>
@@ -352,9 +347,9 @@ const DetailsRow = ({ it: tx, timezone }) => {
           <div>{`${fixedFee} ${tx.fiatCode}`}</div>
         </div>
       </div>
-      <div className={classes.secondRow}>
-        <div data-cy="address" className={classes.address}>
-          <div className={classes.addressHeader}>
+      <div className="flex flex-row justify-between mb-9">
+        <div data-cy="address" className="w-70">
+          <div className="flex flex-row justify-between items-center">
             <Label>Address</Label>
             {!R.isNil(tx.walletScore) && (
               <HelpTooltip parentElements={walletScoreEl}>
@@ -368,7 +363,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
             </CopyToClipboard>
           </div>
         </div>
-        <div data-cy="transactionId" className={classes.transactionId}>
+        <div data-cy="transactionId" className="w-70">
           <Label>Transaction ID</Label>
           <div>
             {tx.txClass === 'cashOut' ? (
@@ -379,18 +374,18 @@ const DetailsRow = ({ it: tx, timezone }) => {
           </div>
         </div>
         {tx.txClass === 'cashIn' && (
-          <div data-cy="networkFee" className={classes.blockFee}>
+          <div data-cy="networkFee" className="w-35">
             <Label>Network Fee</Label>
             {cryptoFee}
           </div>
         )}
-        <div data-cy="sessionId" className={classes.sessionId}>
+        <div data-cy="sessionId" className="w-54">
           <Label>Session ID</Label>
           <CopyToClipboard>{tx.id}</CopyToClipboard>
         </div>
       </div>
-      <div className={classes.lastRow}>
-        <div data-cy="status" className={classes.status}>
+      <div className="flex flex-row mb-8 gap-10">
+        <div data-cy="status" className="62">
           {errorElements}
           {((tx.txClass === 'cashOut' && getStatus(tx) === 'Pending') ||
             (tx.txClass === 'cashIn' && getStatus(tx) === 'Batched')) && (
@@ -398,7 +393,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
               color="primary"
               Icon={CancelIcon}
               InverseIcon={CancelInverseIcon}
-              className={classes.cancelTransaction}
+              className="w-40"
               onClick={() =>
                 setAction({
                   command: 'cancelTx'
@@ -409,21 +404,19 @@ const DetailsRow = ({ it: tx, timezone }) => {
           )}
         </div>
         {!R.isNil(tx.swept) && R.includes(tx.cryptoCode, SWEEPABLE_CRYPTOS) && (
-          <div data-cy="swept" className={classes.swept}>
+          <div data-cy="swept" className="w-63">
             <Label>Sweep status</Label>
-            <span className={classes.bold}>
-              {tx.swept ? `Swept` : `Unswept`}
-            </span>
+            <span className="font-bold">{tx.swept ? `Swept` : `Unswept`}</span>
           </div>
         )}
         <div>
           <Label>Other actions</Label>
-          <div className={classes.otherActionsGroup}>
+          <div className="flex flex-row">
             <ActionButton
               color="primary"
               Icon={Download}
               InverseIcon={DownloadInverseIcon}
-              className={classes.downloadRawLogs}
+              className="w-45"
               onClick={() => downloadRawLogs(tx, timezone)}>
               Download raw logs
             </ActionButton>

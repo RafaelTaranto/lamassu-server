@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import CustomerDataReversedIcon from 'src/styling/icons/customer-nav/data/comet.svg?react'
@@ -10,12 +9,9 @@ import OverviewIcon from 'src/styling/icons/customer-nav/overview/white.svg?reac
 import PhotosReversedIcon from 'src/styling/icons/customer-nav/photos/comet.svg?react'
 import Photos from 'src/styling/icons/customer-nav/photos/white.svg?react'
 
-import styles from './CustomerSidebar.styles'
-
-const useStyles = makeStyles(styles)
+import { P } from '/src/components/typography/index.jsx'
 
 const CustomerSidebar = ({ isSelected, onClick }) => {
-  const classes = useStyles()
   const sideBarOptions = [
     {
       code: 'overview',
@@ -44,19 +40,24 @@ const CustomerSidebar = ({ isSelected, onClick }) => {
   ]
 
   return (
-    <div className={classes.sidebar}>
+    <div className="flex flex-col rounded-sm w-55 bg-zircon overflow-hidden">
       {sideBarOptions?.map(({ Icon, InverseIcon, display, code }, idx) => (
         <div
           key={idx}
           className={classnames({
-            [classes.activeLink]: isSelected(code),
-            [classes.link]: true
+            'gap-4 p-4 cursor-pointer flex items-center': true,
+            'bg-comet2': isSelected(code)
           })}
           onClick={() => onClick(code)}>
-          <div className={classes.icon}>
-            {isSelected(code) ? <Icon /> : <InverseIcon />}
-          </div>
-          {display}
+          {isSelected(code) ? <Icon /> : <InverseIcon />}
+          <P
+            noMargin
+            className={classnames({
+              'text-comet2': true,
+              'text-white font-bold': isSelected(code)
+            })}>
+            {display}
+          </P>
         </div>
       ))}
     </div>

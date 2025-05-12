@@ -1,38 +1,8 @@
-import { makeStyles } from '@mui/styles'
 import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import React from 'react'
 import { H4, P } from 'src/components/typography'
 
-import { backgroundColor, comet } from 'src/styling/variables'
-const styles = {
-  noTextTransform: {
-    textTransform: 'none'
-  },
-  flex: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'start',
-    width: '90%',
-    overflow: 'hidden',
-    maxHeight: 80
-  },
-  buttonTextContent: {
-    marginLeft: 32,
-    textTransform: 'none',
-    textAlign: 'left'
-  },
-  button: {
-    backgroundColor: backgroundColor,
-    marginBottom: 16
-  },
-  paragraph: {
-    color: comet,
-    marginTop: -10
-  }
-}
-
-const useStyles = makeStyles(styles)
 const ToggleButtonGroup = ({
   name,
   orientation = 'vertical',
@@ -42,7 +12,6 @@ const ToggleButtonGroup = ({
   size = 'small',
   ...props
 }) => {
-  const classes = useStyles()
   return (
     <MUIToggleButtonGroup
       size={size}
@@ -54,15 +23,15 @@ const ToggleButtonGroup = ({
       {props.options.map(option => {
         return (
           <ToggleButton
-            className={classes.button}
+            className="bg-ghost"
             value={option.value}
             aria-label={option.value}
             key={option.value}>
-            <div className={classes.flex}>
+            <div className="flex items-center justify-start w-9/10 overflow-hidden max-h-20">
               <option.icon />
-              <div className={classes.buttonTextContent}>
+              <div className="ml-8 normal-case text-left">
                 <H4>{option.title}</H4>
-                <P className={classes.paragraph}> {option.description}</P>
+                <P className="text-comet -mt-2"> {option.description}</P>
               </div>
             </div>
           </ToggleButton>

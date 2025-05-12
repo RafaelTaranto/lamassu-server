@@ -1,18 +1,17 @@
-import { useMutation, useQuery, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
+import { useMutation, useQuery, gql } from '@apollo/client'
 import classnames from 'classnames'
 import React, { useState } from 'react'
-import InfoMessage from 'src/components/InfoMessage'
 import { HelpTooltip } from 'src/components/Tooltip'
-import { H1, H4, P } from 'src/components/typography'
+import { H1, H4, Label1, P } from 'src/components/typography'
 import FormRenderer from 'src/pages/Services/FormRenderer'
+import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
 
 import { Button, SupportLinkButton } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
 import twilio from 'src/pages/Services/schemas/twilio'
 
-import styles from './Wallet/Shared.styles'
+import sharedClasses from './Wallet/Shared.module.css'
+import classes from './Twilio.module.css'
 
 const GET_CONFIG = gql`
   {
@@ -27,30 +26,6 @@ const SAVE_ACCOUNTS = gql`
   }
 `
 
-const useStyles = makeStyles({
-  ...styles,
-  content: {
-    width: 820
-  },
-  radioLabel: {
-    ...styles.radioLabel,
-    width: 280
-  },
-  wrapper: {
-    width: 1200,
-    height: 100,
-    margin: [[0, 'auto']]
-  },
-  title: {
-    marginLeft: 8,
-    marginBottom: 5
-  },
-  info: {
-    marginTop: 20,
-    marginBottom: 20
-  }
-})
-
 const options = [
   {
     code: 'enable',
@@ -63,7 +38,6 @@ const options = [
 ]
 
 function Twilio({ doContinue }) {
-  const classes = useStyles()
   const [selected, setSelected] = useState(null)
   const [error, setError] = useState(false)
 
@@ -90,15 +64,15 @@ function Twilio({ doContinue }) {
   }
 
   const titleClasses = {
-    [classes.title]: true,
-    [classes.error]: error
+    'ml-2 mb-2': true,
+    [sharedClasses.error]: error
   }
 
   return (
     <div className={classes.wrapper}>
       <div className={classes.content}>
         <H1>Twilio (SMS service)</H1>
-        <Box display="flex" alignItems="end">
+        <div className="flex items-end">
           <H4 noMargin className={classnames(titleClasses)}>
             Will you setup a two way machine or compliance?
           </H4>
@@ -112,19 +86,23 @@ function Twilio({ doContinue }) {
               compliance triggers
             </P>
           </HelpTooltip>
-        </Box>
+        </div>
 
         <RadioGroup
           labelClassName={classes.radioLabel}
-          className={classes.radioGroup}
+          className={sharedClasses.radioGroup}
           options={options}
           value={selected}
           onChange={onSelect}
         />
 
-        <InfoMessage className={classes.info}>
-          To set up Twilio please read the instructions from our support portal.
-        </InfoMessage>
+        <div className="flex gap-4 mt-5 mb-8 items-center">
+          <WarningIcon />
+          <Label1 noMargin>
+            To set up Twilio please read the instructions from our support
+            portal.
+          </Label1>
+        </div>
         <SupportLinkButton
           link="https://support.lamassu.is/hc/en-us/articles/115001203951-Twilio-for-SMS"
           label="Twilio for SMS"
@@ -140,12 +118,15 @@ function Twilio({ doContinue }) {
               elements={twilio.elements}
               validationSchema={twilio.getValidationSchema(accounts.twilio)}
               buttonLabel={'Continue'}
-              buttonClass={classes.formButton}
+              buttonClass={sharedClasses.formButton}
             />
           </>
         )}
         {selected !== 'enable' && (
-          <Button size="lg" onClick={clickContinue} className={classes.button}>
+          <Button
+            size="lg"
+            onClick={clickContinue}
+            className={sharedClasses.button}>
             Continue
           </Button>
         )}

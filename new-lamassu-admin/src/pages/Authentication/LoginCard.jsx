@@ -1,5 +1,4 @@
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/styles'
 import React, { useReducer } from 'react'
 import { H5 } from 'src/components/typography'
 import Logo from 'src/styling/icons/menu/logo.svg?react'
@@ -8,13 +7,11 @@ import Input2FAState from './Input2FAState'
 import InputFIDOState from './InputFIDOState'
 import LoginState from './LoginState'
 import Setup2FAState from './Setup2FAState'
-import styles from './shared.styles'
 import { STATES } from './states'
+import classes from './Authentication.module.css'
 
 // FIDO2FA, FIDOPasswordless or FIDOUsernameless
 const AUTHENTICATION_STRATEGY = 'FIDO2FA'
-
-const useStyles = makeStyles(styles)
 
 const initialState = {
   twoFAField: '',
@@ -30,8 +27,6 @@ const reducer = (state, action) => {
 }
 
 const LoginCard = () => {
-  const classes = useStyles()
-
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const renderState = () => {
@@ -62,7 +57,7 @@ const LoginCard = () => {
       <div className={classes.wrapper}>
         <div className={classes.titleWrapper}>
           <Logo className={classes.icon} />
-          <H5 className={classes.title}>Lamassu Admin</H5>
+          <h3 className={classes.title}>Lamassu Admin</h3>
         </div>
         {renderState()}
       </div>

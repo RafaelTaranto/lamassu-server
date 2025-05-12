@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import * as R from 'ramda'
@@ -9,9 +8,6 @@ import Wrench from 'src/styling/icons/action/wrench/zodiac.svg?react'
 import CashBoxEmpty from 'src/styling/icons/cassettes/cashbox-empty.svg?react'
 import AlertLinkIcon from 'src/styling/icons/month arrows/right.svg?react'
 import WarningIcon from 'src/styling/icons/warning-icon/tomato.svg?react'
-
-import styles from './Alerts.styles'
-const useStyles = makeStyles(styles)
 
 const icons = {
   error: <WarningIcon style={{ height: 20, width: 20, marginRight: 12 }} />,
@@ -28,7 +24,6 @@ const links = {
 
 const AlertsTable = ({ numToRender, alerts, machines }) => {
   const history = useHistory()
-  const classes = useStyles()
   const alertsToRender = R.slice(0, numToRender, alerts)
 
   const alertMessage = alert => {
@@ -40,16 +35,16 @@ const AlertsTable = ({ numToRender, alerts, machines }) => {
   }
 
   return (
-    <List dense className={classes.table}>
+    <List dense className="max-h-116 overflow-y-auto overflow-x-hidden">
       {alertsToRender.map((alert, idx) => {
         return (
           <ListItem key={idx}>
             {icons[alert.type] || (
               <Wrench style={{ height: 23, width: 23, marginRight: 8 }} />
             )}
-            <P className={classes.listItemText}>{alertMessage(alert)}</P>
+            <P className="my-2">{alertMessage(alert)}</P>
             <AlertLinkIcon
-              className={classes.linkIcon}
+              className="ml-auto cursor-pointer"
               onClick={() => history.push(links[alert.type] || '/dashboard')}
             />
           </ListItem>

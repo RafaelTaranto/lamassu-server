@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import prettyMs from 'pretty-ms'
 import * as R from 'ramda'
@@ -8,8 +7,7 @@ import Wrench from 'src/styling/icons/action/wrench/zodiac.svg?react'
 import Transaction from 'src/styling/icons/arrow/transaction.svg?react'
 import WarningIcon from 'src/styling/icons/warning-icon/tomato.svg?react'
 
-import styles from './NotificationCenter.styles'
-const useStyles = makeStyles(styles)
+import classes from './NotificationCenter.module.css'
 
 const types = {
   transaction: {
@@ -46,8 +44,6 @@ const NotificationRow = ({
   valid,
   toggleClear
 }) => {
-  const classes = useStyles()
-
   const typeDisplay = R.path([type, 'display'])(types) ?? null
   const icon = R.path([type, 'icon'])(types) ?? (
     <Wrench height={16} width={16} />

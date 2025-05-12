@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Form, Formik } from 'formik'
 import * as R from 'ramda'
 import React, { useState, Fragment } from 'react'
@@ -7,7 +6,6 @@ import Modal from 'src/components/Modal'
 import Stepper from 'src/components/Stepper'
 
 import { Button } from 'src/components/buttons'
-import { comet } from 'src/styling/variables'
 
 import {
   entryType,
@@ -19,43 +17,6 @@ import {
 } from './helper'
 
 const LAST_STEP = 2
-
-const styles = {
-  stepper: {
-    margin: [[16, 0, 14, 0]]
-  },
-  submit: {
-    display: 'flex',
-    flexDirection: 'row',
-    margin: [['auto', 0, 24]]
-  },
-  button: {
-    marginLeft: 'auto'
-  },
-  form: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  infoTitle: {
-    margin: [[18, 0, 20, 0]]
-  },
-  infoCurrentText: {
-    color: comet
-  },
-  blankSpace: {
-    padding: [[0, 30]],
-    margin: [[0, 4, 0, 2]],
-    borderBottom: `1px solid ${comet}`,
-    display: 'inline-block'
-  },
-  dropdownField: {
-    marginTop: 16,
-    minWidth: 155
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const getStep = (step, selectedValues) => {
   const elements =
@@ -82,8 +43,6 @@ const Wizard = ({
   addCustomerData,
   addPhoto
 }) => {
-  const classes = useStyles()
-
   const [selectedValues, setSelectedValues] = useState(null)
 
   const [{ step, config }, setState] = useState({
@@ -98,7 +57,7 @@ const Wizard = ({
   const stepOptions = getStep(step, selectedValues)
 
   const onContinue = async it => {
-    const newConfig = R.merge(config, stepOptions.schema.cast(it))
+    const newConfig = R.mergeRight(config, stepOptions.schema.cast(it))
     setSelectedValues(newConfig)
 
     if (isLastStep) {
@@ -135,11 +94,7 @@ const Wizard = ({
         width={520}
         height={520}
         open={true}>
-        <Stepper
-          className={classes.stepper}
-          steps={LAST_STEP}
-          currentStep={step}
-        />
+        <Stepper steps={LAST_STEP} currentStep={step} className="my-4" />
         <Formik
           validateOnBlur={false}
           validateOnChange={false}
@@ -148,19 +103,19 @@ const Wizard = ({
           initialValues={stepOptions.initialValues}
           validationSchema={stepOptions.schema}>
           {({ errors }) => (
-            <Form className={classes.form}>
+            <Form className="h-full flex flex-col">
               <stepOptions.Component
                 selectedValues={selectedValues}
                 customInfoRequirementOptions={customInfoRequirementOptions}
                 errors={errors}
                 {...stepOptions.props}
               />
-              <div className={classes.submit}>
+              <div className="flex mt-auto mb-6">
                 {error && <ErrorMessage>Failed to save</ErrorMessage>}
                 {Object.keys(errors).length > 0 && (
                   <ErrorMessage>{Object.values(errors)[0]}</ErrorMessage>
                 )}
-                <Button className={classes.button} type="submit">
+                <Button className="ml-auto" type="submit">
                   {isLastStep ? 'Add Data' : 'Next'}
                 </Button>
               </div>

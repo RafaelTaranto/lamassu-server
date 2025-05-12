@@ -1,10 +1,10 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
 import Switch from '@mui/material/Switch'
-import { makeStyles } from '@mui/styles'
+import SvgIcon from '@mui/material/SvgIcon'
+import IconButton from '@mui/material/IconButton'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -14,15 +14,12 @@ import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 import ReverseSettingsIcon from 'src/styling/icons/circle buttons/settings/white.svg?react'
 import SettingsIcon from 'src/styling/icons/circle buttons/settings/zodiac.svg?react'
 
-import { Link, Button, IconButton, SupportLinkButton } from 'src/components/buttons'
+import { Link, Button, SupportLinkButton } from 'src/components/buttons'
 import { fromNamespace, toNamespace } from 'src/utils/config'
 
-import styles from './Blacklist.styles'
 import BlackListAdvanced from './BlacklistAdvanced'
 import BlackListModal from './BlacklistModal'
 import BlacklistTable from './BlacklistTable'
-
-const useStyles = makeStyles(styles)
 
 const DELETE_ROW = gql`
   mutation DeleteBlacklistRow($address: String!) {
@@ -84,8 +81,6 @@ const EDIT_BLACKLIST_MESSAGE = gql`
 `
 
 const PaperWalletDialog = ({ onConfirmed, onDissmised, open, props }) => {
-  const classes = useStyles()
-
   return (
     <Dialog
       open={open}
@@ -99,28 +94,27 @@ const PaperWalletDialog = ({ onConfirmed, onDissmised, open, props }) => {
         }
       }}
       {...props}>
-      <div className={classes.closeButton}>
-        <IconButton size={16} aria-label="close" onClick={onDissmised}>
-          <CloseIcon />
-        </IconButton>
+      <div className="p-2">
+        <DialogTitle className="flex flex-col">
+          <IconButton
+            aria-label="close"
+            onClick={onDissmised}
+            className="-mt-2 -mr-4 ml-auto">
+            <SvgIcon>
+              <CloseIcon />
+            </SvgIcon>
+          </IconButton>
+          <H2 noMargin>{'Are you sure you want to enable this?'}</H2>
+        </DialogTitle>
+        <DialogContent>
+          <Info3>{`This mode means that only paper wallets will be printed for users, and they won't be permitted to scan an address from their own wallet.`}</Info3>
+          <Info3>{`This mode is only useful for countries like Switzerland which mandates such a feature.\n`}</Info3>
+          <Info2>{`Don't enable this if you want users to be able to scan an address of their choosing.`}</Info2>
+          <div className="flex justify-end mt-8">
+            <Button onClick={() => onConfirmed(true)}>Confirm</Button>
+          </div>
+        </DialogContent>
       </div>
-      <H2 className={classes.dialogTitle}>
-        {'Are you sure you want to enable this?'}
-      </H2>
-      <DialogContent className={classes.dialogContent}>
-        <Info3>{`This mode means that only paper wallets will be printed for users, and they won't be permitted to scan an address from their own wallet.`}</Info3>
-        <Info3>{`This mode is only useful for countries like Switzerland which mandates such a feature.\n`}</Info3>
-        <Info2>{`Don't enable this if you want users to be able to scan an address of their choosing.`}</Info2>
-      </DialogContent>
-      <DialogActions className={classes.dialogActions}>
-        <Button
-          backgroundColor="grey"
-          className={classes.cancelButton}
-          onClick={() => onDissmised()}>
-          Cancel
-        </Button>
-        <Button onClick={() => onConfirmed(true)}>Confirm</Button>
-      </DialogActions>
     </Dialog>
   )
 }
@@ -157,8 +151,6 @@ const Blacklist = () => {
     onError: e => setEditMessageError(e),
     refetchQueries: () => ['getBlacklistData']
   })
-
-  const classes = useStyles()
 
   const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
 
@@ -234,12 +226,8 @@ const Blacklist = () => {
           }
         ]}>
         {!advancedSettings && (
-          <Box display="flex" alignItems="center" justifyContent="flex-end">
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="end"
-              mr="15px">
+          <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end mr-4">
               <P>Enable paper wallet (only)</P>
               <Switch
                 checked={enablePaperWalletOnly}
@@ -260,12 +248,8 @@ const Blacklist = () => {
                   to scan an address from their own wallet.
                 </P>
               </HelpTooltip>
-            </Box>
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="flex-end"
-              mr="15px">
+            </div>
+            <div className="flex items-center justify-end mr-4">
               <P>Reject reused addresses</P>
               <Switch
                 checked={rejectAddressReuse}
@@ -285,15 +269,15 @@ const Blacklist = () => {
                   label="Reject Address Reuse"
                 />
               </HelpTooltip>
-            </Box>
+            </div>
             <Link color="primary" onClick={() => setShowModal(true)}>
               Blacklist new addresses
             </Link>
-          </Box>
+          </div>
         )}
       </TitleSection>
       {!advancedSettings && (
-        <div className={classes.content}>
+        <div className="flex flex-col flex-1">
           <BlacklistTable
             data={blacklistData}
             handleDeleteEntry={handleDeleteEntry}

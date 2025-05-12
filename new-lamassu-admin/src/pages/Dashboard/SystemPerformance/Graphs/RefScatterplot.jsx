@@ -4,14 +4,6 @@ import { getTimezoneOffset } from 'date-fns-tz'
 import { add, format, startOfWeek, startOfYear } from 'date-fns/fp'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import {
-  java,
-  neon,
-  subheaderDarkColor,
-  offColor,
-  fontSecondary,
-  backgroundColor
-} from 'src/styling/variables'
 import { numberToFiatAmount } from 'src/utils/number'
 import { MINUTE, DAY, WEEK, MONTH } from 'src/utils/time'
 
@@ -143,7 +135,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
         .attr('y', GRAPH_MARGIN.top)
         .attr('width', GRAPH_WIDTH)
         .attr('height', GRAPH_HEIGHT - GRAPH_MARGIN.top - GRAPH_MARGIN.bottom)
-        .attr('fill', backgroundColor)
+        .attr('fill', 'var(--ghost)')
     },
     [GRAPH_MARGIN]
   )
@@ -191,8 +183,8 @@ const Graph = ({ data, timeFrame, timezone }) => {
 
   const buildGrid = useCallback(
     g => {
-      g.attr('stroke', subheaderDarkColor)
-        .attr('fill', subheaderDarkColor)
+      g.attr('stroke', 'var(--zircon2)')
+        .attr('fill', 'var(--zircon2)')
         // Vertical lines
         .call(g =>
           g
@@ -277,10 +269,10 @@ const Graph = ({ data, timeFrame, timezone }) => {
     () =>
       d3
         .selectAll('.tick text')
-        .style('stroke', offColor)
-        .style('fill', offColor)
+        .style('stroke', 'var(--comet)')
+        .style('fill', 'var(--comet)')
         .style('stroke-width', 0)
-        .style('font-family', fontSecondary),
+        .style('font-family', 'var(--museo)'),
     []
   )
 
@@ -288,10 +280,10 @@ const Graph = ({ data, timeFrame, timezone }) => {
     () =>
       d3
         .selectAll('text')
-        .style('stroke', offColor)
-        .style('fill', offColor)
+        .style('stroke', 'var(--comet)')
+        .style('fill', 'var(--comet)')
         .style('stroke-width', 0)
-        .style('font-family', fontSecondary),
+        .style('font-family', 'var(--museo)'),
     []
   )
 
@@ -311,7 +303,9 @@ const Graph = ({ data, timeFrame, timezone }) => {
           return x(created.setTime(created.getTime() + offset))
         })
         .attr('cy', d => y(new BigNumber(d.fiat).toNumber()))
-        .attr('fill', d => (d.txClass === 'cashIn' ? java : neon))
+        .attr('fill', d =>
+          d.txClass === 'cashIn' ? 'var(--java)' : 'var(--neon)'
+        )
         .attr('r', 3.5)
     },
     [data, offset, x, y]

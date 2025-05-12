@@ -1,7 +1,7 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import DialogActions from '@mui/material/DialogActions'
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'
@@ -14,7 +14,7 @@ import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import ReverseHistoryIcon from 'src/styling/icons/circle buttons/history/white.svg?react'
 import HistoryIcon from 'src/styling/icons/circle buttons/history/zodiac.svg?react'
 
-import { IconButton, Button, SupportLinkButton } from 'src/components/buttons'
+import { Button, SupportLinkButton } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
 import { EmptyTable } from 'src/components/table'
 import { fromNamespace, toNamespace } from 'src/utils/config'
@@ -22,13 +22,10 @@ import { MANUAL, AUTOMATIC } from 'src/utils/constants'
 import { onlyFirstToUpper } from 'src/utils/string'
 
 import CashUnitDetails from './CashUnitDetails'
-import styles from './CashUnits.styles'
 import CashCassettesFooter from './CashUnitsFooter'
 import CashboxHistory from './CashboxHistory'
 import Wizard from './Wizard/Wizard'
 import helper from './helper'
-
-const useStyles = makeStyles(styles)
 
 const GET_MACHINES_AND_CONFIG = gql`
   query getData($billFilters: JSONObject) {
@@ -98,7 +95,11 @@ const SET_CASSETTE_BILLS = gql`
 `
 
 const GET_BATCHES_CSV = gql`
-  query cashboxBatchesCsv($from: DateTimeISO, $until: DateTimeISO, $timezone: String) {
+  query cashboxBatchesCsv(
+    $from: DateTimeISO
+    $until: DateTimeISO
+    $timezone: String
+  ) {
     cashboxBatchesCsv(from: $from, until: $until, timezone: $timezone)
   }
 `
@@ -111,7 +112,6 @@ const widths = {
 }
 
 const CashCassettes = () => {
-  const classes = useStyles()
   const [showHistory, setShowHistory] = useState(false)
   const [editingSchema, setEditingSchema] = useState(null)
   const [selectedRadio, setSelectedRadio] = useState(null)
@@ -185,7 +185,6 @@ const CashCassettes = () => {
   }
 
   const elements = helper.getElements(
-    classes,
     config,
     bills,
     setWizard,
@@ -202,155 +201,153 @@ const CashCassettes = () => {
     />
   )
 
-  return (!dataLoading && (<>
-    <TitleSection
-      title="Cash boxes & cassettes"
-      buttons={[
-        {
-          text: 'Cash box history',
-          icon: HistoryIcon,
-          inverseIcon: ReverseHistoryIcon,
-          toggle: setShowHistory
-        },
-        {
-          component: showHistory ? (
-            <LogsDowloaderPopover
-              className={classes.downloadLogsButton}
-              title="Download logs"
-              name="cashboxHistory"
-              query={GET_BATCHES_CSV}
-              getLogs={logs => R.path(['cashboxBatchesCsv'])(logs)}
-              timezone={timezone}
-              args={{ timezone }}
-            />
-          ) : (
-            <></>
-          )
-        }
-      ]}
-      iconClassName={classes.listViewButton}
-      className={classes.tableWidth}
-      appendix={
-        <HelpTooltip width={220}>
-          <P>
-            For details on configuring cash boxes and cassettes, please read
-            the relevant knowledgebase article:
-          </P>
-          <SupportLinkButton
-            link="https://support.lamassu.is/hc/en-us/articles/4420839641229-Cash-Boxes-Cassettess"
-            label="Cash Boxes & Cassettes"
-            bottomSpace="1"
-          />
-        </HelpTooltip>
-      }>
-      {!showHistory && (
-        <Box alignItems="center" justifyContent="flex-end">
-          <Label1 className={classes.cashboxReset}>Cash box resets</Label1>
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="end"
-            mr="-4px">
-            {cashboxReset && (
-              <P className={classes.selection}>
-                {onlyFirstToUpper(cashboxReset)}
-              </P>
-            )}
-            <IconButton
-              onClick={() => setEditingSchema(true)}
-              className={classes.button}
-              size="large">
-              <EditIcon />
-            </IconButton>
-          </Box>
-        </Box>
-      )}
-    </TitleSection>
-    {!showHistory && (
+  return (
+    !dataLoading && (
       <>
-        <DataTable
-          loading={dataLoading}
-          elements={elements}
-          data={machines}
-          Details={InnerCashUnitDetails}
-          emptyText="No machines so far"
-          expandable
-          tableClassName={classes.dataTable}
-        />
+        <TitleSection
+          title="Cash boxes & cassettes"
+          buttons={[
+            {
+              text: 'Cash box history',
+              icon: HistoryIcon,
+              inverseIcon: ReverseHistoryIcon,
+              toggle: setShowHistory
+            },
+            {
+              component: showHistory ? (
+                <LogsDowloaderPopover
+                  className="ml-4"
+                  title="Download logs"
+                  name="cashboxHistory"
+                  query={GET_BATCHES_CSV}
+                  getLogs={logs => R.path(['cashboxBatchesCsv'])(logs)}
+                  timezone={timezone}
+                  args={{ timezone }}
+                />
+              ) : (
+                <></>
+              )
+            }
+          ]}
+          className="flex items-center mr-[1px]"
+          appendix={
+            <HelpTooltip width={220}>
+              <P>
+                For details on configuring cash boxes and cassettes, please read
+                the relevant knowledgebase article:
+              </P>
+              <SupportLinkButton
+                link="https://support.lamassu.is/hc/en-us/articles/4420839641229-Cash-Boxes-Cassettess"
+                label="Cash Boxes & Cassettes"
+                bottomSpace="1"
+              />
+            </HelpTooltip>
+          }>
+          {!showHistory && (
+            <div className="flex flex-col items-end">
+              <Label1 noMargin className="text-comet">
+                Cash box resets
+              </Label1>
+              <div className="flex items-center justify-end -mr-1">
+                {cashboxReset && (
+                  <P noMargin className="mr-2">
+                    {onlyFirstToUpper(cashboxReset)}
+                  </P>
+                )}
+                <IconButton onClick={() => setEditingSchema(true)}>
+                  <SvgIcon>
+                    <EditIcon />
+                  </SvgIcon>
+                </IconButton>
+              </div>
+            </div>
+          )}
+        </TitleSection>
+        {!showHistory && (
+          <>
+            <DataTable
+              loading={dataLoading}
+              elements={elements}
+              data={machines}
+              Details={InnerCashUnitDetails}
+              emptyText="No machines so far"
+              expandable
+              tableClassName="mb-20"
+            />
 
-        {data && R.isEmpty(machines) && (
-          <EmptyTable message="No machines so far" />
+            {data && R.isEmpty(machines) && (
+              <EmptyTable message="No machines so far" />
+            )}
+          </>
+        )}
+        {showHistory && (
+          <CashboxHistory
+            machines={R.concat(machines, unpairedMachines)}
+            currency={fiatCurrency}
+            timezone={timezone}
+          />
+        )}
+        <CashCassettesFooter
+          currencyCode={fiatCurrency}
+          machines={machines}
+          config={config}
+          bills={R.path(['bills'])(data)}
+          deviceIds={deviceIds}
+        />
+        {wizard && (
+          <Wizard
+            machine={R.find(R.propEq('id', machineId), machines)}
+            cashoutSettings={getCashoutSettings(machineId)}
+            onClose={() => {
+              setWizard(false)
+            }}
+            error={error?.message}
+            save={onSave}
+            locale={locale}
+          />
+        )}
+        {editingSchema && (
+          <Modal
+            title={'Cash box resets'}
+            width={478}
+            handleClose={() => setEditingSchema(null)}
+            open={true}>
+            <P className="text-comet mt-0">
+              We can automatically assume you emptied a bill validator's cash
+              box when the machine detects that it has been removed.
+            </P>
+            <RadioGroup
+              name="set-automatic-reset"
+              value={selectedRadio ?? cashboxReset}
+              options={[radioButtonOptions[0]]}
+              onChange={handleRadioButtons}
+            />
+            <P className="text-comet mt-0">
+              Assume the cash box is emptied whenever it's removed, creating a
+              new batch on the history screen and setting its current balance to
+              zero.
+            </P>
+            <RadioGroup
+              name="set-manual-reset"
+              value={selectedRadio ?? cashboxReset}
+              options={[radioButtonOptions[1]]}
+              onChange={handleRadioButtons}
+            />
+            <P className="text-comet mt-0">
+              Cash boxes won't be assumed emptied when removed, nor their counts
+              modified. Instead, to update the count and create a new batch,
+              you'll click the 'Edit' button on this panel.
+            </P>
+            <DialogActions>
+              <Button onClick={() => saveCashboxOption(selectedRadio)}>
+                Confirm
+              </Button>
+            </DialogActions>
+          </Modal>
         )}
       </>
-    )}
-    {showHistory && (
-      <CashboxHistory
-        machines={R.concat(machines, unpairedMachines)}
-        currency={fiatCurrency}
-        timezone={timezone}
-      />
-    )}
-    <CashCassettesFooter
-      currencyCode={fiatCurrency}
-      machines={machines}
-      config={config}
-      bills={R.path(['bills'])(data)}
-      deviceIds={deviceIds}
-    />
-    {wizard && (
-      <Wizard
-        machine={R.find(R.propEq('id', machineId), machines)}
-        cashoutSettings={getCashoutSettings(machineId)}
-        onClose={() => {
-          setWizard(false)
-        }}
-        error={error?.message}
-        save={onSave}
-        locale={locale}
-      />
-    )}
-    {editingSchema && (
-      <Modal
-        title={'Cash box resets'}
-        width={478}
-        handleClose={() => setEditingSchema(null)}
-        open={true}>
-        <P className={classes.descriptions}>
-          We can automatically assume you emptied a bill validator's cash
-          box when the machine detects that it has been removed.
-        </P>
-        <RadioGroup
-          name="set-automatic-reset"
-          value={selectedRadio ?? cashboxReset}
-          options={[radioButtonOptions[0]]}
-          onChange={handleRadioButtons}
-          className={classes.radioButtons}
-        />
-        <P className={classes.descriptions}>
-          Assume the cash box is emptied whenever it's removed, creating a
-          new batch on the history screen and setting its current balance to
-          zero.
-        </P>
-        <RadioGroup
-          name="set-manual-reset"
-          value={selectedRadio ?? cashboxReset}
-          options={[radioButtonOptions[1]]}
-          onChange={handleRadioButtons}
-          className={classes.radioButtons}
-        />
-        <P className={classes.descriptions}>
-          Cash boxes won't be assumed emptied when removed, nor their counts
-          modified. Instead, to update the count and create a new batch,
-          you'll click the 'Edit' button on this panel.
-        </P>
-        <DialogActions className={classes.actions}>
-          <Button onClick={() => saveCashboxOption(selectedRadio)}>
-            Confirm
-          </Button>
-        </DialogActions>
-      </Modal>
-    )}
-  </>));
+    )
+  )
 }
 
 export default CashCassettes

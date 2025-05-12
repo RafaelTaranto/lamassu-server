@@ -1,8 +1,5 @@
 import { toUnit } from '@lamassu/coins/lightUtils'
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
-import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
 import DataTable from 'src/components/tables/DataTable'
@@ -13,22 +10,14 @@ import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 import { ifNotNull } from 'src/utils/nullCheck'
 import { formatDate } from 'src/utils/timezones'
 
-import CopyToClipboard from '../../Transactions/CopyToClipboard'
-import mainStyles from '../CustomersList.styles'
-
-const useStyles = makeStyles(mainStyles)
+import CopyToClipboard from '../../../components/CopyToClipboard.jsx'
 
 const TransactionsList = ({ customer, data, loading }) => {
-  const classes = useStyles()
   const LastTxIcon = customer.lastTxClass === 'cashOut' ? TxOutIcon : TxInIcon
   const hasData = !(R.isEmpty(data) || R.isNil(data))
   const { lastUsedMachineName } = customer
 
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-  const tableSpacingClasses = {
-    [classes.titleAndButtonsContainer]: loading || (!loading && !hasData),
-    [classes.txTableSpacing]: !loading && hasData
-  }
 
   const summaryElements = [
     {
@@ -62,7 +51,7 @@ const TransactionsList = ({ customer, data, loading }) => {
       value: ifNotNull(
         customer.lastTxFiat,
         <>
-          <LastTxIcon className={classes.icon} />
+          <LastTxIcon className="mr-3" />
           {`${Number.parseFloat(customer.lastTxFiat)} 
             ${customer.lastTxFiatCode}`}
         </>
@@ -81,9 +70,9 @@ const TransactionsList = ({ customer, data, loading }) => {
       view: it => (
         <>
           {it.txClass === 'cashOut' ? (
-            <TxOutIcon className={classes.txClassIconLeft} />
+            <TxOutIcon className="mr-3" />
           ) : (
-            <TxInIcon className={classes.txClassIconLeft} />
+            <TxInIcon className="mr-3" />
           )}
         </>
       )
@@ -97,7 +86,9 @@ const TransactionsList = ({ customer, data, loading }) => {
       header: 'Transaction ID',
       width: 145,
       view: it => (
-        <CopyToClipboard className={classes.txId}>{it.id}</CopyToClipboard>
+        <CopyToClipboard className="font-museo whitespace-nowrap overflow-hidden text-ellipsis">
+          {it.id}
+        </CopyToClipboard>
       )
     },
     {
@@ -139,42 +130,35 @@ const TransactionsList = ({ customer, data, loading }) => {
   return (
     <>
       <H3>Transactions</H3>
-      <Box display="flex" flexDirection="column">
-        <Box display="flex" mt="auto">
+      <div className="flex flex-col">
+        <div className="flex mt-auto">
           {summaryElements.map(({ size, header }, idx) => (
             <Label1
               noMargin
               key={idx}
-              className={classes.txSummaryLabel}
+              className="text-comet mb-1 mr-6"
               style={{ width: size }}>
               {header}
             </Label1>
           ))}
-        </Box>
-        <Box display="flex">
+        </div>
+        <div className="flex">
           {summaryElements.map(({ size, value }, idx) => (
-            <P
-              noMargin
-              key={idx}
-              className={classes.txSummaryValue}
-              style={{ width: size }}>
+            <P noMargin key={idx} className="h-4 mr-6" style={{ width: size }}>
               {value}
             </P>
           ))}
-        </Box>
-      </Box>
-      <div className={classes.titleWrapper}>
-        <div className={classnames(tableSpacingClasses)}>
-          {loading ? (
-            <H4>Loading</H4>
-          ) : hasData ? (
-            ''
-          ) : (
-            <H4>No transactions so far</H4>
-          )}
         </div>
       </div>
-      {hasData && <DataTable elements={tableElements} data={data} />}
+      <div className="flex mt-5">
+        {loading ? (
+          <H4>Loading</H4>
+        ) : hasData ? (
+          <DataTable elements={tableElements} data={data} />
+        ) : (
+          <H4>No transactions so far</H4>
+        )}
+      </div>
     </>
   )
 }

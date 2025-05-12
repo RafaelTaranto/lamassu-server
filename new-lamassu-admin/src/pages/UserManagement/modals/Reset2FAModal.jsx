@@ -1,16 +1,14 @@
-import { useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, gql } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
+
 import ErrorMessage from 'src/components/ErrorMessage'
 import Modal from 'src/components/Modal'
 import { Info2, P, Mono } from 'src/components/typography'
-import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
-
+import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 import { urlResolver } from 'src/utils/urlResolver'
 
-import styles from '../UserManagement.styles'
-
 import Input2FAModal from './Input2FAModal'
+import classes from '../UserManagement.module.css'
 
 const CREATE_RESET_2FA_TOKEN = gql`
   mutation createReset2FAToken($confirmationCode: String, $userID: ID!) {
@@ -22,10 +20,7 @@ const CREATE_RESET_2FA_TOKEN = gql`
   }
 `
 
-const useStyles = makeStyles(styles)
-
 const Reset2FAModal = ({ state, dispatch, user, requiresConfirmation }) => {
-  const classes = useStyles()
   const [reset2FAUrl, setReset2FAUrl] = useState('')
 
   const [createReset2FAToken, { loading, error }] = useMutation(

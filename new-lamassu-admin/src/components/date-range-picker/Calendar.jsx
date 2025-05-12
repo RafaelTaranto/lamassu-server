@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import {
   add,
   differenceInMonths,
@@ -18,76 +17,11 @@ import React, { useState } from 'react'
 import Arrow from 'src/styling/icons/arrow/month_change.svg?react'
 import RightArrow from 'src/styling/icons/arrow/month_change_right.svg?react'
 
-import typographyStyles from 'src/components/typography/styles'
-import { primaryColor, zircon } from 'src/styling/variables'
-
 import Tile from './Tile'
-
-const { p, label2 } = typographyStyles
-
-const styles = {
-  wrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  button: {
-    outline: 'none'
-  },
-  navbar: {
-    extend: p,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    padding: [[15, 15]],
-    color: primaryColor,
-    '& button': {
-      display: 'flex',
-      alignItems: 'center',
-      padding: 0,
-      border: 'none',
-      backgroundColor: zircon,
-      cursor: 'pointer',
-      borderRadius: '50%',
-      width: 20,
-      height: 20,
-      position: 'relative',
-      overflow: 'hidden',
-      '& svg': {
-        position: 'absolute',
-        left: 0
-      }
-    }
-  },
-  table: {
-    borderCollapse: 'collapse',
-    width: '100%',
-    color: primaryColor,
-    '& tr': {
-      '&:first-child': {
-        paddingLeft: 5
-      },
-      '&:last-child': {
-        paddingRight: 5
-      }
-    },
-    '& th, & td': {
-      margin: 0,
-      padding: [[3, 0, 3, 0]]
-    },
-    '& th': {
-      extend: label2
-    }
-  }
-}
-
-const useStyles = makeStyles(styles)
+import classes from './Calendar.module.css'
 
 const Calendar = ({ minDate, maxDate, handleSelect, ...props }) => {
   const [currentDisplayedMonth, setCurrentDisplayedMonth] = useState(new Date())
-
-  const classes = useStyles()
 
   const weekdays = Array.from(Array(7)).map((_, i) =>
     format('EEEEE', add({ days: i }, startOfWeek(new Date())))

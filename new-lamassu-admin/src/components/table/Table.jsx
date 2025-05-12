@@ -1,20 +1,14 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo } from 'react'
 
-const useStyles = makeStyles({
-  table: {
-    // backgroundColor: tableHeaderColor,
-    tableLayout: 'fixed',
-    borderCollapse: 'separate',
-    borderSpacing: '0 0'
-  }
-})
-
 const Table = memo(({ className, children, ...props }) => {
-  const classes = useStyles()
   return (
-    <table {...props} className={classnames(classes.table, className)}>
+    <table
+      {...props}
+      className={classnames(
+        'table-fixed border-separate border-spacing-0',
+        className
+      )}>
       {children}
     </table>
   )

@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -15,14 +14,6 @@ import { P } from '../../components/typography'
 
 import CommissionsDetails from './components/CommissionsDetails'
 import CommissionsList from './components/CommissionsList'
-
-const styles = {
-  listViewButton: {
-    marginLeft: 4
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const GET_DATA = gql`
   query getData {
@@ -49,7 +40,6 @@ const removeCoinFromOverride = crypto => override =>
   })
 
 const Commissions = ({ name: SCREEN_KEY }) => {
-  const classes = useStyles()
   const [showMachines, setShowMachines] = useState(false)
   const [error, setError] = useState(null)
   const { data, loading } = useQuery(GET_DATA)
@@ -120,7 +110,7 @@ const Commissions = ({ name: SCREEN_KEY }) => {
             toggle: setShowMachines
           }
         ]}
-        iconClassName={classes.listViewButton}
+        iconClassName="ml-1"
         appendix={
           <HelpTooltip width={320}>
             <P>
@@ -150,7 +140,6 @@ const Commissions = ({ name: SCREEN_KEY }) => {
           error={error}
           save={save}
           saveOverrides={saveOverrides}
-          classes={classes}
         />
       )}
       {showMachines && !loading && (

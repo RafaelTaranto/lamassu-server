@@ -1,43 +1,15 @@
-import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { H1, P } from 'src/components/typography'
 import CustomReqLogo from 'src/styling/icons/compliance/custom-requirement.svg?react'
 
 import { Button } from 'src/components/buttons'
 
-const styles = {
-  logo: {
-    maxHeight: 150,
-    maxWidth: 200
-  },
-  title: {
-    margin: [[24, 0, 32, 0]]
-  },
-  text: {
-    margin: 0
-  },
-  button: {
-    marginTop: 'auto',
-    marginBottom: 58
-  },
-  modalContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: [[0, 42]],
-    flex: 1
-  }
-}
-
-const useStyles = makeStyles(styles)
-
 const WizardSplash = ({ onContinue }) => {
-  const classes = useStyles()
   return (
-    <div className={classes.modalContent}>
-      <CustomReqLogo className={classes.logo} />
-      <H1 className={classes.title}>Custom information request</H1>
-      <P className={classes.text}>
+    <div className="flex flex-col items-center py-0 px-10 flex-1">
+      <CustomReqLogo className="max-h-37 max-w-50" />
+      <H1 className="mt-6 mb-8 mx-0">Custom information request</H1>
+      <P className="m-0">
         A custom information request allows you to have an extra option to ask
         specific information about your customers when adding a trigger that
         isn't an option on the default requirements list.
@@ -47,7 +19,7 @@ const WizardSplash = ({ onContinue }) => {
         triggers. You will still need to add a trigger with the new requirement
         to get this information from your customers.
       </P>
-      <Button className={classes.button} onClick={onContinue}>
+      <Button className="mt-auto mb-14" onClick={onContinue}>
         Get started
       </Button>
     </div>

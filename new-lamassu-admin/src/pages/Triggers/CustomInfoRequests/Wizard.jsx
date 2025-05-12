@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Form, Formik } from 'formik'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -31,27 +30,6 @@ import TypeFields, {
 import WizardSplash from './WizardSplash'
 
 const LAST_STEP = 5
-
-const styles = {
-  stepper: {
-    margin: [[16, 0, 14, 0]]
-  },
-  submit: {
-    display: 'flex',
-    flexDirection: 'row',
-    margin: [['auto', 0, 24]]
-  },
-  button: {
-    marginLeft: 'auto'
-  },
-  form: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column'
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const getStep = (step, existingRequirements) =>
   [
@@ -153,7 +131,6 @@ const Wizard = ({
   hasError,
   existingRequirements
 }) => {
-  const classes = useStyles()
   const isEditing = !R.isNil(toBeEdited)
   const [step, setStep] = useState(isEditing ? 1 : 0)
 
@@ -206,7 +183,7 @@ const Wizard = ({
       open={true}>
       {step > 0 && (
         <Stepper
-          className={classes.stepper}
+          className="mt-4 mb-4 mx-0"
           steps={LAST_STEP}
           currentStep={step}
         />
@@ -221,15 +198,17 @@ const Wizard = ({
           initialValues={initialValues}
           validationSchema={stepOptions.validationSchema}>
           {({ errors }) => (
-            <Form className={classes.form} id={'custom-requirement-form'}>
+            <Form
+              className="h-full flex flex-col"
+              id={'custom-requirement-form'}>
               <stepOptions.Component />
-              <div className={classes.submit}>
+              <div className="flex flex-row mt-auto mx-0 mb-4">
                 {(hasError || !R.isEmpty(errors)) && (
                   <ErrorMessage>
                     {R.head(R.values(errors)) ?? `Failed to save`}
                   </ErrorMessage>
                 )}
-                <Button className={classes.button} type="submit">
+                <Button className="ml-auto" type="submit">
                   {isLastStep ? 'Save' : 'Next'}
                 </Button>
               </div>

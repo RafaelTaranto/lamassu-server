@@ -1,5 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import Modal from 'src/components/Modal'
@@ -15,7 +14,6 @@ import { Link, SupportLinkButton } from 'src/components/buttons'
 import { Table as EditableTable } from 'src/components/editableTable'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
-import { styles } from './Locales.styles'
 import {
   mainFields,
   overrides,
@@ -24,8 +22,6 @@ import {
   localeDefaults,
   overridesDefaults
 } from './helper'
-
-const useStyles = makeStyles(styles)
 
 const GET_DATA = gql`
   query getData {
@@ -75,8 +71,6 @@ const GET_MARKETS = gql`
 `
 
 const FiatCurrencyChangeAlert = ({ open, close, save }) => {
-  const classes = useStyles()
-
   return (
     <Modal
       title={'Change fiat currency?'}
@@ -94,11 +88,11 @@ const FiatCurrencyChangeAlert = ({ open, close, save }) => {
         Also, if you have cash-out enabled, you must define new dispenser bill
         counts for the new currency for cash-out on the new currency to work.
       </P>
-      <div className={classes.rightAligned}>
+      <div className="ml-auto">
         <Link onClick={close} color="secondary">
           Cancel
         </Link>
-        <Link className={classes.rightLink} onClick={save} color="primary">
+        <Link className="ml-5" onClick={save} color="primary">
           Save
         </Link>
       </div>

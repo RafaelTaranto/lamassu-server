@@ -1,5 +1,4 @@
-import { useMutation, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, useLazyQuery, gql } from '@apollo/client'
 import { Form, Formik } from 'formik'
 import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -9,10 +8,7 @@ import AppContext from 'src/AppContext'
 import { Button } from 'src/components/buttons'
 import { CodeInput } from 'src/components/inputs/base'
 
-import styles from './shared.styles'
 import { STATES } from './states'
-
-const useStyles = makeStyles(styles)
 
 const INPUT_2FA = gql`
   mutation input2FA(
@@ -41,7 +37,6 @@ const GET_USER_DATA = gql`
 `
 
 const Input2FAState = ({ state, dispatch }) => {
-  const classes = useStyles()
   const history = useHistory()
   const { setUserData } = useContext(AppContext)
 
@@ -104,9 +99,7 @@ const Input2FAState = ({ state, dispatch }) => {
 
   return (
     <>
-      <TL1 className={classes.info}>
-        Enter your two-factor authentication code
-      </TL1>
+      <TL1 className="mb-8">Enter your two-factor authentication code</TL1>
       {/* TODO: refactor the 2FA CodeInput to properly use Formik */}
       <Formik onSubmit={() => {}} initialValues={{}}>
         <Form>
@@ -117,15 +110,14 @@ const Input2FAState = ({ state, dispatch }) => {
             numInputs={6}
             error={invalidToken}
           />
-          <button onClick={handleSubmit} className={classes.enterButton} />
+          <div className="mt-9">
+            {errorMessage && <P className="text-tomato">{errorMessage}</P>}
+            <Button onClick={handleSubmit} buttonClassName="w-full">
+              Login
+            </Button>
+          </div>
         </Form>
       </Formik>
-      <div className={classes.twofaFooter}>
-        {errorMessage && <P className={classes.errorMessage}>{errorMessage}</P>}
-        <Button onClick={handleSubmit} buttonClassName={classes.loginButton}>
-          Login
-        </Button>
-      </div>
     </>
   )
 }

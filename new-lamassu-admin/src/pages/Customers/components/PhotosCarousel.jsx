@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import { Carousel } from 'src/components/Carousel'
@@ -6,37 +5,36 @@ import { Label1 } from 'src/components/typography'
 
 import { formatDate } from 'src/utils/timezones'
 
-import CopyToClipboard from '../../Transactions/CopyToClipboard'
-
-import styles from './PhotosCarousel.styles'
-
-const useStyles = makeStyles(styles)
+import CopyToClipboard from '../../../components/CopyToClipboard.jsx'
 
 const PhotosCarousel = memo(({ photosData, timezone }) => {
-  const classes = useStyles()
   const [currentIndex, setCurrentIndex] = useState(0)
 
   const Label = ({ children }) => {
-    const classes = useStyles()
-    return <Label1 className={classes.label}>{children}</Label1>
+    return (
+      <Label1 noMargin className="mb-1 text-comet">
+        {children}
+      </Label1>
+    )
   }
 
   const isFaceCustomerPhoto = !R.has('id')(photosData[currentIndex])
 
   const slidePhoto = index => setCurrentIndex(index)
 
+  // TODO hide copy to clipboard shit
   return (
     <>
       <Carousel photosData={photosData} slidePhoto={slidePhoto} />
       {!isFaceCustomerPhoto && (
-        <div className={classes.firstRow}>
+        <div className="flex flex-col p-2">
           <Label>Session ID</Label>
           <CopyToClipboard>
             {photosData && photosData[currentIndex]?.id}
           </CopyToClipboard>
         </div>
       )}
-      <div className={classes.secondRow}>
+      <div className="text-zodiac flex p-2 gap-8">
         <div>
           <>
             <Label>Date</Label>

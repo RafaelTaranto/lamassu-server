@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Formik, Form, Field } from 'formik'
 import * as R from 'ramda'
@@ -22,89 +21,10 @@ import tejo4CassetteOne from 'src/styling/icons/cassettes/tejo/4-cassettes/4-cas
 import tejo4CassetteTwo from 'src/styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-2-left.svg'
 import tejo4CassetteThree from 'src/styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-3-left.svg'
 import tejo4CassetteFour from 'src/styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-4-left.svg'
-import { comet, errorColor } from 'src/styling/variables'
 import { getCashUnitCapacity } from 'src/utils/machine'
 import { numberToFiatAmount } from 'src/utils/number'
 import { startCase } from 'src/utils/string'
-
-const styles = {
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    flex: 1,
-    paddingBottom: 32
-  },
-  titleDiv: {
-    marginBottom: 32
-  },
-  title: {
-    margin: [[0, 0, 12, 0]],
-    color: comet
-  },
-  stepImage: {
-    width: 148,
-    height: 196
-  },
-  form: {
-    paddingBottom: 95
-  },
-  verticalAlign: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  horizontalAlign: {
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  centerAlignment: {
-    alignItems: 'center'
-  },
-  lineAlignment: {
-    alignItems: 'baseline'
-  },
-  fullWidth: {
-    margin: [[0, 'auto']],
-    flexBasis: 'auto'
-  },
-  formWrapper: {
-    flexBasis: '100%',
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  submit: {
-    float: 'right'
-  },
-  cashboxBills: {
-    marginRight: 5
-  },
-  cassetteCashbox: {
-    width: 40,
-    height: 35
-  },
-  cassetteFormTitle: {
-    marginTop: 18
-  },
-  cassetteFormTitleContent: {
-    marginLeft: 10,
-    marginRight: 25
-  },
-  smBottomMargin: {
-    marginBottom: 25
-  },
-  fiatTotal: {
-    color: comet
-  },
-  errorMessage: {
-    color: errorColor
-  },
-  stepErrorMessage: {
-    maxWidth: 275,
-    marginTop: 25
-  }
-}
-
-const useStyles = makeStyles(styles)
+import classes from './WizardStep.module.css'
 
 const CASHBOX_STEP = 1
 
@@ -171,8 +91,6 @@ const WizardStep = ({
   onContinue,
   initialValues
 }) => {
-  const classes = useStyles()
-
   const label = lastStep ? 'Finish' : 'Confirm'
 
   const stepOneRadioOptions = [
@@ -197,9 +115,11 @@ const WizardStep = ({
   )
 
   return (
-    <div className={classes.content}>
-      <div className={classes.titleDiv}>
-        <Info2 className={classes.title}>{name}</Info2>
+    <div className="flex flex-col flex-1 pb-6 gap-6">
+      <div className="mb-4">
+        <Info2 noMargin className="mb-3">
+          {name}
+        </Info2>
         <Stepper steps={steps.length} currentStep={step} />
       </div>
 
@@ -212,19 +132,14 @@ const WizardStep = ({
           enableReinitialize
           validationSchema={steps[0].schema}>
           {({ errors }) => (
-            <Form>
-              <div
-                className={classnames(classes.horizontalAlign, classes.form)}>
+            <Form className="flex flex-col flex-1">
+              <div className="flex flex-row pb-25">
                 <img
                   className={classes.stepImage}
                   alt={cashUnitCategory}
                   src={cashbox}></img>
                 <div className={classes.formWrapper}>
-                  <div
-                    className={classnames(
-                      classes.verticalAlign,
-                      classes.fullWidth
-                    )}>
+                  <div className={classes.verticalAlign}>
                     <H4 noMargin>Did you empty the cash box?</H4>
                     <Field
                       component={RadioGroup}
@@ -233,14 +148,14 @@ const WizardStep = ({
                       className={classes.horizontalAlign}
                     />
                     {errors.wasCashboxEmptied && (
-                      <div className={classes.errorMessage}>
+                      <div className="text-tomato">
                         {errors.wasCashboxEmptied}
                       </div>
                     )}
                     <div
                       className={classnames(
                         classes.horizontalAlign,
-                        classes.centerAlignment
+                        'items-center'
                       )}>
                       <P>Since previous update</P>
                       <HelpTooltip width={215}>
@@ -253,9 +168,9 @@ const WizardStep = ({
                     <div
                       className={classnames(
                         classes.horizontalAlign,
-                        classes.lineAlignment
+                        'items-baseline'
                       )}>
-                      <Info1 noMargin className={classes.cashboxBills}>
+                      <Info1 noMargin className="mr-1">
                         {machine?.cashUnits.cashbox}
                       </Info1>
                       <P noMargin>accepted bills</P>
@@ -263,7 +178,7 @@ const WizardStep = ({
                   </div>
                 </div>
               </div>
-              <Button className={classes.submit} type="submit">
+              <Button className="mt-auto ml-auto" type="submit">
                 {label}
               </Button>
             </Form>
@@ -280,9 +195,8 @@ const WizardStep = ({
           enableReinitialize
           validationSchema={steps[step - 1].schema}>
           {({ values, errors }) => (
-            <Form>
-              <div
-                className={classnames(classes.horizontalAlign, classes.form)}>
+            <Form className="flex flex-col flex-1">
+              <div className={classnames(classes.horizontalAlign, 'pb-6')}>
                 <img
                   className={classes.stepImage}
                   alt={cashUnitCategory}
@@ -292,25 +206,13 @@ const WizardStep = ({
                     numberOfRecyclers
                   )}></img>
                 <div className={classes.formWrapper}>
-                  <div
-                    className={classnames(
-                      classes.verticalAlign,
-                      classes.fullWidth
-                    )}>
+                  <div className={classes.verticalAlign}>
                     <div
-                      className={classnames(
-                        classes.horizontalAlign,
-                        classes.smBottomMargin
-                      )}>
+                      className={classnames(classes.horizontalAlign, 'mb-6')}>
                       <div
-                        className={classnames(
-                          classes.horizontalAlign,
-                          classes.cassetteFormTitle
-                        )}>
+                        className={classnames(classes.horizontalAlign, 'mt-4')}>
                         <TxOutIcon />
-                        <H4
-                          className={classes.cassetteFormTitleContent}
-                          noMargin>
+                        <H4 className="ml-2 mr-6" noMargin>
                           {startCase(cashUnitField)} (
                           {cashUnitCategory === 'cassette'
                             ? `dispenser`
@@ -321,7 +223,7 @@ const WizardStep = ({
                         </H4>
                       </div>
                       <Cashbox
-                        className={classes.cassetteCashbox}
+                        className="h-10 w-9"
                         percent={getPercentage(values)}
                         cashOut
                       />
@@ -330,7 +232,7 @@ const WizardStep = ({
                     <div
                       className={classnames(
                         classes.horizontalAlign,
-                        classes.lineAlignment
+                        'items-baseline'
                       )}>
                       <Field
                         component={NumberInput}
@@ -338,26 +240,26 @@ const WizardStep = ({
                         width={50}
                         placeholder={originalCashUnitCount.toString()}
                         name={cashUnitField}
-                        className={classes.cashboxBills}
+                        className="mr-1"
                         autoFocus
                       />
                       <P>
                         {cashUnitDenomination} {fiatCurrency} bills loaded
                       </P>
                     </div>
-                    <P noMargin className={classes.fiatTotal}>
+                    <P noMargin className="text-comet">
                       = {numberToFiatAmount(cassetteTotal(values))}{' '}
                       {fiatCurrency}
                     </P>
                     {!R.isEmpty(errors) && (
-                      <ErrorMessage className={classes.stepErrorMessage}>
+                      <ErrorMessage className="max-w-68 mt-6">
                         {R.head(R.values(errors))}
                       </ErrorMessage>
                     )}
                   </div>
                 </div>
               </div>
-              <Button className={classes.submit} type="submit">
+              <Button className="ml-auto mt-auto" type="submit">
                 {label}
               </Button>
             </Form>

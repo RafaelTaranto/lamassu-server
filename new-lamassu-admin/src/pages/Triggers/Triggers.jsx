@@ -1,7 +1,5 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Switch from '@mui/material/Switch'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -21,10 +19,8 @@ import { fromNamespace, toNamespace } from 'src/utils/config'
 
 import CustomInfoRequests from './CustomInfoRequests'
 import TriggerView from './TriggerView'
-import styles from './Triggers.styles'
 import AdvancedTriggers from './components/AdvancedTriggers'
 import { fromServer } from './helper'
-const useStyles = makeStyles(styles)
 
 const SAVE_ACCOUNT = gql`
   mutation Save($accounts: JSONObject) {
@@ -62,7 +58,6 @@ const GET_CUSTOM_REQUESTS = gql`
 `
 
 const Triggers = () => {
-  const classes = useStyles()
   const [wizardType, setWizard] = useState(false)
   const { data, loading: configLoading, refetch } = useQuery(GET_CONFIG)
   const { data: customInfoReqData, loading: customInfoLoading } =
@@ -110,7 +105,7 @@ const Triggers = () => {
   }
 
   const titleSectionWidth = {
-    [classes.tableWidth]: !subMenu === 'customInfoRequests'
+    'w-230': !subMenu === 'customInfoRequests'
   }
 
   const setBlur = shouldBlur => {
@@ -169,12 +164,8 @@ const Triggers = () => {
         ]}
         className={classnames(titleSectionWidth)}>
         {!subMenu && (
-          <Box display="flex" alignItems="center">
-            <Box
-              display="flex"
-              alignItems="center"
-              justifyContent="flex-end"
-              mr="-5px">
+          <div className="flex items-center">
+            <div className="flex items-center justify-end -mr-1">
               <P>Reject reused addresses</P>
               <Switch
                 checked={rejectAddressReuse}
@@ -183,7 +174,7 @@ const Triggers = () => {
                 }}
                 value={rejectAddressReuse}
               />
-              <Label2 className={classes.switchLabel}>
+              <Label2 className="m-3 w-6">
                 {rejectAddressReuse ? 'On' : 'Off'}
               </Label2>
               <HelpTooltip width={304}>
@@ -196,25 +187,25 @@ const Triggers = () => {
                   label="Reject Address Reuse"
                 />
               </HelpTooltip>
-            </Box>
-          </Box>
+            </div>
+          </div>
         )}
         {subMenu === 'customInfoRequests' &&
           !R.isEmpty(enabledCustomInfoRequests) && (
-            <Box display="flex" justifyContent="flex-end">
+            <div className="flex justify-end">
               <Link
                 color="primary"
                 onClick={() => toggleWizard('newCustomRequest')()}>
                 + Add new custom info request
               </Link>
-            </Box>
+            </div>
           )}
         {!loading && !subMenu && !R.isEmpty(triggers) && (
-          <Box display="flex" justifyContent="flex-end">
+          <div className="flex justify-end">
             <Link color="primary" onClick={addNewTriger}>
               + Add new trigger
             </Link>
-          </Box>
+          </div>
         )}
       </TitleSection>
       {!loading && subMenu === 'customInfoRequests' && (

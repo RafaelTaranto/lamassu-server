@@ -1,6 +1,6 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { DeleteDialog } from 'src/components/DeleteDialog'
@@ -8,12 +8,9 @@ import DataTable from 'src/components/tables/DataTable'
 import { Label3, TL1 } from 'src/components/typography'
 import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
 
-import { Link, Button, IconButton } from 'src/components/buttons'
+import { Link, Button } from 'src/components/buttons'
 
-import styles from './PromoCodes.styles'
 import PromoCodesModal from './PromoCodesModal'
-
-const useStyles = makeStyles(styles)
 
 const DUPLICATE_ERROR_MSG = 'There is already a promotion with that code!'
 const DEFAULT_ERROR_MSG = 'Failed to save'
@@ -47,8 +44,6 @@ const CREATE_CODE = gql`
 `
 
 const PromoCodes = () => {
-  const classes = useStyles()
-
   const [deleteDialog, setDeleteDialog] = useState(false)
   const [toBeDeleted, setToBeDeleted] = useState()
 
@@ -121,9 +116,10 @@ const PromoCodes = () => {
           onClick={() => {
             setDeleteDialog(true)
             setToBeDeleted({ variables: { codeId: t.id } })
-          }}
-          size="large">
-          <DeleteIcon />
+          }}>
+          <SvgIcon>
+            <DeleteIcon />
+          </SvgIcon>
         </IconButton>
       )
     }
@@ -132,16 +128,11 @@ const PromoCodes = () => {
   return (
     <>
       {!loading && !R.isEmpty(codeResponse.promoCodes) && (
-        <Box
-          marginBottom={4}
-          marginTop={-7}
-          className={classes.tableWidth}
-          display="flex"
-          justifyContent="flex-end">
+        <div className="flex justify-end mb-8 -mt-14">
           <Link color="primary" onClick={toggleModal}>
             Add new code
           </Link>
-        </Box>
+        </div>
       )}
       {!loading && !R.isEmpty(codeResponse.promoCodes) && (
         <>
@@ -164,12 +155,12 @@ const PromoCodes = () => {
         </>
       )}
       {!loading && R.isEmpty(codeResponse.promoCodes) && (
-        <Box display="flex" alignItems="left" flexDirection="column">
+        <div className="flex flex-col items-start">
           <Label3>
             Currently, there are no active promo codes on your network.
           </Label3>
           <Button onClick={toggleModal}>Add Code</Button>
-        </Box>
+        </div>
       )}
       <PromoCodesModal
         showModal={showModal}

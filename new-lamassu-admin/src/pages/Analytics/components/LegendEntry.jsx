@@ -1,16 +1,9 @@
-import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { P } from 'src/components/typography'
 
-import styles from '../Analytics.styles'
-
-const useStyles = makeStyles(styles)
-
 const LegendEntry = ({ IconElement, IconComponent, label }) => {
-  const classes = useStyles()
-
   return (
-    <span className={classes.legendEntry}>
+    <span className="flex items-center gap-2">
       {!!IconComponent && <IconComponent height={12} />}
       {!!IconElement && IconElement}
       <P>{label}</P>

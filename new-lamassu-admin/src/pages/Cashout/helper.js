@@ -102,7 +102,7 @@ const DenominationsSchema = Yup.object()
         })
   )
 
-const getElements = (machines, locale = {}, classes) => {
+const getElements = (machines, locale = {}) => {
   const fiatCurrency = R.prop('fiatCurrency')(locale)
   const maxNumberOfCassettes = Math.max(
     ...R.map(it => it.numberOfCassettes, machines),
@@ -122,7 +122,7 @@ const getElements = (machines, locale = {}, classes) => {
           options: options,
           labelProp: 'display',
           valueProp: 'code',
-          className: classes.autoComplete
+          className: 'w-full'
         }
       : { decimalPlaces: 0 }
 

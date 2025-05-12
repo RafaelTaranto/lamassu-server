@@ -1,0 +1,24 @@
+.size {
+  font-size: 16px;
+}
+
+.sizeSm {
+  font-size: 14px;
+}
+
+.sizeLg {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.underline:before {
+  border-bottom-color: var(--spring);
+}
+
+.underline:hover:not(.Mui-disabled)::before {
+  border-bottom-color: var(--spring);
+}

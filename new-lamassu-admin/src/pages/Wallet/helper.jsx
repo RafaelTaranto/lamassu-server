@@ -8,15 +8,9 @@ import {
   Checkbox,
   NumberInput
 } from 'src/components/inputs/formik'
-import { disabledColor } from 'src/styling/variables'
 import { CURRENCY_MAX } from 'src/utils/constants'
 import { defaultToZero } from 'src/utils/number'
 
-const classes = {
-  editDisabled: {
-    color: disabledColor
-  }
-}
 const filterClass = type => R.filter(it => it.class === type)
 const filterCoins = ({ id }) => R.filter(it => R.contains(id)(it.cryptos))
 
@@ -172,7 +166,7 @@ const getAdvancedWalletElementsOverrides = (
       width: 250,
       view: (_, ite) => {
         if (ite.cryptoCurrency !== 'BTC')
-          return <span style={classes.editDisabled}>{`No`}</span>
+          return <span className="text-dust">{`No`}</span>
         return ite.allowTransactionBatching ? 'Yes' : 'No'
       },
       input: Checkbox,
@@ -186,7 +180,7 @@ const getAdvancedWalletElementsOverrides = (
       width: 250,
       view: (_, ite) => {
         if (ite.cryptoCurrency !== 'BTC')
-          return <span style={classes.editDisabled}>{`Default`}</span>
+          return <span className="test-dust">{`Default`}</span>
         return viewFeeMultiplier(ite.feeMultiplier)
       },
       input: Autocomplete,
@@ -289,7 +283,7 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
         return has0Conf(row) ? (
           displayName
         ) : (
-          <span style={classes.editDisabled}>{displayName}</span>
+          <span className="text-dust">{displayName}</span>
         )
       },
       input: Autocomplete,
@@ -309,7 +303,7 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
       size: 'sm',
       stripe: true,
       view: (it, row) =>
-        has0Conf(row) ? it : <span style={classes.editDisabled}>{it}</span>,
+        has0Conf(row) ? it : <span className="text-dust">{it}</span>,
       input: NumberInput,
       width: 145 - widthAdjust,
       inputProps: {

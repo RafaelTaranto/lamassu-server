@@ -8,8 +8,6 @@ import { fromNamespace, namespaces } from 'src/utils/config'
 
 import Commissions from './components/Commissions'
 import Locale from './components/Locales'
-// import Notifications from './components/Notifications'
-// import WizardOperatorInfo from './components/OperatorInfo'
 import Twilio from './components/Twilio'
 import Wallet from './components/Wallet/Wallet'
 import Welcome from './components/Welcome'

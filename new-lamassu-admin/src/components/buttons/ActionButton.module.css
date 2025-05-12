@@ -1,0 +1,145 @@
+.actionButton {
+  composes: p from '../typography/typography.module.css';
+  cursor: pointer;
+  border: none;
+  height: 28px;
+  outline: 0;
+  border-radius: 6px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+}
+
+.actionButton.altText {
+  color: white;
+}
+
+.primary {
+  background-color: var(--zircon);
+}
+
+.primary:hover {
+  background-color: var(--zircon2);
+}
+
+.primary:active {
+  background-color: var(--comet);
+  color: white;
+}
+
+.primary .actionButtonIconActive {
+  display: none;
+}
+
+.primary:active .actionButtonIcon {
+  display: none;
+}
+
+.primary:active .actionButtonIconActive {
+  display: flex;
+}
+
+.secondary {
+  background-color: var(--comet);
+  color: white;
+}
+
+.secondary:hover {
+  background-color: var(--comet2);
+}
+
+.secondary:active {
+  background-color: var(--comet3);
+}
+
+.secondary .actionButtonIcon {
+  display: none;
+}
+
+.secondary .actionButtonIconActive {
+  display: flex;
+}
+
+.secondary:active .actionButtonIcon {
+  display: flex;
+}
+
+.secondary:active .actionButtonIconActive {
+  display: none;
+}
+
+.spring {
+  background-color: var(--spring2);
+  color: white;
+}
+
+.spring:hover {
+  background-color: var(--spring);
+}
+
+.spring:active {
+  background-color: var(--spring4);
+}
+
+.spring .actionButtonIcon {
+  display: none;
+}
+
+.spring .actionButtonIconActive {
+  display: flex;
+}
+
+.spring:active .actionButtonIcon {
+  display: flex;
+}
+
+.spring:active .actionButtonIconActive {
+  display: none;
+}
+
+.tomato {
+  background-color: var(--tomato);
+  color: white;
+}
+
+.tomato:hover {
+  background-color: var(--tomato);
+}
+
+.tomato:active {
+  background-color: var(--tomato);
+}
+
+.tomato .actionButtonIcon {
+  display: none;
+}
+
+.tomato .actionButtonIconActive {
+  display: flex;
+}
+
+.tomato:active .actionButtonIcon {
+  display: flex;
+}
+
+.tomato:active .actionButtonIconActive {
+  display: none;
+}
+
+.actionButtonIcon {
+  display: flex;
+  padding-right: 7px;
+}
+
+.actionButtonIcon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.center {
+  align-items: center;
+  justify-content: center;
+}
+
+.actionButtonIconActive {
+}

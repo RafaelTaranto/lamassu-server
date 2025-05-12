@@ -1,19 +1,12 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
-import Switch from '@mui/material/Switch'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { memo } from 'react'
-import { HelpTooltip } from 'src/components/Tooltip'
-import { H4, P, Label2 } from 'src/components/typography'
 
 import { BooleanPropertiesTable } from 'src/components/booleanPropertiesTable'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
-import { SupportLinkButton } from '../../components/buttons'
-
-import { global } from './OperatorInfo.styles'
-
-const useStyles = makeStyles(global)
+import Header from './components/Header.jsx'
+import SwitchRow from './components/SwitchRow.jsx'
 
 const GET_CONFIG = gql`
   query getData {
@@ -28,13 +21,22 @@ const SAVE_CONFIG = gql`
 `
 
 const ReceiptPrinting = memo(({ wizard }) => {
-  const classes = useStyles()
-
   const { data } = useQuery(GET_CONFIG)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData']
   })
+
+  const saveSwitch = object => {
+    return saveConfig({
+      variables: {
+        config: toNamespace(
+          namespaces.RECEIPT,
+          R.mergeRight(receiptPrintingConfig, object)
+        )
+      }
+    })
+  }
 
   const save = it =>
     saveConfig({
@@ -47,84 +49,26 @@ const ReceiptPrinting = memo(({ wizard }) => {
 
   return (
     <>
-      <div className={classes.header}>
-        <H4>Receipt options</H4>
-        <HelpTooltip width={320}>
-          <P>
-            For details on configuring this panel, please read the relevant
-            knowledgebase article:
-          </P>
-          <SupportLinkButton
-            link="https://support.lamassu.is/hc/en-us/articles/360058513951-Receipt-options-printers"
-            label="Lamassu Support Article"
-            bottomSpace="1"
-          />
-        </HelpTooltip>
-      </div>
-      <div className={classes.switchRow}>
-        <P>Enable receipt printing</P>
-        <div className={classes.switch}>
-          <Switch
-            checked={receiptPrintingConfig.active}
-            onChange={event =>
-              saveConfig({
-                variables: {
-                  config: toNamespace(
-                    namespaces.RECEIPT,
-                    R.merge(receiptPrintingConfig, {
-                      active: event.target.checked
-                    })
-                  )
-                }
-              })
-            }
-          />
-          <Label2>{receiptPrintingConfig.active ? 'Yes' : 'No'}</Label2>
-        </div>
-      </div>
-      <div className={classes.switchRow}>
-        <P>Automatic receipt printing</P>
-        <div className={classes.switch}>
-          <Switch
-            disabled={!receiptPrintingConfig.active}
-            checked={receiptPrintingConfig.automaticPrint}
-            onChange={event =>
-              saveConfig({
-                variables: {
-                  config: toNamespace(
-                    namespaces.RECEIPT,
-                    R.merge(receiptPrintingConfig, {
-                      automaticPrint: event.target.checked
-                    })
-                  )
-                }
-              })
-            }
-          />
-          <Label2>{receiptPrintingConfig.automaticPrint ? 'Yes' : 'No'}</Label2>
-        </div>
-      </div>
-      <div className={classes.switchRow}>
-        <P>Offer SMS receipt</P>
-        <div className={classes.switch}>
-          <Switch
-            checked={receiptPrintingConfig.sms}
-            onChange={event =>
-              saveConfig({
-                variables: {
-                  config: toNamespace(
-                    namespaces.RECEIPT,
-                    R.merge(receiptPrintingConfig, {
-                      sms: event.target.checked
-                    })
-                  )
-                }
-              })
-            }
-          />
-          <Label2>{receiptPrintingConfig.sms ? 'Yes' : 'No'}</Label2>
-        </div>
-      </div>
+      <Header
+        title="Receipt printing"
+        tooltipText="For details on configuring this panel, please read the relevant knowledgebase article."
+        articleUrl="https://support.lamassu.is/hc/en-us/articles/360058513951-Receipt-options-printers"
+      />
+      <SwitchRow
+        title="Enable receipt printing"
+        checked={receiptPrintingConfig.active}
+        save={it => saveSwitch({ active: it })}
+      />
+      <SwitchRow
+        title="Automatic receipt printing"
+        checked={receiptPrintingConfig.automaticPrint}
+        save={it => saveSwitch({ automaticPrint: it })}
+      />
+      <SwitchRow
+        title="Offer SMS receipt"
+        checked={receiptPrintingConfig.sms}
+        save={it => saveSwitch({ sms: it })}
+      />
       <BooleanPropertiesTable
         editing={wizard}
         title={'Visible on the receipt (options)'}

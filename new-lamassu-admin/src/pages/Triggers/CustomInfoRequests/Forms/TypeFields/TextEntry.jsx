@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
@@ -6,9 +5,6 @@ import React from 'react'
 import RadioGroup from 'src/components/inputs/formik/RadioGroup'
 import TextInput from 'src/components/inputs/formik/TextInput'
 import { H4 } from 'src/components/typography'
-
-import styles from './formStyles.styles'
-const useStyles = makeStyles(styles)
 
 const options = [
   { display: 'None', code: 'none' },
@@ -21,11 +17,10 @@ const options = [
 ]
 
 const TextEntry = () => {
-  const classes = useStyles()
   const context = useFormikContext()
   const showErrorColor = {
-    [classes.radioSubtitle]: true,
-    [classes.error]:
+    'mt-0': true,
+    'text-tomato':
       !R.path(['values', 'constraintType'])(context) &&
       R.path(['errors', 'constraintType'])(context)
   }
@@ -34,15 +29,15 @@ const TextEntry = () => {
     switch (context.values.constraintType) {
       case 'spaceSeparation':
         return (
-          <div className={classes.flex}>
+          <div className="flex">
             <Field
-              className={classes.label}
+              className="w-50 mr-2"
               component={TextInput}
               name={'inputLabel1'}
               label={'First word label'}
             />
             <Field
-              className={classes.label}
+              className="w-50 mr-2"
               component={TextInput}
               name={'inputLabel2'}
               label={'Second word label'}
@@ -52,7 +47,7 @@ const TextEntry = () => {
       default:
         return (
           <Field
-            className={classes.label}
+            className="w-50 mr-2"
             component={TextInput}
             name={'inputLabel1'}
             label={'Text entry label'}
@@ -65,7 +60,7 @@ const TextEntry = () => {
     <>
       <H4 className={classnames(showErrorColor)}>Text entry constraints</H4>
       <Field
-        className={classes.row}
+        className="flex-row"
         component={RadioGroup}
         options={options}
         name="constraintType"

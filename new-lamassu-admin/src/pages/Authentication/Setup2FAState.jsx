@@ -1,5 +1,4 @@
-import { useMutation, useQuery, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, useQuery, useLazyQuery, gql } from '@apollo/client'
 import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import React, { useContext, useState } from 'react'
@@ -11,7 +10,7 @@ import { ActionButton, Button } from 'src/components/buttons'
 import { CodeInput } from 'src/components/inputs/base'
 import { primaryColor } from 'src/styling/variables'
 
-import styles from './shared.styles'
+import classes from './Authentication.module.css'
 
 const SETUP_2FA = gql`
   mutation setup2FA(
@@ -48,10 +47,7 @@ const GET_USER_DATA = gql`
   }
 `
 
-const useStyles = makeStyles(styles)
-
 const Setup2FAState = ({ state, dispatch }) => {
-  const classes = useStyles()
   const history = useHistory()
   const { setUserData } = useContext(AppContext)
 
@@ -159,17 +155,16 @@ const Setup2FAState = ({ state, dispatch }) => {
                 error={invalidToken}
                 shouldAutoFocus
               />
-              <button onClick={handleSubmit} className={classes.enterButton} />
+              <div className="mt-9">
+                {getErrorMsg() && (
+                  <P className="text-tomato">{getErrorMsg()}</P>
+                )}
+                <Button onClick={handleSubmit} buttonClassName="w-full">
+                  Done
+                </Button>
+              </div>
             </Form>
           </Formik>
-        </div>
-        <div className={classes.twofaFooter}>
-          {getErrorMsg() && (
-            <P className={classes.errorMessage}>{getErrorMsg()}</P>
-          )}
-          <Button onClick={handleSubmit} buttonClassName={classes.loginButton}>
-            Done
-          </Button>
         </div>
       </>
     )

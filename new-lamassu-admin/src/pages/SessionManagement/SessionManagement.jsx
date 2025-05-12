@@ -1,4 +1,5 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import IconButton from '@mui/material/IconButton'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
 import TitleSection from 'src/components/layout/TitleSection'
@@ -6,8 +7,8 @@ import DataTable from 'src/components/tables/DataTable'
 import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
 import parser from 'ua-parser-js'
 
-import { IconButton } from 'src/components/buttons'
 import { formatDate } from 'src/utils/timezones'
+import SvgIcon from '@mui/material/SvgIcon'
 
 const GET_SESSIONS = gql`
   query sessions {
@@ -98,9 +99,10 @@ const SessionManagement = () => {
         <IconButton
           onClick={() => {
             deleteSession({ variables: { sid: s.sid } })
-          }}
-          size="large">
-          <DeleteIcon />
+          }}>
+          <SvgIcon>
+            <DeleteIcon />
+          </SvgIcon>
         </IconButton>
       )
     }

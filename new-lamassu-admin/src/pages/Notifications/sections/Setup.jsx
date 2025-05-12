@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import Switch from '@mui/material/Switch'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
@@ -74,12 +73,6 @@ const Row = ({
   )
 }
 
-const useStyles = makeStyles({
-  wizardTable: {
-    width: 930
-  }
-})
-
 const Setup = ({ wizard, forceDisable }) => {
   const {
     data: rawData,
@@ -120,9 +113,8 @@ const Setup = ({ wizard, forceDisable }) => {
   ]
 
   const widthAdjust = wizard ? 20 : 0
-  const classes = useStyles()
   return (
-    <Table className={wizard ? classes.wizardTable : null}>
+    <Table className={wizard ? 'w-233' : null}>
       <THead>
         <Th width={channelSize - widthAdjust}>Channel</Th>
         {Object.keys(sizes).map(it => (

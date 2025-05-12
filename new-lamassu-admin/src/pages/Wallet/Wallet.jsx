@@ -1,5 +1,4 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import Modal from 'src/components/Modal'
@@ -17,7 +16,6 @@ import { fromNamespace, toNamespace } from 'src/utils/config'
 import { P } from '../../components/typography'
 
 import AdvancedWallet from './AdvancedWallet'
-import styles from './Wallet.styles'
 import Wizard from './Wizard'
 import { WalletSchema, getElements } from './helper'
 
@@ -61,10 +59,7 @@ const GET_MARKETS = gql`
 
 const LOCALE = 'locale'
 
-const useStyles = makeStyles(styles)
-
 const Wallet = ({ name: SCREEN_KEY }) => {
-  const classes = useStyles()
   const [editingSchema, setEditingSchema] = useState(null)
   const [onChangeFunction, setOnChangeFunction] = useState(null)
   const [wizard, setWizard] = useState(false)
@@ -128,7 +123,7 @@ const Wallet = ({ name: SCREEN_KEY }) => {
 
   return (
     <>
-      <div className={classes.header}>
+      <div className="flex items-center justify-between">
         <TitleSection
           title="Wallet settings"
           buttons={[

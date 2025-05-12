@@ -1,15 +1,10 @@
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import { React } from 'react'
 import { H3, P } from 'src/components/typography'
 import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
 
 import { formatDate } from 'src/utils/timezones'
-
-import styles from './NoteCard.styles'
-
-const useStyles = makeStyles(styles)
 
 const formatContent = content => {
   const fragments = R.split(/\n/)(content)
@@ -25,31 +20,28 @@ const formatContent = content => {
 }
 
 const NoteCard = ({ note, deleteNote, handleClick, timezone }) => {
-  const classes = useStyles()
-
   return (
-    <div className={classes.noteCardWrapper}>
-      <Paper className={classes.noteCardChip} onClick={() => handleClick(note)}>
-        <div className={classes.noteCardHeader}>
-          <div className={classes.noteCardTitle}>
-            <H3 noMargin>{note?.title}</H3>
-            <P noMargin>{formatDate(note?.created, timezone, 'yyyy-MM-dd')}</P>
-          </div>
-          <div>
-            <DeleteIcon
-              className={classes.deleteIcon}
-              onClick={e => {
-                e.stopPropagation()
-                deleteNote({ noteId: note.id })
-              }}
-            />
-          </div>
+    <Paper
+      className="p-2 cursor-pointer overflow-hidden text-ellipsis"
+      onClick={() => handleClick(note)}>
+      <div className="flex flex-row justify-between w-full">
+        <div className="overflow-hidden whitespace-nowrap overflow-ellipsis">
+          <H3 noMargin>{note?.title}</H3>
+          <P noMargin>{formatDate(note?.created, timezone, 'yyyy-MM-dd')}</P>
         </div>
-        <P noMargin className={classes.noteCardContent}>
-          {formatContent(note?.content)}
-        </P>
-      </Paper>
-    </div>
+        <div>
+          <DeleteIcon
+            onClick={e => {
+              e.stopPropagation()
+              deleteNote({ noteId: note.id })
+            }}
+          />
+        </div>
+      </div>
+      <P noMargin className="mt-2 line-clamp-8">
+        {formatContent(note?.content)}
+      </P>
+    </Paper>
   )
 }
 

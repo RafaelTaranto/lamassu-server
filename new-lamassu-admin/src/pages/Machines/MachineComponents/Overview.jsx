@@ -1,42 +1,30 @@
-import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import { formatDistance } from 'date-fns'
 import React from 'react'
 import { Status } from 'src/components/Status'
 import MachineActions from 'src/components/machineActions/MachineActions'
 import { H3, Label1, P } from 'src/components/typography'
-import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
-
-import styles from '../Machines.styles'
-const useStyles = makeStyles(styles)
+import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 
 const Overview = ({ data, onActionSuccess }) => {
-  const classes = useStyles()
-
   return (
-    <div className={classes.contentContainer}>
-      <div className={classes.row}>
-        <div className={classes.rowItem}>
-          <H3>{data.name}</H3>
-        </div>
+    <div className="flex flex-col gap-8">
+      <H3>{data.name}</H3>
+      <div>
+        <Label1 className="text-comet mt-0">Status</Label1>
+        {data && data.statuses ? <Status status={data.statuses[0]} /> : null}
       </div>
-      <div className={classes.row}>
-        <div className={classes.rowItem}>
-          <Label1 className={classes.label3}>Status</Label1>
-          {data && data.statuses ? <Status status={data.statuses[0]} /> : null}
-        </div>
-      </div>
-      <div className={classes.row}>
-        <div className={classes.rowItem}>
-          <Label1 className={classes.label3}>Ping</Label1>
+      <div className="flex gap-6">
+        <div>
+          <Label1 className="text-comet mt-0">Ping</Label1>
           <P noMargin>
             {data.responseTime
               ? new BigNumber(data.responseTime).toFixed(3).toString() + ' ms'
               : 'unavailable'}
           </P>
         </div>
-        <div className={classes.rowItem}>
-          <Label1 className={classes.label3}>Last ping</Label1>
+        <div>
+          <Label1 className="text-comet mt-0">Last ping</Label1>
           <P noMargin>
             {data.lastPing
               ? formatDistance(new Date(data.lastPing), new Date(), {
@@ -45,8 +33,8 @@ const Overview = ({ data, onActionSuccess }) => {
               : 'unknown'}
           </P>
         </div>
-        <div className={classes.rowItem}>
-          <Label1 className={classes.label3}>Network speed</Label1>
+        <div>
+          <Label1 className="text-comet mt-0">Network speed</Label1>
           <P noMargin>
             {data.downloadSpeed
               ? new BigNumber(data.downloadSpeed)
@@ -56,17 +44,15 @@ const Overview = ({ data, onActionSuccess }) => {
           </P>
         </div>
       </div>
-      <div className={classes.row}>
-        <div className={classes.rowItem}>
-          <Label1 className={classes.label3}>Device ID</Label1>
-          <P noMargin>
-            <CopyToClipboard buttonClassname={classes.copyToClipboard}>
-              {data.deviceId}
-            </CopyToClipboard>
+      <div>
+        <div>
+          <Label1 className="text-comet mt-0">Device ID</Label1>
+          <P className="wrap-anywhere" noMargin>
+            <CopyToClipboard>{data.deviceId}</CopyToClipboard>
           </P>
         </div>
       </div>
-      <div className={classes.row}>
+      <div>
         <MachineActions
           machine={data}
           onActionSuccess={onActionSuccess}></MachineActions>

@@ -1,5 +1,3 @@
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
@@ -8,94 +6,8 @@ import { H4, Label2, Label1, Info1, Info2 } from 'src/components/typography'
 import * as Yup from 'yup'
 
 import { NumberInput, RadioGroup, Dropdown } from 'src/components/inputs/formik'
-import { errorColor } from 'src/styling/variables'
 import { transformNumber } from 'src/utils/number'
 import { onlyFirstToUpper } from 'src/utils/string'
-
-// import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-// import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
-
-const useStyles = makeStyles({
-  radioLabel: {
-    height: 40,
-    padding: [[0, 10]]
-  },
-  radio: {
-    padding: 4,
-    margin: 4
-  },
-  radioGroup: {
-    flexDirection: 'row'
-  },
-  error: {
-    color: errorColor
-  },
-  specialLabel: {
-    height: 40,
-    padding: 0
-  },
-  specialGrid: {
-    display: 'grid',
-    gridTemplateColumns: [[182, 162, 181]]
-  },
-  directionIcon: {
-    marginRight: 2
-  },
-  directionName: {
-    marginLeft: 6
-  },
-  thresholdWrapper: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  thresholdTitle: {
-    marginTop: 50
-  },
-  thresholdContentWrapper: {
-    display: 'flex',
-    flexDirection: 'row'
-  },
-  thresholdField: {
-    marginRight: 6,
-    width: 75
-  },
-  description: {
-    marginTop: 7
-  },
-  space: {
-    marginLeft: 6,
-    marginRight: 6
-  },
-  lastSpace: {
-    marginLeft: 6
-  },
-  suspensionDays: {
-    width: 34
-  },
-  input: {
-    marginTop: -2
-  },
-  limitedInput: {
-    width: 50
-  },
-  daysInput: {
-    width: 60
-  },
-  dropdownField: {
-    marginTop: 16,
-    minWidth: 155
-  },
-  externalFields: {
-    '& > *': {
-      marginRight: 15
-    },
-    '& > *:last-child': {
-      marginRight: 0
-    }
-  }
-})
-
-// const direction = Yup.string().required()
 
 const triggerType = Yup.string().required()
 const threshold = Yup.object().shape({
@@ -172,92 +84,6 @@ const Schema = Yup.object()
     })
   })
 
-// Direction V2 only
-// const directionSchema = Yup.object().shape({ direction })
-
-// const directionOptions = [
-//   {
-//     display: 'Both',
-//     code: 'both'
-//   },
-//   {
-//     display: 'Only cash-in',
-//     code: 'cashIn'
-//   },
-//   {
-//     display: 'Only cash-out',
-//     code: 'cashOut'
-//   }
-// ]
-
-// const directionOptions2 = [
-//   {
-//     display: (
-//       <>
-//         <TxInIcon /> in
-//       </>
-//     ),
-//     code: 'cashIn'
-//   },
-//   {
-//     display: (
-//       <>
-//         <TxOutIcon /> out
-//       </>
-//     ),
-//     code: 'cashOut'
-//   },
-//   {
-//     display: (
-//       <>
-//         <Box display="flex">
-//           <Box mr={0.25}>
-//             <TxOutIcon />
-//           </Box>
-//           <Box>
-//             <TxInIcon />
-//           </Box>
-//         </Box>
-//       </>
-//     ),
-//     code: 'both'
-//   }
-// ]
-
-// const Direction = () => {
-//   const classes = useStyles()
-//   const { errors } = useFormikContext()
-
-//   const titleClass = {
-//     [classes.error]: errors.direction
-//   }
-
-//   return (
-//     <>
-//       <Box display="flex" alignItems="center">
-//         <H4 className={classnames(titleClass)}>
-//           In which type of transactions will it trigger?
-//         </H4>
-//       </Box>
-//       <Field
-//         component={RadioGroup}
-//         name="direction"
-//         options={directionOptions}
-//         labelClassName={classes.radioLabel}
-//         radioClassName={classes.radio}
-//         className={classes.radioGroup}
-//       />
-//     </>
-//   )
-// }
-
-// const txDirection = {
-//   schema: directionSchema,
-//   options: directionOptions,
-//   Component: Direction,
-//   initialValues: { direction: '' }
-// }
-
 // TYPE
 const typeSchema = Yup.object()
   .shape({
@@ -315,18 +141,20 @@ const typeSchema = Yup.object()
 
 const typeOptions = [
   { display: 'Transaction amount', code: 'txAmount' },
-  { display: 'Transaction volume', code: 'txVolume' },
+  {
+    display: 'Transaction volume',
+    code: 'txVolume'
+  },
   { display: 'Transaction velocity', code: 'txVelocity' },
   { display: 'Consecutive days', code: 'consecutiveDays' }
 ]
 
 const Type = ({ ...props }) => {
-  const classes = useStyles()
   const { errors, touched, values, setTouched, handleChange } =
     useFormikContext()
 
   const typeClass = {
-    [classes.error]: errors.triggerType && touched.triggerType
+    'text-tomato': errors.triggerType && touched.triggerType
   }
 
   const containsType = R.contains(values?.triggerType)
@@ -349,7 +177,7 @@ const Type = ({ ...props }) => {
   const triggerTypeError = !!(hasDaysError || hasAmountError)
 
   const thresholdClass = {
-    [classes.error]: triggerTypeError
+    'text-tomato': triggerTypeError
   }
 
   const isRadioGroupActive = () => {
@@ -363,16 +191,16 @@ const Type = ({ ...props }) => {
 
   return (
     <>
-      <Box display="flex" alignItems="center">
+      <div className="flex items-center">
         <H4 className={classnames(typeClass)}>Choose trigger type</H4>
-      </Box>
+      </div>
       <Field
         component={RadioGroup}
         name="triggerType"
         options={typeOptions}
-        labelClassName={classes.radioLabel}
-        radioClassName={classes.radio}
-        className={classes.radioGroup}
+        labelClassName="h-10 py-0 px-3"
+        radioClassName="p-1 m-1"
+        className="flex-row"
         onChange={e => {
           handleChange(e)
           setTouched({
@@ -382,73 +210,58 @@ const Type = ({ ...props }) => {
         }}
       />
 
-      <div className={classes.thresholdWrapper}>
+      <div className="flex flex-col">
         {isRadioGroupActive() && (
-          <H4 className={classnames(thresholdClass, classes.thresholdTitle)}>
-            Threshold
-          </H4>
+          <H4 className={classnames(thresholdClass, 'mt-12')}>Threshold</H4>
         )}
-        <div className={classes.thresholdContentWrapper}>
+        <div className="flex flex-row">
           {isThresholdCurrencyEnabled && (
             <>
               <Field
-                className={classes.thresholdField}
+                className="mr-2 w-19"
                 component={NumberInput}
                 size="lg"
                 name="threshold.threshold"
                 error={hasAmountError}
               />
-              <Info1 className={classnames(classes.description)}>
-                {props.currency}
-              </Info1>
+              <Info1 className="mt-2">{props.currency}</Info1>
             </>
           )}
           {isTransactionAmountEnabled && (
             <>
               <Field
-                className={classes.thresholdField}
+                className="mr-2 w-19"
                 component={NumberInput}
                 size="lg"
                 name="threshold.threshold"
                 error={hasAmountError}
               />
-              <Info1 className={classnames(classes.description)}>
-                transactions
-              </Info1>
+              <Info1 className="mt-2">transactions</Info1>
             </>
           )}
           {isThresholdDaysEnabled && (
             <>
-              <Info1
-                className={classnames(
-                  typeClass,
-                  classes.space,
-                  classes.description
-                )}>
-                in
-              </Info1>
+              <Info1 className={classnames(typeClass, 'mx-2 mt-2')}>in</Info1>
               <Field
-                className={classes.thresholdField}
+                className="mr-2 w-19"
                 component={NumberInput}
                 size="lg"
                 name="threshold.thresholdDays"
                 error={hasDaysError}
               />
-              <Info1 className={classnames(classes.description)}>days</Info1>
+              <Info1 className="mt-2">days</Info1>
             </>
           )}
           {isConsecutiveDaysEnabled && (
             <>
               <Field
-                className={classes.thresholdField}
+                className="mr-2 w-19"
                 component={NumberInput}
                 size="lg"
                 name="threshold.thresholdDays"
                 error={hasDaysError}
               />
-              <Info1 className={classnames(classes.description)}>
-                consecutive days
-              </Info1>
+              <Info1 className="mt-2">consecutive days</Info1>
             </>
           )}
         </div>
@@ -528,16 +341,27 @@ const requirementSchema = Yup.object()
 
 const requirementOptions = [
   { display: 'SMS verification', code: 'sms' },
-  { display: 'Email verification', code: 'email' },
+  {
+    display: 'Email verification',
+    code: 'email'
+  },
   { display: 'ID card image', code: 'idCardPhoto' },
-  { display: 'ID data', code: 'idCardData' },
+  {
+    display: 'ID data',
+    code: 'idCardData'
+  },
   { display: 'Customer camera', code: 'facephoto' },
   { display: 'Sanctions', code: 'sanctions' },
-  { display: 'US SSN', code: 'usSsn' },
-  // { display: 'Super user', code: 'superuser' },
+  {
+    display: 'US SSN',
+    code: 'usSsn'
+  }, // { display: 'Super user', code: 'superuser' },
   { display: 'Suspend', code: 'suspend' },
   { display: 'Block', code: 'block' },
-  { display: 'External verification', code: 'external' }
+  {
+    display: 'External verification',
+    code: 'external'
+  }
 ]
 
 const hasRequirementError = (errors, touched, values) =>
@@ -564,7 +388,6 @@ const Requirement = ({
   complianceServices,
   customInfoRequests = []
 }) => {
-  const classes = useStyles()
   const { touched, errors, values, handleChange, setTouched } =
     useFormikContext()
 
@@ -588,7 +411,10 @@ const Requirement = ({
   const availableCustomRequirements = R.filter(
     it =>
       !R.includes(
-        { triggerType: config.triggerType, id: it.id },
+        {
+          triggerType: config.triggerType,
+          id: it.id
+        },
         customRequirementsInUse
       ),
     customInfoRequests
@@ -614,7 +440,7 @@ const Requirement = ({
   enableCustomRequirement && options.push(customInfoOption)
 
   const titleClass = {
-    [classes.error]:
+    'text-tomato':
       (!!errors.requirement && !isSuspend && !isCustom && !isExternal) ||
       (isSuspend && hasRequirementError(errors, touched, values)) ||
       (isCustom && hasCustomRequirementError(errors, touched, values)) ||
@@ -623,16 +449,16 @@ const Requirement = ({
 
   return (
     <>
-      <Box display="flex" alignItems="center">
+      <div className="flex items-center">
         <H4 className={classnames(titleClass)}>Choose a requirement</H4>
-      </Box>
+      </div>
       <Field
         component={RadioGroup}
         name="requirement.requirement"
         options={options}
-        labelClassName={classes.specialLabel}
-        radioClassName={classes.radio}
-        className={classnames(classes.radioGroup, classes.specialGrid)}
+        labelClassName="h-10 p-0"
+        radioClassName="p-1 m-1"
+        className="flex-row grid grid-cols-[182px_162px_181px]"
         onChange={e => {
           handleChange(e)
           setTouched({
@@ -642,7 +468,7 @@ const Requirement = ({
       />
       {isSuspend && (
         <Field
-          className={classes.thresholdField}
+          className="mr-2 w-19"
           component={NumberInput}
           label="Days"
           size="lg"
@@ -653,7 +479,7 @@ const Requirement = ({
       {isCustom && (
         <div>
           <Field
-            className={classes.dropdownField}
+            className="mt-4 min-w-[155px]"
             component={Dropdown}
             label="Available requests"
             name="requirement.customInfoRequestId"
@@ -662,9 +488,9 @@ const Requirement = ({
         </div>
       )}
       {isExternal && (
-        <div className={classes.externalFields}>
+        <div className="flex flex-col gap-4">
           <Field
-            className={classes.dropdownField}
+            className="mt-4 w-[155px]"
             component={Dropdown}
             label="Service"
             name="requirement.externalService"
@@ -715,29 +541,12 @@ const getView = (data, code, compare) => it => {
   return R.compose(R.prop(code), R.find(R.propEq(compare ?? 'code', it)))(data)
 }
 
-// const DirectionDisplay = ({ code }) => {
-//   const classes = useStyles()
-//   const displayName = getView(directionOptions, 'display')(code)
-//   const showCashIn = code === 'cashIn' || code === 'both'
-//   const showCashOut = code === 'cashOut' || code === 'both'
-
-//   return (
-//     <div>
-//       {showCashOut && <TxOutIcon className={classes.directionIcon} />}
-//       {showCashIn && <TxInIcon className={classes.directionIcon} />}
-//       <span className={classes.directionName}>{displayName}</span>
-//     </div>
-//   )
-// }
-
 const customReqIdMatches = customReqId => it => {
   return it.id === customReqId
 }
 
 const RequirementInput = ({ customInfoRequests = [] }) => {
   const { values } = useFormikContext()
-  const classes = useStyles()
-
   const requirement = values?.requirement?.requirement
   const customRequestId =
     R.path(['requirement', 'customInfoRequestId'])(values) ?? ''
@@ -749,19 +558,19 @@ const RequirementInput = ({ customInfoRequests = [] }) => {
     : getView(requirementOptions, 'display')(requirement)
 
   return (
-    <Box display="flex" alignItems="baseline">
+    <div className="flex items-baseline">
       {`${display} ${isSuspend ? 'for' : ''}`}
       {isSuspend && (
         <Field
           bold
-          className={classes.suspensionDays}
+          className="w-8"
           name="requirement.suspensionDays"
           component={NumberInput}
           textAlign="center"
         />
       )}
       {isSuspend && 'days'}
-    </Box>
+    </div>
   )
 }
 
@@ -772,7 +581,6 @@ const RequirementView = ({
   externalService,
   customInfoRequests = []
 }) => {
-  const classes = useStyles()
   const display =
     requirement === 'custom'
       ? (R.path(['customRequest', 'name'])(
@@ -783,25 +591,23 @@ const RequirementView = ({
         : getView(requirementOptions, 'display')(requirement)
   const isSuspend = requirement === 'suspend'
   return (
-    <Box display="flex" alignItems="baseline">
+    <div className="flex items-baseline">
       {`${display} ${isSuspend ? 'for' : ''}`}
       {isSuspend && (
-        <Info2 className={classes.space} noMargin>
+        <Info2 className="mx-2" noMargin>
           {suspensionDays}
         </Info2>
       )}
       {isSuspend && 'days'}
-    </Box>
+    </div>
   )
 }
 
 const DisplayThreshold = ({ config, currency, isEdit }) => {
-  const classes = useStyles()
-
   const inputClasses = {
-    [classes.input]: true,
-    [classes.limitedInput]: config?.triggerType === 'txVelocity',
-    [classes.daysInput]: config?.triggerType === 'consecutiveDays'
+    '-mt-1': true,
+    'w-13': config?.triggerType === 'txVelocity',
+    'w-15': config?.triggerType === 'consecutiveDays'
   }
 
   const threshold = config?.threshold?.threshold
@@ -833,50 +639,50 @@ const DisplayThreshold = ({ config, currency, isEdit }) => {
   switch (config?.triggerType) {
     case 'txAmount':
       return (
-        <Box display="flex" alignItems="baseline" justifyContent="right">
+        <div className="flex items-baseline justify-end">
           {Threshold}
-          <Label2 noMargin className={classes.lastSpace}>
+          <Label2 noMargin className="ml-2">
             {currency}
           </Label2>
-        </Box>
+        </div>
       )
     case 'txVolume':
       return (
-        <Box display="flex" alignItems="baseline" justifyContent="right">
+        <div className="flex items-baseline justify-end">
           {Threshold}
-          <Label2 noMargin className={classes.lastSpace}>
+          <Label2 noMargin className="ml-2">
             {currency}
           </Label2>
-          <Label1 noMargin className={classes.space}>
+          <Label1 noMargin className="mx-2">
             in
           </Label1>
           {ThresholdDays}
-          <Label1 noMargin className={classes.lastSpace}>
+          <Label1 noMargin className="ml-2">
             days
           </Label1>
-        </Box>
+        </div>
       )
     case 'txVelocity':
       return (
-        <Box display="flex" alignItems="baseline" justifyContent="right">
+        <div className="flex items-baseline justify-end">
           {Threshold}
-          <Label1 className={classes.space} noMargin>
+          <Label1 className="mx-2" noMargin>
             transactions in
           </Label1>
           {ThresholdDays}
-          <Label1 className={classes.lastSpace} noMargin>
+          <Label1 className="ml-2" noMargin>
             days
           </Label1>
-        </Box>
+        </div>
       )
     case 'consecutiveDays':
       return (
-        <Box display="flex" alignItems="baseline" justifyContent="right">
+        <div className="flex items-baseline justify-end">
           {ThresholdDays}
-          <Label1 className={classes.lastSpace} noMargin>
+          <Label1 className="mx-2" noMargin>
             days
           </Label1>
-        </Box>
+        </div>
       )
     default:
       return ''
@@ -893,7 +699,7 @@ const ThresholdView = ({ config, currency }) => {
   return <DisplayThreshold config={config} currency={currency} />
 }
 
-const getElements = (currency, classes, customInfoRequests) => [
+const getElements = (currency, customInfoRequests) => [
   {
     name: 'triggerType',
     size: 'sm',
@@ -927,18 +733,6 @@ const getElements = (currency, classes, customInfoRequests) => [
     input: () => <ThresholdInput currency={currency} />,
     view: (it, config) => <ThresholdView config={config} currency={currency} />
   }
-  // {
-  //   name: 'direction',
-  //   size: 'sm',
-  //   width: 282,
-  //   view: it => <DirectionDisplay code={it} />,
-  //   input: RadioGroup,
-  //   inputProps: {
-  //     labelClassName: classes.tableRadioLabel,
-  //     className: classes.tableRadioGroup,
-  //     options: directionOptions2
-  //   }
-  // }
 ]
 
 const triggerOrder = R.map(R.prop('code'))(typeOptions)
@@ -988,8 +782,7 @@ const toServer = triggers =>
 
 export {
   Schema,
-  getElements,
-  // txDirection,
+  getElements, // txDirection,
   type,
   requirements,
   sortBy,

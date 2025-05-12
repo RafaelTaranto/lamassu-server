@@ -1,15 +1,11 @@
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import { React, useState } from 'react'
 import { H3 } from 'src/components/typography'
 
-import styles from './CustomerNotes.styles'
 import NewNoteCard from './components/notes/NewNoteCard'
 import NewNoteModal from './components/notes/NewNoteModal'
 import NoteCard from './components/notes/NoteCard'
 import NoteEdit from './components/notes/NoteEdit'
-
-const useStyles = makeStyles(styles)
 
 const CustomerNotes = ({
   customer,
@@ -18,7 +14,6 @@ const CustomerNotes = ({
   editNote,
   timezone
 }) => {
-  const classes = useStyles()
   const [openModal, setOpenModal] = useState(false)
   const [editing, setEditing] = useState(null)
 
@@ -52,11 +47,9 @@ const CustomerNotes = ({
 
   return (
     <div>
-      <div className={classes.header}>
-        <H3 className={classes.title}>{'Notes'}</H3>
-      </div>
+      <H3 className="mt-1 mb-7">{'Notes'}</H3>
       {R.isNil(editing) && (
-        <div className={classes.notesChipList}>
+        <div className="grid grid-cols-[repeat(4,_200px)] gap-5 auto-rows-[200px]">
           <NewNoteCard setOpenModal={setOpenModal} />
           {customerNotes.map((it, idx) => (
             <NoteCard

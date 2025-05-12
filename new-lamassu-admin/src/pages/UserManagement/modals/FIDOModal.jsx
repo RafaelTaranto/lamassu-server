@@ -1,17 +1,12 @@
-import { makeStyles } from '@mui/styles'
 import React from 'react'
+
 import Modal from 'src/components/Modal'
 import { Info2, P } from 'src/components/typography'
-
 import { Button } from 'src/components/buttons'
 
-import styles from '../UserManagement.styles'
-
-const useStyles = makeStyles(styles)
+import classes from '../UserManagement.module.css'
 
 const ChangeRoleModal = ({ state, dispatch }) => {
-  const classes = useStyles()
-
   const handleClose = () => {
     dispatch({
       type: 'close',

@@ -6,10 +6,6 @@ import {
 } from 'src/styling/variables'
 
 const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
   label: {
     margin: 0,
     color: offColor
@@ -45,29 +41,11 @@ const styles = {
     bottom: 160,
     marginBottom: 0
   },
-  upperButtonLabel: {
-    textAlign: 'center',
-    marginBottom: 0,
-    marginTop: 0
-  },
   statusHeader: {
     marginLeft: 2
   },
-  table: {
-    maxHeight: 440,
-    '&::-webkit-scrollbar': {
-      width: 7
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor: offColor,
-      borderRadius: 5
-    }
-  },
   tableBody: {
     overflow: 'auto'
-  },
-  h4: {
-    marginTop: 0
   },
   tl2: {
     display: 'inline'
@@ -76,11 +54,9 @@ const styles = {
     display: 'inline'
   },
   machinesTableContainer: {
-    marginTop: 10,
     height: 220
   },
   expandedMachinesTableContainer: {
-    marginTop: 10,
     height: 414
   },
   centerLabel: {

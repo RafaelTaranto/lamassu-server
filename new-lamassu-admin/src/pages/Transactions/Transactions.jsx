@@ -1,6 +1,5 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
-import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
 import React, { useEffect, useState } from 'react'
@@ -8,7 +7,6 @@ import { useHistory } from 'react-router-dom'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'
 import SearchBox from 'src/components/SearchBox'
 import SearchFilter from 'src/components/SearchFilter'
-import Title from 'src/components/Title'
 import { HelpTooltip } from 'src/components/Tooltip'
 import DataTable from 'src/components/tables/DataTable'
 import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
@@ -22,10 +20,8 @@ import * as Customer from 'src/utils/customer'
 import { formatDate } from 'src/utils/timezones'
 
 import DetailsRow from './DetailsCard'
-import { mainStyles } from './Transactions.styles'
 import { getStatus } from './helper'
-
-const useStyles = makeStyles(mainStyles)
+import TitleSection from '../../components/layout/TitleSection.jsx'
 
 const NUM_LOG_RESULTS = 1000
 
@@ -138,7 +134,6 @@ const getFiltersObj = filters =>
   R.reduce((s, f) => ({ ...s, [f.type]: f.value }), {}, filters)
 
 const Transactions = () => {
-  const classes = useStyles()
   const history = useHistory()
 
   const [filters, setFilters] = useState([])
@@ -187,14 +182,18 @@ const Transactions = () => {
       width: 202,
       size: 'sm',
       view: it => (
-        <div className={classes.flexWrapper}>
-          <div className={classes.overflowTd}>{Customer.displayName(it)}</div>
+        <div className="flex items-center justify-between mr-4">
+          <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+            {Customer.displayName(it)}
+          </div>
           {!it.isAnonymous && (
-            <div data-cy="customer-link" onClick={() => redirect(it.customerId)}>
+            <div
+              data-cy="customer-link"
+              onClick={() => redirect(it.customerId)}>
               {it.hasError || it.batchError ? (
-                <CustomerLinkWhiteIcon className={classes.customerLinkIcon} />
+                <CustomerLinkWhiteIcon />
               ) : (
-                <CustomerLinkIcon className={classes.customerLinkIcon} />
+                <CustomerLinkIcon />
               )}
             </div>
           )}
@@ -221,7 +220,7 @@ const Transactions = () => {
     {
       header: 'Address',
       view: it => formatCryptoAddress(it.cryptoCode, it.toAddress),
-      className: classes.overflowTd,
+      className: 'overflow-hidden whitespace-nowrap text-ellipsis',
       size: 'sm',
       width: 140
     },
@@ -238,7 +237,7 @@ const Transactions = () => {
       view: it => {
         if (getStatus(it) === 'Pending')
           return (
-            <div className={classes.pendingBox}>
+            <div className="flex items-center">
               {'Pending'}
               <HelpTooltip width={285}>
                 <SupportLinkButton
@@ -332,10 +331,15 @@ const Transactions = () => {
 
   return (
     <>
-      <div className={classes.titleWrapper}>
-        <div className={classes.titleAndButtonsContainer}>
-          <Title>Transactions</Title>
-          <div className={classes.buttonsWrapper}>
+      <TitleSection
+        title="Transactions"
+        labels={[
+          { icon: <TxInIcon />, label: 'Cash-in' },
+          { icon: <TxOutIcon />, label: 'Cash-out' },
+          { icon: errorLabel, label: 'Transaction error' }
+        ]}
+        appendix={
+          <div className="flex ml-4 gap-4">
             <SearchBox
               loading={filtersLoading}
               filters={filters}
@@ -343,9 +347,7 @@ const Transactions = () => {
               inputPlaceholder={'Search transactions'}
               onChange={onFilterChange}
             />
-          </div>
-          {txList && (
-            <div className={classes.buttonsWrapper}>
+            {txList && (
               <LogsDowloaderPopover
                 title="Download logs"
                 name="transactions"
@@ -355,24 +357,10 @@ const Transactions = () => {
                 timezone={timezone}
                 args={{ timezone }}
               />
-            </div>
-          )}
-        </div>
-        <div className={classes.headerLabels}>
-          <div>
-            <TxInIcon />
-            <span>Cash-in</span>
+            )}
           </div>
-          <div>
-            <TxOutIcon />
-            <span>Cash-out</span>
-          </div>
-          <div>
-            {errorLabel}
-            <span>Transaction error</span>
-          </div>
-        </div>
-      </div>
+        }
+      />
       {filters.length > 0 && (
         <SearchFilter
           entries={txList.length}

@@ -1,19 +1,9 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { compareAsc, differenceInDays, set } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
 
 import Calendar from './Calendar'
-
-const styles = {
-  wrapper: {
-    backgroundColor: 'white',
-    borderRadius: 10
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const DateRangePicker = ({ minDate, maxDate, className, onRangeChange }) => {
   const [from, setFrom] = useState(null)
@@ -22,8 +12,6 @@ const DateRangePicker = ({ minDate, maxDate, className, onRangeChange }) => {
   useEffect(() => {
     onRangeChange(from, to)
   }, [from, onRangeChange, to])
-
-  const classes = useStyles()
 
   const handleSelect = day => {
     if (
@@ -55,7 +43,7 @@ const DateRangePicker = ({ minDate, maxDate, className, onRangeChange }) => {
 
   return (
     <>
-      <div className={classnames(classes.wrapper, className)}>
+      <div className={classnames('bg-white rounded-xl', className)}>
         <Calendar
           from={from}
           to={to}

@@ -1,12 +1,10 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
 import Section from 'src/components/layout/Section'
 import TitleSection from 'src/components/layout/TitleSection'
 
 import { Table as EditableTable } from 'src/components/editableTable'
-import styles from 'src/pages/AddMachine/styles'
 import {
   mainFields,
   localeDefaults as defaults,
@@ -15,8 +13,6 @@ import {
 import { toNamespace } from 'src/utils/config'
 
 import { getConfiguredCoins } from '../helper'
-
-const useStyles = makeStyles(styles)
 
 const GET_DATA = gql`
   query getData {
@@ -52,7 +48,6 @@ const SAVE_CONFIG = gql`
 `
 
 function Locales({ isActive, doContinue }) {
-  const classes = useStyles()
   const { data } = useQuery(GET_DATA)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
@@ -72,7 +67,7 @@ function Locales({ isActive, doContinue }) {
   const onChangeCoin = (prev, curr, setValue) => setValue(curr)
 
   return (
-    <div className={classes.wrapper}>
+    <div className="w-[1132px] h-full mx-auto flex-1 flex flex-col">
       <TitleSection title="Locales" />
       <Section>
         <EditableTable
@@ -87,7 +82,7 @@ function Locales({ isActive, doContinue }) {
           validationSchema={schema}
           data={[]}
           elements={mainFields(
-            R.merge(data, { cryptoCurrencies }),
+            R.mergeRight(data, { cryptoCurrencies }),
             onChangeCoin
           )}
         />

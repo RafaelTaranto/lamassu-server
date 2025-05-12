@@ -1,11 +1,10 @@
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState, memo } from 'react'
 import Popper from 'src/components/Popper'
 import HelpIcon from 'src/styling/icons/action/help/zodiac.svg?react'
 
-const useStyles = makeStyles({
+const useStyles = {
   transparentButton: {
     border: 'none',
     backgroundColor: 'transparent',
@@ -27,10 +26,9 @@ const useStyles = makeStyles({
     width,
     padding: [[10, 15]]
   })
-})
+}
 
-const usePopperHandler = width => {
-  const classes = useStyles({ width })
+const usePopperHandler = () => {
   const [helpPopperAnchorEl, setHelpPopperAnchorEl] = useState(null)
 
   const handleOpenHelpPopper = event => {
@@ -48,7 +46,6 @@ const usePopperHandler = width => {
   const helpPopperOpen = Boolean(helpPopperAnchorEl)
 
   return {
-    classes,
     helpPopperAnchorEl,
     helpPopperOpen,
     handleOpenHelpPopper,
@@ -62,15 +59,13 @@ const HelpTooltip = memo(({ children, width }) => {
 
   return (
     <ClickAwayListener onClickAway={handler.handleCloseHelpPopper}>
-      <div
-        className={handler.classes.relativelyPositioned}
-        onMouseLeave={handler.handleCloseHelpPopper}>
+      <div className="relative" onMouseLeave={handler.handleCloseHelpPopper}>
         {handler.helpPopperOpen && (
-          <div className={handler.classes.safeSpace}></div>
+          <div className="absolute bg-transparent h-10 -left-1/2 w-[200%]"></div>
         )}
         <button
           type="button"
-          className={handler.classes.transparentButton}
+          className="border-0 bg-transparent outline-0 cursor-pointer mt-1"
           onMouseEnter={handler.openHelpPopper}>
           <HelpIcon />
         </button>
@@ -79,7 +74,9 @@ const HelpTooltip = memo(({ children, width }) => {
           anchorEl={handler.helpPopperAnchorEl}
           arrowEnabled={true}
           placement="bottom">
-          <div className={handler.classes.popoverContent}>{children}</div>
+          <div className="py-2 px-4" style={{ width }}>
+            {children}
+          </div>
         </Popper>
       </div>
     </ClickAwayListener>
@@ -104,7 +101,7 @@ const HoverableTooltip = memo(({ parentElements, children, width }) => {
             type="button"
             onMouseEnter={handler.handleOpenHelpPopper}
             onMouseLeave={handler.handleCloseHelpPopper}
-            className={handler.classes.transparentButton}>
+            className="border-0 bg-transparent outline-0 cursor-pointer mt-1">
             <HelpIcon />
           </button>
         )}
@@ -112,7 +109,9 @@ const HoverableTooltip = memo(({ parentElements, children, width }) => {
           open={handler.helpPopperOpen}
           anchorEl={handler.helpPopperAnchorEl}
           placement="bottom">
-          <div className={handler.classes.popoverContent}>{children}</div>
+          <div className="py-2 px-4" style={{ width }}>
+            {children}
+          </div>
         </Popper>
       </div>
     </ClickAwayListener>

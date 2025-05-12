@@ -1,5 +1,4 @@
-import { useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, gql } from '@apollo/client'
 import React, { useState } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import Modal from 'src/components/Modal'
@@ -7,9 +6,8 @@ import { Info2, P } from 'src/components/typography'
 
 import { Button } from 'src/components/buttons'
 
-import styles from '../UserManagement.styles'
-
 import Input2FAModal from './Input2FAModal'
+import classes from '../UserManagement.module.css'
 
 const CHANGE_USER_ROLE = gql`
   mutation changeUserRole(
@@ -27,11 +25,7 @@ const CHANGE_USER_ROLE = gql`
   }
 `
 
-const useStyles = makeStyles(styles)
-
 const ChangeRoleModal = ({ state, dispatch, user, requiresConfirmation }) => {
-  const classes = useStyles()
-
   const [changeUserRole, { error }] = useMutation(CHANGE_USER_ROLE, {
     onCompleted: () => handleClose(),
     refetchQueries: () => ['users']

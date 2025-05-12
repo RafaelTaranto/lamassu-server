@@ -1,0 +1,87 @@
+.baseButton {
+  cursor: pointer;
+  border: none;
+  outline: 0;
+  height: 32px;
+  color: var(--zodiac);
+}
+
+.roundButton {
+  width: 32px;
+  border-radius: 16px;
+  display: flex;
+  padding: 0;
+}
+
+.roundButton .buttonIcon {
+  margin: auto;
+}
+
+.roundButton .buttonIcon svg {
+  width: 16px;
+  height: 16px;
+  overflow: visible;
+}
+
+.roundButton .buttonIcon svg g {
+  stroke-width: 2px;
+}
+
+.baseButton:active {
+  color: white;
+}
+
+.primary {
+  background-color: var(--zircon);
+}
+
+.primary:hover {
+  background-color: var(--zircon2);
+}
+
+.primary:active {
+  background-color: var(--comet);
+  color: white;
+}
+
+.primary .buttonIconActive {
+  display: none;
+}
+
+.primary:active .buttonIcon {
+  display: none;
+}
+
+.primary:active .buttonIconActive {
+  display: block;
+}
+
+.secondary {
+  background-color: var(--comet);
+  color: white;
+}
+
+.secondary:hover {
+  background-color: var(--comet2);
+}
+
+.secondary:active {
+  background-color: white;
+  color: var(--zodiac);
+}
+
+.secondary .buttonIcon {
+  display: none;
+}
+
+.secondary .buttonIconActive {
+  display: flex;
+}
+
+.secondary:active .buttonIcon {
+  display: flex;
+}
+
+.secondary:active .buttonIconActive {
+  display: none;
+}

@@ -1,9 +1,6 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { Link, useLocation, useHistory } from 'react-router-dom'
@@ -14,8 +11,6 @@ import Commissions from './MachineComponents/Commissions'
 import Details from './MachineComponents/Details'
 import Overview from './MachineComponents/Overview'
 import Transactions from './MachineComponents/Transactions'
-import styles from './Machines.styles'
-const useStyles = makeStyles(styles)
 
 const GET_INFO = gql`
   query getMachine($deviceId: ID!, $billFilters: JSONObject) {
@@ -101,8 +96,6 @@ const MachineRoute = () => {
 }
 
 const Machines = ({ data, refetch, reload }) => {
-  const classes = useStyles()
-
   const timezone = R.path(['config', 'locale_timezone'], data) ?? {}
 
   const machine = R.path(['machine'])(data) ?? {}
@@ -113,51 +106,44 @@ const Machines = ({ data, refetch, reload }) => {
   const machineID = R.path(['deviceId'])(machine) ?? null
 
   return (
-    <Grid container className={classes.grid}>
-      <Grid item xs={3}>
-        <Grid item xs={12}>
-          <div className={classes.breadcrumbsContainer}>
-            <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
-              <Link to="/dashboard" className={classes.breadcrumbLink}>
-                <Label3 noMargin className={classes.subtitle}>
-                  Dashboard
-                </Label3>
-              </Link>
-              <TL2 noMargin className={classes.subtitle}>
-                {machineName}
-              </TL2>
-            </Breadcrumbs>
-            <Overview data={machine} onActionSuccess={reload} />
-          </div>
-        </Grid>
-      </Grid>
-      <Grid item xs={9}>
-        <div className={classes.content}>
-          <div
-            className={classnames(classes.detailItem, classes.detailsMargin)}>
-            <TL1 className={classes.subtitle}>{'Details'}</TL1>
-            <Details data={machine} timezone={timezone} />
-          </div>
-          <div className={classes.detailItem}>
-            <TL1 className={classes.subtitle}>{'Cash box & cassettes'}</TL1>
-            <Cassettes
-              refetchData={refetch}
-              machine={machine}
-              config={config ?? false}
-              bills={bills}
-            />
-          </div>
-          <div className={classes.transactionsItem}>
-            <TL1 className={classes.subtitle}>{'Latest transactions'}</TL1>
-            <Transactions id={machineID} />
-          </div>
-          <div className={classes.detailItem}>
-            <TL1 className={classes.subtitle}>{'Commissions'}</TL1>
-            <Commissions name={'commissions'} id={machineID} />
-          </div>
+    <div className="flex flex-1 h-full gap-12">
+      <div className="basis-1/4 min-w-1/4 pt-8">
+        <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
+          <Link to="/dashboard" className="no-underline">
+            <Label3 noMargin className="text-comet mt-[1px]">
+              Dashboard
+            </Label3>
+          </Link>
+          <TL2 noMargin className="text-comet">
+            {machineName}
+          </TL2>
+        </Breadcrumbs>
+        <Overview data={machine} onActionSuccess={reload} />
+      </div>
+      <div className="basis-3/4 max-w-3/4 flex flex-col mt-6">
+        <div>
+          <TL1 className="text-comet">Details</TL1>
+          <Details data={machine} timezone={timezone} />
         </div>
-      </Grid>
-    </Grid>
+        <div>
+          <TL1 className="text-comet">Cash box & cassettes</TL1>
+          <Cassettes
+            refetchData={refetch}
+            machine={machine}
+            config={config ?? false}
+            bills={bills}
+          />
+        </div>
+        <div>
+          <TL1 className="text-comet">Latest transactions</TL1>
+          <Transactions id={machineID} />
+        </div>
+        <div>
+          <TL1 className="text-comet">Commissions</TL1>
+          <Commissions name={'commissions'} id={machineID} />
+        </div>
+      </div>
+    </div>
   )
 }
 

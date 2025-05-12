@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Form, Formik } from 'formik'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
@@ -12,10 +11,6 @@ import { Cashbox } from '../../../components/inputs/cashbox/Cashbox'
 import NotificationsCtx from '../NotificationsContext'
 import Header from '../components/EditHeader'
 import EditableNumber from '../components/EditableNumber'
-
-import styles from './FiatBalanceAlerts.styles'
-
-const useStyles = makeStyles(styles)
 
 const CASH_IN_KEY = 'fiatBalanceAlertsCashIn'
 const CASH_OUT_KEY = 'fiatBalanceAlertsCashOut'
@@ -34,8 +29,6 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
     save,
     machines = []
   } = useContext(NotificationsCtx)
-  const classes = useStyles()
-
   const maxNumberOfCassettes = Math.max(
     ...R.map(it => it.numberOfCassettes, machines),
     DEFAULT_NUMBER_OF_CASSETTES
@@ -97,8 +90,8 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
         setEditing(CASH_OUT_KEY, false)
       }}>
       {({ values }) => (
-        <>
-          <Form className={classes.form}>
+        <div className="flex flex-col gap-9">
+          <Form>
             <PromptWhenDirty />
             <Header
               title="Cash box"
@@ -106,24 +99,16 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
               disabled={isDisabled(CASH_IN_KEY)}
               setEditing={it => setEditing(CASH_IN_KEY, it)}
             />
-            <div className={classes.wrapper}>
-              <div className={classes.first}>
-                <div className={classes.row}>
-                  <div className={classes.col2}>
-                    <EditableNumber
-                      label="Alert me over"
-                      name="cashInAlertThreshold"
-                      editing={isEditing(CASH_IN_KEY)}
-                      displayValue={x => (x === '' ? '-' : x)}
-                      decoration="notes"
-                      width={fieldWidth}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <EditableNumber
+              label="Alert me over"
+              name="cashInAlertThreshold"
+              editing={isEditing(CASH_IN_KEY)}
+              displayValue={x => (x === '' ? '-' : x)}
+              decoration="notes"
+              width={fieldWidth}
+            />
           </Form>
-          <Form className={classes.form}>
+          <Form>
             <PromptWhenDirty />
             <Header
               title="Cash out (Empty)"
@@ -131,25 +116,23 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
               disabled={isDisabled(CASH_OUT_KEY)}
               setEditing={it => setEditing(CASH_OUT_KEY, it)}
             />
-            <div className={classes.wrapper}>
+            <div className="flex flex-wrap gap-8">
               {R.map(
                 it => (
                   <>
-                    <div className={classes.row}>
+                    <div className="flex w-50 gap-4">
                       <Cashbox
-                        labelClassName={classes.cashboxLabel}
-                        emptyPartClassName={classes.cashboxEmptyPart}
                         percent={
                           values[`fillingPercentageCassette${it + 1}`] ??
                           data[`cassette${it + 1}`]
                         }
-                        applyColorVariant
-                        applyFiatBalanceAlertsStyling
+                        isLow={false}
+                        className="border-4 inline-block"
                         omitInnerPercentage
                         cashOut
                       />
-                      <div className={classes.col2}>
-                        <TL2 className={classes.title}>Cassette {it + 1}</TL2>
+                      <div className="w-30">
+                        <TL2 className="mt-0">Cassette {it + 1}</TL2>
                         <EditableNumber
                           label="Alert me under"
                           name={`fillingPercentageCassette${it + 1}`}
@@ -166,7 +149,7 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
               )}
             </div>
           </Form>
-          <Form className={classes.form}>
+          <Form>
             <PromptWhenDirty />
             <Header
               title="Cash recycling"
@@ -174,28 +157,24 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
               disabled={isDisabled(RECYCLER_STACKER_KEY)}
               setEditing={it => setEditing(RECYCLER_STACKER_KEY, it)}
             />
-            <div className={classes.wrapper}>
+            <div className="flex flex-wrap gap-8">
               {R.chain(
                 it => [
                   <>
-                    <div className={classes.row}>
+                    <div className="flex w-50 gap-4">
                       <Cashbox
-                        labelClassName={classes.cashboxLabel}
-                        emptyPartClassName={classes.cashboxEmptyPart}
                         percent={
                           values[
                             `fillingPercentageRecycler${(it + 1) * 2 - 1}`
                           ] ?? data[`recycler${(it + 1) * 2 - 1}`]
                         }
-                        applyColorVariant
-                        applyFiatBalanceAlertsStyling
+                        isLow={false}
+                        className="border-4 inline-block"
                         omitInnerPercentage
                         cashOut
                       />
-                      <div className={classes.col2}>
-                        <TL2 className={classes.title}>
-                          Recycler {(it + 1) * 2 - 1}
-                        </TL2>
+                      <div className="w-30">
+                        <TL2 className="mt-0">Recycler {(it + 1) * 2 - 1}</TL2>
                         <EditableNumber
                           label="Alert me under"
                           name={`fillingPercentageRecycler${(it + 1) * 2 - 1}`}
@@ -208,23 +187,19 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
                     </div>
                   </>,
                   <>
-                    <div className={classes.row}>
+                    <div className="flex w-50 gap-4">
                       <Cashbox
-                        labelClassName={classes.cashboxLabel}
-                        emptyPartClassName={classes.cashboxEmptyPart}
                         percent={
                           values[`fillingPercentageRecycler${(it + 1) * 2}`] ??
                           data[`recycler${(it + 1) * 2}`]
                         }
-                        applyColorVariant
-                        applyFiatBalanceAlertsStyling
+                        isLow={false}
+                        className="border-4 inline-block"
                         omitInnerPercentage
                         cashOut
                       />
-                      <div className={classes.col2}>
-                        <TL2 className={classes.title}>
-                          Recycler {(it + 1) * 2}
-                        </TL2>
+                      <div className="w-30">
+                        <TL2 className="mt-0">Recycler {(it + 1) * 2}</TL2>
                         <EditableNumber
                           label="Alert me under"
                           name={`fillingPercentageRecycler${(it + 1) * 2}`}
@@ -241,7 +216,7 @@ const FiatBalance = ({ section, min = 0, max = 100, fieldWidth = 80 }) => {
               )}
             </div>
           </Form>
-        </>
+        </div>
       )}
     </Formik>
   )

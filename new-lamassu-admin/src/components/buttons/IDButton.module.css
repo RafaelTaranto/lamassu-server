@@ -1,0 +1,58 @@
+.idButton {
+  width: 34px;
+  height: 28px;
+  display: flex;
+  border-radius: 4px;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+}
+
+.buttonIcon {
+  margin: auto;
+  line-height: 1px;
+}
+
+.buttonIcon svg {
+  overflow: visible;
+}
+
+.closed {
+  background-color: var(--zircon);
+}
+
+.closed:hover {
+  background-color: var(--zircon2);
+}
+
+.closed:active {
+  background-color: var(--comet);
+  color: white;
+}
+
+.open {
+  background-color: var(--comet);
+  color: white;
+}
+
+.open:hover {
+  background-color: var(--comet2);
+}
+
+.open:active {
+  background-color: var(--comet3);
+}
+
+.popoverContent {
+  composes: info2 from '../typography/typography.module.css';
+  padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+}
+
+.popoverContent img {
+  height: 145px;
+  min-width: 200px;
+}

@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from '@mui/material/styles'
 
 import typographyStyles from 'src/components/typography/styles'
 
@@ -10,17 +10,26 @@ import {
   offColor,
   subheaderColor,
   fontSize3,
-  fontSize5,
   zircon,
   zircon2,
-  primaryColor, disabledColor2, disabledColor
+  primaryColor,
+  disabledColor2,
+  disabledColor,
+  smallestFontSize,
+  inputFontWeight,
+  spring3,
+  spring4,
+  tomato,
+  mistyRose,
+  linen,
+  pumpkin
 } from './variables'
 
 const { p } = typographyStyles
 
 let theme = createTheme({
   typography: {
-    fontFamily: inputFontFamily,
+    fontFamily: inputFontFamily
   },
   palette: {
     primary: {
@@ -36,7 +45,7 @@ let theme = createTheme({
     background: {
       default: backgroundColor
     }
-  },
+  }
 })
 
 theme = createTheme(theme, {
@@ -44,7 +53,12 @@ theme = createTheme(theme, {
     MuiTypography: {
       styleOverrides: {
         root: { ...p },
-        body1: { ...p },
+        body1: { ...p }
+      }
+    },
+    MuiIconButtonBase: {
+      defaultProps: {
+        disableRipple: true
       }
     },
     MuiButtonBase: {
@@ -128,7 +142,7 @@ theme = createTheme(theme, {
           },
           '&[aria-selected="true"]': {
             backgroundColor: `${subheaderColor} !important`
-          },
+          }
         },
         paper: {
           color: fontColor,
@@ -148,13 +162,65 @@ theme = createTheme(theme, {
         }
       }
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          color: primaryColor
+        },
+        elevation1: {
+          boxShadow: '0 0 4px 0 rgba(0, 0, 0, 0.08)'
+        }
+      }
+    },
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          color: secondaryColor,
+          '&.Mui-checked': {
+            color: secondaryColor
+          }
+        }
+      }
+    },
     MuiChip: {
       styleOverrides: {
+        root: {
+          backgroundColor: subheaderColor,
+          borderRadius: 4,
+          margin: theme.spacing(0.5, 0.25),
+          height: 18
+        },
         label: {
-          paddingLeft: 4,
-          paddingRight: 4,
+          fontSize: smallestFontSize,
           color: fontColor,
-          fontSize: fontSize5
+          fontWeight: inputFontWeight,
+          fontFamily: inputFontFamily,
+          paddingRight: 4,
+          paddingLeft: 4
+        },
+        colorDefault: {
+          backgroundColor: zircon,
+          '& .MuiChip-label': {
+            color: primaryColor
+          }
+        },
+        colorWarning: {
+          backgroundColor: linen,
+          '& .MuiChip-label': {
+            color: pumpkin
+          }
+        },
+        colorError: {
+          backgroundColor: mistyRose,
+          '& .MuiChip-label': {
+            color: tomato
+          }
+        },
+        colorSuccess: {
+          backgroundColor: spring3,
+          '& .MuiChip-label': {
+            color: spring4
+          }
         }
       }
     },
@@ -223,7 +289,7 @@ theme = createTheme(theme, {
         vertical: {
           borderRadius: 8,
           border: 'none',
-          borderColor: zircon,
+          borderColor: zircon
         },
         firstButton: {
           borderTop: '1px solid',
@@ -248,7 +314,7 @@ theme = createTheme(theme, {
           borderTopLeftRadius: 8,
           borderBottomRightRadius: 8,
           borderBottomLeftRadius: 8
-        },
+        }
       }
     }
   }

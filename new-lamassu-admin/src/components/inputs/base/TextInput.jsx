@@ -1,12 +1,9 @@
-import { makeStyles } from '@mui/styles'
 import TextField from '@mui/material/TextField'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { memo } from 'react'
 
-import styles from './TextInput.styles'
-
-const useStyles = makeStyles(styles)
+import styles from './TextInput.module.css'
 
 const TextInput = memo(
   ({
@@ -19,6 +16,7 @@ const TextInput = memo(
     suffix,
     textAlign,
     width,
+    inputClasses,
     // lg or sm
     size,
     bold,
@@ -26,11 +24,23 @@ const TextInput = memo(
     InputProps,
     ...props
   }) => {
-    const classes = useStyles({ textAlign, width, size })
     const isTextFilled = !error && !R.isNil(value) && !R.isEmpty(value)
     const filled = isPasswordFilled || isTextFilled
-    const inputClasses = {
-      [classes.bold]: bold
+
+    const style = {
+      width: width,
+      textAlign: textAlign
+    }
+
+    const sizeClass =
+      size === 'sm'
+        ? styles.sizeSm
+        : size === 'lg'
+          ? styles.sizeLg
+          : styles.size
+
+    const divClass = {
+      [styles.bold]: bold
     }
 
     return (
@@ -41,17 +51,22 @@ const TextInput = memo(
         onBlur={onBlur}
         error={error}
         value={value}
-        classes={{ root: classes.root }}
         className={className}
-        InputProps={{
-          className: classnames(inputClasses),
-          classes: {
-            root: classes.size,
-            underline: filled ? classes.underline : null
+        style={style}
+        {...props}
+        slotProps={{
+          input: {
+            className: classnames(divClass),
+            classes: {
+              root: sizeClass,
+              underline: filled ? styles.underline : null,
+              input: inputClasses
+            },
+            ...InputProps
           },
-          ...InputProps
-        }}
-        {...props} />
+
+          htmlInput: { style: { textAlign } }
+        }} />
     );
   }
 )

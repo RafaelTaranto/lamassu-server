@@ -1,12 +1,11 @@
-import { useMutation, useQuery, gql } from "@apollo/client";
+import { useMutation, useQuery, gql } from '@apollo/client'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import SvgIcon from '@mui/material/SvgIcon'
 import IconButton from '@mui/material/IconButton'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Form, Formik, FastField } from 'formik'
-import {QRCodeSVG as QRCode} from 'qrcode.react'
+import { QRCodeSVG as QRCode } from 'qrcode.react'
 import * as R from 'ramda'
 import React, { memo, useState, useEffect, useRef } from 'react'
 import Title from 'src/components/Title'
@@ -25,8 +24,6 @@ import { Button } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 import { primaryColor } from 'src/styling/variables'
 
-import styles from './styles'
-
 const SAVE_CONFIG = gql`
   mutation createPairingTotem($name: String!) {
     createPairingTotem(name: $name)
@@ -41,11 +38,9 @@ const GET_MACHINES = gql`
   }
 `
 
-const useStyles = makeStyles(styles)
-
 const getSize = R.compose(R.length, R.pathOr([], ['machines']))
 
-const QrCodeComponent = ({ classes, qrCode, name, count, onPaired }) => {
+const QrCodeComponent = ({ qrCode, name, count, onPaired }) => {
   const timeout = useRef(null)
   const CLOSE_SCREEN_TIMEOUT = 2000
   const { data } = useQuery(GET_MACHINES, { pollInterval: 10000 })
@@ -69,43 +64,42 @@ const QrCodeComponent = ({ classes, qrCode, name, count, onPaired }) => {
 
   return (
     <>
-      <Info2 className={classes.qrTitle}>
-        Scan QR code with your new cryptomat
-      </Info2>
-      <div className={classes.qrCodeWrapper}>
-        <div className={classes.qrCodeImageWrapper} data-cy={qrCode}>
+      <Info2>Scan QR code with your new cryptomat</Info2>
+      <div className="flex gap-20 pt-6">
+        <div
+          className="bg-white p-1 rounded-2xl border-solid border-zodiac border-5"
+          data-cy={qrCode}>
           <QRCode
             size={280}
             fgColor={primaryColor}
-            marginSize={4}
+            marginSize={3}
             value={qrCode}
-            className={classes.qrCodeBorder}
           />
-          <div className={classes.qrCodeScanMessage}>
+          <div className="flex items-center mb-5 ml-5">
             <CameraIcon />
-            <P noMargin>Snap a picture and scan</P>
+            <P noMargin className="ml-3">
+              Snap a picture and scan
+            </P>
           </div>
         </div>
-        <div className={classes.qrTextWrapper}>
-          <div className={classes.qrTextInfoWrapper}>
-            <div className={classes.qrTextIcon}>
+        <div className="max-w-100">
+          <div className="flex gap-4 mb-4">
+            <div>
               <WarningIcon />
             </div>
-            <div className={classes.textWrapper}>
-              <P className={classes.qrText}>
-                To pair the machine you need scan the QR code with your machine.
-                To do this either snap a picture of this QR code or download it
-                through the button above and scan it with the scanning bay on
-                your machine.
-              </P>
-            </div>
+            <P noMargin>
+              To pair the machine you need scan the QR code with your machine.
+              To do this either snap a picture of this QR code or download it
+              through the button above and scan it with the scanning bay on your
+              machine.
+            </P>
           </div>
           {hasNewMachine && (
-            <div className={classes.successMessageWrapper}>
-              <div className={classes.successMessageIcon}>
+            <div className="bg-spring3 flex gap-4 p-2">
+              <div className="flex items-center">
                 <CompleteStageIconSpring />
               </div>
-              <Info2 className={classes.successMessage}>
+              <Info2 className="text-spring2 m-0">
                 Machine has been successfully paired!
               </Info2>
             </div>
@@ -135,7 +129,7 @@ const validationSchema = Yup.object().shape({
     )
 })
 
-const MachineNameComponent = ({ nextStep, classes, setQrCode, setName }) => {
+const MachineNameComponent = ({ nextStep, setQrCode, setName }) => {
   const [register] = useMutation(SAVE_CONFIG, {
     onCompleted: ({ createPairingTotem }) => {
       if (process.env.NODE_ENV === 'development') {
@@ -162,9 +156,7 @@ const MachineNameComponent = ({ nextStep, classes, setQrCode, setName }) => {
 
   return (
     <>
-      <Info2 className={classes.nameTitle}>
-        Machine Name (ex: Coffee shop 01)
-      </Info2>
+      <Info2 className="mb-6">Machine Name (ex: Coffee shop 01)</Info2>
       <Formik
         validateOnBlur={false}
         validateOnChange={false}
@@ -175,7 +167,7 @@ const MachineNameComponent = ({ nextStep, classes, setQrCode, setName }) => {
           register({ variables: { name } })
         }}>
         {({ errors }) => (
-          <Form className={classes.form}>
+          <Form>
             <div>
               <FastField
                 name="name"
@@ -183,8 +175,8 @@ const MachineNameComponent = ({ nextStep, classes, setQrCode, setName }) => {
                 component={TextInput}
               />
             </div>
-            {errors && <P className={classes.errorMessage}>{errors.message}</P>}
-            <div className={classes.button}>
+            {errors && <P className="text-tomato">{errors.message}</P>}
+            <div className="mt-16">
               <Button type="submit">Submit</Button>
             </div>
           </Form>
@@ -205,18 +197,18 @@ const steps = [
   }
 ]
 
-const renderStepper = (step, it, idx, classes) => {
+const renderStepper = (step, it, idx) => {
   const active = step === idx
   const past = idx < step
   const future = idx > step
 
   return (
-    <div className={classes.item}>
+    <div className="flex relative my-3">
       <span
         className={classnames({
-          [classes.itemText]: true,
-          [classes.itemTextActive]: active,
-          [classes.itemTextPast]: past
+          'mr-6 text-comet': true,
+          'text-zodiac font-bold': active,
+          'text-zodiac': past
         })}>
         {it.label}
       </span>
@@ -226,8 +218,8 @@ const renderStepper = (step, it, idx, classes) => {
       {idx < steps.length - 1 && (
         <div
           className={classnames({
-            [classes.stepperPath]: true,
-            [classes.stepperPast]: past
+            'absolute h-7 w-px border border-comet border-solid right-2 top-[18px]': true,
+            'border-zodiac': past
           })}></div>
       )}
     </div>
@@ -235,7 +227,6 @@ const renderStepper = (step, it, idx, classes) => {
 }
 
 const AddMachine = memo(({ close, onPaired }) => {
-  const classes = useStyles()
   const { data } = useQuery(GET_MACHINES)
   const [qrCode, setQrCode] = useState('')
   const [name, setName] = useState('')
@@ -246,14 +237,12 @@ const AddMachine = memo(({ close, onPaired }) => {
 
   return (
     <div>
-      <Dialog
-        fullScreen
-        className={classes.dialog}
-        open={true}
-        aria-labelledby="form-dialog-title">
-        <DialogContent className={classes.dialog}>
-          <div className={classes.wrapper}>
-            <div className={classes.headerDiv}>
+      <Dialog fullScreen open={true} aria-labelledby="form-dialog-title">
+        <DialogContent className="p-0 pt-5 bg-ghost">
+          <div
+            className=" mx-auto flex flex-col flex-col flex-col flex-col
+              flex-col flex-col flex-col flex-col w-[1200px] h-full ">
+            <div className="flex items-center justify-between">
               <Title>Add Machine</Title>
               <IconButton onClick={close} size="large">
                 <SvgIcon color="error">
@@ -261,13 +250,12 @@ const AddMachine = memo(({ close, onPaired }) => {
                 </SvgIcon>
               </IconButton>
             </div>
-            <div className={classes.contentDiv}>
+            <div className="flex flex-1">
               <Sidebar>
-                {steps.map((it, idx) => renderStepper(step, it, idx, classes))}
+                {steps.map((it, idx) => renderStepper(step, it, idx))}
               </Sidebar>
-              <div className={classes.contentWrapper}>
+              <div className="px-12 flex-1">
                 <Component
-                  classes={classes}
                   nextStep={() => setStep(1)}
                   count={count}
                   onPaired={onPaired}
@@ -282,7 +270,7 @@ const AddMachine = memo(({ close, onPaired }) => {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 })
 
 export default AddMachine

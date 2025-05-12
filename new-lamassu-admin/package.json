@@ -5,12 +5,9 @@
   "type": "module",
   "dependencies": {
     "@apollo/client": "^3.13.7",
-    "@emotion/react": "^11.14.0",
-    "@emotion/styled": "^11.14.0",
     "@lamassu/coins": "v1.6.1",
-    "@mui/icons-material": "^5.17.1",
-    "@mui/material": "^5.17.1",
-    "@mui/styles": "^5.17.1",
+    "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
     "@simplewebauthn/browser": "^3.0.0",
     "apollo-upload-client": "^18.0.0",
     "bignumber.js": "9.0.0",
@@ -33,7 +30,6 @@
     "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "17.0.2",
     "react-dropzone": "^11.4.2",
-    "react-material-ui-carousel": "^3.4.2",
     "react-number-format": "^4.4.1",
     "react-otp-input": "3.1.1",
     "react-router-dom": "5.1.2",
@@ -44,6 +40,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.16.0",
+    "@tailwindcss/vite": "^4.1.4",
     "@vitejs/plugin-react-swc": "^3.7.2",
     "esbuild-plugin-react-virtualized": "^1.0.4",
     "eslint": "^9.16.0",
@@ -53,6 +50,7 @@
     "globals": "^15.13.0",
     "lint-staged": "^15.2.10",
     "prettier": "3.4.1",
+    "tailwindcss": "^4.1.4",
     "vite": "^6.0.1",
     "vite-plugin-svgr": "^4.3.0"
   },

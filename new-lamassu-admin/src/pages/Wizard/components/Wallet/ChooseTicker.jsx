@@ -1,6 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
 import { getEquivalentCode } from '@lamassu/coins/lightUtils'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H4 } from 'src/components/typography'
@@ -8,10 +7,8 @@ import { H4 } from 'src/components/typography'
 import { Button } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
 
-import styles from './Shared.styles'
+import classes from './Shared.module.css'
 import { getItems } from './getItems'
-
-const useStyles = makeStyles(styles)
 
 const GET_CONFIG = gql`
   {
@@ -25,7 +22,6 @@ const GET_CONFIG = gql`
 `
 
 const ChooseTicker = ({ data: currentData, addData }) => {
-  const classes = useStyles()
   const { data } = useQuery(GET_CONFIG)
 
   const [selected, setSelected] = useState(null)

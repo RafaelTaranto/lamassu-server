@@ -1,20 +1,9 @@
-import { makeStyles } from '@mui/styles'
 import React, { memo } from 'react'
-
-import { spacer } from 'src/styling/variables'
 
 import { H1 } from './typography'
 
-const useStyles = makeStyles({
-  title: {
-    marginTop: spacer * 3,
-    marginBottom: spacer * 3
-  }
-})
-
 const Title = memo(({ children }) => {
-  const classes = useStyles()
-  return <H1 className={classes.title}>{children}</H1>
+  return <H1 className="my-6">{children}</H1>
 })
 
 export default Title

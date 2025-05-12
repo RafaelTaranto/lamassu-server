@@ -1,6 +1,5 @@
-import { useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from '@apollo/client'
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { format, set } from 'date-fns/fp'
 import FileSaver from 'file-saver'
@@ -11,68 +10,32 @@ import DownloadInverseIcon from 'src/styling/icons/button/download/white.svg?rea
 import Download from 'src/styling/icons/button/download/zodiac.svg?react'
 
 import { FeatureButton, Link } from 'src/components/buttons'
-import { primaryColor, offColor, zircon } from 'src/styling/variables'
 import { formatDate } from 'src/utils/timezones'
 
 import Popper from './Popper'
 import DateRangePicker from './date-range-picker/DateRangePicker'
 import { RadioGroup } from './inputs'
 import typographyStyles from './typography/styles'
+import { H4, Info1, Label1, Label2 } from './typography/index.jsx'
 
-const { info1, label1, label2, h4 } = typographyStyles
-
-const dateContainerStyles = {
-  wrapper: {
-    height: 46,
-    width: 99
-  },
-  container: {
-    display: 'flex'
-  },
-  monthWeekDayContainer: {
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  label: {
-    extend: label1,
-    lineHeight: 1.33,
-    color: primaryColor
-  },
-  bigNumber: {
-    extend: info1,
-    lineHeight: 1,
-    marginRight: 7
-  },
-  monthYear: {
-    extend: label2,
-    lineHeight: 1.17,
-    color: primaryColor
-  },
-  weekDay: {
-    extend: label1,
-    lineHeight: 1.33,
-    color: offColor
-  }
-}
-
-const dateContainerUseStyles = makeStyles(dateContainerStyles)
-
-const DateContainer = ({ date, children, ...props }) => {
-  const classes = dateContainerUseStyles()
-
+const DateContainer = ({ date, children }) => {
   return (
-    <div className={classes.wrapper}>
-      <div className={classes.label}>{children}</div>
+    <div className="h-11 w-25">
+      <Label1 noMargin>{children}</Label1>
       {date && (
         <>
-          <div className={classes.container}>
-            <div className={classes.bigNumber}>{format('d', date)}</div>
-            <div className={classes.monthWeekDayContainer}>
-              <span className={classes.monthYear}>{`${format(
+          <div className="flex">
+            <Info1 noMargin className="mr-2">
+              {format('d', date)}
+            </Info1>
+            <div className="flex flex-col">
+              <Label2 noMargin>{`${format(
                 'MMM',
                 date
-              )} ${format('yyyy', date)}`}</span>
-              <span className={classes.weekDay}>{format('EEEE', date)}</span>
+              )} ${format('yyyy', date)}`}</Label2>
+              <Label1 noMargin className="text-comet">
+                {format('EEEE', date)}
+              </Label1>
             </div>
           </div>
         </>
@@ -81,54 +44,6 @@ const DateContainer = ({ date, children, ...props }) => {
   )
 }
 
-const styles = {
-  popoverContent: {
-    width: 280
-  },
-  popoverHeader: {
-    extend: h4,
-    padding: [[15, 15, 0, 15]]
-  },
-  radioButtonsContainer: {
-    padding: [[5, 15, 5, 15]]
-  },
-  radioButtons: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    color: primaryColor
-  },
-  dateRangePickerShowing: {
-    display: 'block',
-    height: '100%'
-  },
-  dateRangePickerHidden: {
-    display: 'none',
-    height: 0
-  },
-  download: {
-    padding: [[10, 15]]
-  },
-  dateContainerWrapper: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    position: 'relative',
-    backgroundColor: zircon,
-    padding: [[0, 15]],
-    minHeight: 70
-  },
-  arrowContainer: {
-    position: 'absolute',
-    left: 125,
-    top: 26
-  },
-  arrow: {
-    margin: 'auto'
-  }
-}
-
-const useStyles = makeStyles(styles)
 const ALL = 'all'
 const RANGE = 'range'
 const ADVANCED = 'advanced'
@@ -153,11 +68,9 @@ const LogsDownloaderPopover = ({
     onCompleted: data => createLogsFile(getLogs(data), range)
   })
 
-  const classes = useStyles()
-
   const dateRangePickerClasses = {
-    [classes.dateRangePickerShowing]: selectedRadio === RANGE,
-    [classes.dateRangePickerHidden]: selectedRadio === ALL
+    'block h-full': selectedRadio === RANGE,
+    hidden: selectedRadio === ALL
   }
 
   const handleRadioButtons = evt => {
@@ -255,26 +168,28 @@ const LogsDownloaderPopover = ({
           variant="contained"
         />
         <Popper id={id} open={open} anchorEl={anchorEl} placement="bottom">
-          <div className={classes.popoverContent}>
-            <div className={classes.popoverHeader}>{title}</div>
-            <div className={classes.radioButtonsContainer}>
+          <div className="w-70">
+            <H4 noMargin className="p-4 pb-0">
+              {title}
+            </H4>
+            <div className="py-1 px-4">
               <RadioGroup
                 name="logs-select"
                 value={selectedRadio}
                 options={radioButtonOptions}
                 ariaLabel="logs-select"
                 onChange={handleRadioButtons}
-                className={classes.radioButtons}
+                className="flex flex-row justify-between text-zodiac"
               />
             </div>
             {selectedRadio === RANGE && (
               <div className={classnames(dateRangePickerClasses)}>
-                <div className={classes.dateContainerWrapper}>
+                <div className="flex justify-between items-center py-0 px-4 bg-zircon relative min-h-20">
                   {range && (
                     <>
                       <DateContainer date={range.from}>From</DateContainer>
-                      <div className={classes.arrowContainer}>
-                        <Arrow className={classes.arrow} />
+                      <div className="absolute left-31 top-6">
+                        <Arrow className="m-auto" />
                       </div>
                       <DateContainer date={range.until}>To</DateContainer>
                     </>
@@ -295,18 +210,18 @@ const LogsDownloaderPopover = ({
               </div>
             )}
             {simplified && (
-              <div className={classes.radioButtonsContainer}>
+              <div className="py-1 px-4">
                 <RadioGroup
                   name="simplified-tx-logs"
                   value={selectedAdvancedRadio}
                   options={advancedRadioButtonOptions}
                   ariaLabel="simplified-tx-logs"
                   onChange={handleAdvancedRadioButtons}
-                  className={classes.radioButtons}
+                  className="flex flex-row justify-between text-zodiac"
                 />
               </div>
             )}
-            <div className={classes.download}>
+            <div className="py-3 px-4">
               <Link color="primary" onClick={() => downloadLogs(range, args)}>
                 Download
               </Link>

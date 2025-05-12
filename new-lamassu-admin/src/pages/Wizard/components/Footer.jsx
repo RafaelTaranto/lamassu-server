@@ -1,60 +1,27 @@
 import Drawer from '@mui/material/Drawer'
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
-import classnames from 'classnames'
 import React, { useState } from 'react'
 import Modal from 'src/components/Modal'
 import Stepper from 'src/components/Stepper'
 import { P, H2, Info2 } from 'src/components/typography'
 
 import { Button, Link } from 'src/components/buttons'
-import { spacer } from 'src/styling/variables'
-
-const useStyles = makeStyles(() => ({
-  drawer: {
-    borderTop: 'none',
-    boxShadow: '0 0 4px 0 rgba(0, 0, 0, 0.08)'
-  },
-  wrapper: {
-    padding: '32px 0',
-    flexGrow: 1,
-    height: 264
-  },
-  smallWrapper: {
-    height: 84
-  },
-  title: {
-    margin: [[0, spacer * 4, 0, 0]]
-  },
-  subtitle: {
-    marginTop: spacer,
-    marginBottom: 6,
-    lineHeight: 1.25,
-    display: 'inline'
-  },
-  modal: {
-    background: 'none',
-    boxShadow: 'none'
-  }
-}))
 
 function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
-  const classes = useStyles()
   const [fullExample, setFullExample] = useState(false)
-
-  const wrapperClassNames = {
-    [classes.wrapper]: true,
-    [classes.smallWrapper]: !open
-  }
 
   return (
     <Drawer
       anchor={'bottom'}
       open={true}
       variant={'persistent'}
-      classes={{ paperAnchorDockedBottom: classes.drawer }}>
-      <div className={classnames(wrapperClassNames)}>
-        <Grid container direction="row" justifyContent="center" alignItems="baseline">
+      classes={{ paperAnchorDockedBottom: 'border-t-0 shadow-sm' }}>
+      <div className={`py-8 flex-grow ${open ? 'h-[264px]' : 'h-[84px]'}`}>
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="baseline">
           <Grid
             item
             xs={5}
@@ -62,8 +29,8 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
             direction={open ? 'column' : 'row'}
             justifyContent="flex-start"
             alignItems="baseline">
-            <H2 className={classes.title}>Setup Lamassu Admin</H2>
-            <Info2 className={classes.subtitle}>{subtitle}</Info2>
+            <H2 className="m-0 mr-8">Setup Lamassu Admin</H2>
+            <Info2 className="mt-2 mb-2 leading-tight inline">{subtitle}</Info2>
             {open && <P>{text}</P>}
           </Grid>
           <Grid
@@ -121,7 +88,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
       <Modal
         closeOnEscape={true}
         closeOnBackdropClick={true}
-        className={classes.modal}
+        className="bg-transparent shadow-none"
         xl={true}
         width={1152 + 120 + 56}
         handleClose={() => {
@@ -131,7 +98,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
         <img width={1152} src={exImage} alt="" />
       </Modal>
     </Drawer>
-  );
+  )
 }
 
 export default Footer

@@ -1,5 +1,4 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { P, H4 } from 'src/components/typography'
@@ -9,9 +8,7 @@ import { Button } from 'src/components/buttons'
 import { NamespacedTable as EditableTable } from 'src/components/editableTable'
 import { toNamespace, namespaces } from 'src/utils/config'
 
-import styles from './Shared.styles'
-
-const useStyles = makeStyles(styles)
+import classes from './Shared.module.css'
 const GET_INFO = gql`
   query getData {
     config
@@ -37,8 +34,6 @@ const SAVE_CONFIG = gql`
 `
 
 const AllSet = ({ data: currentData, doContinue }) => {
-  const classes = useStyles()
-
   const { data } = useQuery(GET_INFO)
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: doContinue

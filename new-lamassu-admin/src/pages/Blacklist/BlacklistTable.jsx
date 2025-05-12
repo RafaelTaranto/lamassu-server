@@ -1,16 +1,11 @@
-import { makeStyles } from '@mui/styles'
+import IconButton from '@mui/material/IconButton'
+import SvgIcon from '@mui/material/SvgIcon'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { DeleteDialog } from 'src/components/DeleteDialog'
 import DataTable from 'src/components/tables/DataTable'
-import CopyToClipboard from 'src/pages/Transactions/CopyToClipboard'
+import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
 import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
-
-import { IconButton } from 'src/components/buttons'
-
-import styles from './Blacklist.styles'
-
-const useStyles = makeStyles(styles)
 
 const BlacklistTable = ({
   data,
@@ -20,8 +15,6 @@ const BlacklistTable = ({
   deleteDialog,
   setDeleteDialog
 }) => {
-  const classes = useStyles()
-
   const [toBeDeleted, setToBeDeleted] = useState()
 
   const elements = [
@@ -32,7 +25,7 @@ const BlacklistTable = ({
       textAlign: 'left',
       size: 'sm',
       view: it => (
-        <div className={classes.addressRow}>
+        <div className="ml-2">
           <CopyToClipboard>{R.path(['address'], it)}</CopyToClipboard>
         </div>
       )
@@ -45,13 +38,14 @@ const BlacklistTable = ({
       size: 'sm',
       view: it => (
         <IconButton
-          className={classes.deleteButton}
+          className="pl-3"
           onClick={() => {
             setDeleteDialog(true)
             setToBeDeleted(it)
-          }}
-          size="large">
-          <DeleteIcon />
+          }}>
+          <SvgIcon>
+            <DeleteIcon />
+          </SvgIcon>
         </IconButton>
       )
     }

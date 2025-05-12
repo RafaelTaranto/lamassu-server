@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { H1, P } from 'src/components/typography'
 import BitcoinLogo from 'src/styling/logos/icon-bitcoin-colour.svg?react'
@@ -13,32 +12,6 @@ import USDCLogo from 'src/styling/logos/icon-usdc-colour.svg?react'
 import ZCashLogo from 'src/styling/logos/icon-zcash-colour.svg?react'
 
 import { Button } from 'src/components/buttons'
-
-const styles = {
-  logo: {
-    maxHeight: 80,
-    maxWidth: 200
-  },
-  title: {
-    margin: [[24, 0, 32, 0]]
-  },
-  text: {
-    margin: 0
-  },
-  button: {
-    marginTop: 'auto',
-    marginBottom: 58
-  },
-  modalContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: [[0, 42]],
-    flex: 1
-  }
-}
-
-const useStyles = makeStyles(styles)
 
 const getLogo = code => {
   switch (code) {
@@ -71,19 +44,18 @@ const getLogo = code => {
 }
 
 const WizardSplash = ({ code, name, onContinue }) => {
-  const classes = useStyles()
   const Logo = getLogo(code)
 
   return (
-    <div className={classes.modalContent}>
-      <Logo className={classes.logo} />
-      <H1 className={classes.title}>Enable {name}</H1>
-      <P className={classes.text}>
+    <div className="flex flex-col items-center px-10 flex-1">
+      <Logo className="max-h-20 max-w-50" />
+      <H1 className="mt-6 mb-8">Enable {name}</H1>
+      <P className="m-0">
         You are about to enable {name} on your system. This will allow you to
         use this cryptocurrency on your machines. To be able to do that, you’ll
         have to set up all the necessary 3rd party services.
       </P>
-      <Button className={classes.button} onClick={onContinue}>
+      <Button className="mt-auto mb-15" onClick={onContinue}>
         Start configuration
       </Button>
     </div>

@@ -1,68 +1,9 @@
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState, memo } from 'react'
 import Popover from 'src/components/Popper'
 
-import typographyStyles from 'src/components/typography/styles'
-import {
-  subheaderColor,
-  subheaderDarkColor,
-  offColor
-} from 'src/styling/variables'
-
-const { info2 } = typographyStyles
-
-const colors = (color1, color2, color3) => {
-  return {
-    backgroundColor: color1,
-    '&:hover': {
-      backgroundColor: color2
-    },
-    '&:active': {
-      backgroundColor: color3
-    }
-  }
-}
-
-const styles = {
-  idButton: {
-    width: 34,
-    height: 28,
-    display: 'flex',
-    borderRadius: 4,
-    padding: 0,
-    border: 'none',
-    cursor: 'pointer'
-  },
-  buttonIcon: {
-    margin: 'auto',
-    lineHeight: 1,
-    '& svg': {
-      overflow: 'visible'
-    }
-  },
-  closed: {
-    extend: colors(subheaderColor, subheaderDarkColor, offColor)
-  },
-  open: {
-    extend: colors(offColor, offColor, offColor)
-  },
-  popoverContent: {
-    extend: info2,
-    padding: 8,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 4,
-    '& img': {
-      height: 145,
-      minWidth: 200
-    }
-  }
-}
-
-const useStyles = makeStyles(styles)
+import classes from './IDButton.module.css'
 
 const IDButton = memo(
   ({
@@ -76,8 +17,6 @@ const IDButton = memo(
     ...props
   }) => {
     const [anchorEl, setAnchorEl] = useState(null)
-
-    const classes = useStyles()
 
     const open = Boolean(anchorEl)
     const id = open ? `simple-popper-${name}` : undefined
@@ -127,7 +66,6 @@ const IDButton = memo(
           open={open}
           anchorEl={anchorEl}
           onClose={handleClose}
-          arrowSize={3}
           placement="top"
           flip>
           <div className={classes.popoverContent}>

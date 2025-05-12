@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Formik, Form, Field } from 'formik'
 import * as R from 'ramda'
@@ -12,10 +11,6 @@ import { Button } from 'src/components/buttons'
 import { RadioGroup, Autocomplete } from 'src/components/inputs'
 import { NumberInput } from 'src/components/inputs/formik'
 import { startCase } from 'src/utils/string'
-
-import styles from './WizardStep.styles'
-
-const useStyles = makeStyles(styles)
 
 const initialState = {
   form: null,
@@ -69,7 +64,6 @@ const WizardStep = ({
   unfilled,
   getValue
 }) => {
-  const classes = useStyles()
   const [{ innerError, selected, form, isNew }, dispatch] = useReducer(
     reducer,
     initialState
@@ -88,15 +82,16 @@ const WizardStep = ({
 
   const label = isLastStep ? 'Finish' : 'Next'
   const displayName = name ?? type
-  const subtitleClass = {
-    [classes.subtitle]: true,
-    [classes.error]: innerError
-  }
+  const subtitleClass = classnames('mt-8 mb-5 mx-0', {
+    'text-tomato': innerError
+  })
   return (
     <>
-      <Info2 className={classes.title}>{startCase(displayName)}</Info2>
+      <Info2 noMargin className="mb-3">
+        {startCase(displayName)}
+      </Info2>
       <Stepper steps={lastStep} currentStep={step} />
-      <H4 className={classnames(subtitleClass)}>
+      <H4 className={subtitleClass}>
         {step < maxSteps - 1
           ? `Select a ${displayName} or set up a new one`
           : `Select ${displayName} for ${coin}`}
@@ -105,12 +100,12 @@ const WizardStep = ({
         <RadioGroup
           options={filled}
           value={selected}
-          className={classes.radioGroup}
+          className="flex-row"
           onChange={(evt, it) => {
             dispatch({ type: 'select', selected: it })
           }}
-          labelClassName={classes.radioLabel}
-          radioClassName={classes.radio}
+          labelClassName="w-37 h-12"
+          radioClassName="p-1 m-1"
         />
       )}
       {type === 'zeroConfLimit' && (
@@ -122,11 +117,7 @@ const WizardStep = ({
           validationSchema={stepSchema}>
           {({ values, setFieldValue }) => (
             <Form>
-              <div
-                className={classnames(
-                  classes.horizontalAlign,
-                  classes.lineAlignment
-                )}>
+              <div className="flex flex-row">
                 <Field
                   component={NumberInput}
                   decimalPlaces={0}
@@ -140,7 +131,7 @@ const WizardStep = ({
                     })
                     setFieldValue(event.target.id, event.target.value)
                   }}
-                  className={classes.zeroConfLimit}
+                  className="mr-1 text-2xl font-mont font-normal"
                 />
                 <Info2>{fiatCurrency}</Info2>
               </div>
@@ -148,15 +139,15 @@ const WizardStep = ({
           )}
         </Formik>
       )}
-      <div className={classes.setupNew}>
+      <div className="flex items-center h-12">
         {!R.isEmpty(unfilled) && !R.isNil(unfilled) && (
           <RadioGroup
             value={isNew}
             onChange={(evt, it) => {
               dispatch({ type: 'new' })
             }}
-            labelClassName={classes.radioLabel}
-            radioClassName={classes.radio}
+            labelClassName="w-[150px] h-12"
+            radioClassName="p-1 m-1"
             options={[{ display: 'Set up new', code: true }]}
           />
         )}
@@ -164,7 +155,7 @@ const WizardStep = ({
           <Autocomplete
             fullWidth
             label={`Select ${displayName}`}
-            className={classes.picker}
+            className="w-[150px]"
             isOptionEqualToValue={R.eqProps('code')}
             labelProp={'display'}
             options={unfilled}
@@ -178,23 +169,25 @@ const WizardStep = ({
         <FormRenderer
           save={it => innerContinue({ [type]: form.code }, { [form.code]: it })}
           elements={schemas[form.code].elements}
-          validationSchema={schemas[form.code].getValidationSchema(accounts[form.code])}
+          validationSchema={schemas[form.code].getValidationSchema(
+            accounts[form.code]
+          )}
           value={getValue(form.code)}
           buttonLabel={label}
         />
       )}
       {!form && (
-        <div className={classes.submit}>
+        <div className="flex flex-row ml-auto mt-auto mb-6">
           {error && <ErrorMessage>Failed to save</ErrorMessage>}
           <Button
-            className={classes.button}
+            className="ml-auto"
             onClick={() => innerContinue({ [type]: selected })}>
             {label}
           </Button>
         </div>
       )}
     </>
-  );
+  )
 }
 
 export default WizardStep

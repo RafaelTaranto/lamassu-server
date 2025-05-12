@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { useFormikContext } from 'formik'
 import * as R from 'ramda'
 import React, { useState, useCallback } from 'react'
@@ -7,42 +6,9 @@ import { Label3, H3 } from 'src/components/typography'
 import UploadPhotoIcon from 'src/styling/icons/button/photo/zodiac-resized.svg?react'
 import UploadFileIcon from 'src/styling/icons/button/upload-file/zodiac-resized.svg?react'
 
-import { offColor, subheaderColor } from 'src/styling/variables'
-
-const useStyles = makeStyles({
-  box: {
-    boxSizing: 'border-box',
-    width: 450,
-    height: 120,
-    borderStyle: 'dashed',
-    borderColor: offColor,
-    borderRadius: 4,
-    borderWidth: 1,
-    backgroundColor: subheaderColor,
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  inputContent: {
-    marginTop: 35,
-    display: 'flex'
-  },
-  uploadContent: {
-    marginTop: 50,
-    display: 'flex'
-  },
-  board: {
-    marginTop: 40,
-    width: 450,
-    height: 120
-  },
-  icon: {
-    margin: [[14, 20, 0, 0]]
-  }
-})
+import classes from './Upload.module.css'
 
 const Upload = ({ type }) => {
-  const classes = useStyles()
-
   const [data, setData] = useState({})
 
   const { setFieldValue } = useFormikContext()
@@ -71,20 +37,14 @@ const Upload = ({ type }) => {
 
   return (
     <>
-      <div {...getRootProps()} className={classes.board}>
+      <div {...getRootProps()} className="mt-10 w-112 h-30">
         {R.isEmpty(data) && (
           <div className={classes.box}>
             <input {...getInputProps()} />
-            <div className={classes.inputContent}>
-              {isImage ? (
-                <UploadPhotoIcon className={classes.icon}></UploadPhotoIcon>
-              ) : (
-                <UploadFileIcon className={classes.icon}></UploadFileIcon>
-              )}
-              <Label3>{`Drag and drop ${
-                isImage ? 'an image' : 'a file'
-              } or click to open the explorer`}</Label3>
-            </div>
+            {isImage ? <UploadPhotoIcon /> : <UploadFileIcon />}
+            <Label3>{`Drag and drop ${
+              isImage ? 'an image' : 'a file'
+            } or click to open the explorer`}</Label3>
           </div>
         )}
         {!R.isEmpty(data) && isImage && (
@@ -94,7 +54,7 @@ const Upload = ({ type }) => {
         )}
         {!R.isEmpty(data) && !isImage && (
           <div className={classes.box}>
-            <H3 className={classes.uploadContent}>{data.preview}</H3>
+            <H3 className="mt-12 flex">{data.preview}</H3>
           </div>
         )}
       </div>

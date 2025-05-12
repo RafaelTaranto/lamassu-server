@@ -1,13 +1,10 @@
 import React from 'react'
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
-import classnames from 'classnames'
 import { parse, isValid, format } from 'date-fns/fp'
 import { Field, useFormikContext } from 'formik'
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import * as R from 'ramda'
 import { H4 } from 'src/components/typography'
-import { validate as uuidValidate } from 'uuid';
+import { validate as uuidValidate } from 'uuid'
 import * as Yup from 'yup'
 
 import {
@@ -15,44 +12,9 @@ import {
   TextInput,
   Autocomplete
 } from 'src/components/inputs/formik'
-import { errorColor } from 'src/styling/variables'
 import { MANUAL } from 'src/utils/constants'
 
 import { Upload } from './components'
-
-const useStyles = makeStyles({
-  radio: {
-    padding: 4,
-    margin: 4
-  },
-  radioGroup: {
-    flexDirection: 'row'
-  },
-  error: {
-    color: errorColor
-  },
-  specialLabel: {
-    height: 40,
-    padding: 0,
-    width: 250
-  },
-  label: {
-    height: 40,
-    padding: 0
-  },
-  specialGrid: {
-    display: 'grid',
-    gridTemplateColumns: [[182, 162, 141]]
-  },
-  picker: {
-    width: 150
-  },
-  field: {
-    '& > *:last-child': {
-      marginBottom: 24
-    }
-  }
-})
 
 const CUSTOMER_BLOCKED = 'blocked'
 const CUSTOM = 'custom'
@@ -216,68 +178,50 @@ const updateRequirementOptions = it => [
 ]
 
 const EntryType = ({ customInfoRequirementOptions }) => {
-  const classes = useStyles()
   const { values } = useFormikContext()
 
   const displayCustomOptions = values.entryType === CUSTOM
   const displayRequirementOptions = values.entryType === REQUIREMENT
 
-  return (
-    <>
-      <Box display="flex" alignItems="center">
-        <H4>Type of entry</H4>
-      </Box>
+  const Entry = ({ title, name, options, className }) => (
+    <div>
+      <div className="flex items-center">
+        <H4>{title}</H4>
+      </div>
       <Field
         component={RadioGroup}
+        name={name}
+        options={options}
+        radioClassName="p-1 m-1"
+        labelClassName={className}
+        className="grid grid-cols-[182px_162px_141px]"
+      />
+    </div>
+  )
+
+  return (
+    <>
+      <Entry
+        title="Type of entry"
         name="entryType"
         options={entryOptions}
-        labelClassName={classes.specialLabel}
-        radioClassName={classes.radio}
-        className={classnames(classes.radioGroup, classes.specialGrid)}
+        className="w-62"
       />
       {displayCustomOptions && (
-        <div>
-          <Box display="flex" alignItems="center">
-            <H4>Type of data</H4>
-          </Box>
-          <Field
-            component={RadioGroup}
-            name="dataType"
-            options={dataOptions}
-            labelClassName={classes.label}
-            radioClassName={classes.radio}
-            className={classnames(classes.radioGroup, classes.specialGrid)}
-          />
-        </div>
+        <Entry title="Type of data" name="dataType" options={dataOptions} />
       )}
       {displayRequirementOptions && (
-        <div>
-          <Box display="flex" alignItems="center">
-            <H4>Requirements</H4>
-          </Box>
-          <Field
-            component={RadioGroup}
-            name="requirement"
-            options={
-              requirementOptions
-              // TODO: Enable once custom info requirement manual entry is finished
-              // !R.isEmpty(customInfoRequirementOptions)
-              //   ? updateRequirementOptions(requirementOptions)
-              //   : requirementOptions
-            }
-            labelClassName={classes.label}
-            radioClassName={classes.radio}
-            className={classnames(classes.radioGroup, classes.specialGrid)}
-          />
-        </div>
+        <Entry
+          title="Requirements"
+          name="requirement"
+          options={requirementOptions}
+        />
       )}
     </>
   )
 }
 
 const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
-  const classes = useStyles()
-
   const typeOfEntrySelected = selectedValues?.entryType
   const dataTypeSelected = selectedValues?.dataType
   const requirementSelected = selectedValues?.requirement
@@ -310,21 +254,21 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
 
   return (
     <>
-      <Box display="flex" alignItems="center">
+      <div className="flex items-center">
         <H4>{title}</H4>
-      </Box>
+      </div>
       {isCustomInfoRequirement && (
         <Autocomplete
           fullWidth
           label={`Available requests`}
-          className={classes.picker}
+          className="w-37"
           isOptionEqualToValue={R.eqProps('code')}
           labelProp={'display'}
           options={customInfoRequirementOptions}
           onChange={(evt, it) => {}}
         />
       )}
-      <div className={classes.field}>
+      <div className="mb-6">
         {!upload &&
           !isCustomInfoRequirement &&
           elements.options.map(({ label, name }, idx) => (
@@ -344,7 +288,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
           }></Upload>
       )}
     </>
-  );
+  )
 }
 
 const customElements = {

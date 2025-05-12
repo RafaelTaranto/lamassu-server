@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { Form, Formik } from 'formik'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
@@ -13,12 +12,10 @@ import { AddButton } from 'src/components/buttons/index'
 import TableCtx from './Context'
 import Header from './Header'
 import ERow from './Row'
-import styles from './Table.styles'
+import classes from './Table.module.css'
 
 const ACTION_COL_SIZE = 87
 const DEFAULT_COL_SIZE = 100
-
-const useStyles = makeStyles(styles)
 
 const getWidth = R.compose(
   R.reduce(R.add)(0),
@@ -129,8 +126,6 @@ const ETable = ({
 
   const width = getWidth(elements) + actionColSize
 
-  const classes = useStyles({ width })
-
   const showButtonOnEmpty = !data.length && enableCreate && !adding
   const canAdd = !forceDisable && !editingId && !disableAdd && !adding
   const showTable = adding || data.length !== 0
@@ -162,7 +157,7 @@ const ETable = ({
 
   return (
     <TableCtx.Provider value={ctxValue}>
-      <div className={classes.wrapper}>
+      <div style={{ width }}>
         {showButtonOnEmpty && canAdd && (
           <AddButton onClick={addField}>{createText}</AddButton>
         )}

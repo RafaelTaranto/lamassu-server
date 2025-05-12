@@ -1,14 +1,10 @@
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H2 } from 'src/components/typography'
 
-import styles from '../../Analytics.styles'
 import Graph from '../../graphs/Graph'
 import LegendEntry from '../LegendEntry'
-
-const useStyles = makeStyles(styles)
+import classes from './wrappers.module.css'
 
 const options = [
   { code: 'topMachinesTransactions', display: 'Transactions' },
@@ -24,8 +20,6 @@ const TopMachinesBarGraphHeader = ({
   timezone,
   currency
 }) => {
-  const classes = useStyles()
-
   const [graphType /*, setGraphType */] = useState(options[0].code)
 
   const legend = {
@@ -38,10 +32,10 @@ const TopMachinesBarGraphHeader = ({
       <div className={classes.graphHeaderWrapper}>
         <div className={classes.graphHeaderLeft}>
           <H2 noMargin>{title}</H2>
-          <Box className={classes.graphLegend}>
+          <div className={classes.graphLegend}>
             <LegendEntry IconElement={legend.cashIn} label={'Cash-in'} />
             <LegendEntry IconElement={legend.cashOut} label={'Cash-out'} />
-          </Box>
+          </div>
         </div>
         <div className={classes.graphHeaderRight}>
           {/* <RadioGroup

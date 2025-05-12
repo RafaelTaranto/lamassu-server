@@ -1,5 +1,3 @@
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
 import { Formik, Form, Field } from 'formik'
 import * as R from 'ramda'
 import React from 'react'
@@ -11,11 +9,7 @@ import * as Yup from 'yup'
 import { Link } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
 
-import styles from './Blacklist.styles'
-const useStyles = makeStyles(styles)
-
 const BlackListModal = ({ onClose, addToBlacklist, errorMsg }) => {
-  const classes = useStyles()
   const handleAddToBlacklist = address => {
     addToBlacklist(address)
   }
@@ -41,8 +35,8 @@ const BlackListModal = ({ onClose, addToBlacklist, errorMsg }) => {
         onSubmit={({ address }) => {
           handleAddToBlacklist(address.trim())
         }}>
-        <Form id="address-form">
-          <H3 className={classes.modalTitle}>Blacklist new address</H3>
+        <Form id="address-form" className="flex flex-col">
+          <H3 className="mt-auto mb-2">Blacklist new address</H3>
           <Field
             name="address"
             fullWidth
@@ -51,16 +45,16 @@ const BlackListModal = ({ onClose, addToBlacklist, errorMsg }) => {
             placeholder={`ex: ${placeholderAddress}`}
             component={TextInput}
           />
+          <div className="flex flex-row mt-auto">
+            {!R.isNil(errorMsg) && <ErrorMessage>{errorMsg}</ErrorMessage>}
+            <div className="flex ml-auto mt-12">
+              <Link type="submit" form="address-form">
+                Blacklist address
+              </Link>
+            </div>
+          </div>
         </Form>
       </Formik>
-      <div className={classes.footer}>
-        {!R.isNil(errorMsg) && <ErrorMessage>{errorMsg}</ErrorMessage>}
-        <Box className={classes.submit}>
-          <Link type="submit" form="address-form">
-            Blacklist address
-          </Link>
-        </Box>
-      </div>
     </Modal>
   )
 }

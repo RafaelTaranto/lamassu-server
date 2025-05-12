@@ -1,5 +1,4 @@
-import { useMutation, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useMutation, useLazyQuery, gql } from '@apollo/client'
 import { startAssertion } from '@simplewebauthn/browser'
 import { Field, Form, Formik } from 'formik'
 import React, { useContext } from 'react'
@@ -10,10 +9,6 @@ import * as Yup from 'yup'
 import AppContext from 'src/AppContext'
 import { Button } from 'src/components/buttons'
 import { Checkbox, SecretInput, TextInput } from 'src/components/inputs/formik'
-
-import styles from './shared.styles'
-
-const useStyles = makeStyles(styles)
 
 const LOGIN = gql`
   mutation login($username: String!, $password: String!) {
@@ -68,7 +63,6 @@ const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
 }
 
 const LoginState = ({ state, dispatch, strategy }) => {
-  const classes = useStyles()
   const history = useHistory()
   const { setUserData } = useContext(AppContext)
 
@@ -148,7 +142,7 @@ const LoginState = ({ state, dispatch, strategy }) => {
             component={TextInput}
             fullWidth
             autoFocus
-            className={classes.input}
+            className="-mt-4 mb-6"
             error={getErrorMsg(
               errors,
               touched,
@@ -173,15 +167,16 @@ const LoginState = ({ state, dispatch, strategy }) => {
                 userDataQueryError
             )}
           />
-          <div className={classes.rememberMeWrapper}>
+          <div className="mt-9 flex">
             <Field
               name="rememberMe"
-              className={classes.checkbox}
+              className="-ml-2 transform-[scale(1.5)]"
               component={Checkbox}
+              size="medium"
             />
             <Label3>Keep me logged in</Label3>
           </div>
-          <div className={classes.footer}>
+          <div className="mt-15">
             {getErrorMsg(
               errors,
               touched,
@@ -190,7 +185,7 @@ const LoginState = ({ state, dispatch, strategy }) => {
                 assertionQueryError ||
                 userDataQueryError
             ) && (
-              <P className={classes.errorMessage}>
+              <P className="text-tomato">
                 {getErrorMsg(
                   errors,
                   touched,
@@ -214,15 +209,12 @@ const LoginState = ({ state, dispatch, strategy }) => {
                         payload: {}
                       })
                 }}
-                buttonClassName={classes.loginButton}
-                className={classes.fidoLoginButtonWrapper}>
+                buttonClassName="w-full"
+                className="mb-3">
                 I have a hardware key
               </Button>
             )}
-            <Button
-              type="submit"
-              form="login-form"
-              buttonClassName={classes.loginButton}>
+            <Button type="submit" form="login-form" buttonClassName="w-full">
               Login
             </Button>
           </div>

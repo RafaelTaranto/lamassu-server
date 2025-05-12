@@ -1,14 +1,8 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import OtpInput from 'react-otp-input'
 
-import typographyStyles from 'src/components/typography/styles'
-
-import styles from './CodeInput.styles'
-
-const useStyles = makeStyles(styles)
-const useTypographyStyles = makeStyles(typographyStyles)
+import classes from './CodeInput.module.css'
 
 const CodeInput = ({
   name,
@@ -19,9 +13,6 @@ const CodeInput = ({
   inputStyle,
   containerStyle
 }) => {
-  const classes = useStyles()
-  const typographyClasses = useTypographyStyles()
-
   return (
     <OtpInput
       id={name}
@@ -30,19 +21,15 @@ const CodeInput = ({
       numInputs={numInputs}
       renderSeparator={<span> </span>}
       shouldAutoFocus
-      containerStyle={classnames(containerStyle, classes.container)}
+      containerStyle={classnames(containerStyle, 'justify-evenly')}
       inputStyle={classnames(
         inputStyle,
         classes.input,
-        typographyClasses.confirmationCode,
-        error && classes.error
+        'font-museo font-black text-4xl',
+        error && 'border-tomato'
       )}
       inputType={'tel'}
-      renderInput={(props) => (
-        <input
-          {...props}
-        />
-      )}
+      renderInput={props => <input {...props} />}
     />
   )
 }

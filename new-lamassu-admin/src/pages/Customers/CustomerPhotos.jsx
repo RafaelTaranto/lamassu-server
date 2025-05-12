@@ -1,5 +1,4 @@
 import Paper from '@mui/material/Paper'
-import { makeStyles } from '@mui/styles'
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
 import { React, useState } from 'react'
@@ -7,14 +6,9 @@ import { InformativeDialog } from 'src/components/InformativeDialog'
 import { Label2, H3 } from 'src/components/typography'
 import CameraIcon from 'src/styling/icons/ID/photo/comet.svg?react'
 
-import styles from './CustomerPhotos.styles'
 import PhotosCarousel from './components/PhotosCarousel'
 
-const useStyles = makeStyles(styles)
-
 const CustomerPhotos = ({ photosData, timezone }) => {
-  const classes = useStyles()
-
   const [photosDialog, setPhotosDialog] = useState(false)
   const [photoClickedIndex, setPhotoClickIndex] = useState(null)
   const orderedPhotosData = !R.isNil(photoClickedIndex)
@@ -23,10 +17,8 @@ const CustomerPhotos = ({ photosData, timezone }) => {
 
   return (
     <div>
-      <div className={classes.header}>
-        <H3 className={classes.title}>{'Photos & files'}</H3>
-      </div>
-      <div className={classes.photosChipList}>
+      <H3 className="mt-1 mb-7">{'Photos & files'}</H3>
+      <div className="flex flex-wrap gap-4">
         {photosData.map((elem, idx) => (
           <PhotoCard
             key={idx}
@@ -59,21 +51,21 @@ export const PhotoCard = ({
   setPhotosDialog,
   setPhotoClickIndex
 }) => {
-  const classes = useStyles()
-
   return (
     <Paper
-      className={classes.photoCardChip}
+      className="cursor-pointer overflow-hidden"
       onClick={() => {
         setPhotoClickIndex(idx)
         setPhotosDialog(true)
       }}>
-      <img className={classes.image} src={src} alt="" />
-      <div className={classes.footer}>
+      <img
+        className="w-56 h-50 object-cover object-center block"
+        src={src}
+        alt=""
+      />
+      <div className="flex p-3 gap-3">
         <CameraIcon />
-        <Label2 className={classes.date}>
-          {format('yyyy-MM-dd', new Date(date))}
-        </Label2>
+        <Label2 noMargin>{format('yyyy-MM-dd', new Date(date))}</Label2>
       </div>
     </Paper>
   )

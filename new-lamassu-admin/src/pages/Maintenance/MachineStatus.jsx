@@ -1,5 +1,4 @@
-import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, gql } from '@apollo/client'
 import { formatDistance } from 'date-fns'
 import * as R from 'ramda'
 import React from 'react'
@@ -7,11 +6,10 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { MainStatus } from 'src/components/Status'
 import Title from 'src/components/Title'
 import DataTable from 'src/components/tables/DataTable'
+import { Label1 } from 'src/components/typography/index.jsx'
 import MachineRedirectIcon from 'src/styling/icons/month arrows/right.svg?react'
 import WarningIcon from 'src/styling/icons/status/pumpkin.svg?react'
 import ErrorIcon from 'src/styling/icons/status/tomato.svg?react'
-
-import { mainStyles } from 'src/pages/Transactions/Transactions.styles'
 
 import MachineDetailsRow from './MachineDetailsCard'
 
@@ -56,10 +54,7 @@ const GET_DATA = gql`
   }
 `
 
-const useStyles = makeStyles(mainStyles)
-
 const MachineStatus = () => {
-  const classes = useStyles()
   const history = useHistory()
   const { state } = useLocation()
   const addedMachineId = state?.id
@@ -78,10 +73,9 @@ const MachineStatus = () => {
       size: 'sm',
       textAlign: 'left',
       view: m => (
-        <div className={classes.flexRow}>
+        <div className="flex items-center gap-2">
           {m.name}
           <div
-            className={classes.machineRedirectContainer}
             onClick={() => {
               history.push(`/machines/${m.deviceId}`)
             }}>
@@ -131,18 +125,16 @@ const MachineStatus = () => {
 
   return (
     <>
-      <div className={classes.titleWrapper}>
-        <div className={classes.titleAndButtonsContainer}>
-          <Title>Machine status</Title>
-        </div>
-        <div className={classes.headerLabels}>
-          <div>
+      <div className="flex justify-between items-center">
+        <Title>Machine status</Title>
+        <div className="flex gap-6">
+          <div className="flex items-center gap-2">
             <WarningIcon />
-            <span>Warning</span>
+            <Label1 noMargin>Warning</Label1>
           </div>
-          <div>
+          <div className="flex items-center gap-2">
             <ErrorIcon />
-            <span>Error</span>
+            <Label1 noMargin>Error</Label1>
           </div>
         </div>
       </div>

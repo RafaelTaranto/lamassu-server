@@ -1,8 +1,6 @@
-import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
+import { useQuery, useMutation, useLazyQuery, gql } from '@apollo/client'
 import Chip from '@mui/material/Chip'
-import Box from '@mui/material/Box'
 import Switch from '@mui/material/Switch'
-import { makeStyles } from '@mui/styles'
 import { startAttestation } from '@simplewebauthn/browser'
 import * as R from 'ramda'
 import React, { useReducer, useState, useContext } from 'react'
@@ -19,7 +17,6 @@ import AppContext from 'src/AppContext'
 import { ActionButton, Link } from 'src/components/buttons'
 import { IP_CHECK_REGEX } from 'src/utils/constants'
 
-import styles from './UserManagement.styles'
 import ChangeRoleModal from './modals/ChangeRoleModal'
 import CreateUserModal from './modals/CreateUserModal'
 import EnableUserModal from './modals/EnableUserModal'
@@ -27,7 +24,7 @@ import FIDOModal from './modals/FIDOModal'
 import Reset2FAModal from './modals/Reset2FAModal'
 import ResetPasswordModal from './modals/ResetPasswordModal'
 
-const useStyles = makeStyles(styles)
+import classes from './UserManagement.module.css'
 
 const GET_USERS = gql`
   query users {
@@ -89,7 +86,6 @@ const roleMapper = {
 }
 
 const Users = () => {
-  const classes = useStyles()
   const { userData } = useContext(AppContext)
 
   const { data: userResponse } = useQuery(GET_USERS)
@@ -242,24 +238,21 @@ const Users = () => {
 
   return (
     <>
-      <TitleSection title="User management" />
-      <Box
-        marginBottom={3}
-        marginTop={-5}
-        className={classes.tableWidth}
-        display="flex"
-        justifyContent="flex-end">
-        <Link
-          color="primary"
-          onClick={() => {
-            dispatch({
-              type: 'open',
-              payload: 'showCreateUserModal'
-            })
-          }}>
-          Add new user
-        </Link>
-      </Box>
+      <TitleSection
+        title="User management"
+        appendixRight={
+          <Link
+            color="primary"
+            onClick={() => {
+              dispatch({
+                type: 'open',
+                payload: 'showCreateUserModal'
+              })
+            }}>
+            Add new user
+          </Link>
+        }
+      />
       <DataTable elements={elements} data={R.path(['users'])(userResponse)} />
       <CreateUserModal state={state} dispatch={dispatch} />
       <ResetPasswordModal

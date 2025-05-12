@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Field, useFormikContext, FieldArray } from 'formik'
 import * as R from 'ramda'
@@ -10,9 +9,6 @@ import { H4 } from 'src/components/typography'
 import AddIconInverse from 'src/styling/icons/button/add/white.svg?react'
 import AddIcon from 'src/styling/icons/button/add/zodiac.svg?react'
 
-import styles from './formStyles.styles'
-const useStyles = makeStyles(styles)
-
 const nonEmptyStr = obj => obj.text && obj.text.length
 
 const options = [
@@ -21,15 +17,14 @@ const options = [
 ]
 
 const ChoiceList = () => {
-  const classes = useStyles()
   const context = useFormikContext()
   const choiceListRef = useRef(null)
   const listChoices = R.path(['values', 'listChoices'])(context) ?? []
   const choiceListError = R.path(['errors', 'listChoices'])(context) ?? false
 
   const showErrorColor = {
-    [classes.radioSubtitle]: true,
-    [classes.error]:
+    'mb-0': true,
+    'text-tomato':
       !R.path(['values', 'constraintType'])(context) &&
       R.path(['errors', 'constraintType'])(context)
   }
@@ -56,20 +51,20 @@ const ChoiceList = () => {
       <Field
         component={RadioGroup}
         options={options}
-        className={classes.row}
+        className="flex-col"
         name="constraintType"
       />
       <FieldArray name="listChoices">
         {({ push }) => {
           return (
-            <div className={classnames(classes.flex, classes.column)}>
-              <H4 className={classes.subtitle}>Choices</H4>
-              <div className={classes.choiceList}>
+            <div className="flex flex-col">
+              <H4 className="mb-0">Choices</H4>
+              <div className="flex flex-col max-h-60">
                 {listChoices.map((choice, idx) => {
                   return (
                     <div ref={choiceListRef} key={idx}>
                       <Field
-                        className={classes.textInput}
+                        className="w-105"
                         error={hasError(choice)}
                         component={TextInput}
                         name={`listChoices[${idx}].text`}
@@ -83,7 +78,7 @@ const ChoiceList = () => {
                 Icon={AddIcon}
                 color="primary"
                 InverseIcon={AddIconInverse}
-                className={classes.button}
+                className="w-30 h-7 mt-7"
                 onClick={e => {
                   e.preventDefault()
                   return push({ text: '' })

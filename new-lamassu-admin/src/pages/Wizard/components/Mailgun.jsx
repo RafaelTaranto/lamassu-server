@@ -1,5 +1,4 @@
 import { useMutation, useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
 import React, { useState, useEffect } from 'react'
 import { H4, Info3 } from 'src/components/typography'
 import FormRenderer from 'src/pages/Services/FormRenderer'
@@ -10,20 +9,8 @@ import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
 import { ActionButton } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
 import mailgunSchema from 'src/pages/Services/schemas/mailgun'
-import styles from 'src/pages/Wizard/Radio.styles'
+import classes from 'src/pages/Wizard/Radio.module.css'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
-
-const useStyles = makeStyles({
-  ...styles,
-  radioGroup: {
-    ...styles.radioGroup,
-    width: 768
-  },
-  radioLabel: {
-    ...styles.radioLabel,
-    width: 300
-  }
-})
 
 const GET_CONFIG = gql`
   {
@@ -55,7 +42,6 @@ const options = [
 ]
 
 const Mailgun = () => {
-  const classes = useStyles()
   const { data } = useQuery(GET_CONFIG)
   const [saveConfig] = useMutation(SAVE_CONFIG)
   const [saveAccounts] = useMutation(SAVE_ACCOUNTS)
@@ -90,8 +76,8 @@ const Mailgun = () => {
     <div className={classes.mdForm}>
       <H4>Do you want to get notifications via email?</H4>
       <RadioGroup
-        labelClassName={classes.radioLabel}
-        className={classes.radioGroup}
+        labelClassName={classes.mailgunRadioLabel}
+        className={classes.mailgunRadioGroup}
         options={options}
         value={emailActive}
         onChange={event => handleRadio(event.target.value)}

@@ -1,6 +1,5 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 import Paper from '@mui/material/Paper'
 import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
@@ -13,9 +12,7 @@ import { ActionButton, Button } from 'src/components/buttons'
 import { CodeInput } from 'src/components/inputs/base'
 import { primaryColor } from 'src/styling/variables'
 
-import styles from './shared.styles'
-
-const useStyles = makeStyles(styles)
+import classes from './Authentication.module.css'
 
 const VALIDATE_RESET_2FA_LINK = gql`
   query validateReset2FALink($token: String!) {
@@ -46,7 +43,6 @@ const reducer = (state, action) => {
 }
 
 const Reset2FA = () => {
-  const classes = useStyles()
   const history = useHistory()
   const QueryParams = () => new URLSearchParams(useLocation().search)
   const token = QueryParams().get('t')
@@ -177,22 +173,18 @@ const Reset2FA = () => {
                           numInputs={6}
                           error={invalidToken}
                         />
-                        <button
-                          onClick={handleSubmit}
-                          className={classes.enterButton}
-                        />
+                        <div className="mt-9">
+                          {getErrorMsg() && (
+                            <P className="text-tomato">{getErrorMsg()}</P>
+                          )}
+                          <Button
+                            onClick={handleSubmit}
+                            buttonClassName="w-full">
+                            Done
+                          </Button>
+                        </div>
                       </Form>
                     </Formik>
-                  </div>
-                  <div className={classes.twofaFooter}>
-                    {getErrorMsg() && (
-                      <P className={classes.errorMessage}>{getErrorMsg()}</P>
-                    )}
-                    <Button
-                      onClick={handleSubmit}
-                      buttonClassName={classes.loginButton}>
-                      Done
-                    </Button>
                   </div>
                 </>
               )}
@@ -206,7 +198,7 @@ const Reset2FA = () => {
         </div>
       </Grid>
     </Grid>
-  );
+  )
 }
 
 export default Reset2FA

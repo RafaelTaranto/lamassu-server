@@ -1,5 +1,4 @@
-import { useLazyQuery, useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useLazyQuery, useQuery, gql } from '@apollo/client'
 import { subMinutes } from 'date-fns'
 import FileSaver from 'file-saver'
 import React, { useState, useEffect } from 'react'
@@ -7,10 +6,6 @@ import Modal from 'src/components/Modal'
 import { H3, P } from 'src/components/typography'
 
 import { Button } from 'src/components/buttons'
-
-import { diagnosticsModal } from './MachineActions.styles'
-
-const useStyles = makeStyles(diagnosticsModal)
 
 const STATES = {
   INITIAL: 'INITIAL',
@@ -59,7 +54,6 @@ const createCsv = async ({ machineLogsCsv }) => {
 }
 
 const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
-  const classes = useStyles()
   const [state, setState] = useState(STATES.INITIAL)
   const [timestamp, setTimestamp] = useState(null)
   let timeout = null
@@ -103,6 +97,8 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
     sendAction()
   }
 
+  const messageClass = 'm-auto flex flex-col items-center justify-center'
+
   return (
     <Modal
       closeOnBackdropClick={true}
@@ -111,27 +107,27 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
       handleClose={onClose}
       open={true}>
       {state === STATES.INITIAL && (
-        <div className={classes.message}>
+        <div className={messageClass}>
           <H3>Loading...</H3>
         </div>
       )}
 
       {state === STATES.EMPTY && (
-        <div className={classes.message}>
+        <div className={messageClass}>
           <H3>No diagnostics available</H3>
           <P>Run diagnostics to generate a report</P>
         </div>
       )}
 
       {state === STATES.RUNNING && (
-        <div className={classes.message}>
+        <div className={messageClass}>
           <H3>Running Diagnostics...</H3>
           <P>This page should refresh automatically</P>
         </div>
       )}
 
       {state === STATES.FAILURE && (
-        <div className={classes.message}>
+        <div className={messageClass}>
           <H3>Failed to run diagnostics</H3>
           <P>Please try again. If the problem persists, contact support.</P>
         </div>
@@ -139,11 +135,11 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
 
       {state === STATES.FILLED && (
         <div>
-          <div className={classes.photoWrapper}>
+          <div className="flex mt-6">
             <div>
               <H3>Scan</H3>
               <img
-                className={classes.photo}
+                className="w-88"
                 src={path + 'scan.jpg'}
                 alt="Failure getting photo"
               />
@@ -151,7 +147,7 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
             <div>
               <H3>Front</H3>
               <img
-                className={classes.photo}
+                className="w-88"
                 src={path + 'front.jpg'}
                 alt="Failure getting photo"
               />
@@ -163,7 +159,7 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
           </div>
         </div>
       )}
-      <div className={classes.footer}>
+      <div className="flex flex-row mt-auto ml-auto mr-2 mb-0">
         <Button
           disabled={state !== STATES.FILLED || !timestamp}
           onClick={() => {
@@ -176,7 +172,7 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
               }
             })
           }}
-          className={classes.downloadLogs}>
+          className="mt-auto ml-auto mr-2 mb-0">
           Download Logs
         </Button>
         <Button

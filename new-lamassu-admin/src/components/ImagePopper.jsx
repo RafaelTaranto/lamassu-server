@@ -1,5 +1,4 @@
 import ClickAwayListener from '@mui/material/ClickAwayListener'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
 import Popper from 'src/components/Popper'
@@ -8,18 +7,8 @@ import ZoomIcon from 'src/styling/icons/circle buttons/search/zodiac.svg?react'
 
 import { FeatureButton } from 'src/components/buttons'
 
-import imagePopperStyles from './ImagePopper.styles'
-
-const useStyles = makeStyles(imagePopperStyles)
-
 const ImagePopper = memo(
   ({ className, width, height, popupWidth, popupHeight, src }) => {
-    const classes = useStyles({
-      width,
-      height,
-      popupWidth,
-      popupHeight
-    })
     const [popperAnchorEl, setPopperAnchorEl] = useState(null)
 
     const handleOpenPopper = event => {
@@ -32,23 +21,30 @@ const ImagePopper = memo(
 
     const popperOpen = Boolean(popperAnchorEl)
 
-    const Image = ({ className }) => (
-      <img className={classnames(className)} src={src} alt="" />
+    const Image = ({ className, style }) => (
+      <img className={classnames(className)} style={style} src={src} alt="" />
     )
 
     return (
       <ClickAwayListener onClickAway={handleClosePopper}>
-        <div className={classnames(classes.row, className)}>
-          <Image className={classes.image} />
+        <div className={classnames('flex flex-row', className)}>
+          <Image
+            className="object-cover rounded-tl-lg"
+            style={{ width, height }}
+          />
           <FeatureButton
             Icon={ZoomIcon}
             InverseIcon={ZoomIconInverse}
-            className={classes.button}
+            className="rounded-none rounded-tr-lg rounded-br-lg"
+            style={{ height }}
             onClick={handleOpenPopper}
           />
           <Popper open={popperOpen} anchorEl={popperAnchorEl} placement="top">
-            <div className={classes.popoverContent}>
-              <Image className={classes.popupImage} />
+            <div className="py-2 px-4">
+              <Image
+                className="object-cover"
+                style={{ width: popupWidth, height: popupHeight }}
+              />
             </div>
           </Popper>
         </div>

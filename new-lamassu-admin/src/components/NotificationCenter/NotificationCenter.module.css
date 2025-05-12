@@ -1,0 +1,145 @@
+.container {
+  width: 40vw;
+  height: 110vh;
+  right: 0;
+  background-color: white;
+  box-shadow: 0 0 14px 0 rgba(0, 0, 0, 0.24);
+}
+
+.container @media only screen and (max-width: 1920px) {
+  width: 30vw;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.headerText {
+  margin-top: 20px;
+  margin-left: 12px;
+}
+
+.actionButtons {
+  display: flex;
+  margin-left: 16px;
+  height: 0;
+}
+
+.notificationIcon {
+  position: absolute;
+  cursor: pointer;
+  background: transparent;
+  box-shadow: 0 0 0 transparent;
+  border: 0 solid transparent;
+  text-shadow: 0 0 0 transparent;
+  outline: none;
+}
+
+.clearAllButton {
+  margin-top: -16px;
+  margin-left: 8px;
+  background-color: var(--zircon);
+}
+
+.notificationsList {
+  height: 90vh;
+  max-height: 100vh;
+  margin-top: 24px;
+  margin-left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: white;
+  z-index: 10;
+}
+
+.notificationRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  position: relative;
+  margin-bottom: 16px;
+  padding-top: 12px;
+  gap: 10px;
+}
+
+.notificationRow > *:first-child {
+  margin-right: 24px;
+}
+
+.notificationContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 300px;
+}
+
+.unread {
+  background-color: var(--spring3)
+}
+
+.notificationRowIcon {
+  align-self: center;
+}
+
+.notificationRowIcon > * {
+  margin-left: 24px
+}
+
+.readIconWrapper {
+  flex-grow: 1
+}
+
+.unreadIcon {
+  margin-top: 5px;
+  margin-left: 8px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--spring);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.readIcon {
+  margin-left: 8px;
+  margin-top: 5px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--comet);
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.notificationTitle {
+  margin: 0;
+  color: var(--comet);
+}
+
+.notificationBody {
+  margin: 0
+}
+
+.notificationSubtitle {
+  margin: 0;
+  margin-bottom: 8px;
+  color: var(--comet);
+}
+
+.stripes {
+  position: absolute;
+  height: 100%;
+  top: 0;
+  opacity: 60%;
+}
+
+.hasUnread {
+  position: absolute;
+  top: 0;
+  left: 16px;
+  width: 9px;
+  height: 9px;
+  background-color: var(--spring);
+  border-radius: 50%;
+}

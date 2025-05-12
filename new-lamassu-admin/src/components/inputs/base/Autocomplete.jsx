@@ -1,12 +1,10 @@
-import Box from '@mui/material/Box'
 import MAutocomplete from '@mui/material/Autocomplete'
+import classnames from 'classnames'
 import sort from 'match-sorter'
 import * as R from 'ramda'
 import React from 'react'
 import { HoverableTooltip } from 'src/components/Tooltip'
 import { P } from 'src/components/typography'
-
-import { errorColor, orangeYellow, spring4 } from 'src/styling/variables'
 
 import TextInput from './TextInput'
 
@@ -82,7 +80,6 @@ const Autocomplete = ({
       openOnFocus
       autoHighlight
       disableClearable
-      ChipProps={{ onDelete: null }}
       clearOnEscape
       isOptionEqualToValue={R.eqProps(valueProp)}
       {...props}
@@ -104,39 +101,30 @@ const Autocomplete = ({
         if (!props.warning && !props.warningMessage)
           return <li {...iprops}>{R.path([labelProp])(props)}</li>
 
-        const warningColors = {
-          clean: spring4,
-          partial: orangeYellow,
-          important: errorColor
+        const className = {
+          'flex w-4 h-4 rounded-md': true,
+          'bg-spring4': props.warning === 'clean',
+          'bg-orange-yellow': props.warning === 'partial',
+          'bg-tomato': props.warning === 'important'
         }
 
-        const hoverableElement = (
-          <Box
-            width={18}
-            height={18}
-            borderRadius="6px"
-            bgcolor={warningColors[props.warning]}
-          />
-        )
+        const hoverableElement = <div className={classnames(className)} />
 
         return (
           <li {...iprops}>
-            <Box
-              width="100%"
-              display="flex"
-              flexDirection="row"
-              justifyContent="space-between"
-              alignItems="center">
-              <Box>{R.path([labelProp])(props)}</Box>
+            <div className="flex flex-row justify-between items-center w-full">
+              <div className="flex">{R.path([labelProp])(props)}</div>
               <HoverableTooltip parentElements={hoverableElement} width={250}>
                 <P>{props.warningMessage}</P>
               </HoverableTooltip>
-            </Box>
+            </div>
           </li>
         )
       }}
-    />
-  )
+      slotProps={{
+        chip: { onDelete: null }
+      }} />
+  );
 }
 
 export default Autocomplete

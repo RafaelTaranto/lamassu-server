@@ -1,6 +1,5 @@
-import { useQuery, useLazyQuery, gql } from "@apollo/client";
+import { useQuery, useLazyQuery, gql } from '@apollo/client'
 import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
-import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
 import React, { useEffect, useState } from 'react'
@@ -8,18 +7,21 @@ import DetailsRow from 'src/pages/Transactions/DetailsCard'
 import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 
-import { mainStyles } from 'src/pages/Transactions/Transactions.styles'
 import { getStatus } from 'src/pages/Transactions/helper'
 import * as Customer from 'src/utils/customer'
 import { formatDate } from 'src/utils/timezones'
 
-import DataTable from './DataTable'
-const useStyles = makeStyles(mainStyles)
+import DataTable from 'src/components/tables/DataTable'
 
 const NUM_LOG_RESULTS = 5
 
 const GET_TRANSACTIONS = gql`
-  query transactions($limit: Int, $from: DateTimeISO, $until: DateTimeISO, $deviceId: String) {
+  query transactions(
+    $limit: Int
+    $from: DateTimeISO
+    $until: DateTimeISO
+    $deviceId: String
+  ) {
     transactions(
       limit: $limit
       from: $from
@@ -67,8 +69,6 @@ const GET_DATA = gql`
 `
 
 const Transactions = ({ id }) => {
-  const classes = useStyles()
-
   const [extraHeight, setExtraHeight] = useState(0)
   const [clickedId, setClickedId] = useState('')
 
@@ -130,7 +130,7 @@ const Transactions = ({ id }) => {
     {
       header: 'Address',
       view: it => formatCryptoAddress(it.cryptoCode, it.toAddress),
-      className: classes.overflowTd,
+      className: 'overflow-hidden whitespace-nowrap text-ellipsis',
       size: 'sm',
       textAlign: 'left',
       width: 140
@@ -164,6 +164,8 @@ const Transactions = ({ id }) => {
     <DataTable
       extraHeight={extraHeight}
       onClick={handleClick}
+      maxWidth="950"
+      className="min-h-90"
       loading={loading || id === null}
       emptyText="No transactions so far"
       elements={elements}

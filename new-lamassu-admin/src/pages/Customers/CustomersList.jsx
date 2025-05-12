@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
 import React from 'react'
@@ -7,10 +6,7 @@ import DataTable from 'src/components/tables/DataTable'
 import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 
-import styles from './CustomersList.styles'
 import { getFormattedPhone, getName } from './helper'
-
-const useStyles = makeStyles(styles)
 
 const CustomersList = ({
   data,
@@ -20,8 +16,6 @@ const CustomersList = ({
   triggers,
   customRequests
 }) => {
-  const classes = useStyles()
-
   const elements = [
     {
       header: 'Phone/email',
@@ -60,7 +54,7 @@ const CustomersList = ({
       view: it => {
         const hasLastTx = !R.isNil(it.lastTxFiatCode)
         const LastTxIcon = it.lastTxClass === 'cashOut' ? TxOutIcon : TxInIcon
-        const lastIcon = <LastTxIcon className={classes.txClassIconRight} />
+        const lastIcon = <LastTxIcon className="ml-3" />
         return (
           <>
             {hasLastTx &&

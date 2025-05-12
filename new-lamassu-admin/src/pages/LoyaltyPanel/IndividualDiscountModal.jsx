@@ -1,19 +1,14 @@
-import { makeStyles } from '@mui/styles'
 import { Form, Formik, Field } from 'formik'
 import * as R from 'ramda'
 import React from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import Modal from 'src/components/Modal'
 import { HelpTooltip } from 'src/components/Tooltip'
-import { H3, TL1, P } from 'src/components/typography'
+import { H1, H3, P } from 'src/components/typography'
 import * as Yup from 'yup'
 
 import { Button } from 'src/components/buttons'
 import { NumberInput, Autocomplete } from 'src/components/inputs/formik'
-
-import styles from './IndividualDiscount.styles'
-
-const useStyles = makeStyles(styles)
 
 const initialValues = {
   customer: '',
@@ -46,8 +41,6 @@ const IndividualDiscountModal = ({
   addDiscount,
   customers
 }) => {
-  const classes = useStyles()
-
   const handleAddDiscount = (customer, discount) => {
     addDiscount({
       variables: {
@@ -77,8 +70,10 @@ const IndividualDiscountModal = ({
               handleAddDiscount(customer, discount)
             }}>
             {({ errors, touched }) => (
-              <Form id="individual-discount-form" className={classes.form}>
-                <div className={classes.customerAutocomplete}>
+              <Form
+                id="individual-discount-form"
+                className="flex flex-col h-full gap-5">
+                <div className="mt-2 w-88">
                   <Field
                     name="customer"
                     label="Select a customer"
@@ -97,7 +92,7 @@ const IndividualDiscountModal = ({
                   />
                 </div>
                 <div>
-                  <div className={classes.discountRateWrapper}>
+                  <div className="flex items-center">
                     <H3>Define discount rate</H3>
                     <HelpTooltip width={304}>
                       <P>
@@ -112,22 +107,19 @@ const IndividualDiscountModal = ({
                       </P>
                     </HelpTooltip>
                   </div>
-                  <div className={classes.discountInput}>
+                  <div className="flex items-center">
                     <Field
                       name="discount"
                       size="lg"
                       autoComplete="off"
                       width={50}
                       decimalScale={0}
-                      className={classes.discountInputField}
                       component={NumberInput}
                     />
-                    <TL1 inline className={classes.inputLabel}>
-                      %
-                    </TL1>
+                    <H1 className="ml-2 mt-4 font-bold inline">%</H1>
                   </div>
                 </div>
-                <div className={classes.footer}>
+                <div className="flex mt-auto mb-6">
                   {getErrorMsg(errors, touched, creationError) && (
                     <ErrorMessage>
                       {getErrorMsg(errors, touched, creationError)}
@@ -136,7 +128,7 @@ const IndividualDiscountModal = ({
                   <Button
                     type="submit"
                     form="individual-discount-form"
-                    className={classes.submit}>
+                    className="ml-auto">
                     Add discount
                   </Button>
                 </div>

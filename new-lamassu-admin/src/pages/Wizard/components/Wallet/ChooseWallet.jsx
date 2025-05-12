@@ -1,5 +1,4 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H4, Info3 } from 'src/components/typography'
@@ -11,10 +10,8 @@ import { RadioGroup } from 'src/components/inputs'
 import _schema from 'src/pages/Services/schemas'
 import bitgo from 'src/pages/Services/schemas/singlebitgo'
 
-import styles from './Shared.styles'
+import classes from './Shared.module.css'
 import { getItems } from './getItems'
-
-const useStyles = makeStyles(styles)
 
 const GET_CONFIG = gql`
   {
@@ -52,7 +49,6 @@ const isLocalHosted = it =>
   ])
 
 const ChooseWallet = ({ data: currentData, addData }) => {
-  const classes = useStyles()
   // no need to fetch exchange config here
   const schema = _schema()
   const { data } = useQuery(GET_CONFIG)

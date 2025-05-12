@@ -1,16 +1,12 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { useSelect } from 'downshift'
 import * as R from 'ramda'
 import React from 'react'
 import Arrowdown from 'src/styling/icons/action/arrow/regular.svg?react'
 
-import styles from './Select.styles'
-
-const useStyles = makeStyles(styles)
+import styles from './Select.module.css'
 
 function Select({ className, label, items, ...props }) {
-  const classes = useStyles()
 
   const {
     isOpen,
@@ -28,18 +24,18 @@ function Select({ className, label, items, ...props }) {
   })
 
   const selectClassNames = {
-    [classes.select]: true,
-    [classes.selectFiltered]: props.defaultAsFilter
+    [styles.select]: true,
+    [styles.selectFiltered]: props.defaultAsFilter
       ? true
       : !R.equals(selectedItem, props.default),
-    [classes.open]: isOpen
+    [styles.open]: isOpen
   }
 
   return (
     <div className={classnames(selectClassNames, className)}>
       <label {...getLabelProps()}>{label}</label>
       <button {...getToggleButtonProps()}>
-        <span className={classes.selectedItem}>{selectedItem.display}</span>
+        <span className={styles.selectedItem}>{selectedItem.display}</span>
         <Arrowdown />
       </button>
       <ul {...getMenuProps()}>

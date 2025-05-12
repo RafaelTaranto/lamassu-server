@@ -1,6 +1,5 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 import Paper from '@mui/material/Paper'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
@@ -12,9 +11,7 @@ import * as Yup from 'yup'
 import { Button } from 'src/components/buttons'
 import { SecretInput } from 'src/components/inputs/formik/'
 
-import styles from './shared.styles'
-
-const useStyles = makeStyles(styles)
+import classes from './Authentication.module.css'
 
 const VALIDATE_RESET_PASSWORD_LINK = gql`
   query validateResetPasswordLink($token: String!) {
@@ -60,7 +57,6 @@ const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
 }
 
 const ResetPassword = () => {
-  const classes = useStyles()
   const history = useHistory()
   const QueryParams = () => new URLSearchParams(useLocation().search)
   const token = QueryParams().get('t')
@@ -129,7 +125,7 @@ const ResetPassword = () => {
                         component={SecretInput}
                         label="New password"
                         fullWidth
-                        className={classes.input}
+                        className="-mt-4 mb-6"
                       />
                       <Field
                         name="confirmPassword"
@@ -138,16 +134,16 @@ const ResetPassword = () => {
                         label="Confirm your password"
                         fullWidth
                       />
-                      <div className={classes.footer}>
+                      <div className="mt-15">
                         {getErrorMsg(errors, touched, error) && (
-                          <P className={classes.errorMessage}>
+                          <P className="text-tomato">
                             {getErrorMsg(errors, touched, error)}
                           </P>
                         )}
                         <Button
                           type="submit"
                           form="reset-password"
-                          buttonClassName={classes.loginButton}>
+                          buttonClassName="w-full">
                           Done
                         </Button>
                       </div>
@@ -165,7 +161,7 @@ const ResetPassword = () => {
         </div>
       </Grid>
     </Grid>
-  );
+  )
 }
 
 export default ResetPassword

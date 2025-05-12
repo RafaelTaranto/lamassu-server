@@ -1,6 +1,5 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
 import { getEquivalentCode } from '@lamassu/coins/lightUtils'
-import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H4, Info3 } from 'src/components/typography'
@@ -11,10 +10,8 @@ import { Button, SupportLinkButton } from 'src/components/buttons'
 import { RadioGroup } from 'src/components/inputs'
 import _schema from 'src/pages/Services/schemas'
 
-import styles from './Shared.styles'
+import classes from './Shared.module.css'
 import { getItems } from './getItems'
-
-const useStyles = makeStyles(styles)
 
 const GET_CONFIG = gql`
   {
@@ -42,7 +39,6 @@ const isConfigurable = it =>
   !R.isNil(it) && !R.contains(it)(['mock-exchange', 'no-exchange'])
 
 const ChooseExchange = ({ data: currentData, addData }) => {
-  const classes = useStyles()
   const { data } = useQuery(GET_CONFIG)
   const [saveAccounts] = useMutation(SAVE_ACCOUNTS, {
     onCompleted: () => submit()

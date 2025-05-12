@@ -1,17 +1,11 @@
-import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
+import { useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
-// import * as Yup from 'yup'
-// import { Link, IconButton } from 'src/components/buttons'
-// import { TextInput } from 'src/components/inputs'
 import DataTable from 'src/components/tables/DataTable'
 import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 
 import { NumberInput } from 'src/components/inputs/formik'
-// import EditIconDisabled from 'src/styling/icons/action/edit/disabled.svg?react'
-// import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import { formatDate } from 'src/utils/timezones'
 
 const GET_BATCHES = gql`
@@ -29,54 +23,8 @@ const GET_BATCHES = gql`
   }
 `
 
-/* const EDIT_BATCH = gql`
-  mutation editBatch($id: ID, $performedBy: String) {
-    editBatch(id: $id, performedBy: $performedBy) {
-      id
-    }
-  }
-` */
-
-const styles = {
-  operationType: {
-    marginLeft: 8
-  },
-  operationTypeWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  saveAndCancel: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between'
-  },
-  tableWrapper: {
-    display: 'flex',
-    flexDirection: 'column',
-    flex: 1,
-    marginBottom: 80
-  }
-}
-
-/* const schema = Yup.object().shape({
-  performedBy: Yup.string().nullable()
-}) */
-
-const useStyles = makeStyles(styles)
-
 const CashboxHistory = ({ machines, currency, timezone }) => {
-  const classes = useStyles()
-
-  /* const [error, setError] = useState(false)
-  const [field, setField] = useState(null)
-  const [editing, setEditing] = useState(false) */
-
   const { data: batchesData, loading: batchesLoading } = useQuery(GET_BATCHES)
-
-  /* const [editBatch] = useMutation(EDIT_BATCH, {
-    refetchQueries: () => ['cashboxBatches']
-  }) */
 
   const loading = batchesLoading
 
@@ -89,18 +37,14 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
           `cash-cassette-${i}-refill`,
           <>
             <TxOutIcon />
-            <span className={classes.operationType}>
-              Cash cassette {i} refill
-            </span>
+            <span>Cash cassette {i} refill</span>
           </>
         ),
         R.assoc(
           `cash-cassette-${i}-empty`,
           <>
             <TxOutIcon />
-            <span className={classes.operationType}>
-              Cash cassette {i} emptied
-            </span>
+            <span>Cash cassette {i} emptied</span>
           </>
         )
       )(ret),
@@ -108,34 +52,12 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
       'cash-box-empty': (
         <>
           <TxInIcon />
-          <span className={classes.operationType}>Cash box emptied</span>
+          <span>Cash box emptied</span>
         </>
       )
     },
     R.range(1, 5)
   )
-
-  /* const save = row => {
-    const performedBy = field.performedBy === '' ? null : field.performedBy
-
-    schema
-      .isValid(field)
-      .then(() => {
-        setError(false)
-        editBatch({
-          variables: { id: row.id, performedBy: performedBy }
-        })
-      })
-      .catch(setError(true))
-    return close()
-  }
-
-  const close = () => {
-    setEditing(false)
-    setField(null)
-  }
-
-  const notEditing = id => field?.id !== id */
 
   const elements = [
     {
@@ -144,7 +66,7 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
       width: 200,
       textAlign: 'left',
       view: it => (
-        <div className={classes.operationTypeWrapper}>
+        <div className="flex items-center gap-2">
           {getOperationRender[it.operationType]}
         </div>
       )
@@ -198,57 +120,10 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
       textAlign: 'right',
       view: it => formatDate(it.created, timezone, 'HH:mm')
     }
-    /* {
-      name: 'performedBy',
-      header: 'Performed by',
-      width: 180,
-      textAlign: 'left',
-      view: it => {
-        if (notEditing(it.id))
-          return R.isNil(it.performedBy) ? 'Unknown entity' : it.performedBy
-        return (
-          <TextInput
-            onChange={e => setField({ ...field, performedBy: e.target.value })}
-            error={error}
-            width={190 * 0.85}
-            value={field?.performedBy}
-          />
-        )
-      }
-    },
-    {
-      name: '',
-      header: 'Edit',
-      width: 80,
-      textAlign: 'right',
-      view: it => {
-        if (notEditing(it.id))
-          return (
-            <IconButton
-              disabled={editing}
-              onClick={() => {
-                setField({ id: it.id, performedBy: it.performedBy })
-                setEditing(true)
-              }}>
-              {editing ? <EditIconDisabled /> : <EditIcon />}
-            </IconButton>
-          )
-        return (
-          <div className={classes.saveAndCancel}>
-            <Link type="submit" color="primary" onClick={() => save(it)}>
-              Save
-            </Link>
-            <Link color="secondary" onClick={close}>
-              Cancel
-            </Link>
-          </div>
-        )
-      }
-    } */
   ]
 
   return (
-    <div className={classes.tableWrapper}>
+    <div className="flex flex-col flex-1 mb-20">
       <DataTable
         loading={loading}
         name="cashboxHistory"

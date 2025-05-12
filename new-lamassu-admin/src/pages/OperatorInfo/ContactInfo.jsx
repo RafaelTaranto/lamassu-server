@@ -1,70 +1,39 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
-import Switch from '@mui/material/Switch'
-import classnames from 'classnames'
+import IconButton from '@mui/material/IconButton'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import { Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import PromptWhenDirty from 'src/components/PromptWhenDirty'
-import { HelpTooltip } from 'src/components/Tooltip'
-import { P, H4, Info3, Label1, Label2, Label3 } from 'src/components/typography'
+import { H4, Info3, Label3 } from 'src/components/typography'
 import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
 import * as Yup from 'yup'
 
-import { Link, IconButton, SupportLinkButton } from 'src/components/buttons'
+import { Link } from 'src/components/buttons'
 import { TextInput } from 'src/components/inputs/formik'
-import { fontSize5 } from 'src/styling/variables'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
-import { global } from './OperatorInfo.styles'
+import SwitchRow from './components/SwitchRow.jsx'
+import InfoMessage from './components/InfoMessage.jsx'
+import Header from './components/Header.jsx'
+import SvgIcon from '@mui/material/SvgIcon'
 
 const FIELD_WIDTH = 280
 
-const fieldStyles = {
-  field: {
-    position: 'relative',
-    width: 280,
-    height: 48,
-    padding: [[0, 4, 4, 0]]
-  },
-  notEditing: {
-    display: 'flex',
-    flexDirection: 'column',
-    '& > p:first-child': {
-      height: 16,
-      lineHeight: '16px',
-      fontSize: fontSize5,
-      transformOrigin: 'left',
-      paddingLeft: 0,
-      margin: [[3, 0, 3, 0]]
-    },
-    '& > p:last-child': {
-      overflow: 'hidden',
-      whiteSpace: 'nowrap',
-      textOverflow: 'ellipsis',
-      margin: 0
-    }
-  }
-}
-
-const fieldUseStyles = makeStyles(fieldStyles)
-
 const Field = ({ editing, field, displayValue, ...props }) => {
-  const classes = fieldUseStyles()
-
-  const classNames = {
-    [classes.field]: true,
-    [classes.notEditing]: !editing
-  }
-
   return (
-    <div className={classnames(classNames)}>
+    <div className="w-70 h-12 p-0 pl-1 pb-1">
       {!editing && (
         <>
-          <Label3>{field.label}</Label3>
-          <Info3>{displayValue(field.value)}</Info3>
+          <Label3 noMargin className="h-4 text-[13px] my-[3px]">
+            {field.label}
+          </Label3>
+          <Info3
+            noMargin
+            className="overflow-hidden whitespace-nowrap text-ellipsis">
+            {displayValue(field.value)}
+          </Info3>
         </>
       )}
       {editing && (
@@ -95,11 +64,7 @@ const SAVE_CONFIG = gql`
   }
 `
 
-const contactUseStyles = makeStyles(global)
-
 const ContactInfo = ({ wizard }) => {
-  const classes = contactUseStyles()
-
   const [editing, setEditing] = useState(wizard || false)
   const [error, setError] = useState(null)
 
@@ -187,43 +152,20 @@ const ContactInfo = ({ wizard }) => {
 
   return (
     <>
-      <div className={classes.header}>
-        <H4>Contact information</H4>
-        <HelpTooltip width={320}>
-          <P>
-            For details on configuring this panel, please read the relevant
-            knowledgebase article:
-          </P>
-          <SupportLinkButton
-            link="https://support.lamassu.is/hc/en-us/articles/360033051732-Enabling-Operator-Info"
-            label="Lamassu Support Article"
-            bottomSpace="1"
-          />
-        </HelpTooltip>
-      </div>
-      <div className={classes.switchRow}>
-        <P>Info card enabled?</P>
-        <div className={classes.switch}>
-          <Switch
-            checked={info.active}
-            onChange={event =>
-              save({
-                active: event.target.checked
-              })
-            }
-          />
-          <Label2>{info.active ? 'Yes' : 'No'}</Label2>
-        </div>
-      </div>
-      <div className={classes.section}>
-        <div className={classes.header}>
+      <Header
+        title="Contact information"
+        articleUrl="https://support.lamassu.is/hc/en-us/articles/360033051732-Enabling-Operator-Info"
+        tooltipText="For details on configuring this panel, please read the relevant knowledgebase article:"
+      />
+      <SwitchRow checked={info.active} save={save} title="Info card enabled?" />
+      <div>
+        <div className="flex items-center gap-4">
           <H4>Info card</H4>
           {!editing && (
-            <IconButton
-              className={classes.transparentButton}
-              onClick={() => setEditing(true)}
-              size="large">
-              <EditIcon />
+            <IconButton onClick={() => setEditing(true)}>
+              <SvgIcon>
+                <EditIcon />
+              </SvgIcon>
             </IconButton>
           )}
         </div>
@@ -239,9 +181,9 @@ const ContactInfo = ({ wizard }) => {
             setError(null)
           }}>
           {({ errors }) => (
-            <Form>
+            <Form className="flex flex-col gap-7 w-147">
               <PromptWhenDirty />
-              <div className={classes.row}>
+              <div className="flex gap-6 justify-between">
                 <Field
                   field={findField('name')}
                   editing={editing}
@@ -255,7 +197,7 @@ const ContactInfo = ({ wizard }) => {
                   onFocus={() => setError(null)}
                 />
               </div>
-              <div className={classes.row}>
+              <div className="flex gap-6">
                 <Field
                   field={findField('email')}
                   editing={editing}
@@ -269,7 +211,7 @@ const ContactInfo = ({ wizard }) => {
                   onFocus={() => setError(null)}
                 />
               </div>
-              <div className={classes.row}>
+              <div className="flex gap-6">
                 <Field
                   field={findField('companyNumber')}
                   editing={editing}
@@ -278,41 +220,34 @@ const ContactInfo = ({ wizard }) => {
                 />
               </div>
               {editing && !!getErrorMsg(errors) && (
-                <ErrorMessage className={classes.formErrorMsg}>
-                  {getErrorMsg(errors)}
-                </ErrorMessage>
+                <ErrorMessage>{getErrorMsg(errors)}</ErrorMessage>
               )}
-              <div className={classnames(classes.row, classes.submit)}>
-                {editing && (
-                  <>
-                    <Link color="primary" type="submit">
-                      Save
-                    </Link>
-                    <Link color="secondary" type="reset">
-                      Cancel
-                    </Link>
-                    {error && (
-                      <ErrorMessage>Failed to save changes</ErrorMessage>
-                    )}
-                  </>
-                )}
-              </div>
+              {editing && (
+                <div className="flex gap-10">
+                  <Link color="primary" type="submit">
+                    Save
+                  </Link>
+                  <Link color="secondary" type="reset">
+                    Cancel
+                  </Link>
+                  {error && <ErrorMessage>Failed to save changes</ErrorMessage>}
+                </div>
+              )}
             </Form>
           )}
         </Formik>
       </div>
       {!wizard && (
-        <div className={classnames(classes.section, classes.infoMessage)}>
-          <WarningIcon />
-          <Label1>
+        <>
+          <InfoMessage Icon={WarningIcon}>
             Sharing your information with your customers through your machines
             allows them to contact you in case there's a problem with a machine
             in your network or a transaction.
-          </Label1>
-        </div>
+          </InfoMessage>
+        </>
       )}
     </>
-  );
+  )
 }
 
 export default ContactInfo

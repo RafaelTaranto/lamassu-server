@@ -1,6 +1,4 @@
-import { useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
+import { useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H2 } from 'src/components/typography'
@@ -10,11 +8,8 @@ import { Button } from 'src/components/buttons'
 import { Table as EditableTable } from 'src/components/editableTable'
 import { fromNamespace, namespaces } from 'src/utils/config'
 
-import styles from './Triggers.styles'
 import Wizard from './Wizard'
 import { Schema, getElements, sortBy, toServer } from './helper'
-
-const useStyles = makeStyles(styles)
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
@@ -35,7 +30,6 @@ const TriggerView = ({
   const currency = R.path(['fiatCurrency'])(
     fromNamespace(namespaces.LOCALE)(config)
   )
-  const classes = useStyles()
   const [error, setError] = useState(null)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
@@ -52,9 +46,9 @@ const TriggerView = ({
   }
 
   const add = rawConfig => {
-    const toSave = R.concat([{ id: uuidv4(), direction: 'both', ...rawConfig }])(
-      triggers
-    )
+    const toSave = R.concat([
+      { id: uuidv4(), direction: 'both', ...rawConfig }
+    ])(triggers)
     return saveConfig({ variables: { config: { triggers: toServer(toSave) } } })
   }
 
@@ -70,7 +64,7 @@ const TriggerView = ({
         error={error?.message}
         save={save}
         validationSchema={Schema}
-        elements={getElements(currency, classes, customInfoRequests)}
+        elements={getElements(currency, customInfoRequests)}
       />
       {showWizard && (
         <Wizard
@@ -85,12 +79,12 @@ const TriggerView = ({
         />
       )}
       {R.isEmpty(triggers) && (
-        <Box display="flex" alignItems="center" flexDirection="column" mt={15}>
+        <div className="flex items-center flex-col mt-30">
           <H2>
             It seems there are no active compliance triggers on your network
           </H2>
           <Button onClick={addNewTriger}>Add first trigger</Button>
-        </Box>
+        </div>
       )}
     </>
   )

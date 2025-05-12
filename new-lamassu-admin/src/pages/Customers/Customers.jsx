@@ -1,6 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import Box from '@mui/material/Box'
-import { makeStyles } from '@mui/styles'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { useHistory } from 'react-router-dom'
@@ -11,7 +9,6 @@ import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 
 import { Link } from 'src/components/buttons'
-import baseStyles from 'src/pages/Logs.styles'
 import { fromNamespace, namespaces } from 'src/utils/config'
 
 import CustomersList from './CustomersList'
@@ -94,13 +91,10 @@ const CREATE_CUSTOMER = gql`
   }
 `
 
-const useBaseStyles = makeStyles(baseStyles)
-
 const getFiltersObj = filters =>
   R.reduce((s, f) => ({ ...s, [f.type]: f.value }), {}, filters)
 
 const Customers = () => {
-  const baseStyles = useBaseStyles()
   const history = useHistory()
 
   const handleCustomerClicked = customer =>
@@ -211,7 +205,7 @@ const Customers = () => {
       <TitleSection
         title="Customers"
         appendix={
-          <div className={baseStyles.buttonsWrapper}>
+          <div className="flex ml-4">
             <SearchBox
               loading={loadingFilters}
               filters={filters}
@@ -222,11 +216,11 @@ const Customers = () => {
           </div>
         }
         appendixRight={
-          <Box display="flex">
+          <div className="flex">
             <Link color="primary" onClick={() => setShowCreationModal(true)}>
               Add new user
             </Link>
-          </Box>
+          </div>
         }
         labels={[
           { label: 'Cash-in', icon: <TxInIcon /> },

@@ -1,5 +1,3 @@
-import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Formik, Form, FastField } from 'formik'
 import * as R from 'ramda'
@@ -8,29 +6,7 @@ import ErrorMessage from 'src/components/ErrorMessage'
 
 import { Button } from 'src/components/buttons'
 import { SecretInput } from 'src/components/inputs/formik'
-import { spacer } from 'src/styling/variables'
 
-const styles = {
-  footer: {
-    display: 'flex',
-    flexDirection: 'row',
-    margin: [['auto', 0, spacer * 4, 0]]
-  },
-  button: {
-    margin: [['auto', 0, 0, 'auto']]
-  },
-  form: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  grid: {
-    marginBottom: 24,
-    marginTop: 12
-  }
-}
-
-const useStyles = makeStyles(styles)
 const FormRenderer = ({
   validationSchema,
   elements,
@@ -40,8 +16,6 @@ const FormRenderer = ({
   buttonClass,
   xs = 12
 }) => {
-  const classes = useStyles()
-
   const initialValues = R.compose(
     R.mergeAll,
     R.map(({ code }) => ({ [code]: (value && value[code]) ?? '' }))
@@ -74,11 +48,11 @@ const FormRenderer = ({
       validationSchema={validationSchema}
       onSubmit={saveNonEmptySecret}>
       {({ errors }) => (
-        <Form className={classes.form}>
-          <Grid container spacing={3} className={classes.grid}>
+        <Form className="flex flex-col flex-1">
+          <div className="flex flex-col gap-3 mb-6 mt-3">
             {elements.map(
               ({ component, code, display, settings, inputProps }) => (
-                <Grid item xs={xs} key={code}>
+                <div key={code}>
                   <FastField
                     component={component}
                     {...inputProps}
@@ -87,18 +61,18 @@ const FormRenderer = ({
                     settings={settings}
                     fullWidth={true}
                   />
-                </Grid>
+                </div>
               )
             )}
-          </Grid>
-          <div className={classes.footer}>
+          </div>
+          <div className="flex flex-row mt-auto mb-8">
             {!R.isEmpty(R.mergeRight(errors, saveError)) && (
               <ErrorMessage>
                 {R.head(R.values(R.mergeRight(errors, saveError)))}
               </ErrorMessage>
             )}
             <Button
-              className={classnames(classes.button, buttonClass)}
+              className={classnames('mt-auto ml-auto', buttonClass)}
               type="submit">
               {buttonLabel}
             </Button>

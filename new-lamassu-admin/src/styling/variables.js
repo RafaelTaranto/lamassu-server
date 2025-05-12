@@ -32,16 +32,12 @@ const mistyRose = '#ffeceb'
 const pumpkin = '#ff7311'
 const linen = '#fbf3ec'
 
-// Warning
-const orangeYellow = '#ffcc00'
-
 // Color Variables
 const primaryColor = zodiac
 
 const secondaryColor = spring
 const secondaryColorDark = spring2
 const secondaryColorDarker = spring4
-const secondaryColorLighter = spring3
 
 const backgroundColor = ghost
 const subheaderColor = zircon
@@ -52,16 +48,13 @@ const fontColor = primaryColor
 const offColor = comet
 const offDarkColor = comet2
 const offDarkerColor = comet3
-const placeholderColor = comet
 const errorColor = tomato
 const errorColorDark = tomato1
 const errorColorDarker = tomato2
 const offErrorColor = mistyRose
-const inputBorderColor = primaryColor
 
 // General
 const spacer = 8
-const mainWidth = 1200
 
 // Buttons
 const linkPrimaryColor = secondaryColor
@@ -72,19 +65,11 @@ const fontPrimary = 'Mont'
 const fontSecondary = 'MuseoSans'
 const fontMonospaced = 'BPmono'
 
-let fontSize1 = 24
-let fontSize2 = 20
-let fontSize3 = 16
-let fontSize4 = 14
-let fontSize5 = 13
-
-if (version === 8) {
-  fontSize1 = 32
-  fontSize2 = 24
-  fontSize3 = 20
-  fontSize4 = 16
-  fontSize5 = 14
-}
+const fontSize1 = 24
+const fontSize2 = 20
+const fontSize3 = 16
+const fontSize4 = 14
+const fontSize5 = 13
 
 const smallestFontSize = fontSize5
 const inputFontSizeSm = fontSize4
@@ -93,7 +78,6 @@ const inputFontSizeLg = fontSize1
 const inputFontWeight = 500
 const inputFontWeightBold = 700
 const inputFontFamily = fontSecondary
-const codeInputFontSize = 35
 
 // Breakpoints
 const sm = 576
@@ -113,13 +97,7 @@ if (version === 8) {
 
 const tableDoubleHeaderHeight = tableHeaderHeight * 2
 
-const tableSmCellHeight = 30
-const tableLgCellHeight = 76
-
 const tableHeaderColor = primaryColor
-const tableDisabledHeaderColor = zircon
-const tableNewDisabledHeaderColor = spring3
-const tableCellColor = white
 const tableErrorColor = mistyRose
 const tableSuccessColor = spring3
 
@@ -139,17 +117,14 @@ export {
   java,
   neon,
   linen,
-  orangeYellow,
   // named colors
   primaryColor,
   secondaryColor,
   secondaryColorDark,
   secondaryColorDarker,
-  secondaryColorLighter,
   subheaderColor,
   subheaderDarkColor,
   backgroundColor,
-  placeholderColor,
   offColor,
   offDarkColor,
   offDarkerColor,
@@ -162,7 +137,6 @@ export {
   errorColorDarker,
   errorColorDark,
   offErrorColor,
-  inputBorderColor,
   // font sizes
   fontSize1,
   fontSize2,
@@ -180,7 +154,6 @@ export {
   inputFontFamily,
   inputFontWeight,
   inputFontWeightBold,
-  codeInputFontSize,
   // screen sizes
   sm,
   md,
@@ -189,17 +162,11 @@ export {
   xxl,
   // sizes
   spacer,
-  mainWidth,
   // table sizes
   tableHeaderHeight,
   tableDoubleHeaderHeight,
   tableCellHeight,
-  tableSmCellHeight,
-  tableLgCellHeight,
   tableHeaderColor,
-  tableDisabledHeaderColor,
-  tableNewDisabledHeaderColor,
-  tableCellColor,
   tableErrorColor,
   tableSuccessColor
 }

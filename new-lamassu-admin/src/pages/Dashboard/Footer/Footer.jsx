@@ -1,8 +1,5 @@
-import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
-import Grid from '@mui/material/Grid'
+import { useQuery, gql } from '@apollo/client'
 import BigNumber from 'bignumber.js'
-import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
 import { Label2 } from 'src/components/typography'
@@ -11,7 +8,8 @@ import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 
 import { fromNamespace } from 'src/utils/config'
 
-import styles from './Footer.styles'
+import classes from './Footer.module.css'
+
 const GET_DATA = gql`
   query getData {
     cryptoRates
@@ -29,12 +27,10 @@ const GET_DATA = gql`
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_HALF_UP })
 
-const useStyles = makeStyles(styles)
 const Footer = () => {
   const { data } = useQuery(GET_DATA)
 
   const withCommissions = R.path(['cryptoRates', 'withCommissions'])(data) ?? {}
-  const classes = useStyles()
   const config = R.path(['config'])(data) ?? {}
   // const canExpand = R.keys(withCommissions).length > 4
 
@@ -72,36 +68,31 @@ const Footer = () => {
     ).toFormat(2)
 
     return (
-      <Grid key={key} item xs={3}>
-        <Label2 className={classes.label}>
+      <div className="flex flex-col w-1/4">
+        <Label2 className="text-comet mt-3 mb-2">
           {cryptoCurrencies[idx].display}
         </Label2>
-        <div className={classes.headerLabels}>
-          <div className={classes.headerLabel}>
+        <div className="flex gap-6">
+          <div className="flex items-center gap-1">
             <TxInIcon />
-            <Label2>{` ${cashIn} ${localeFiatCurrency}`}</Label2>
+            <Label2 noMargin>{`${cashIn} ${localeFiatCurrency}`}</Label2>
           </div>
-          <div className={classnames(classes.headerLabel, classes.txOutMargin)}>
+          <div className="flex items-center gap-1">
             <TxOutIcon />
-            <Label2>{` ${cashOut} ${localeFiatCurrency}`}</Label2>
+            <Label2 noMargin>{`${cashOut} ${localeFiatCurrency}`}</Label2>
           </div>
         </div>
-        <Label2
-          className={
-            classes.tickerLabel
-          }>{`${tickerName}: ${avgOfAskBid} ${localeFiatCurrency}`}</Label2>
-      </Grid>
+        <Label2 className="text-comet mt-2">
+          {`${tickerName}: ${avgOfAskBid} ${localeFiatCurrency}`}
+        </Label2>
+      </div>
     )
   }
 
   return (
     <div className={classes.footer1}>
       <div className={classes.content1}>
-        <Grid container>
-          <Grid container className={classes.footerContainer1}>
-            {R.keys(withCommissions).map(key => renderFooterItem(key))}
-          </Grid>
-        </Grid>
+        {R.keys(withCommissions).map(key => renderFooterItem(key))}
       </div>
     </div>
   )

@@ -1,4 +1,3 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import { P } from 'src/components/typography'
@@ -6,9 +5,7 @@ import CompleteStageIconZodiac from 'src/styling/icons/stage/zodiac/complete.svg
 import CurrentStageIconZodiac from 'src/styling/icons/stage/zodiac/current.svg?react'
 import EmptyStageIconZodiac from 'src/styling/icons/stage/zodiac/empty.svg?react'
 
-import styles from './Sidebar.styles'
-
-const useStyles = makeStyles(styles)
+import styles from './Sidebar.module.css'
 
 const Sidebar = ({
   data,
@@ -19,23 +16,21 @@ const Sidebar = ({
   itemRender,
   loading = false
 }) => {
-  const classes = useStyles()
-
   return (
-    <div className={classes.sidebar}>
+    <div className={styles.sidebar}>
       {loading && <P>Loading...</P>}
       {!loading &&
         data?.map((it, idx) => (
           <div
             key={idx}
-            className={classes.linkWrapper}
+            className={styles.linkWrapper}
             onClick={() => onClick(it)}>
             <div
               className={classnames({
-                [classes.activeLink]: isSelected(it),
-                [classes.customRenderActiveLink]: itemRender && isSelected(it),
-                [classes.customRenderLink]: itemRender,
-                [classes.link]: true
+                [styles.activeLink]: isSelected(it),
+                [styles.customRenderActiveLink]: itemRender && isSelected(it),
+                [styles.customRenderLink]: itemRender,
+                [styles.link]: true
               })}>
               {itemRender ? itemRender(it, isSelected(it)) : displayName(it)}
             </div>
@@ -49,18 +44,17 @@ const Sidebar = ({
 export default Sidebar
 
 const Stepper = ({ step, it, idx, steps }) => {
-  const classes = useStyles()
   const active = step === idx
   const past = idx < step
   const future = idx > step
 
   return (
-    <div className={classes.item}>
+    <div className={styles.item}>
       <span
         className={classnames({
-          [classes.itemText]: true,
-          [classes.itemTextActive]: active,
-          [classes.itemTextPast]: past
+          [styles.itemText]: true,
+          [styles.itemTextActive]: active,
+          [styles.itemTextPast]: past
         })}>
         {it.label}
       </span>
@@ -70,8 +64,8 @@ const Stepper = ({ step, it, idx, steps }) => {
       {idx < steps.length - 1 && (
         <div
           className={classnames({
-            [classes.stepperPath]: true,
-            [classes.stepperPast]: past
+            [styles.stepperPath]: true,
+            [styles.stepperPast]: past
           })}></div>
       )}
     </div>

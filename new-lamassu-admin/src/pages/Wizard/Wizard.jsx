@@ -1,35 +1,14 @@
-import { useQuery, gql } from "@apollo/client";
+import { useQuery, gql } from '@apollo/client'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { getWizardStep, STEPS } from 'src/pages/Wizard/helper'
 
 import AppContext from 'src/AppContext'
-import { backgroundColor } from 'src/styling/variables'
 
 import Footer from './components/Footer'
-
-const useStyles = makeStyles({
-  wrapper: {
-    display: 'flex',
-    padding: [[16, 0]],
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: backgroundColor
-  },
-  welcomeBackground: {
-    background: 'url(/wizard-background.svg) no-repeat center center fixed',
-    backgroundColor: backgroundColor,
-    backgroundSize: 'cover'
-  },
-  blurred: {
-    filter: 'blur(4px)',
-    pointerEvents: 'none'
-  }
-})
 
 const GET_DATA = gql`
   query getData {
@@ -43,7 +22,6 @@ const GET_DATA = gql`
 `
 
 const Wizard = ({ fromAuthRegister }) => {
-  const classes = useStyles()
   const { data, loading } = useQuery(GET_DATA)
   const history = useHistory()
   const { setWizardTested } = useContext(AppContext)
@@ -68,11 +46,6 @@ const Wizard = ({ fromAuthRegister }) => {
   }
 
   const isWelcome = step === 0
-  const classNames = {
-    [classes.blurred]: footerExp,
-    [classes.wrapper]: true,
-    [classes.welcomeBackground]: isWelcome
-  }
 
   const start = () => {
     setFooterExp(false)
@@ -91,6 +64,12 @@ const Wizard = ({ fromAuthRegister }) => {
   }
 
   const current = STEPS[step]
+  const classNames = {
+    'flex flex-col justify-between py-4 px-0 bg-white': true,
+    'bg-[url(/wizard-background.svg)] bg-no-repeat bg-center bg-fixed bg-cover':
+      isWelcome,
+    'blur-sm pointer-events-none': footerExp
+  }
 
   return (
     <Dialog fullScreen open={open}>

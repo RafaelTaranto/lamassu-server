@@ -1,30 +1,19 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React, { memo } from 'react'
 
-import { spacer } from 'src/styling/variables'
-
-const useStyles = makeStyles({
-  td: {
-    padding: [[0, spacer * 3]]
-  },
-  alignRight: {
-    textAlign: 'right'
-  }
-})
+import classes from './Table.module.css'
 
 const TableCell = memo(
   ({ colspan, rightAlign, className, children, ...props }) => {
-    const classes = useStyles()
     const styles = {
-      [classes.td]: true,
-      [classes.alignRight]: rightAlign
+      [classes.tableCell]: true,
+      'text-right': rightAlign
     }
 
     return (
       <td
         colSpan={colspan}
-        className={classnames(styles, className)}
+        className={classnames(className, styles)}
         {...props}>
         {children}
       </td>

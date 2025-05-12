@@ -1,54 +1,25 @@
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
-import { makeStyles } from '@mui/styles'
+import IconButton from '@mui/material/IconButton'
 import React from 'react'
 import { H4, P } from 'src/components/typography'
 import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
 
-import { Button, IconButton } from 'src/components/buttons'
-import { spacer } from 'src/styling/variables'
+import { Button } from 'src/components/buttons'
 
 import ErrorMessage from './ErrorMessage'
-
-const useStyles = makeStyles({
-  content: {
-    width: 434,
-    padding: spacer * 2,
-    paddingRight: spacer * 3.5
-  },
-  titleSection: {
-    padding: spacer * 2,
-    paddingRight: spacer * 1.5,
-    display: 'flex',
-    justifyContent: 'space-between',
-    margin: 0
-  },
-  actions: {
-    padding: spacer * 4,
-    paddingTop: spacer * 2
-  },
-  title: {
-    margin: 0
-  },
-  closeButton: {
-    padding: 0,
-    marginTop: -(spacer / 2)
-  }
-})
+import SvgIcon from '@mui/material/SvgIcon'
 
 export const DialogTitle = ({ children, close }) => {
-  const classes = useStyles()
   return (
-    <div className={classes.titleSection}>
+    <div className="p-4 pr-3 flex justify-between m-0">
       {children}
       {close && (
-        <IconButton
-          size={16}
-          aria-label="close"
-          onClick={close}
-          className={classes.closeButton}>
-          <CloseIcon />
+        <IconButton aria-label="close" onClick={close} className="p-0 -mt-1">
+          <SvgIcon fontSize="small">
+            <CloseIcon />
+          </SvgIcon>
         </IconButton>
       )}
     </div>
@@ -65,12 +36,10 @@ export const DeleteDialog = ({
   extraMessage,
   errorMessage = ''
 }) => {
-  const classes = useStyles()
-
   return (
     <Dialog open={open} aria-labelledby="form-dialog-title">
       <DialogTitle close={() => onDismissed()}>
-        <H4 className={classes.title}>{title}</H4>
+        <H4 className="m-0">{title}</H4>
       </DialogTitle>
       {errorMessage && (
         <DialogTitle>
@@ -84,11 +53,11 @@ export const DeleteDialog = ({
           </ErrorMessage>
         </DialogTitle>
       )}
-      <DialogContent className={classes.content}>
+      <DialogContent className="w-108 p-4 pr-7">
         {confirmationMessage && <P>{confirmationMessage}</P>}
         {extraMessage}
       </DialogContent>
-      <DialogActions className={classes.actions}>
+      <DialogActions className="p-8 pt-4">
         <Button onClick={onConfirmed}>Confirm</Button>
       </DialogActions>
     </Dialog>

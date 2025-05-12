@@ -1,77 +1,30 @@
-import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import { Label1 } from 'src/components/typography/index'
 
-import { java, neon, white } from 'src/styling/variables'
-
-const styles = {
-  wrapper: {
-    display: 'flex',
-    height: 142
-  },
-  percentageBox: {
-    height: 142,
-    borderRadius: 4,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    whiteSpace: 'pre'
-  },
-  label: {
-    color: white
-  },
-  inColor: {
-    backgroundColor: java
-  },
-  outColor: {
-    backgroundColor: neon
-  },
-  other: {
-    minWidth: '6px',
-    borderRadius: 2
-  },
-  inWidth: {
-    width: value => `${value}%`,
-    marginRight: value => (value === 100 ? 0 : 4)
-  },
-  outWidth: {
-    width: value => `${100 - value}%`
-  }
-}
-
-const useStyles = makeStyles(styles)
-
 const PercentageChart = ({ cashIn, cashOut }) => {
   const value = cashIn || cashOut !== 0 ? cashIn : 50
-  const classes = useStyles(value)
 
   const buildPercentageView = value => {
     if (value <= 15) return
-    return <Label1 className={classes.label}>{value}%</Label1>
+    return <Label1 className="text-white">{value}%</Label1>
   }
 
   const percentageClasses = {
-    [classes.percentageBox]: true,
-    [classes.other]: value < 5 && value > 0
+    'h-35 rounded-sm flex items-center justify-center': true,
+    'min-w-2 rounded-xs': value < 5 && value > 0
   }
 
   return (
-    <div className={classes.wrapper}>
+    <div className="flex h-35 gap-1">
       <div
-        className={classnames(
-          percentageClasses,
-          classes.inColor,
-          classes.inWidth
-        )}>
+        className={classnames(percentageClasses, 'bg-java')}
+        style={{ width: `${value}%` }}>
         {buildPercentageView(value, 'cashIn')}
       </div>
       <div
-        className={classnames(
-          percentageClasses,
-          classes.outColor,
-          classes.outWidth
-        )}>
+        className={classnames(percentageClasses, 'bg-neon')}
+        style={{ width: `${100 - value}%` }}>
         {buildPercentageView(100 - value, 'cashOut')}
       </div>
     </div>

@@ -1,15 +1,11 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@mui/styles'
-import Switch from '@mui/material/Switch'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { memo } from 'react'
-import { H4, P, Label2 } from 'src/components/typography'
+import { H4 } from 'src/components/typography'
 
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
-import { global } from './OperatorInfo.styles'
-
-const useStyles = makeStyles(global)
+import SwitchRow from './components/SwitchRow.jsx'
 
 const GET_CONFIG = gql`
   query getData {
@@ -24,13 +20,25 @@ const SAVE_CONFIG = gql`
 `
 
 const MachineScreens = memo(({ wizard }) => {
-  const classes = useStyles()
-
   const { data } = useQuery(GET_CONFIG)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData']
   })
+
+  const save = it => {
+    const formatConfig = R.compose(
+      toNamespace(namespaces.MACHINE_SCREENS),
+      toNamespace('rates'),
+      R.mergeRight(ratesScreenConfig)
+    )
+
+    return saveConfig({
+      variables: {
+        config: formatConfig({ active: it })
+      }
+    })
+  }
 
   const machineScreensConfig =
     data?.config && fromNamespace(namespaces.MACHINE_SCREENS, data.config)
@@ -46,32 +54,12 @@ const MachineScreens = memo(({ wizard }) => {
 
   return (
     <>
-      <div className={classes.header}>
-        <H4>Rates screen</H4>
-      </div>
-      <div className={classes.switchRow}>
-        <P>Enable rates screen</P>
-        <div className={classes.switch}>
-          <Switch
-            checked={ratesScreenConfig.active}
-            onChange={event =>
-              saveConfig({
-                variables: {
-                  config: R.compose(
-                    toNamespace(namespaces.MACHINE_SCREENS),
-                    toNamespace('rates')
-                  )(
-                    R.merge(ratesScreenConfig, {
-                      active: event.target.checked
-                    })
-                  )
-                }
-              })
-            }
-          />
-          <Label2>{ratesScreenConfig.active ? 'Yes' : 'No'}</Label2>
-        </div>
-      </div>
+      <H4>Rates screen</H4>
+      <SwitchRow
+        save={save}
+        title="Enable rates screen"
+        checked={ratesScreenConfig.active}
+      />
     </>
   )
 })
