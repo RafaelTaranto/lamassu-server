@@ -16,7 +16,7 @@ const ActionButton = memo(
   }) => {
     const classNames = {
       [moduleStyles.actionButton]: true,
-      [moduleStyles.altText]: altTextColor,
+      [moduleStyles.altText]: altTextColor || color !== 'primary',
       [moduleStyles.primary]: color === 'primary',
       [moduleStyles.secondary]: color === 'secondary',
       [moduleStyles.spring]: color === 'spring',
