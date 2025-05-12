@@ -1,7 +1,7 @@
 FROM node:22-alpine AS build-ui
 RUN apk add --no-cache npm git curl build-base python3
 
-COPY ["packages/admin-ui/package.json", "packages/admin-ui/package-lock.json", "./"]
+COPY ["packages/admin-ui/package.json", "package-lock.json", "./"]
 
 RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
 RUN npm install
@@ -31,7 +31,7 @@ RUN apt-get install nodejs -y -q
 
 WORKDIR lamassu-server
 
-COPY ["packages/server/package.json", "packages/server/package-lock.json", "./"]
+COPY ["packages/server/package.json", "package-lock.json", "./"]
 RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
 RUN npm install --production
 
