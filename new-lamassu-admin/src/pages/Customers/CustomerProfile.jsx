@@ -1,18 +1,11 @@
-import IconButton from '@mui/material/IconButton'
-import SvgIcon from '@mui/material/SvgIcon'
 import { useQuery, useMutation, useLazyQuery, gql } from '@apollo/client'
 import Breadcrumbs from '@mui/material/Breadcrumbs'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import Dialog from '@mui/material/Dialog'
 import Switch from '@mui/material/Switch'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
-import ErrorMessage from 'src/components/ErrorMessage'
-import { Label1, Label2, H2, Info3 } from 'src/components/typography'
-import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
+import { Label1, Label2 } from 'src/components/typography'
 import AuthorizeReversedIcon from 'src/styling/icons/button/authorize/white.svg?react'
 import AuthorizeIcon from 'src/styling/icons/button/authorize/zodiac.svg?react'
 import BlockReversedIcon from 'src/styling/icons/button/block/white.svg?react'
@@ -20,7 +13,7 @@ import BlockIcon from 'src/styling/icons/button/block/zodiac.svg?react'
 import DataReversedIcon from 'src/styling/icons/button/data/white.svg?react'
 import DataIcon from 'src/styling/icons/button/data/zodiac.svg?react'
 
-import { Button, ActionButton } from 'src/components/buttons'
+import { ActionButton } from 'src/components/buttons'
 import {
   OVERRIDE_AUTHORIZED,
   OVERRIDE_REJECTED
@@ -147,7 +140,6 @@ const SET_CUSTOMER = gql`
       lastTxFiat
       lastTxFiatCode
       lastTxClass
-      subscriberInfo
       phoneOverride
       externalCompliance
     }
@@ -297,7 +289,6 @@ const CHECK_AGAINST_SANCTIONS = gql`
 const CustomerProfile = memo(() => {
   const history = useHistory()
 
-  const [retrieve, setRetrieve] = useState(false)
   const [showCompliance, setShowCompliance] = useState(false)
   const [wizard, setWizard] = useState(false)
   const [error, setError] = useState(null)
@@ -343,7 +334,6 @@ const CustomerProfile = memo(() => {
   const [setCustomer] = useMutation(SET_CUSTOMER, {
     onCompleted: () => {
       getCustomer()
-      setRetrieve(false)
     },
     onError: error => setError(error)
   })
@@ -464,16 +454,6 @@ const CustomerProfile = memo(() => {
       variables: {
         noteId: it.noteId,
         newContent: it.newContent
-      }
-    })
-
-  const retrieveAdditionalData = () =>
-    setCustomer({
-      variables: {
-        customerId,
-        customerInput: {
-          subscriberInfo: true
-        }
       }
     })
 
@@ -664,21 +644,8 @@ const CustomerProfile = memo(() => {
                 updateCustomRequest={setCustomerCustomInfoRequest}
                 authorizeCustomRequest={authorizeCustomRequest}
                 updateCustomEntry={updateCustomEntry}
-                setRetrieve={setRetrieve}
                 checkAgainstSanctions={checkAgainstSanctions}
-                retrieveAdditionalDataDialog={
-                  <RetrieveDataDialog
-                    onDismissed={() => {
-                      setError(null)
-                      setRetrieve(false)
-                    }}
-                    onConfirmed={() => {
-                      setError(null)
-                      retrieveAdditionalData()
-                    }}
-                    error={error}
-                    open={retrieve}></RetrieveDataDialog>
-                }></CustomerData>
+              />
             </div>
           )}
           {isNotes && (
@@ -714,56 +681,5 @@ const CustomerProfile = memo(() => {
     </>
   )
 })
-
-const RetrieveDataDialog = ({
-  onConfirmed,
-  onDismissed,
-  open,
-  error,
-  props
-}) => {
-  return (
-    <Dialog
-      open={open}
-      aria-labelledby="form-dialog-title"
-      PaperProps={{
-        style: {
-          borderRadius: 8,
-          minWidth: 656,
-          bottom: 125,
-          right: 7
-        }
-      }}
-      {...props}>
-      <div className="pt-4 pr-4 flex justify-end">
-        <IconButton aria-label="close" onClick={() => onDismissed(false)}>
-          <SvgIcon>
-            <CloseIcon />
-          </SvgIcon>
-        </IconButton>
-      </div>
-      <H2 className="mb-2 ml-10">{'Retrieve API data from Twilio'}</H2>
-      <DialogContent className="w-153 ml-4">
-        <Info3>{`With this action you'll be using Twilio's API to retrieve additional
-  data from this user. This includes name and address, if available.\n`}</Info3>
-        <Info3>{` There is a small cost from Twilio for each retrieval. Would you like
-  to proceed?`}</Info3>
-      </DialogContent>
-      {error && (
-        <ErrorMessage className="ml-10">
-          Failed to fetch additional data
-        </ErrorMessage>
-      )}
-      <DialogActions className="p-8 pt-4 gap-2">
-        <Button
-          onClick={() => {
-            onConfirmed()
-          }}>
-          Confirm
-        </Button>
-      </DialogActions>
-    </Dialog>
-  )
-}
 
 export default CustomerProfile
