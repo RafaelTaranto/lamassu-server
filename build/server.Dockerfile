@@ -7,7 +7,7 @@ COPY ["packages/server/package.json", "packages/server/package-lock.json", "./"]
 RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
 RUN npm install --production
 
-COPY .packages/server ./
+COPY packages/server/ ./
 
 
 FROM node:22-alpine AS l-s-base
