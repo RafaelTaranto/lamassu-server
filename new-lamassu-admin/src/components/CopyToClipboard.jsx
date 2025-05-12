@@ -68,7 +68,7 @@ const CopyToClipboard = ({
         </>
       )}
     </div>
-  )
+  );
 }
 
 export default CopyToClipboard

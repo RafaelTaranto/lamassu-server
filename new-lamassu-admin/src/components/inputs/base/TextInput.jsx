@@ -53,19 +53,21 @@ const TextInput = memo(
         value={value}
         className={className}
         style={style}
-        inputProps={{ style: { textAlign } }}
-        InputProps={{
-          className: classnames(divClass),
-          classes: {
-            root: sizeClass,
-            underline: filled ? styles.underline : null,
-            input: inputClasses
-          },
-          ...InputProps
-        }}
         {...props}
-      />
-    )
+        slotProps={{
+          input: {
+            className: classnames(divClass),
+            classes: {
+              root: sizeClass,
+              underline: filled ? styles.underline : null,
+              input: inputClasses
+            },
+            ...InputProps
+          },
+
+          htmlInput: { style: { textAlign } }
+        }} />
+    );
   }
 )
 

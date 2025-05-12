@@ -8,8 +8,10 @@
   padding: 0 8px;
   display: flex;
   align-items: center;
-  /*TODO important is a hack while we don't have a better way of handling overrides of 'composes'*/
-  color: white !important;
+}
+
+.actionButton.altText {
+  color: white;
 }
 
 .primary {

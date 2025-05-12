@@ -1,8 +1,7 @@
 @import "./fonts.css";
 
-/*@tailwind setup with no preflighrt*/
-/* TODO remove important after mui v6 migration*/
-@layer theme, base, components, utilities;
+/* TODO remove important */
+@layer theme, base, mui, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities) important;
 

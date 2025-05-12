@@ -25,7 +25,7 @@ const App = () => {
       value={{ wizardTested, setWizardTested, userData, setUserData, setRole }}>
       <Router>
         <ApolloProvider>
-          <StyledEngineProvider injectFirst>
+          <StyledEngineProvider enableCssLayer>
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <Main />

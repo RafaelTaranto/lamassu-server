@@ -47,14 +47,6 @@ const SearchBox = memo(
         multiple
         filterSelectedOptions
         isOptionEqualToValue={(option, value) => option.type === value.type}
-        PaperComponent={({ children }) => (
-          <Paper
-            elevation={0}
-            className="flex flex-col rounded-b-xl bg-zircon shadow-2xl">
-            <div className="w-[88%] h-[1px] my-p mx-auto border-1 border-comet" />
-            {children}
-          </Paper>
-        )}
         renderInput={params => {
           return (
             <InputBase
@@ -74,8 +66,17 @@ const SearchBox = memo(
         onClose={() => setPopupOpen(false)}
         onChange={(_, filters) => innerOnChange(filters)}
         {...props}
-      />
-    )
+        slots={{
+          paper: ({ children }) => (
+            <Paper
+              elevation={0}
+              className="flex flex-col rounded-b-xl bg-zircon shadow-2xl">
+              <div className="w-[88%] h-[1px] my-p mx-auto border-1 border-comet" />
+              {children}
+            </Paper>
+          )
+        }} />
+    );
   }
 )
 

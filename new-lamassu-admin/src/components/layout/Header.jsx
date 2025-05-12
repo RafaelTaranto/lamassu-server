@@ -149,6 +149,7 @@ const Header = memo(({ tree, user }) => {
           </nav>
           <div className={styles.actionButtonsContainer}>
             <ActionButton
+              altTextColor
               color="secondary"
               Icon={AddIcon}
               InverseIcon={AddIconReverse}

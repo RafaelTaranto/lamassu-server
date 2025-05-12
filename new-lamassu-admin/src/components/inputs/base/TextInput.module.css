@@ -1,15 +1,12 @@
 .size {
-  margin-top: 2px;
   font-size: 16px;
 }
 
 .sizeSm {
-  margin-top: 2px;
   font-size: 14px;
 }
 
 .sizeLg {
-  margin-top: 0;
   font-size: 24px;
   font-weight: 700;
 }

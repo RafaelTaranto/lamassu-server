@@ -37,6 +37,7 @@ const SearchFilter = ({
             )}`}</Label3>
           }
           <ActionButton
+            altTextColor
             color="secondary"
             Icon={ReverseFilterIcon}
             InverseIcon={FilterIcon}

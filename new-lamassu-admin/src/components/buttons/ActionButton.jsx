@@ -4,9 +4,19 @@ import React, { memo } from 'react'
 import moduleStyles from './ActionButton.module.css'
 
 const ActionButton = memo(
-  ({ className, Icon, InverseIcon, color, center, children, ...props }) => {
+  ({
+    className,
+    altTextColor,
+    Icon,
+    InverseIcon,
+    color,
+    center,
+    children,
+    ...props
+  }) => {
     const classNames = {
       [moduleStyles.actionButton]: true,
+      [moduleStyles.altText]: altTextColor,
       [moduleStyles.primary]: color === 'primary',
       [moduleStyles.secondary]: color === 'secondary',
       [moduleStyles.spring]: color === 'spring',

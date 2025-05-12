@@ -80,7 +80,6 @@ const Autocomplete = ({
       openOnFocus
       autoHighlight
       disableClearable
-      ChipProps={{ onDelete: null }}
       clearOnEscape
       isOptionEqualToValue={R.eqProps(valueProp)}
       {...props}
@@ -122,8 +121,10 @@ const Autocomplete = ({
           </li>
         )
       }}
-    />
-  )
+      slotProps={{
+        chip: { onDelete: null }
+      }} />
+  );
 }
 
 export default Autocomplete
