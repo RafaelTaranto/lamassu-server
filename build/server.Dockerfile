@@ -3,11 +3,11 @@ RUN apk add --no-cache npm git curl build-base net-tools python3 postgresql-dev
 
 WORKDIR /lamassu-server
 
-COPY ["package.json", "package-lock.json", "./"]
+COPY ["packages/server/package.json", "packages/server/package-lock.json", "./"]
 RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
 RUN npm install --production
 
-COPY . ./
+COPY .packages/server ./
 
 
 FROM node:22-alpine AS l-s-base
@@ -30,12 +30,12 @@ RUN apk add --no-cache npm git curl build-base python3
 
 WORKDIR /app
 
-COPY ["new-lamassu-admin/package.json", "new-lamassu-admin/package-lock.json", "./"]
+COPY ["packages/admin-ui/package.json", "packages/admin-ui/package-lock.json", "./"]
 
 RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
 RUN npm install
 
-COPY new-lamassu-admin/ ./
+COPY packages/admin-ui/ ./
 RUN npm run build
 
 

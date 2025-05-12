@@ -1,12 +1,12 @@
 FROM node:22-alpine AS build-ui
 RUN apk add --no-cache npm git curl build-base python3
 
-COPY ["new-lamassu-admin/package.json", "new-lamassu-admin/package-lock.json", "./"]
+COPY ["packages/admin-ui/package.json", "packages/admin-ui/package-lock.json", "./"]
 
 RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
 RUN npm install
 
-COPY new-lamassu-admin/ ./
+COPY packages/admin-ui/ ./
 RUN npm run build
 
 FROM ubuntu:20.04 as base
@@ -31,11 +31,11 @@ RUN apt-get install nodejs -y -q
 
 WORKDIR lamassu-server
 
-COPY ["package.json", "package-lock.json", "./"]
+COPY ["packages/server/package.json", "packages/server/package-lock.json", "./"]
 RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
 RUN npm install --production
 
-COPY . ./
+COPY ./packages/server/ ./
 COPY --from=build-ui /build /lamassu-server/public
 
 RUN cd .. && tar -zcvf lamassu-server.tar.gz ./lamassu-server

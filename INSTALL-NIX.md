@@ -26,8 +26,6 @@ shell.nix script provided, all you need to do to setup the environment is to run
 
 ### Install node modules
 
-Make sure you're running NodeJS 8.3 or higher. Ignore any warnings.
-
 ```
 npm install
 ```
@@ -35,7 +33,7 @@ npm install
 ### Generate certificates
 
 ```
-bash tools/cert-gen.sh
+bash packages/server/tools/cert-gen.sh
 ```
 
 Notes: 
@@ -46,14 +44,13 @@ Notes:
 Important: lamassu-migrate currently gripes about a QueryResultError. Ignore this, it works anyway.
 
 ```
-node bin/lamassu-migrate
+node packages/server/bin/lamassu-migrate
 ```
 
 ### Run new-lamassu-admin
 
 ```
-cd new-lamassu-admin/
-npm install
+cd packages-admin-ui/
 npm run start
 ```
 
@@ -62,7 +59,7 @@ npm run start
 In a second terminal window:
 
 ```
-node bin/lamassu-admin-server --dev
+node packages/server/bin/lamassu-admin-server --dev
 ```
 
 ### Register admin user
@@ -70,7 +67,7 @@ node bin/lamassu-admin-server --dev
 In a third terminal window:
 
 ```
-node bin/lamassu-register admin@example.com superuser
+node packages/server/bin/lamassu-register admin@example.com superuser
 ```
 
 You'll use this generated URL in the brower in a moment.
@@ -86,7 +83,7 @@ Go to all the required, unconfigured red fields and choose some values. Choose m
 ### Run lamassu-server
 
 ```
-node bin/lamassu-server --mockScoring
+node packages/server/bin/lamassu-server --mockScoring
 ```
 
 ### Add a lamassu-machine
@@ -100,18 +97,18 @@ Now continue with lamassu-machine instructions from the ``INSTALL.md`` file in [
 To start the Lamassu server run:
 
 ```
-node bin/lamassu-server --mockScoring
+node packages/server/bin/lamassu-server --mockScoring
 ```
 
 To start the Lamassu Admin run:
 
 ```
-node bin/lamassu-admin-server --dev
+node packages/server/bin/lamassu-admin-server --dev
 ```
 
 and
 
 ```
-cd new-lamassu-admin/
+cd packages/admin-ui/
 npm run start
 ```
