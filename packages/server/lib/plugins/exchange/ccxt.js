@@ -12,15 +12,23 @@ const T = require('../../time')
 const DEFAULT_PRICE_PRECISION = 2
 const DEFAULT_AMOUNT_PRECISION = 8
 
-function trade (side, account, tradeEntry, exchangeName) {
-  const { cryptoAtoms, fiatCode, cryptoCode: _cryptoCode, tradeId } = tradeEntry
+function trade(side, account, tradeEntry, exchangeName) {
+  const { cryptoAtoms, cryptoCode: _cryptoCode, tradeId } = tradeEntry
   try {
     const cryptoCode = coinUtils.getEquivalentCode(_cryptoCode)
     const exchangeConfig = ALL[exchangeName]
     if (!exchangeConfig) throw Error('Exchange configuration not found')
 
-    const { USER_REF, loadOptions, loadConfig = _.noop, REQUIRED_CONFIG_FIELDS, ORDER_TYPE, AMOUNT_PRECISION } = exchangeConfig
-    if (!isConfigValid(account, REQUIRED_CONFIG_FIELDS)) throw Error('Invalid config')
+    const {
+      USER_REF,
+      loadOptions,
+      loadConfig = _.noop,
+      REQUIRED_CONFIG_FIELDS,
+      ORDER_TYPE,
+      AMOUNT_PRECISION,
+    } = exchangeConfig
+    if (!isConfigValid(account, REQUIRED_CONFIG_FIELDS))
+      throw Error('Invalid config')
 
     const selectedFiatMarket = account.currencyMarket
     const symbol = buildMarket(selectedFiatMarket, cryptoCode, exchangeName)
@@ -32,20 +40,35 @@ function trade (side, account, tradeEntry, exchangeName) {
     const exchange = new ccxt[exchangeName](loadConfig(account))
 
     if (ORDER_TYPE === ORDER_TYPES.MARKET) {
-      return exchange.createOrder(symbol, ORDER_TYPES.MARKET, side, amount, null, options)
+      return exchange.createOrder(
+        symbol,
+        ORDER_TYPES.MARKET,
+        side,
+        amount,
+        null,
+        options,
+      )
     }
 
-    return exchange.fetchOrderBook(symbol)
-      .then(orderBook => {
-        const price = calculatePrice(side, amount, orderBook).toFixed(DEFAULT_PRICE_PRECISION)
-        return exchange.createOrder(symbol, ORDER_TYPES.LIMIT, side, amount, price, options)
-      })
+    return exchange.fetchOrderBook(symbol).then(orderBook => {
+      const price = calculatePrice(side, amount, orderBook).toFixed(
+        DEFAULT_PRICE_PRECISION,
+      )
+      return exchange.createOrder(
+        symbol,
+        ORDER_TYPES.LIMIT,
+        side,
+        amount,
+        price,
+        options,
+      )
+    })
   } catch (e) {
     return Promise.reject(e)
   }
 }
 
-function calculatePrice (side, amount, orderBook) {
+function calculatePrice(side, amount, orderBook) {
   const book = side === 'buy' ? 'asks' : 'bids'
   let collected = 0.0
   for (const entry of orderBook[book]) {
@@ -55,38 +78,52 @@ function calculatePrice (side, amount, orderBook) {
   throw new Error('Insufficient market depth')
 }
 
-function _getMarkets (exchangeName, availableCryptos) {
-  const prunedCryptos = _.compose(_.uniq, _.map(coinUtils.getEquivalentCode))(availableCryptos)
+function _getMarkets(exchangeName, availableCryptos) {
+  const prunedCryptos = _.compose(
+    _.uniq,
+    _.map(coinUtils.getEquivalentCode),
+  )(availableCryptos)
 
   try {
     const exchange = new ccxt[exchangeName]()
     const cryptosToQuoteAgainst = ['USDT']
-    const currencyCodes = _.concat(_.map(it => it.code, currencies), cryptosToQuoteAgainst)
+    const currencyCodes = _.concat(
+      _.map(it => it.code, currencies),
+      cryptosToQuoteAgainst,
+    )
 
-    return exchange.fetchMarkets()
-      .then(_.filter(it => (it.type === 'spot' || it.spot)))
+    return exchange
+      .fetchMarkets()
+      .then(_.filter(it => it.type === 'spot' || it.spot))
       .then(res =>
-        _.reduce((acc, value) => {
-          if (_.includes(value.base, prunedCryptos) && _.includes(value.quote, currencyCodes)) {
-            if (value.quote === value.base) return acc
+        _.reduce(
+          (acc, value) => {
+            if (
+              _.includes(value.base, prunedCryptos) &&
+              _.includes(value.quote, currencyCodes)
+            ) {
+              if (value.quote === value.base) return acc
 
-            if (_.isNil(acc[value.quote])) {
-              return { ...acc, [value.quote]: [value.base] }
+              if (_.isNil(acc[value.quote])) {
+                return { ...acc, [value.quote]: [value.base] }
+              }
+
+              acc[value.quote].push(value.base)
             }
-
-            acc[value.quote].push(value.base)
-          }
-          return acc
-        }, {}, res)
+            return acc
+          },
+          {},
+          res,
+        ),
       )
   } catch (e) {
-    logger.debug(`No CCXT exchange found for ${exchangeName}`)
+    logger.debug(`No CCXT exchange found for ${exchangeName}. ${e}`)
   }
 }
 
 const getMarkets = mem(_getMarkets, {
   maxAge: T.week,
-  cacheKey: (exchangeName, availableCryptos) => exchangeName
+  cacheKey: exchangeName => exchangeName,
 })
 
 module.exports = { trade, getMarkets }

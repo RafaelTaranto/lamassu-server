@@ -4,14 +4,16 @@ const pgp = require('pg-promise')()
 const db = require('../../db')
 const BN = require('../../bn')
 const { utils: coinUtils } = require('@lamassu/coins')
-const machineLoader = require('../../machine-loader')
 const tx = require('../../tx')
 const cashInTx = require('../../cash-in/cash-in-tx')
-const { REDEEMABLE_AGE, CASH_OUT_TRANSACTION_STATES } = require('../../cash-out/cash-out-helper')
+const {
+  REDEEMABLE_AGE,
+  CASH_OUT_TRANSACTION_STATES,
+} = require('../../cash-out/cash-out-helper')
 
 const NUM_RESULTS = 1000
 
-function addProfits (txs) {
+function addProfits(txs) {
   return _.map(it => {
     const profit = getProfit(it).toString()
     return _.set('profit', profit, it)
@@ -28,7 +30,7 @@ const DEVICE_NAME_QUERY = `
   END AS machine_name
 `
 
-  const DEVICE_NAME_JOINS = `
+const DEVICE_NAME_JOINS = `
   LEFT JOIN devices d ON txs.device_id = d.device_id
   LEFT JOIN (
     SELECT device_id, name, unpaired, paired 
@@ -38,7 +40,7 @@ const DEVICE_NAME_QUERY = `
     AND (txs.created >= ud.paired)
   `
 
-function batch (
+function batch(
   from = new Date(0).toISOString(),
   until = new Date().toISOString(),
   limit = null,
@@ -52,20 +54,19 @@ function batch (
   status = null,
   swept = null,
   excludeTestingCustomers = false,
-  simplified
+  simplified,
 ) {
   const isCsvExport = _.isBoolean(simplified)
   const packager = _.flow(
     _.flatten,
     _.orderBy(_.property('created'), ['desc']),
-    _.map(_.flow(
-      camelize,
-      _.mapKeys(k =>
-        k == 'cashInFee' ? 'fixedFee' :
-        k
-      )
-    )),
-    addProfits
+    _.map(
+      _.flow(
+        camelize,
+        _.mapKeys(k => (k == 'cashInFee' ? 'fixedFee' : k)),
+      ),
+    ),
+    addProfits,
   )
 
   const cashInSql = `SELECT 'cashIn' AS tx_class, txs.*,
@@ -138,46 +139,164 @@ function batch (
   let promises
 
   if (hasCashInOnlyFilters && hasCashOutOnlyFilters) {
-    throw new Error('Trying to filter transactions with mutually exclusive filters')
+    throw new Error(
+      'Trying to filter transactions with mutually exclusive filters',
+    )
   }
 
   if (hasCashInOnlyFilters) {
-    promises = [db.any(cashInSql, [cashInTx.PENDING_INTERVAL, from, until, limit, offset, txClass, deviceId, customerName, fiatCode, cryptoCode, toAddress, status])]
+    promises = [
+      db.any(cashInSql, [
+        cashInTx.PENDING_INTERVAL,
+        from,
+        until,
+        limit,
+        offset,
+        txClass,
+        deviceId,
+        customerName,
+        fiatCode,
+        cryptoCode,
+        toAddress,
+        status,
+      ]),
+    ]
   } else if (hasCashOutOnlyFilters) {
-    promises = [db.any(cashOutSql, [REDEEMABLE_AGE, from, until, limit, offset, txClass, deviceId, customerName, fiatCode, cryptoCode, toAddress, status, swept])]
+    promises = [
+      db.any(cashOutSql, [
+        REDEEMABLE_AGE,
+        from,
+        until,
+        limit,
+        offset,
+        txClass,
+        deviceId,
+        customerName,
+        fiatCode,
+        cryptoCode,
+        toAddress,
+        status,
+        swept,
+      ]),
+    ]
   } else {
     promises = [
-      db.any(cashInSql, [cashInTx.PENDING_INTERVAL, from, until, limit, offset, txClass, deviceId, customerName, fiatCode, cryptoCode, toAddress, status]),
-      db.any(cashOutSql, [REDEEMABLE_AGE, from, until, limit, offset, txClass, deviceId, customerName, fiatCode, cryptoCode, toAddress, status, swept])
+      db.any(cashInSql, [
+        cashInTx.PENDING_INTERVAL,
+        from,
+        until,
+        limit,
+        offset,
+        txClass,
+        deviceId,
+        customerName,
+        fiatCode,
+        cryptoCode,
+        toAddress,
+        status,
+      ]),
+      db.any(cashOutSql, [
+        REDEEMABLE_AGE,
+        from,
+        until,
+        limit,
+        offset,
+        txClass,
+        deviceId,
+        customerName,
+        fiatCode,
+        cryptoCode,
+        toAddress,
+        status,
+        swept,
+      ]),
     ]
   }
 
   return Promise.all(promises)
     .then(packager)
     .then(res =>
-      !isCsvExport ? res :
-      // GQL transactions and transactionsCsv both use this function and
-      // if we don't check for the correct simplified value, the Transactions page polling
-      // will continuously build a csv in the background
-      simplified ? simplifiedBatch(res) :
-      advancedBatch(res)
+      !isCsvExport
+        ? res
+        : // GQL transactions and transactionsCsv both use this function and
+          // if we don't check for the correct simplified value, the Transactions page polling
+          // will continuously build a csv in the background
+          simplified
+          ? simplifiedBatch(res)
+          : advancedBatch(res),
     )
 }
 
-function advancedBatch (data) {
-  const fields = ['txClass', 'id', 'deviceId', 'toAddress', 'cryptoAtoms',
-  'cryptoCode', 'fiat', 'fiatCode', 'fee', 'status', 'fiatProfit', 'cryptoAmount',
-  'dispense', 'notified', 'redeem', 'phone', 'error', 'fixedFee',
-  'created', 'confirmedAt', 'hdIndex', 'swept', 'timedout',
-  'dispenseConfirmed', 'provisioned1', 'provisioned2', 'provisioned3', 'provisioned4',
-  'provisionedRecycler1', 'provisionedRecycler2', 'provisionedRecycler3', 'provisionedRecycler4', 'provisionedRecycler5', 'provisionedRecycler6',
-  'denomination1', 'denomination2', 'denomination3', 'denomination4',
-  'denominationRecycler1', 'denominationRecycler2', 'denominationRecycler3', 'denominationRecycler4', 'denominationRecycler5', 'denominationRecycler6',
-  'errorCode', 'customerId', 'txVersion', 'publishedAt', 'termsAccepted', 'layer2Address',
-  'commissionPercentage', 'rawTickerPrice', 'receivedCryptoAtoms',
-  'discount', 'txHash', 'customerPhone', 'customerEmail', 'customerIdCardDataNumber',
-  'customerIdCardDataExpiration', 'customerIdCardData', 'customerName', 'sendTime',
-  'customerFrontCameraPath', 'customerIdCardPhotoPath', 'expired', 'machineName', 'walletScore']
+function advancedBatch(data) {
+  const fields = [
+    'txClass',
+    'id',
+    'deviceId',
+    'toAddress',
+    'cryptoAtoms',
+    'cryptoCode',
+    'fiat',
+    'fiatCode',
+    'fee',
+    'status',
+    'fiatProfit',
+    'cryptoAmount',
+    'dispense',
+    'notified',
+    'redeem',
+    'phone',
+    'error',
+    'fixedFee',
+    'created',
+    'confirmedAt',
+    'hdIndex',
+    'swept',
+    'timedout',
+    'dispenseConfirmed',
+    'provisioned1',
+    'provisioned2',
+    'provisioned3',
+    'provisioned4',
+    'provisionedRecycler1',
+    'provisionedRecycler2',
+    'provisionedRecycler3',
+    'provisionedRecycler4',
+    'provisionedRecycler5',
+    'provisionedRecycler6',
+    'denomination1',
+    'denomination2',
+    'denomination3',
+    'denomination4',
+    'denominationRecycler1',
+    'denominationRecycler2',
+    'denominationRecycler3',
+    'denominationRecycler4',
+    'denominationRecycler5',
+    'denominationRecycler6',
+    'errorCode',
+    'customerId',
+    'txVersion',
+    'publishedAt',
+    'termsAccepted',
+    'layer2Address',
+    'commissionPercentage',
+    'rawTickerPrice',
+    'receivedCryptoAtoms',
+    'discount',
+    'txHash',
+    'customerPhone',
+    'customerEmail',
+    'customerIdCardDataNumber',
+    'customerIdCardDataExpiration',
+    'customerIdCardData',
+    'customerName',
+    'sendTime',
+    'customerFrontCameraPath',
+    'customerIdCardPhotoPath',
+    'expired',
+    'machineName',
+    'walletScore',
+  ]
 
   const addAdvancedFields = _.map(it => ({
     ...it,
@@ -191,28 +310,48 @@ function advancedBatch (data) {
   return _.compose(_.map(_.pick(fields)), addAdvancedFields)(data)
 }
 
-function simplifiedBatch (data) {
-  const fields = ['txClass', 'id', 'created', 'machineName', 'fee',
-    'cryptoCode', 'cryptoAtoms', 'fiat', 'fiatCode', 'phone', 'email', 'toAddress',
-    'txHash', 'dispense', 'error', 'status', 'fiatProfit', 'cryptoAmount']
+function simplifiedBatch(data) {
+  const fields = [
+    'txClass',
+    'id',
+    'created',
+    'machineName',
+    'fee',
+    'cryptoCode',
+    'cryptoAtoms',
+    'fiat',
+    'fiatCode',
+    'phone',
+    'email',
+    'toAddress',
+    'txHash',
+    'dispense',
+    'error',
+    'status',
+    'fiatProfit',
+    'cryptoAmount',
+  ]
 
   const addSimplifiedFields = _.map(it => ({
     ...it,
     status: getStatus(it),
     fiatProfit: getProfit(it).toString(),
-    cryptoAmount: getCryptoAmount(it).toString()
+    cryptoAmount: getCryptoAmount(it).toString(),
   }))
 
   return _.compose(_.map(_.pick(fields)), addSimplifiedFields)(data)
 }
 
-const getCryptoAmount = it => coinUtils.toUnit(BN(it.cryptoAtoms), it.cryptoCode)
+const getCryptoAmount = it =>
+  coinUtils.toUnit(BN(it.cryptoAtoms), it.cryptoCode)
 
 const getProfit = it => {
   /* fiat - crypto*tickerPrice */
-  const calcCashInProfit = (fiat, crypto, tickerPrice) => fiat.minus(crypto.times(tickerPrice))
+  const calcCashInProfit = (fiat, crypto, tickerPrice) =>
+    fiat.minus(crypto.times(tickerPrice))
   /* crypto*tickerPrice - fiat */
-  const calcCashOutProfit = (fiat, crypto, tickerPrice) => crypto.times(tickerPrice).minus(fiat)
+  const calcCashOutProfit = (fiat, crypto, tickerPrice) =>
+    crypto.times(tickerPrice).minus(fiat)
 
   const fiat = BN(it.fiat)
   const crypto = getCryptoAmount(it)
@@ -247,10 +386,15 @@ const getStatus = it => {
   return getCashInStatus(it)
 }
 
-function getCustomerTransactionsBatch (ids) {
-  const packager = _.flow(it => {
-    return it
-  }, _.flatten, _.orderBy(_.property('created'), ['desc']), _.map(camelize))
+function getCustomerTransactionsBatch(ids) {
+  const packager = _.flow(
+    it => {
+      return it
+    },
+    _.flatten,
+    _.orderBy(_.property('created'), ['desc']),
+    _.map(camelize),
+  )
 
   const cashInSql = `SELECT 'cashIn' AS tx_class, txs.*,
   c.phone AS customer_phone,
@@ -292,16 +436,25 @@ function getCustomerTransactionsBatch (ids) {
   WHERE c.id IN ($1^)
   ORDER BY created DESC limit $2`
   return Promise.all([
-    db.any(cashInSql, [_.map(pgp.as.text, ids).join(','), cashInTx.PENDING_INTERVAL, NUM_RESULTS]),
-    db.any(cashOutSql, [_.map(pgp.as.text, ids).join(','), NUM_RESULTS, REDEEMABLE_AGE])
+    db.any(cashInSql, [
+      _.map(pgp.as.text, ids).join(','),
+      cashInTx.PENDING_INTERVAL,
+      NUM_RESULTS,
+    ]),
+    db.any(cashOutSql, [
+      _.map(pgp.as.text, ids).join(','),
+      NUM_RESULTS,
+      REDEEMABLE_AGE,
+    ]),
   ])
-    .then(packager).then(transactions => {
+    .then(packager)
+    .then(transactions => {
       const transactionMap = _.groupBy('customerId', transactions)
       return ids.map(id => transactionMap[id])
     })
 }
 
-function single (txId) {
+function single(txId) {
   const packager = _.flow(_.compact, _.map(camelize))
 
   const cashInSql = `SELECT 'cashIn' AS tx_class, txs.*,
@@ -344,18 +497,17 @@ function single (txId) {
 
   return Promise.all([
     db.oneOrNone(cashInSql, [cashInTx.PENDING_INTERVAL, txId]),
-    db.oneOrNone(cashOutSql, [txId, REDEEMABLE_AGE])
+    db.oneOrNone(cashOutSql, [txId, REDEEMABLE_AGE]),
   ])
     .then(packager)
     .then(_.head)
 }
 
-function cancel (txId) {
-  return tx.cancel(txId)
-    .then(() => single(txId))
+function cancel(txId) {
+  return tx.cancel(txId).then(() => single(txId))
 }
 
-function getTx (txId, txClass) {
+function getTx(txId, txClass) {
   const cashInSql = `select 'cashIn' as tx_class, txs.*,
   ((not txs.send_confirmed) and (txs.created <= now() - interval $1)) as expired
   from cash_in_txs as txs
@@ -372,7 +524,7 @@ function getTx (txId, txClass) {
     : db.oneOrNone(cashOutSql, [txId, REDEEMABLE_AGE])
 }
 
-function getTxAssociatedData (txId, txClass) {
+function getTxAssociatedData(txId, txClass) {
   const billsSql = `select 'bills' as bills, b.* from bills b where cash_in_txs_id = $1`
   const actionsSql = `select 'cash_out_actions' as cash_out_actions, actions.* from cash_out_actions actions where tx_id = $1`
 
@@ -381,15 +533,27 @@ function getTxAssociatedData (txId, txClass) {
     : db.manyOrNone(actionsSql, [txId])
 }
 
-function updateTxCustomerPhoto (customerId, txId, direction, data) {
+function updateTxCustomerPhoto(customerId, txId, direction, data) {
   const formattedData = _.mapKeys(_.snakeCase, data)
-  const cashInSql = 'UPDATE cash_in_txs SET tx_customer_photo_at = $1, tx_customer_photo_path = $2 WHERE customer_id=$3 AND id=$4'
+  const cashInSql =
+    'UPDATE cash_in_txs SET tx_customer_photo_at = $1, tx_customer_photo_path = $2 WHERE customer_id=$3 AND id=$4'
 
-  const cashOutSql = 'UPDATE cash_out_txs SET tx_customer_photo_at = $1, tx_customer_photo_path = $2 WHERE customer_id=$3 AND id=$4'
+  const cashOutSql =
+    'UPDATE cash_out_txs SET tx_customer_photo_at = $1, tx_customer_photo_path = $2 WHERE customer_id=$3 AND id=$4'
 
   return direction === 'cashIn'
-    ? db.oneOrNone(cashInSql, [formattedData.tx_customer_photo_at, formattedData.tx_customer_photo_path, customerId, txId])
-    : db.oneOrNone(cashOutSql, [formattedData.tx_customer_photo_at, formattedData.tx_customer_photo_path, customerId, txId])
+    ? db.oneOrNone(cashInSql, [
+        formattedData.tx_customer_photo_at,
+        formattedData.tx_customer_photo_path,
+        customerId,
+        txId,
+      ])
+    : db.oneOrNone(cashOutSql, [
+        formattedData.tx_customer_photo_at,
+        formattedData.tx_customer_photo_path,
+        customerId,
+        txId,
+      ])
 }
 
 module.exports = {
@@ -399,5 +563,5 @@ module.exports = {
   getCustomerTransactionsBatch,
   getTx,
   getTxAssociatedData,
-  updateTxCustomerPhoto
+  updateTxCustomerPhoto,
 }

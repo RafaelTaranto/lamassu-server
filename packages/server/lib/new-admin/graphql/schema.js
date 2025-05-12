@@ -3,5 +3,5 @@ const resolvers = require('./resolvers')
 
 module.exports = {
   resolvers: resolvers,
-  typeDefs: types
+  typeDefs: types,
 }

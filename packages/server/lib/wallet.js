@@ -22,36 +22,50 @@ const ZERO_CONF_EXPIRATION = 60000
 
 const MNEMONIC_PATH = process.env.MNEMONIC_PATH
 
-function computeSeed (masterSeed) {
-  return hkdf(masterSeed, 32, { salt: 'lamassu-server-salt', info: 'wallet-seed' })
+function computeSeed(masterSeed) {
+  return hkdf(masterSeed, 32, {
+    salt: 'lamassu-server-salt',
+    info: 'wallet-seed',
+  })
 }
 
-function computeOperatorId (masterSeed) {
-  return hkdf(masterSeed, 16, { salt: 'lamassu-server-salt', info: 'operator-id' }).toString('hex')
+function computeOperatorId(masterSeed) {
+  return hkdf(masterSeed, 16, {
+    salt: 'lamassu-server-salt',
+    info: 'operator-id',
+  }).toString('hex')
 }
 
-function fetchWallet (settings, cryptoCode) {
-  return fs.readFile(MNEMONIC_PATH, 'utf8')
-    .then(mnemonic => {
-      const masterSeed = mnemonicHelpers.toEntropyBuffer(mnemonic)
-      const plugin = configManager.getWalletSettings(cryptoCode, settings.config).wallet
-      const wallet = ph.load(ph.WALLET, plugin)
-      const rawAccount = settings.accounts[plugin]
-      const account = _.set('seed', computeSeed(masterSeed), rawAccount)
-      const accountWithMnemonic = _.set('mnemonic', mnemonic, account)
-      if (_.isFunction(wallet.run)) wallet.run(accountWithMnemonic)
-      const operatorId = computeOperatorId(masterSeed)
-      return { wallet, account: accountWithMnemonic, operatorId }
-    })
+function fetchWallet(settings, cryptoCode) {
+  return fs.readFile(MNEMONIC_PATH, 'utf8').then(mnemonic => {
+    const masterSeed = mnemonicHelpers.toEntropyBuffer(mnemonic)
+    const plugin = configManager.getWalletSettings(
+      cryptoCode,
+      settings.config,
+    ).wallet
+    const wallet = ph.load(ph.WALLET, plugin)
+    const rawAccount = settings.accounts[plugin]
+    const account = _.set('seed', computeSeed(masterSeed), rawAccount)
+    const accountWithMnemonic = _.set('mnemonic', mnemonic, account)
+    if (_.isFunction(wallet.run)) wallet.run(accountWithMnemonic)
+    const operatorId = computeOperatorId(masterSeed)
+    return { wallet, account: accountWithMnemonic, operatorId }
+  })
 }
 
 const lastBalance = {}
 
-function _balance (settings, cryptoCode) {
+function _balance(settings, cryptoCode) {
   return fetchWallet(settings, cryptoCode)
     .then(r => r.wallet.balance(r.account, cryptoCode, settings, r.operatorId))
-    .then(balance => Promise.all([balance, getOpenBatchCryptoValue(cryptoCode)]))
-    .then(([balance, reservedBalance]) => ({ balance: BN(balance).minus(reservedBalance), reservedBalance, timestamp: Date.now() }))
+    .then(balance =>
+      Promise.all([balance, getOpenBatchCryptoValue(cryptoCode)]),
+    )
+    .then(([balance, reservedBalance]) => ({
+      balance: BN(balance).minus(reservedBalance),
+      reservedBalance,
+      timestamp: Date.now(),
+    }))
     .then(r => {
       lastBalance[cryptoCode] = r
       return r
@@ -62,18 +76,24 @@ function _balance (settings, cryptoCode) {
     })
 }
 
-function probeLN (settings, cryptoCode, address) {
+function probeLN(settings, cryptoCode, address) {
   return fetchWallet(settings, cryptoCode).then(r => {
     if (!r.wallet.probeLN) return null
     return r.wallet.probeLN(r.account, cryptoCode, address)
   })
 }
 
-function sendCoins (settings, tx) {
+function sendCoins(settings, tx) {
   return fetchWallet(settings, tx.cryptoCode)
     .then(r => {
-      const feeMultiplier = new BN(configManager.getWalletSettings(tx.cryptoCode, settings.config).feeMultiplier)
-      return r.wallet.sendCoins(r.account, tx, settings, r.operatorId, feeMultiplier)
+      const feeMultiplier = new BN(
+        configManager.getWalletSettings(
+          tx.cryptoCode,
+          settings.config,
+        ).feeMultiplier,
+      )
+      return r.wallet
+        .sendCoins(r.account, tx, settings, r.operatorId, feeMultiplier)
         .then(res => {
           mem.clear(module.exports.balance)
           return res
@@ -87,11 +107,17 @@ function sendCoins (settings, tx) {
     })
 }
 
-function sendCoinsBatch (settings, txs, cryptoCode) {
+function sendCoinsBatch(settings, txs, cryptoCode) {
   return fetchWallet(settings, cryptoCode)
     .then(r => {
-      const feeMultiplier = new BN(configManager.getWalletSettings(cryptoCode, settings.config).feeMultiplier)
-      return r.wallet.sendCoinsBatch(r.account, txs, cryptoCode, feeMultiplier)
+      const feeMultiplier = new BN(
+        configManager.getWalletSettings(
+          cryptoCode,
+          settings.config,
+        ).feeMultiplier,
+      )
+      return r.wallet
+        .sendCoinsBatch(r.account, txs, cryptoCode, feeMultiplier)
         .then(res => {
           mem.clear(module.exports.balance)
           return res
@@ -106,38 +132,40 @@ function sendCoinsBatch (settings, txs, cryptoCode) {
     })
 }
 
-function newAddress (settings, info, tx) {
-  const walletAddressPromise = fetchWallet(settings, info.cryptoCode)
-    .then(r => r.wallet.newAddress(r.account, info, tx, settings, r.operatorId))
+function newAddress(settings, info, tx) {
+  const walletAddressPromise = fetchWallet(settings, info.cryptoCode).then(r =>
+    r.wallet.newAddress(r.account, info, tx, settings, r.operatorId),
+  )
 
   return Promise.all([
     walletAddressPromise,
-    layer2.newAddress(settings, info)
-  ])
-    .then(([toAddress, layer2Address]) => ({
-      toAddress,
-      layer2Address
-    }))
+    layer2.newAddress(settings, info),
+  ]).then(([toAddress, layer2Address]) => ({
+    toAddress,
+    layer2Address,
+  }))
 }
 
-function newFunding (settings, cryptoCode, address) {
-  return fetchWallet(settings, cryptoCode)
-    .then(r => {
-      const wallet = r.wallet
-      const account = r.account
+function newFunding(settings, cryptoCode) {
+  return fetchWallet(settings, cryptoCode).then(r => {
+    const wallet = r.wallet
+    const account = r.account
 
-      return wallet.newFunding(account, cryptoCode, settings, r.operatorId)
-    })
+    return wallet.newFunding(account, cryptoCode, settings, r.operatorId)
+  })
 }
 
-function mergeStatus (a, b) {
+function mergeStatus(a, b) {
   if (!a) return b
   if (!b) return a
 
-  return { receivedCryptoAtoms: a.receivedCryptoAtoms, status: mergeStatusMode(a.status, b.status) }
+  return {
+    receivedCryptoAtoms: a.receivedCryptoAtoms,
+    status: mergeStatusMode(a.status, b.status),
+  }
 }
 
-function mergeStatusMode (a, b) {
+function mergeStatusMode(a, b) {
   const cleared = ['authorized', 'confirmed', 'instant']
   if (_.includes(a, cleared)) return a
   if (_.includes(b, cleared)) return b
@@ -151,25 +179,30 @@ function mergeStatusMode (a, b) {
   return 'notSeen'
 }
 
-function getWalletStatus (settings, tx) {
-  const fudgeFactorEnabled = configManager.getGlobalCashOut(settings.config).fudgeFactorActive
+function getWalletStatus(settings, tx) {
+  const fudgeFactorEnabled = configManager.getGlobalCashOut(
+    settings.config,
+  ).fudgeFactorActive
   const fudgeFactor = fudgeFactorEnabled ? 100 : 0
   const requested = tx.cryptoAtoms.minus(fudgeFactor)
 
-  const walletStatusPromise = fetchWallet(settings, tx.cryptoCode)
-    .then(r => r.wallet.getStatus(r.account, tx, requested, settings, r.operatorId))
+  const walletStatusPromise = fetchWallet(settings, tx.cryptoCode).then(r =>
+    r.wallet.getStatus(r.account, tx, requested, settings, r.operatorId),
+  )
 
   return Promise.all([
     walletStatusPromise,
-    layer2.getStatus(settings, tx)
-  ])
-    .then(([walletStatus, layer2Status]) => {
-      return mergeStatus(walletStatus, layer2Status)
-    })
+    layer2.getStatus(settings, tx),
+  ]).then(([walletStatus, layer2Status]) => {
+    return mergeStatus(walletStatus, layer2Status)
+  })
 }
 
-function authorizeZeroConf (settings, tx, machineId) {
-  const walletSettings = configManager.getWalletSettings(tx.cryptoCode, settings.config)
+function authorizeZeroConf(settings, tx) {
+  const walletSettings = configManager.getWalletSettings(
+    tx.cryptoCode,
+    settings.config,
+  )
   const isBitcoindAvailable = walletSettings.wallet === 'bitcoind'
   const plugin = walletSettings.zeroConf
   const zeroConfLimit = walletSettings.zeroConfLimit || 0
@@ -192,45 +225,60 @@ function authorizeZeroConf (settings, tx, machineId) {
   const zeroConf = ph.load(ph.ZERO_CONF, plugin)
   const account = settings.accounts[plugin]
 
-  return zeroConf.authorize(account, tx.toAddress, tx.cryptoAtoms, tx.cryptoCode, isBitcoindAvailable)
+  return zeroConf.authorize(
+    account,
+    tx.toAddress,
+    tx.cryptoAtoms,
+    tx.cryptoCode,
+    isBitcoindAvailable,
+  )
 }
 
-function getStatus (settings, tx, machineId) {
-  return getWalletStatus(settings, tx)
-    .then((statusRec) => {
-      if (statusRec.status === 'authorized') {
-        return authorizeZeroConf(settings, tx, machineId)
-          .then(isAuthorized => {
-            const publishAge = Date.now() - tx.publishedAt
+function getStatus(settings, tx) {
+  return getWalletStatus(settings, tx).then(statusRec => {
+    if (statusRec.status === 'authorized') {
+      return authorizeZeroConf(settings, tx).then(isAuthorized => {
+        const publishAge = Date.now() - tx.publishedAt
 
-            const unauthorizedStatus = publishAge < ZERO_CONF_EXPIRATION
-              ? 'published'
-              : 'rejected'
+        const unauthorizedStatus =
+          publishAge < ZERO_CONF_EXPIRATION ? 'published' : 'rejected'
 
-            // Sanity check to confirm if there's any cryptoatoms for which to dispense bills
-            const authorizedStatus = isAuthorized ? 'authorized' : unauthorizedStatus
-            const status = BN(tx.cryptoAtoms).gt(0) ? authorizedStatus : 'rejected'
+        // Sanity check to confirm if there's any cryptoatoms for which to dispense bills
+        const authorizedStatus = isAuthorized
+          ? 'authorized'
+          : unauthorizedStatus
+        const status = BN(tx.cryptoAtoms).gt(0) ? authorizedStatus : 'rejected'
 
-            return { receivedCryptoAtoms: statusRec.receivedCryptoAtoms, status }
-          })
-      }
+        return { receivedCryptoAtoms: statusRec.receivedCryptoAtoms, status }
+      })
+    }
 
-      return statusRec
-    })
+    return statusRec
+  })
 }
 
-function sweep (settings, txId, cryptoCode, hdIndex) {
-  return fetchWallet(settings, cryptoCode)
-    .then(r => r.wallet.sweep(r.account, txId, cryptoCode, hdIndex, settings, r.operatorId))
+function sweep(settings, txId, cryptoCode, hdIndex) {
+  return fetchWallet(settings, cryptoCode).then(r =>
+    r.wallet.sweep(
+      r.account,
+      txId,
+      cryptoCode,
+      hdIndex,
+      settings,
+      r.operatorId,
+    ),
+  )
 }
 
-function isHd (settings, tx) {
-  return fetchWallet(settings, tx.cryptoCode)
-    .then(r => r.wallet.supportsHd)
+function isHd(settings, tx) {
+  return fetchWallet(settings, tx.cryptoCode).then(r => r.wallet.supportsHd)
 }
 
-function cryptoNetwork (settings, cryptoCode) {
-  const plugin = configManager.getWalletSettings(cryptoCode, settings.config).wallet
+function cryptoNetwork(settings, cryptoCode) {
+  const plugin = configManager.getWalletSettings(
+    cryptoCode,
+    settings.config,
+  ).wallet
   const account = settings.accounts[plugin]
   return fetchWallet(settings, cryptoCode).then(r => {
     if (!r.wallet.cryptoNetwork) return Promise.resolve(false)
@@ -238,23 +286,31 @@ function cryptoNetwork (settings, cryptoCode) {
   })
 }
 
-function isStrictAddress (settings, cryptoCode, toAddress) {
+function isStrictAddress(settings, cryptoCode, toAddress) {
   // Note: For now, only for wallets that specifically check for this.
 
-  return fetchWallet(settings, cryptoCode)
-    .then(r => {
-      if (!r.wallet.isStrictAddress) return true
-      return r.wallet.isStrictAddress(cryptoCode, toAddress, settings, r.operatorId)
-    })
-}
-
-function supportsBatching (settings, cryptoCode) {
   return fetchWallet(settings, cryptoCode).then(r => {
-    return Promise.resolve(!!r.wallet.SUPPORTS_BATCHING && !!configManager.getWalletSettings(cryptoCode, settings.config).allowTransactionBatching)
+    if (!r.wallet.isStrictAddress) return true
+    return r.wallet.isStrictAddress(
+      cryptoCode,
+      toAddress,
+      settings,
+      r.operatorId,
+    )
   })
 }
 
-function checkBlockchainStatus (settings, cryptoCode) {
+function supportsBatching(settings, cryptoCode) {
+  return fetchWallet(settings, cryptoCode).then(r => {
+    return Promise.resolve(
+      !!r.wallet.SUPPORTS_BATCHING &&
+        !!configManager.getWalletSettings(cryptoCode, settings.config)
+          .allowTransactionBatching,
+    )
+  })
+}
+
+function checkBlockchainStatus(settings, cryptoCode) {
   const walletDaemons = {
     BTC: './plugins/wallet/bitcoind/bitcoind.js',
     BCH: './plugins/wallet/bitcoincashd/bitcoincashd.js',
@@ -262,11 +318,12 @@ function checkBlockchainStatus (settings, cryptoCode) {
     ETH: './plugins/wallet/geth/base.js',
     LTC: './plugins/wallet/litecoind/litecoind.js',
     XMR: './plugins/wallet/monerod/monerod.js',
-    ZEC: './plugins/wallet/zcashd/zcashd.js'
+    ZEC: './plugins/wallet/zcashd/zcashd.js',
   }
 
-  return Promise.resolve(require(walletDaemons[cryptoCode]))
-    .then(({ checkBlockchainStatus }) => checkBlockchainStatus(cryptoCode))
+  return Promise.resolve(require(walletDaemons[cryptoCode])).then(
+    ({ checkBlockchainStatus }) => checkBlockchainStatus(cryptoCode),
+  )
 }
 
 const balance = (settings, cryptoCode) => {
@@ -286,12 +343,12 @@ const balance = (settings, cryptoCode) => {
 
 const balanceNormal = mem(_balance, {
   maxAge: BALANCE_FETCH_SPEED_MULTIPLIER.NORMAL * FETCH_INTERVAL,
-  cacheKey: (settings, cryptoCode) => cryptoCode
+  cacheKey: (settings, cryptoCode) => cryptoCode,
 })
 
 const balanceSlow = mem(_balance, {
   maxAge: BALANCE_FETCH_SPEED_MULTIPLIER.SLOW * FETCH_INTERVAL,
-  cacheKey: (settings, cryptoCode) => cryptoCode
+  cacheKey: (settings, cryptoCode) => cryptoCode,
 })
 
 module.exports = {
@@ -307,5 +364,5 @@ module.exports = {
   cryptoNetwork,
   supportsBatching,
   checkBlockchainStatus,
-  probeLN
+  probeLN,
 }

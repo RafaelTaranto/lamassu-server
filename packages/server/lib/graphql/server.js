@@ -5,11 +5,11 @@ const { ApolloServer } = require('@apollo/server')
 const devMode = !!require('minimist')(process.argv.slice(2)).dev
 
 const context = ({ req, res }) => ({
-  deviceId: req.deviceId, /* lib/middlewares/populateDeviceId.js */
-  deviceName: req.deviceName, /* lib/middlewares/authorize.js */
-  operatorId: res.locals.operatorId, /* lib/middlewares/operatorId.js */
+  deviceId: req.deviceId /* lib/middlewares/populateDeviceId.js */,
+  deviceName: req.deviceName /* lib/middlewares/authorize.js */,
+  operatorId: res.locals.operatorId /* lib/middlewares/operatorId.js */,
   pid: req.query.pid,
-  settings: req.settings, /* lib/middlewares/populateSettings.js */
+  settings: req.settings /* lib/middlewares/populateSettings.js */,
 })
 
 const graphQLServer = new ApolloServer({
@@ -21,7 +21,7 @@ const graphQLServer = new ApolloServer({
     return error
   },
   includeStacktraceInErrorResponses: devMode,
-  logger
+  logger,
 })
 
 module.exports = { graphQLServer, context }

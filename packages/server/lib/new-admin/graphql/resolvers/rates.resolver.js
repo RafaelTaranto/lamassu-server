@@ -10,12 +10,12 @@ const resolvers = {
         return pi.getRawRates().then(r => {
           return {
             withCommissions: pi.buildRates(r),
-            withoutCommissions: pi.buildRatesNoCommission(r)
+            withoutCommissions: pi.buildRatesNoCommission(r),
           }
         })
       }),
-    fiatRates: () => forex.getFiatRates()
-  }
+    fiatRates: () => forex.getFiatRates(),
+  },
 }
 
 module.exports = resolvers

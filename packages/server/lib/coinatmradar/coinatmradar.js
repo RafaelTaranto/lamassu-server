@@ -18,9 +18,11 @@ const STALE_INTERVAL = '2 minutes'
 
 module.exports = { update }
 
-function mapCoin (rates, deviceId, settings, cryptoCode) {
+function mapCoin(rates, deviceId, settings, cryptoCode) {
   const config = settings.config
-  const buildedRates = plugins(settings, deviceId).buildRates(rates)[cryptoCode] || { cashIn: null, cashOut: null }
+  const buildedRates = plugins(settings, deviceId).buildRates(rates)[
+    cryptoCode
+  ] || { cashIn: null, cashOut: null }
   const commissions = configManager.getCommissions(cryptoCode, deviceId, config)
   const coinAtmRadar = configManager.getCoinAtmRadar(config)
 
@@ -30,8 +32,12 @@ function mapCoin (rates, deviceId, settings, cryptoCode) {
   const cashOutFee = showCommissions ? commissions.cashOut / 100 : null
   const cashInFixedFee = showCommissions ? commissions.fixedFee : null
   const cashOutFixedFee = showCommissions ? commissions.cashOutFixedFee : null
-  const cashInRate = showCommissions ? _.invoke('cashIn.toNumber', buildedRates) : null
-  const cashOutRate = showCommissions ? _.invoke('cashOut.toNumber', buildedRates) : null
+  const cashInRate = showCommissions
+    ? _.invoke('cashIn.toNumber', buildedRates)
+    : null
+  const cashOutRate = showCommissions
+    ? _.invoke('cashOut.toNumber', buildedRates)
+    : null
 
   return {
     cryptoCode,
@@ -40,11 +46,11 @@ function mapCoin (rates, deviceId, settings, cryptoCode) {
     cashInFixedFee,
     cashOutFixedFee,
     cashInRate,
-    cashOutRate
+    cashOutRate,
   }
 }
 
-function mapIdentification (config) {
+function mapIdentification(config) {
   const triggers = configManager.getTriggers(config)
 
   return {
@@ -52,11 +58,11 @@ function mapIdentification (config) {
     isPalmVein: false,
     isPhoto: complianceTriggers.hasFacephoto(triggers),
     isIdDocScan: complianceTriggers.hasIdScan(triggers),
-    isFingerprint: false
+    isFingerprint: false,
   }
 }
 
-function mapMachine (rates, settings, machineRow) {
+function mapMachine(rates, settings, machineRow) {
   const deviceId = machineRow.device_id
   const config = settings.config
 
@@ -69,10 +75,15 @@ function mapMachine (rates, settings, machineRow) {
   const lastOnline = machineRow.last_online.toISOString()
   const status = machineRow.stale ? 'online' : 'offline'
   const showLimitsAndVerification = coinAtmRadar.limitsAndVerification
-  const cashLimit = showLimitsAndVerification ? (_.get('threshold', complianceTriggers.getCashLimit(triggers)) || Infinity) : null
+  const cashLimit = showLimitsAndVerification
+    ? _.get('threshold', complianceTriggers.getCashLimit(triggers)) || Infinity
+    : null
   const cryptoCurrencies = locale.cryptoCurrencies
   const identification = mapIdentification(config)
-  const coins = _.map(_.partial(mapCoin, [rates, deviceId, settings]), cryptoCurrencies)
+  const coins = _.map(
+    _.partial(mapCoin, [rates, deviceId, settings]),
+    cryptoCurrencies,
+  )
   return {
     machineId: deviceId,
     address: {
@@ -80,12 +91,12 @@ function mapMachine (rates, settings, machineRow) {
       city: null,
       region: null,
       postalCode: null,
-      country: null
+      country: null,
     },
     location: {
       name: null,
       url: null,
-      phone: null
+      phone: null,
     },
     status,
     lastOnline,
@@ -98,20 +109,21 @@ function mapMachine (rates, settings, machineRow) {
     cashOutDailyLimit: cashLimit,
     fiatCurrency: locale.fiatCurrency,
     identification,
-    coins
+    coins,
   }
 }
 
-function getMachines (rates, settings) {
+function getMachines(rates, settings) {
   const sql = `select device_id, last_online, now() - last_online < $1 as stale from devices
   where display=TRUE and
   paired=TRUE
   order by created`
-  return db.any(sql, [STALE_INTERVAL])
+  return db
+    .any(sql, [STALE_INTERVAL])
     .then(_.map(_.partial(mapMachine, [rates, settings])))
 }
 
-function sendRadar (data) {
+function sendRadar(data) {
   const url = COIN_ATM_RADAR_URL
 
   if (_.isEmpty(url)) {
@@ -123,31 +135,32 @@ function sendRadar (data) {
     method: 'post',
     data,
     timeout: TIMEOUT,
-    maxContentLength: MAX_CONTENT_LENGTH
+    maxContentLength: MAX_CONTENT_LENGTH,
   }
 
-  return axios.default(config)
-    .then(r => logger.info(r.status))
+  return axios.default(config).then(r => logger.info(r.status))
 }
 
-function mapRecord (rates, settings) {
+function mapRecord(rates, settings) {
   const timestamp = new Date().toISOString()
-  return Promise.all([getMachines(rates, settings), getOperatorId('coinatmradar')])
-    .then(([machines, operatorId]) => {
-      return {
-        operatorId: operatorId,
-        operator: {
-          name: null,
-          phone: null,
-          email: null
-        },
-        timestamp,
-        machines
-      }
-    })
+  return Promise.all([
+    getMachines(rates, settings),
+    getOperatorId('coinatmradar'),
+  ]).then(([machines, operatorId]) => {
+    return {
+      operatorId: operatorId,
+      operator: {
+        name: null,
+        phone: null,
+        email: null,
+      },
+      timestamp,
+      machines,
+    }
+  })
 }
 
-function update (rates, settings) {
+function update(rates, settings) {
   const coinAtmRadar = configManager.getCoinAtmRadar(settings.config)
 
   if (!coinAtmRadar.active) return Promise.resolve()

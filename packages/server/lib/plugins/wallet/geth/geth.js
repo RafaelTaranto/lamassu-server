@@ -8,7 +8,7 @@ const defaultPort = cryptoRec.defaultPort
 
 const NAME = 'geth'
 
-function run (account) {
+function run() {
   base.connect(`http://localhost:${defaultPort}`)
 }
 

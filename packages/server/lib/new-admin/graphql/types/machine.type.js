@@ -30,7 +30,7 @@ const typeDef = gql`
     frontTimestamp: DateTimeISO
     scanTimestamp: DateTimeISO
   }
-  
+
   type CashUnits {
     cashbox: Int
     cassette1: Int
@@ -98,7 +98,12 @@ const typeDef = gql`
   }
 
   type Mutation {
-    machineAction(deviceId:ID!, action: MachineAction!, cashUnits: CashUnitsInput, newName: String): Machine @auth
+    machineAction(
+      deviceId: ID!
+      action: MachineAction!
+      cashUnits: CashUnitsInput
+      newName: String
+    ): Machine @auth
   }
 `
 

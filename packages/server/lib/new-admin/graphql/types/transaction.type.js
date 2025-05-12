@@ -60,8 +60,38 @@ const typeDef = gql`
   }
 
   type Query {
-    transactions(from: DateTimeISO, until: DateTimeISO, limit: Int, offset: Int, txClass: String, deviceId: String, customerName: String, fiatCode: String, cryptoCode: String, toAddress: String, status: String, swept: Boolean, excludeTestingCustomers: Boolean): [Transaction] @auth
-    transactionsCsv(from: DateTimeISO, until: DateTimeISO, limit: Int, offset: Int, txClass: String, deviceId: String, customerName: String, fiatCode: String, cryptoCode: String, toAddress: String, status: String, swept: Boolean, timezone: String, excludeTestingCustomers: Boolean, simplified: Boolean): String @auth
+    transactions(
+      from: DateTimeISO
+      until: DateTimeISO
+      limit: Int
+      offset: Int
+      txClass: String
+      deviceId: String
+      customerName: String
+      fiatCode: String
+      cryptoCode: String
+      toAddress: String
+      status: String
+      swept: Boolean
+      excludeTestingCustomers: Boolean
+    ): [Transaction] @auth
+    transactionsCsv(
+      from: DateTimeISO
+      until: DateTimeISO
+      limit: Int
+      offset: Int
+      txClass: String
+      deviceId: String
+      customerName: String
+      fiatCode: String
+      cryptoCode: String
+      toAddress: String
+      status: String
+      swept: Boolean
+      timezone: String
+      excludeTestingCustomers: Boolean
+      simplified: Boolean
+    ): String @auth
     transactionCsv(id: ID, txClass: String, timezone: String): String @auth
     txAssociatedDataCsv(id: ID, txClass: String, timezone: String): String @auth
     transactionFilters: [Filter] @auth

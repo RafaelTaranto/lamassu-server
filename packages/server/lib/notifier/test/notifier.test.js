@@ -20,7 +20,7 @@ const plugins = {
     email_errors: false,
     sms_errors: true,
     sms: { active: true, errors: true },
-    email: { active: false, errors: false }
+    email: { active: false, errors: false },
   }),
   getMachineNames: () => [
     {
@@ -36,16 +36,15 @@ const plugins = {
       name: 'Abc123',
       paired: true,
       cashOut: true,
-      statuses: [{ label: 'Unresponsive', type: 'error' }]
-    }
+      statuses: [{ label: 'Unresponsive', type: 'error' }],
+    },
   ],
-  checkBalances: () => []
+  checkBalances: () => [],
 }
 
 const tx = {
   id: 'bec8d452-9ea2-4846-841b-55a9df8bbd00',
-  deviceId:
-    '490ab16ee0c124512dc769be1f3e7ee3894ce1e5b4b8b975e134fb326e551e88',
+  deviceId: '490ab16ee0c124512dc769be1f3e7ee3894ce1e5b4b8b975e134fb326e551e88',
   toAddress: 'bc1q7s4yy5n9vp6zhlf6mrw3cttdgx5l3ysr2mhc4v',
   cryptoAtoms: new BN(252100),
   cryptoCode: 'BTC',
@@ -71,7 +70,7 @@ const tx = {
   commissionPercentage: new BN(0.11),
   rawTickerPrice: new BN(18937.4),
   isPaperWallet: false,
-  direction: 'cashIn'
+  direction: 'cashIn',
 }
 
 const notifSettings = {
@@ -84,13 +83,13 @@ const notifSettings = {
   sms: {
     active: true,
     errors: true,
-    transactions: false // force early return
+    transactions: false, // force early return
   },
   email: {
     active: false,
     errors: false,
-    transactions: false // force early return
-  }
+    transactions: false, // force early return
+  },
 }
 
 test('Exits checkNotifications with Promise.resolve() if SMS and Email are disabled', async () => {
@@ -99,9 +98,9 @@ test('Exits checkNotifications with Promise.resolve() if SMS and Email are disab
     notifier.checkNotification({
       getNotificationConfig: () => ({
         sms: { active: false, errors: false },
-        email: { active: false, errors: false }
-      })
-    })
+        email: { active: false, errors: false },
+      }),
+    }),
   ).resolves.toBe(undefined)
 })
 
@@ -111,9 +110,9 @@ test('Exits checkNotifications with Promise.resolve() if SMS and Email are disab
     notifier.checkNotification({
       getNotificationConfig: () => ({
         sms: { active: false, errors: true, balance: true },
-        email: { active: false, errors: true, balance: true }
-      })
-    })
+        email: { active: false, errors: true, balance: true },
+      }),
+    }),
   ).resolves.toBe(undefined)
 })
 
@@ -124,13 +123,13 @@ test("Check Pings should return code PING for devices that haven't been pinged r
         deviceId:
           '7e531a2666987aa27b9917ca17df7998f72771c57fdb21c90bc033999edd17e4',
         lastPing: '2020-11-16T13:11:03.169Z',
-        name: 'Abc123'
-      }
-    ])
+        name: 'Abc123',
+      },
+    ]),
   ).toMatchObject({
     '7e531a2666987aa27b9917ca17df7998f72771c57fdb21c90bc033999edd17e4': [
-      { code: 'PING', machineName: 'Abc123' }
-    ]
+      { code: 'PING', machineName: 'Abc123' },
+    ],
   })
 })
 
@@ -141,11 +140,11 @@ test('Checkpings returns empty array as the value for the id prop, if the lastPi
         deviceId:
           '7a531a2666987aa27b9917ca17df7998f72771c57fdb21c90bc033999edd17e4',
         lastPing: new Date(),
-        name: 'Abc123'
-      }
-    ])
+        name: 'Abc123',
+      },
+    ]),
   ).toMatchObject({
-    '7a531a2666987aa27b9917ca17df7998f72771c57fdb21c90bc033999edd17e4': []
+    '7a531a2666987aa27b9917ca17df7998f72771c57fdb21c90bc033999edd17e4': [],
   })
 })
 
@@ -203,7 +202,7 @@ test('checkStuckScreen returns [] if most recent event is idle', () => {
         note: '{"state":"chooseCoin","isIdle":false}',
         created: '2020-11-23T19:30:29.209Z',
         device_time: '1999-11-23T19:30:29.177Z',
-        age: 157352628.123
+        age: 157352628.123,
       },
       {
         id: '48ae51c6-c5b4-485e-b81d-aa337fc025e2',
@@ -213,9 +212,9 @@ test('checkStuckScreen returns [] if most recent event is idle', () => {
         note: '{"state":"chooseCoin","isIdle":true}',
         created: '2020-11-23T19:30:29.209Z',
         device_time: '2020-11-23T19:30:29.177Z',
-        age: 157352628.123
-      }
-    ])
+        age: 157352628.123,
+      },
+    ]),
   ).toEqual([])
 })
 
@@ -230,7 +229,7 @@ test('checkStuckScreen returns object array of length 1 with prop code: "STALE" 
       note: '{"state":"chooseCoin","isIdle":true}',
       created: '2020-11-23T19:30:29.209Z',
       device_time: '1999-11-23T19:30:29.177Z',
-      age: 0
+      age: 0,
     },
     {
       id: '48ae51c6-c5b4-485e-b81d-aa337fc025e2',
@@ -240,8 +239,8 @@ test('checkStuckScreen returns object array of length 1 with prop code: "STALE" 
       note: '{"state":"chooseCoin","isIdle":false}',
       created: '2020-11-23T19:30:29.209Z',
       device_time: '2020-11-23T19:30:29.177Z',
-      age: 157352628.123
-    }
+      age: 157352628.123,
+    },
   ])
   expect(result[0]).toMatchObject({ code: 'STALE' })
 })
@@ -257,8 +256,8 @@ test('checkStuckScreen returns empty array if age < STALE_STATE', () => {
       note: '{"state":"chooseCoin","isIdle":false}',
       created: '2020-11-23T19:30:29.209Z',
       device_time: '2020-11-23T19:30:29.177Z',
-      age: 0
-    }
+      age: 0,
+    },
   ])
   const result2 = notifier.checkStuckScreen([
     {
@@ -269,8 +268,8 @@ test('checkStuckScreen returns empty array if age < STALE_STATE', () => {
       note: '{"state":"chooseCoin","isIdle":false}',
       created: '2020-11-23T19:30:29.209Z',
       device_time: '2020-11-23T19:30:29.177Z',
-      age: STALE_STATE
-    }
+      age: STALE_STATE,
+    },
   ])
   expect(result1).toEqual([])
   expect(result2).toEqual([])
@@ -281,7 +280,10 @@ test('calls sendRedemptionMessage if !zeroConf and rec.isRedemption', async () =
   const settingsLoader = require('../../new-settings-loader')
 
   const loadLatest = jest.spyOn(settingsLoader, 'loadLatest')
-  const getGlobalNotifications = jest.spyOn(configManager, 'getGlobalNotifications')
+  const getGlobalNotifications = jest.spyOn(
+    configManager,
+    'getGlobalNotifications',
+  )
   const getWalletSettings = jest.spyOn(configManager, 'getWalletSettings')
 
   // sendRedemptionMessage will cause this func to be called
@@ -289,19 +291,24 @@ test('calls sendRedemptionMessage if !zeroConf and rec.isRedemption', async () =
 
   getWalletSettings.mockReturnValue({ zeroConfLimit: -Infinity })
   loadLatest.mockReturnValue(Promise.resolve({}))
-  getGlobalNotifications.mockReturnValue({ ...notifSettings, sms: { active: true, errors: true, transactions: true }, notificationCenter: { active: true } })
+  getGlobalNotifications.mockReturnValue({
+    ...notifSettings,
+    sms: { active: true, errors: true, transactions: true },
+    notificationCenter: { active: true },
+  })
 
   const response = await notifier.transactionNotify(tx, { isRedemption: true })
 
   // this type of response implies sendRedemptionMessage was called
   expect(response[0]).toMatchObject({
     sms: {
-      body: "Here's an update on transaction bec8d452-9ea2-4846-841b-55a9df8bbd00 - It was just dispensed successfully"
+      body: "Here's an update on transaction bec8d452-9ea2-4846-841b-55a9df8bbd00 - It was just dispensed successfully",
     },
     email: {
-      subject: "Here's an update on transaction bec8d452-9ea2-4846-841b-55a9df8bbd00",
-      body: 'It was just dispensed successfully'
-    }
+      subject:
+        "Here's an update on transaction bec8d452-9ea2-4846-841b-55a9df8bbd00",
+      body: 'It was just dispensed successfully',
+    },
   })
 })
 
@@ -310,23 +317,32 @@ test('calls sendTransactionMessage if !zeroConf and !rec.isRedemption', async ()
   const settingsLoader = require('../../new-settings-loader')
   const queries = require('../queries')
   const loadLatest = jest.spyOn(settingsLoader, 'loadLatest')
-  const getGlobalNotifications = jest.spyOn(configManager, 'getGlobalNotifications')
+  const getGlobalNotifications = jest.spyOn(
+    configManager,
+    'getGlobalNotifications',
+  )
   const getWalletSettings = jest.spyOn(configManager, 'getWalletSettings')
   const getMachineName = jest.spyOn(queries, 'getMachineName')
   const buildTransactionMessage = jest.spyOn(utils, 'buildTransactionMessage')
 
   // sendMessage on emailFuncs isn't called because it is disabled in getGlobalNotifications.mockReturnValue
-  jest.spyOn(smsFuncs, 'sendMessage').mockImplementation((_, rec) => ({ prop: rec }))
+  jest
+    .spyOn(smsFuncs, 'sendMessage')
+    .mockImplementation((_, rec) => ({ prop: rec }))
   buildTransactionMessage.mockImplementation(() => ['mock message', false])
 
   getMachineName.mockResolvedValue('mockMachineName')
   getWalletSettings.mockReturnValue({ zeroConfLimit: -Infinity })
   loadLatest.mockReturnValue(Promise.resolve({}))
-  getGlobalNotifications.mockReturnValue({ ...notifSettings, sms: { active: true, errors: true, transactions: true }, notificationCenter: { active: true } })
+  getGlobalNotifications.mockReturnValue({
+    ...notifSettings,
+    sms: { active: true, errors: true, transactions: true },
+    notificationCenter: { active: true },
+  })
 
   const response = await notifier.transactionNotify(tx, { isRedemption: false })
 
   // If the return object is this, it means the code went through all the functions expected to go through if
   // getMachineName, buildTransactionMessage and sendTransactionMessage were called, in this order
-  expect(response).toEqual([{prop: 'mock message'}])
+  expect(response).toEqual([{ prop: 'mock message' }])
 })

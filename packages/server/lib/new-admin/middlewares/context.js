@@ -8,9 +8,10 @@ const buildApolloContext = async ({ req, res }) => {
   const user = await users.verifyAndUpdateUser(
     req.session.user.id,
     req.headers['user-agent'] || 'Unknown',
-    req.ip
+    req.ip,
   )
-  if (!user || !user.enabled) throw new AuthenticationError('Authentication failed')
+  if (!user || !user.enabled)
+    throw new AuthenticationError('Authentication failed')
 
   req.session.ua = req.headers['user-agent'] || 'Unknown'
   req.session.ipAddress = req.ip

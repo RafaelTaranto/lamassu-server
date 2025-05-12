@@ -2,7 +2,10 @@ const db = require('../../db')
 const uuid = require('uuid')
 const _ = require('lodash/fp')
 const pgp = require('pg-promise')()
-const { loadLatestConfigOrNone, saveConfig } = require('../../../lib/new-settings-loader')
+const {
+  loadLatestConfigOrNone,
+  saveConfig,
+} = require('../../../lib/new-settings-loader')
 
 const getCustomInfoRequests = (onlyEnabled = false) => {
   const sql = onlyEnabled
@@ -12,38 +15,57 @@ const getCustomInfoRequests = (onlyEnabled = false) => {
     return res.map(item => ({
       id: item.id,
       enabled: item.enabled,
-      customRequest: item.custom_request
+      customRequest: item.custom_request,
     }))
   })
 }
 
-const addCustomInfoRequest = (customRequest) => {
-  const sql = 'INSERT INTO custom_info_requests (id, custom_request) VALUES ($1, $2)'
+const addCustomInfoRequest = customRequest => {
+  const sql =
+    'INSERT INTO custom_info_requests (id, custom_request) VALUES ($1, $2)'
   const id = uuid.v4()
   return db.none(sql, [id, customRequest]).then(() => ({ id }))
 }
 
-const removeCustomInfoRequest = (id) => {
+const removeCustomInfoRequest = id => {
   return loadLatestConfigOrNone()
-    .then(cfg => saveConfig({triggers: _.remove(x => x.customInfoRequestId === id, cfg.triggers ?? [])}))
-    .then(() => db.none('UPDATE custom_info_requests SET enabled = false WHERE id = $1', [id]))
-    .then(() => ({ id }));
+    .then(cfg =>
+      saveConfig({
+        triggers: _.remove(
+          x => x.customInfoRequestId === id,
+          cfg.triggers ?? [],
+        ),
+      }),
+    )
+    .then(() =>
+      db.none('UPDATE custom_info_requests SET enabled = false WHERE id = $1', [
+        id,
+      ]),
+    )
+    .then(() => ({ id }))
 }
 
 const editCustomInfoRequest = (id, customRequest) => {
-  return db.none('UPDATE custom_info_requests SET custom_request = $1 WHERE id=$2', [customRequest, id]).then(() => ({ id, customRequest }))
+  return db
+    .none('UPDATE custom_info_requests SET custom_request = $1 WHERE id=$2', [
+      customRequest,
+      id,
+    ])
+    .then(() => ({ id, customRequest }))
 }
 
-const getAllCustomInfoRequestsForCustomer = (customerId) => {
+const getAllCustomInfoRequestsForCustomer = customerId => {
   const sql = `SELECT * FROM customers_custom_info_requests WHERE customer_id = $1`
-  return db.any(sql, [customerId]).then(res => res.map(item => ({
-    customerId: item.customer_id,
-    infoRequestId: item.info_request_id,
-    customerData: item.customer_data,
-    override: item.override,
-    overrideAt: item.override_at,
-    overrideBy: item.override_by
-  })))
+  return db.any(sql, [customerId]).then(res =>
+    res.map(item => ({
+      customerId: item.customer_id,
+      infoRequestId: item.info_request_id,
+      customerData: item.customer_data,
+      override: item.override,
+      overrideAt: item.override_at,
+      overrideBy: item.override_by,
+    })),
+  )
 }
 
 const getCustomInfoRequestForCustomer = (customerId, infoRequestId) => {
@@ -55,12 +77,12 @@ const getCustomInfoRequestForCustomer = (customerId, infoRequestId) => {
       customerData: item.customer_data,
       override: item.override,
       overrideAt: item.override_at,
-      overrideBy: item.override_by
+      overrideBy: item.override_by,
     }
   })
 }
 
-const batchGetAllCustomInfoRequestsForCustomer = (customerIds) => {
+const batchGetAllCustomInfoRequestsForCustomer = customerIds => {
   const sql = `SELECT * FROM customers_custom_info_requests WHERE customer_id IN ($1^)`
   return db.any(sql, [_.map(pgp.as.text, customerIds).join(',')]).then(res => {
     const map = _.groupBy('customer_id', res)
@@ -72,40 +94,49 @@ const batchGetAllCustomInfoRequestsForCustomer = (customerIds) => {
         customerData: item.customer_data,
         override: item.override,
         overrideAt: item.override_at,
-        overrideBy: item.override_by
+        overrideBy: item.override_by,
       }))
     })
   })
 }
 
-const getCustomInfoRequest = (infoRequestId) => {
+const getCustomInfoRequest = infoRequestId => {
   const sql = `SELECT * FROM custom_info_requests WHERE id = $1`
   return db.one(sql, [infoRequestId]).then(item => ({
     id: item.id,
     enabled: item.enabled,
-    customRequest: item.custom_request
+    customRequest: item.custom_request,
   }))
 }
 
-const batchGetCustomInfoRequest = (infoRequestIds) => {
+const batchGetCustomInfoRequest = infoRequestIds => {
   if (infoRequestIds.length === 0) return Promise.resolve([])
   const sql = `SELECT * FROM custom_info_requests WHERE id IN ($1^)`
-  return db.any(sql, [_.map(pgp.as.text, infoRequestIds).join(',')]).then(res => {
-    const map = _.groupBy('id', res)
-    return infoRequestIds.map(id => {
-      const item = map[id][0] // since id is primary key the array always has 1 element
-      return {
-        id: item.id,
-        enabled: item.enabled,
-        customRequest: item.custom_request
-      }
+  return db
+    .any(sql, [_.map(pgp.as.text, infoRequestIds).join(',')])
+    .then(res => {
+      const map = _.groupBy('id', res)
+      return infoRequestIds.map(id => {
+        const item = map[id][0] // since id is primary key the array always has 1 element
+        return {
+          id: item.id,
+          enabled: item.enabled,
+          customRequest: item.custom_request,
+        }
+      })
     })
-  })
 }
 
-const setAuthorizedCustomRequest = (customerId, infoRequestId, override, token) => {
+const setAuthorizedCustomRequest = (
+  customerId,
+  infoRequestId,
+  override,
+  token,
+) => {
   const sql = `UPDATE customers_custom_info_requests SET override = $1, override_by = $2, override_at = now() WHERE customer_id = $3 AND info_request_id = $4`
-  return db.none(sql, [override, token, customerId, infoRequestId]).then(() => true)
+  return db
+    .none(sql, [override, token, customerId, infoRequestId])
+    .then(() => true)
 }
 
 const setCustomerData = (customerId, infoRequestId, data) => {
@@ -138,5 +169,5 @@ module.exports = {
   batchGetCustomInfoRequest,
   setAuthorizedCustomRequest,
   setCustomerData,
-  setCustomerDataViaMachine
+  setCustomerDataViaMachine,
 }

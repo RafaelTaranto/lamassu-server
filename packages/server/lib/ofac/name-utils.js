@@ -5,17 +5,24 @@ const makePhonetic = _.flow(doubleMetaphone, _.uniq)
 
 // Combine name-parts in a standard order.
 
-const partOrdering = ['firstName', 'middleName', 'maidenName', 'patronymic', 'matronymic', 'lastName']
+const partOrdering = [
+  'firstName',
+  'middleName',
+  'maidenName',
+  'patronymic',
+  'matronymic',
+  'lastName',
+]
 
 const usingPartOrder = _.flow(
   _.get('partName'),
-  _.partialRight(_.indexOf, [partOrdering])
+  _.partialRight(_.indexOf, [partOrdering]),
 )
 
 const makeFullName = _.flow(
   _.sortBy(usingPartOrder),
   _.map(_.get('value')),
-  _.join(' ')
+  _.join(' '),
 )
 
 const makeWords = value => {
@@ -27,5 +34,5 @@ const makeWords = value => {
 
 module.exports = {
   makeFullName,
-  makeWords
+  makeWords,
 }

@@ -3,7 +3,7 @@ const blacklist = require('../../../blacklist')
 const resolvers = {
   Query: {
     blacklist: () => blacklist.getBlacklist(),
-    blacklistMessages: () => blacklist.getMessages()
+    blacklistMessages: () => blacklist.getMessages(),
   },
   Mutation: {
     deleteBlacklistRow: (...[, { address }]) =>
@@ -11,8 +11,8 @@ const resolvers = {
     insertBlacklistRow: (...[, { address }]) =>
       blacklist.insertIntoBlacklist(address),
     editBlacklistMessage: (...[, { id, content }]) =>
-      blacklist.editBlacklistMessage(id, content)
-  }
+      blacklist.editBlacklistMessage(id, content),
+  },
 }
 
 module.exports = resolvers

@@ -25,93 +25,114 @@ case
   else 'Pending'
 end`
 
-module.exports = { post, monitorPending, cancel, PENDING_INTERVAL, TRANSACTION_STATES }
+module.exports = {
+  post,
+  monitorPending,
+  cancel,
+  PENDING_INTERVAL,
+  TRANSACTION_STATES,
+}
 
-function post (machineTx, pi) {
+function post(machineTx, pi) {
   logger.silly('Updating cashin tx:', machineTx)
-  return cashInAtomic.atomic(machineTx, pi)
-    .then(r => {
-      const updatedTx = r.tx
-      let addressReuse = false
+  return cashInAtomic.atomic(machineTx).then(r => {
+    const updatedTx = r.tx
+    let addressReuse = false
 
-      const promises = [settingsLoader.loadLatestConfig()]
+    const promises = [settingsLoader.loadLatestConfig()]
 
-      const isFirstPost = !r.tx.fiat || r.tx.fiat.isZero()
-      if (isFirstPost) {
-        promises.push(
-          checkForBlacklisted(updatedTx),
-          doesTxReuseAddress(updatedTx),
-          getWalletScore(updatedTx, pi)
-        )
-      }
+    const isFirstPost = !r.tx.fiat || r.tx.fiat.isZero()
+    if (isFirstPost) {
+      promises.push(
+        checkForBlacklisted(updatedTx),
+        doesTxReuseAddress(updatedTx),
+        getWalletScore(updatedTx, pi),
+      )
+    }
 
-      return Promise.all(promises)
-        .then(([config, blacklisted = false, isReusedAddress = false, walletScore = null]) => {
-          const { rejectAddressReuse } = configManager.getCompliance(config)
-          const isBlacklisted = !!blacklisted
+    return Promise.all(promises).then(
+      ([
+        config,
+        blacklisted = false,
+        isReusedAddress = false,
+        walletScore = null,
+      ]) => {
+        const { rejectAddressReuse } = configManager.getCompliance(config)
+        const isBlacklisted = !!blacklisted
 
-          if (isBlacklisted) {
-            notifier.notifyIfActive('compliance', 'blacklistNotify', r.tx, false)
-          } else if (isReusedAddress && rejectAddressReuse) {
-            notifier.notifyIfActive('compliance', 'blacklistNotify', r.tx, true)
-            addressReuse = true
-          }
-          return postProcess(r, pi, isBlacklisted, addressReuse, walletScore)
-            .then(changes => _.set('walletScore', _.isNil(walletScore) ? null : walletScore.score, changes))
-            .then(changes => cashInLow.update(db, updatedTx, changes))
-            .then(_.flow(
+        if (isBlacklisted) {
+          notifier.notifyIfActive('compliance', 'blacklistNotify', r.tx, false)
+        } else if (isReusedAddress && rejectAddressReuse) {
+          notifier.notifyIfActive('compliance', 'blacklistNotify', r.tx, true)
+          addressReuse = true
+        }
+        return postProcess(r, pi, isBlacklisted, addressReuse, walletScore)
+          .then(changes =>
+            _.set(
+              'walletScore',
+              _.isNil(walletScore) ? null : walletScore.score,
+              changes,
+            ),
+          )
+          .then(changes => cashInLow.update(db, updatedTx, changes))
+          .then(
+            _.flow(
               _.set('bills', machineTx.bills),
               _.set('blacklisted', isBlacklisted),
               _.set('blacklistMessage', blacklisted?.content),
               _.set('addressReuse', addressReuse),
-              _.set('validWalletScore', _.isNil(walletScore) || walletScore.isValid),
-            ))
-        })
-    })
+              _.set(
+                'validWalletScore',
+                _.isNil(walletScore) || walletScore.isValid,
+              ),
+            ),
+          )
+      },
+    )
+  })
 }
 
-function registerTrades (pi, r) {
+function registerTrades(pi, r) {
   _.forEach(bill => pi.buy(bill, r.tx), r.newBills)
 }
 
-function logAction (rec, tx) {
+function logAction(rec, tx) {
   const action = {
     tx_id: tx.id,
     action: rec.action || (rec.sendConfirmed ? 'sendCoins' : 'sendCoinsError'),
     error: rec.error,
     error_code: rec.errorCode,
-    tx_hash: rec.txHash
+    tx_hash: rec.txHash,
   }
 
   const sql = pgp.helpers.insert(action, null, 'cash_in_actions')
 
-  return db.none(sql)
-    .then(_.constant(rec))
+  return db.none(sql).then(_.constant(rec))
 }
 
-function logActionById (action, _rec, txId) {
+function logActionById(action, _rec, txId) {
   const rec = _.assign(_rec, { action, tx_id: txId })
   const sql = pgp.helpers.insert(rec, null, 'cash_in_actions')
 
   return db.none(sql)
 }
 
-function checkForBlacklisted (tx) {
+function checkForBlacklisted(tx) {
   return blacklist.blocked(tx.toAddress)
 }
 
-function postProcess (r, pi, isBlacklisted, addressReuse, walletScore) {
+function postProcess(r, pi, isBlacklisted, addressReuse, walletScore) {
   if (addressReuse) {
     return Promise.resolve({
       operatorCompleted: true,
-      error: 'Address Reused'
+      error: 'Address Reused',
     })
   }
 
   if (isBlacklisted) {
     return Promise.resolve({
       operatorCompleted: true,
-      error: 'Blacklisted Address'
+      error: 'Blacklisted Address',
     })
   }
 
@@ -120,7 +141,7 @@ function postProcess (r, pi, isBlacklisted, addressReuse, walletScore) {
       walletScore: walletScore.score,
       operatorCompleted: true,
       error: 'Chain analysis score is above defined threshold',
-      errorCode: 'scoreThresholdReached'
+      errorCode: 'scoreThresholdReached',
     })
   }
 
@@ -128,7 +149,8 @@ function postProcess (r, pi, isBlacklisted, addressReuse, walletScore) {
 
   if (!cashInLow.isClearToSend(r.dbTx, r.tx)) return Promise.resolve({})
 
-  return pi.sendCoins(r.tx)
+  return pi
+    .sendCoins(r.tx)
     .then(txObj => {
       if (txObj.batched) {
         return {
@@ -136,7 +158,7 @@ function postProcess (r, pi, isBlacklisted, addressReuse, walletScore) {
           batchTime: 'now()^',
           sendPending: true,
           error: null,
-          errorCode: null
+          errorCode: null,
         }
       }
 
@@ -147,7 +169,7 @@ function postProcess (r, pi, isBlacklisted, addressReuse, walletScore) {
         sendTime: 'now()^',
         sendPending: false,
         error: null,
-        errorCode: null
+        errorCode: null,
       }
     })
     .catch(err => {
@@ -161,17 +183,18 @@ function postProcess (r, pi, isBlacklisted, addressReuse, walletScore) {
         sendTime: 'now()^',
         error: err.message,
         errorCode: err.name,
-        sendPending: true
+        sendPending: true,
       }
     })
     .then(sendRec => {
-      pi.notifyOperator(r.tx, sendRec)
-        .catch((err) => logger.error('Failure sending transaction notification', err))
+      pi.notifyOperator(r.tx, sendRec).catch(err =>
+        logger.error('Failure sending transaction notification', err),
+      )
       return logAction(sendRec, r.tx)
     })
 }
 
-function doesTxReuseAddress (tx) {
+function doesTxReuseAddress(tx) {
   const sql = `
     SELECT EXISTS (
       SELECT DISTINCT to_address FROM (
@@ -181,15 +204,14 @@ function doesTxReuseAddress (tx) {
   return db.one(sql, [tx.id, tx.toAddress]).then(({ exists }) => exists)
 }
 
-function getWalletScore (tx, pi) {
-  return pi.isWalletScoringEnabled(tx)
-    .then(isEnabled => {
-      if (!isEnabled) return null
-      return pi.rateAddress(tx.cryptoCode, tx.toAddress)
-    })
+function getWalletScore(tx, pi) {
+  return pi.isWalletScoringEnabled(tx).then(isEnabled => {
+    if (!isEnabled) return null
+    return pi.rateAddress(tx.cryptoCode, tx.toAddress)
+  })
 }
 
-function monitorPending (settings) {
+function monitorPending(settings) {
   const sql = `select * from cash_in_txs
   where created > now() - interval $1
   and send
@@ -203,27 +225,29 @@ function monitorPending (settings) {
     const tx = cashInLow.toObj(row)
     const pi = plugins(settings, tx.deviceId)
 
-    return post(tx, pi)
-      .catch(logger.error)
+    return post(tx, pi).catch(logger.error)
   }
 
-  return db.any(sql, [PENDING_INTERVAL, MAX_PENDING])
+  return db
+    .any(sql, [PENDING_INTERVAL, MAX_PENDING])
     .then(rows => pEachSeries(rows, row => processPending(row)))
     .catch(logger.error)
 }
 
-function cancel (txId) {
+function cancel(txId) {
   const updateRec = {
     error: 'Operator cancel',
     error_code: 'operatorCancel',
     operator_completed: true,
-    batch_id: null
+    batch_id: null,
   }
 
   return Promise.resolve()
     .then(() => {
-      return pgp.helpers.update(updateRec, null, 'cash_in_txs') +
-      pgp.as.format(' where id=$1', [txId])
+      return (
+        pgp.helpers.update(updateRec, null, 'cash_in_txs') +
+        pgp.as.format(' where id=$1', [txId])
+      )
     })
     .then(sql => db.result(sql, false))
     .then(res => {

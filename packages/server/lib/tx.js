@@ -9,41 +9,41 @@ const T = require('./time')
 // E.g.: 1853.013808 * 1000 = 1866149.494
 const REDEEMABLE_AGE = T.day / 1000
 
-function process (tx, pi) {
-  const mtx = massage(tx, pi)
+function process(tx, pi) {
+  const mtx = massage(tx)
   if (mtx.direction === 'cashIn') return CashInTx.post(mtx, pi)
   if (mtx.direction === 'cashOut') return CashOutTx.post(mtx, pi)
   return Promise.reject(new Error('No such tx direction: ' + mtx.direction))
 }
 
-function post (tx, pi) {
-  return process(tx, pi)
-    .then(_.set('dirty', false))
+function post(tx, pi) {
+  return process(tx, pi).then(_.set('dirty', false))
 }
 
-function massage (tx, pi) {
+function massage(tx) {
   const isDateField = r => r === 'created' || _.endsWith('_time', r)
-  const transformDate = (v, k) => isDateField(k) ? new Date(v) : v
-  const mapValuesWithKey = _.mapValues.convert({'cap': false})
+  const transformDate = (v, k) => (isDateField(k) ? new Date(v) : v)
+  const mapValuesWithKey = _.mapValues.convert({ cap: false })
   const transformDates = r => mapValuesWithKey(transformDate, r)
 
   const mapBN = r => {
-    const update = r.direction === 'cashIn'
-      ? {
-        cryptoAtoms: new BN(r.cryptoAtoms),
-        fiat: new BN(r.fiat),
-        cashInFee: new BN(r.cashInFee),
-        commissionPercentage: new BN(r.commissionPercentage),
-        rawTickerPrice: r.rawTickerPrice ? new BN(r.rawTickerPrice) : null,
-        minimumTx: new BN(r.minimumTx)
-      }
-      : {
-        cryptoAtoms: new BN(r.cryptoAtoms),
-        fiat: new BN(r.fiat),
-        fixedFee: r.cashOutFee ? new BN(r.cashOutFee) : null,
-        rawTickerPrice: r.rawTickerPrice ? new BN(r.rawTickerPrice) : null,
-        commissionPercentage: new BN(r.commissionPercentage)
-      }
+    const update =
+      r.direction === 'cashIn'
+        ? {
+            cryptoAtoms: new BN(r.cryptoAtoms),
+            fiat: new BN(r.fiat),
+            cashInFee: new BN(r.cashInFee),
+            commissionPercentage: new BN(r.commissionPercentage),
+            rawTickerPrice: r.rawTickerPrice ? new BN(r.rawTickerPrice) : null,
+            minimumTx: new BN(r.minimumTx),
+          }
+        : {
+            cryptoAtoms: new BN(r.cryptoAtoms),
+            fiat: new BN(r.fiat),
+            fixedFee: r.cashOutFee ? new BN(r.cashOutFee) : null,
+            rawTickerPrice: r.rawTickerPrice ? new BN(r.rawTickerPrice) : null,
+            commissionPercentage: new BN(r.commissionPercentage),
+          }
 
     return _.assign(r, update)
   }
@@ -52,26 +52,29 @@ function massage (tx, pi) {
     transformDates,
     mapBN,
     _.unset('dirty'),
-    _.unset('cashOutFee')
+    _.unset('cashOutFee'),
   )
 
   return mapper(tx)
 }
 
-function cancel (txId) {
+function cancel(txId) {
   const promises = [
-    CashInTx.cancel(txId).then(() => true).catch(() => false),
-    CashOutTx.cancel(txId).then(() => true).catch(() => false)
+    CashInTx.cancel(txId)
+      .then(() => true)
+      .catch(() => false),
+    CashOutTx.cancel(txId)
+      .then(() => true)
+      .catch(() => false),
   ]
 
-  return Promise.all(promises)
-    .then(r => {
-      if (_.some(r)) return
-      throw new Error('No such transaction')
-    })
+  return Promise.all(promises).then(r => {
+    if (_.some(r)) return
+    throw new Error('No such transaction')
+  })
 }
 
-function customerHistory (customerId, thresholdDays) {
+function customerHistory(customerId, thresholdDays) {
   const sql = `SELECT ch.id, ch.created, ch.fiat, ch.direction FROM (
     SELECT txIn.id, txIn.created, txIn.fiat, 'cashIn' AS direction,
       ((NOT txIn.send_confirmed) AND (txIn.created <= now() - interval $3)) AS expired

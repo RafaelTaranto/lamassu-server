@@ -8,7 +8,7 @@ module.exports = { setup, updateCore }
 
 const coinRec = coinUtils.getCryptoCurrency('BCH')
 
-function setup (dataDir) {
+function setup(dataDir) {
   common.firewall([coinRec.defaultPort])
   const config = buildConfig()
   common.writeFile(path.resolve(dataDir, coinRec.configFile), config)
@@ -16,12 +16,17 @@ function setup (dataDir) {
   common.writeSupervisorConfig(coinRec, cmd)
 }
 
-function updateCore (coinRec, isCurrentlyRunning) {
+function updateCore(coinRec, isCurrentlyRunning) {
   common.logger.info('Updating Bitcoin Cash. This may take a minute...')
   common.es(`sudo supervisorctl stop bitcoincash`)
   common.es(`curl -#Lo /tmp/bitcoincash.tar.gz ${coinRec.url}`)
-  if (common.es(`sha256sum /tmp/bitcoincash.tar.gz | awk '{print $1}'`).trim() !== coinRec.urlHash) {
-    common.logger.info('Failed to update Bitcoin Cash: Package signature do not match!')
+  if (
+    common.es(`sha256sum /tmp/bitcoincash.tar.gz | awk '{print $1}'`).trim() !==
+    coinRec.urlHash
+  ) {
+    common.logger.info(
+      'Failed to update Bitcoin Cash: Package signature do not match!',
+    )
     return
   }
   common.es(`tar -xzf /tmp/bitcoincash.tar.gz -C /tmp/`)
@@ -32,11 +37,17 @@ function updateCore (coinRec, isCurrentlyRunning) {
   common.es(`rm -r /tmp/${coinRec.dir.replace('/bin', '')}`)
   common.es(`rm /tmp/bitcoincash.tar.gz`)
 
-  if (common.es(`grep "listenonion=" /mnt/blockchains/bitcoincash/bitcoincash.conf || true`)) {
+  if (
+    common.es(
+      `grep "listenonion=" /mnt/blockchains/bitcoincash/bitcoincash.conf || true`,
+    )
+  ) {
     common.logger.info(`listenonion already defined, skipping...`)
   } else {
     common.logger.info(`Setting 'listenonion=0' in config file...`)
-    common.es(`echo "\nlistenonion=0" >> /mnt/blockchains/bitcoincash/bitcoincash.conf`)
+    common.es(
+      `echo "\nlistenonion=0" >> /mnt/blockchains/bitcoincash/bitcoincash.conf`,
+    )
   }
 
   if (isCurrentlyRunning) {
@@ -47,7 +58,7 @@ function updateCore (coinRec, isCurrentlyRunning) {
   common.logger.info('Bitcoin Cash is updated!')
 }
 
-function buildConfig () {
+function buildConfig() {
   return `rpcuser=lamassuserver
 rpcpassword=${common.randomPass()}
 dbcache=500

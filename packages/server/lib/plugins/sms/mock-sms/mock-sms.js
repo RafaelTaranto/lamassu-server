@@ -2,7 +2,7 @@ const _ = require('lodash/fp')
 
 const NAME = 'MockSMS'
 
-function sendMessage (account, rec) {
+function sendMessage(account, rec) {
   console.log('Sending SMS: %j', rec)
   return new Promise((resolve, reject) => {
     if (_.endsWith('666', _.getOr(false, 'sms.toNumber', rec))) {
@@ -15,5 +15,5 @@ function sendMessage (account, rec) {
 
 module.exports = {
   NAME,
-  sendMessage
+  sendMessage,
 }

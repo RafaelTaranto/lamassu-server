@@ -3,10 +3,12 @@ const _ = require('lodash/fp')
 
 const NAME = 'Twilio'
 
-const BAD_NUMBER_CODES = [21201, 21202, 21211, 21214, 21216, 21217, 21219, 21408,
-  21610, 21612, 21614, 21608]
+const BAD_NUMBER_CODES = [
+  21201, 21202, 21211, 21214, 21216, 21217, 21219, 21408, 21610, 21612, 21614,
+  21608,
+]
 
-function sendMessage (account, rec) {
+function sendMessage(account, rec) {
   return Promise.resolve()
     .then(() => {
       // to catch configuration errors like
@@ -14,14 +16,16 @@ function sendMessage (account, rec) {
       const client = twilio(account.accountSid, account.authToken)
       const body = rec.sms.body
       const _toNumber = rec.sms.toNumber || account.toNumber
-      const from = (_.startsWith('+')(account.fromNumber) 
-        || !_.isNumber(String(account.fromNumber).replace(/\s/g,'')))
-        ? account.fromNumber : `+${account.fromNumber}`
+      const from =
+        _.startsWith('+')(account.fromNumber) ||
+        !_.isNumber(String(account.fromNumber).replace(/\s/g, ''))
+          ? account.fromNumber
+          : `+${account.fromNumber}`
 
       const opts = {
         body: body,
         to: _toNumber,
-        from
+        from,
       }
 
       return client.messages.create(opts)
@@ -39,5 +43,5 @@ function sendMessage (account, rec) {
 
 module.exports = {
   NAME,
-  sendMessage
+  sendMessage,
 }

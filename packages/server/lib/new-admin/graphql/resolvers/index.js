@@ -47,7 +47,7 @@ const resolvers = [
   status,
   transaction,
   user,
-  version
+  version,
 ]
 
 module.exports = mergeResolvers(resolvers)

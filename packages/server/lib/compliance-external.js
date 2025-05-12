@@ -8,20 +8,25 @@ const getPlugin = (settings, pluginCode) => {
   const account = settings.accounts[pluginCode]
   const plugin = ph.load(ph.COMPLIANCE, pluginCode)
 
-  return ({ plugin, account })
+  return { plugin, account }
 }
 
 const getStatus = (settings, service, customerId) => {
   try {
     const { plugin, account } = getPlugin(settings, service)
 
-    return plugin.getApplicantStatus(account, customerId)
-      .then((status) => ({
+    return plugin
+      .getApplicantStatus(account, customerId)
+      .then(status => ({
         service,
-        status
+        status,
       }))
-      .catch((error) => {
-        if (error.response.status !== 404) logger.error(`Error getting applicant for service ${service}:`, error.message)
+      .catch(error => {
+        if (error.response.status !== 404)
+          logger.error(
+            `Error getting applicant for service ${service}:`,
+            error.message,
+          )
         return {
           service: service,
           status: null,
@@ -34,28 +39,22 @@ const getStatus = (settings, service, customerId) => {
       status: null,
     })
   }
-
 }
 
 const getStatusMap = (settings, customerExternalCompliance) => {
   const triggers = configManager.getTriggers(settings.config)
-  const services = _.flow(
-    _.map('externalService'),
-    _.compact,
-    _.uniq
-  )(triggers)
+  const services = _.flow(_.map('externalService'), _.compact, _.uniq)(triggers)
 
   const applicantPromises = _.map(service => {
     return getStatus(settings, service, customerExternalCompliance)
   })(services)
 
-  return Promise.all(applicantPromises)
-    .then((applicantResults) => {
-      return _.reduce((map, result) => {
-        if (result.status) map[result.service] = result.status
-        return map
-      }, {})(applicantResults)
-    })
+  return Promise.all(applicantPromises).then(applicantResults => {
+    return _.reduce((map, result) => {
+      if (result.status) map[result.service] = result.status
+      return map
+    }, {})(applicantResults)
+  })
 }
 
 const createApplicant = (settings, externalService, customerId) => {
@@ -76,5 +75,5 @@ module.exports = {
   getStatusMap,
   getStatus,
   createApplicant,
-  createLink
+  createLink,
 }

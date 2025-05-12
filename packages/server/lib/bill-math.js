@@ -1,7 +1,6 @@
 const _ = require('lodash/fp')
 const sumService = require('@haensl/subset-sum')
 
-const BN = require('./bn')
 const logger = require('./logger')
 const cc = require('./coin-change')
 
@@ -11,7 +10,7 @@ const BILL_LIST_MODES = {
   LOWEST_VALUE_FIRST: 2,
   HIGHEST_VALUE_FIRST: 3,
   UNIT_ROUND_ROBIN: 4,
-  VALUE_ROUND_ROBIN: 5
+  VALUE_ROUND_ROBIN: 5,
 }
 
 const buildBillList = (units, mode) => {
@@ -23,7 +22,7 @@ const buildBillList = (units, mode) => {
           return acc
         },
         [],
-        _.reverse(units)
+        _.reverse(units),
       )
     case BILL_LIST_MODES.FIRST_UNIT_FIRST:
       return _.reduce(
@@ -32,7 +31,7 @@ const buildBillList = (units, mode) => {
           return acc
         },
         [],
-        units
+        units,
       )
     case BILL_LIST_MODES.LOWEST_VALUE_FIRST:
       return _.reduce(
@@ -41,7 +40,7 @@ const buildBillList = (units, mode) => {
           return acc
         },
         [],
-        _.orderBy(['denomination'], ['asc'])(units)
+        _.orderBy(['denomination'], ['asc'])(units),
       )
     case BILL_LIST_MODES.HIGHEST_VALUE_FIRST:
       return _.reduce(
@@ -50,58 +49,59 @@ const buildBillList = (units, mode) => {
           return acc
         },
         [],
-        _.orderBy(['denomination'], ['desc'])(units)
+        _.orderBy(['denomination'], ['desc'])(units),
       )
-    case BILL_LIST_MODES.UNIT_ROUND_ROBIN:
-      {
-        const amountOfBills = _.reduce(
-          (acc, value) => acc + value.count,
-          0,
-          units
-        )
-      
-        const _units = _.filter(it => it.count > 0)(_.cloneDeep(units))
-        const bills = []
-      
-        for(let i = 0; i < amountOfBills; i++) {
-          const idx = i % _.size(_units)
-          if (_units[idx].count > 0) {
-            bills.push(_units[idx].denomination)
-            _units[idx].count--
-          }
-      
-          if (_units[idx].count === 0) {
-            _units.splice(idx, 1)
-          }
+    case BILL_LIST_MODES.UNIT_ROUND_ROBIN: {
+      const amountOfBills = _.reduce(
+        (acc, value) => acc + value.count,
+        0,
+        units,
+      )
+
+      const _units = _.filter(it => it.count > 0)(_.cloneDeep(units))
+      const bills = []
+
+      for (let i = 0; i < amountOfBills; i++) {
+        const idx = i % _.size(_units)
+        if (_units[idx].count > 0) {
+          bills.push(_units[idx].denomination)
+          _units[idx].count--
         }
 
-        return bills
+        if (_units[idx].count === 0) {
+          _units.splice(idx, 1)
+        }
       }
-    case BILL_LIST_MODES.VALUE_ROUND_ROBIN:
-      {
-        const amountOfBills = _.reduce(
-          (acc, value) => acc + value.count,
-          0,
-          units
-        )
-      
-        const _units = _.flow([_.filter(it => it.count > 0), _.orderBy(['denomination'], ['asc'])])(_.cloneDeep(units))
-        const bills = []
-      
-        for(let i = 0; i < amountOfBills; i++) {
-          const idx = i % _.size(_units)
-          if (_units[idx].count > 0) {
-            bills.push(_units[idx].denomination)
-            _units[idx].count--
-          }
-      
-          if (_units[idx].count === 0) {
-            _units.splice(idx, 1)
-          }
+
+      return bills
+    }
+    case BILL_LIST_MODES.VALUE_ROUND_ROBIN: {
+      const amountOfBills = _.reduce(
+        (acc, value) => acc + value.count,
+        0,
+        units,
+      )
+
+      const _units = _.flow([
+        _.filter(it => it.count > 0),
+        _.orderBy(['denomination'], ['asc']),
+      ])(_.cloneDeep(units))
+      const bills = []
+
+      for (let i = 0; i < amountOfBills; i++) {
+        const idx = i % _.size(_units)
+        if (_units[idx].count > 0) {
+          bills.push(_units[idx].denomination)
+          _units[idx].count--
         }
 
-        return bills
+        if (_units[idx].count === 0) {
+          _units.splice(idx, 1)
+        }
       }
+
+      return bills
+    }
     default:
       throw new Error(`Invalid mode: ${mode}`)
   }
@@ -113,11 +113,13 @@ const getSolution_old = (units, amount, mode) => {
   if (_.sum(billList) < amount.toNumber()) {
     return []
   }
-  
+
   const solver = sumService.subsetSum(billList, amount.toNumber())
   const solution = _.countBy(Math.floor, solver.next().value)
-  return Object.entries(solution)
-    .map(([denomination, provisioned]) => [_.toNumber(denomination), provisioned])
+  return Object.entries(solution).map(([denomination, provisioned]) => [
+    _.toNumber(denomination),
+    provisioned,
+  ])
 }
 
 const getSolution = (units, amount) => {
@@ -128,28 +130,35 @@ const getSolution = (units, amount) => {
 }
 
 const solutionToOriginalUnits = (solution, units) => {
-  const billsToAssign = (count, left) => _.clamp(0, count)(_.isNaN(left) || _.isNil(left) ? 0 : left)
+  const billsToAssign = (count, left) =>
+    _.clamp(0, count)(_.isNaN(left) || _.isNil(left) ? 0 : left)
   const billsLeft = Object.fromEntries(solution)
-  return units.map(
-    ({ count, name, denomination }) => {
-      const provisioned = billsToAssign(count, billsLeft[denomination])
-      billsLeft[denomination] -= provisioned
-      return { name, denomination, provisioned }
-    }
-  )
+  return units.map(({ count, name, denomination }) => {
+    const provisioned = billsToAssign(count, billsLeft[denomination])
+    billsLeft[denomination] -= provisioned
+    return { name, denomination, provisioned }
+  })
 }
 
 function makeChange(outCassettes, amount) {
-  const ss_solution = getSolution_old(outCassettes, amount, BILL_LIST_MODES.VALUE_ROUND_ROBIN)
+  const ss_solution = getSolution_old(
+    outCassettes,
+    amount,
+    BILL_LIST_MODES.VALUE_ROUND_ROBIN,
+  )
   const cc_solution = getSolution(outCassettes, amount)
 
   if (!cc.check(cc_solution, amount.toNumber())) {
-    logger.error(new Error("coin-change provided a bad solution"))
+    logger.error(new Error('coin-change provided a bad solution'))
     return solutionToOriginalUnits(ss_solution, outCassettes)
   }
 
   if (!!ss_solution !== !!cc_solution) {
-    logger.error(new Error(`subset-sum and coin-change don't agree on solvability -- subset-sum:${!!ss_solution} coin-change:${!!cc_solution}`))
+    logger.error(
+      new Error(
+        `subset-sum and coin-change don't agree on solvability -- subset-sum:${!!ss_solution} coin-change:${!!cc_solution}`,
+      ),
+    )
     return solutionToOriginalUnits(ss_solution, outCassettes)
   }
 

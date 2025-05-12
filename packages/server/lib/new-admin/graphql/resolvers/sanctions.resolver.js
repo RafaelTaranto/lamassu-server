@@ -6,8 +6,8 @@ const resolvers = {
     checkAgainstSanctions: (...[, { customerId }, context]) => {
       const token = authentication.getToken(context)
       return sanctions.checkByUser(customerId, token)
-    }
-  }
+    },
+  },
 }
 
 module.exports = resolvers

@@ -1,7 +1,14 @@
 const parser = require('./parsing')
 const axios = require('axios')
 const { createWriteStream } = require('fs')
-const { rename, writeFile, readFile, mkdir, copyFile, unlink } = require('fs/promises')
+const {
+  rename,
+  writeFile,
+  readFile,
+  mkdir,
+  copyFile,
+  unlink,
+} = require('fs/promises')
 const path = require('path')
 const _ = require('lodash/fp')
 
@@ -10,17 +17,21 @@ const OFAC_DATA_DIR = process.env.OFAC_DATA_DIR
 const OFAC_SOURCES_DIR = path.join(OFAC_DATA_DIR, 'sources')
 const LAST_UPDATED_FILE = path.resolve(OFAC_DATA_DIR, 'last_updated.dat')
 
-const OFAC_SOURCES = [{
-  name: 'sdn_advanced',
-  url: 'https://sanctionslistservice.ofac.treas.gov/api/download/sdn_advanced.xml'
-}, {
-  name: 'cons_advanced',
-  url: 'https://sanctionslistservice.ofac.treas.gov/api/download/cons_advanced.xml'
-}]
+const OFAC_SOURCES = [
+  {
+    name: 'sdn_advanced',
+    url: 'https://sanctionslistservice.ofac.treas.gov/api/download/sdn_advanced.xml',
+  },
+  {
+    name: 'cons_advanced',
+    url: 'https://sanctionslistservice.ofac.treas.gov/api/download/cons_advanced.xml',
+  },
+]
 
 const _mkdir = path =>
-  mkdir(path)
-    .catch(err => err.code === 'EEXIST' ? Promise.resolve() : Promise.reject(err))
+  mkdir(path).catch(err =>
+    err.code === 'EEXIST' ? Promise.resolve() : Promise.reject(err),
+  )
 
 const download = (dstDir, { name, url }) => {
   const dstFile = path.join(dstDir, name + '.xml')
@@ -90,7 +101,7 @@ const moveToSourcesDir = async (srcFile, ofacSourcesDir) => {
   return dstFile
 }
 
-function update () {
+function update() {
   if (!OFAC_DATA_DIR) {
     throw new Error('ofacDataDir must be defined in the environment')
   }
@@ -118,17 +129,20 @@ function update () {
       if (skipUpdate) return Promise.resolve()
 
       const downloads = _.flow(
-        _.map(file => download(DOWNLOAD_DIR, file).then(parseToJson))
+        _.map(file => download(DOWNLOAD_DIR, file).then(parseToJson)),
       )(OFAC_SOURCES)
 
-      return Promise.all(downloads)
-        .then(parsed => {
-          const moves = _.map(src => moveToSourcesDir(src, OFAC_SOURCES_DIR), parsed)
-          const timestamp = new Date().toISOString()
+      return Promise.all(downloads).then(parsed => {
+        const moves = _.map(
+          src => moveToSourcesDir(src, OFAC_SOURCES_DIR),
+          parsed,
+        )
+        const timestamp = new Date().toISOString()
 
-          return Promise.all([...moves])
-            .then(() => writeFile(LAST_UPDATED_FILE, timestamp))
-        })
+        return Promise.all([...moves]).then(() =>
+          writeFile(LAST_UPDATED_FILE, timestamp),
+        )
+      })
     })
 }
 

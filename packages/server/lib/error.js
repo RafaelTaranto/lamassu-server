@@ -15,7 +15,7 @@ const E = function (name) {
 
 module.exports = E
 
-function register (errorName) {
+function register(errorName) {
   E[errorName] = E(errorName)
 }
 

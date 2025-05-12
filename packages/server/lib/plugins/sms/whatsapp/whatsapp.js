@@ -2,20 +2,20 @@ const axios = require('axios')
 
 const NAME = 'Whatsapp'
 
-function sendMessage (account, rec) {
+function sendMessage(account, rec) {
   const phoneId = account.phoneId
   const token = account.apiKey
-  
+
   const to = rec.sms.toNumber || account.toNumber
   const template = rec.sms.template
 
   const url = `https://graph.facebook.com/v17.0/${phoneId}/messages`
 
   const config = {
-    headers:{
+    headers: {
       Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    }
+      'Content-Type': 'application/json',
+    },
   }
 
   const data = {
@@ -25,18 +25,17 @@ function sendMessage (account, rec) {
     to,
     template: {
       name: template,
-      language: { code: 'en_US' }
-    }
+      language: { code: 'en_US' },
+    },
   }
 
-  axios.post(url, data, config)
-    .catch(err => {
+  axios.post(url, data, config).catch(err => {
     //   console.log(err)
-      throw new Error(`Whatsapp error: ${err.message}`)
-    })
+    throw new Error(`Whatsapp error: ${err.message}`)
+  })
 }
 
 module.exports = {
   NAME,
-  sendMessage
+  sendMessage,
 }

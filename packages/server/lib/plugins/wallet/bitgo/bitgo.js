@@ -36,7 +36,7 @@ const getWallet = (account, cryptoCode) => {
   return bitgo.coin(coin).wallets().get({ id: walletId })
 }
 
-function checkCryptoCode (cryptoCode) {
+function checkCryptoCode(cryptoCode) {
   if (!SUPPORTED_COINS.includes(cryptoCode)) {
     return Promise.reject(new Error('Unsupported crypto: ' + cryptoCode))
   }
@@ -44,26 +44,26 @@ function checkCryptoCode (cryptoCode) {
   return Promise.resolve()
 }
 
-function getLegacyAddress (address, cryptoCode) {
+function getLegacyAddress(address, cryptoCode) {
   if (!BCH_CODES.includes(cryptoCode)) return address
 
   return toLegacyAddress(address)
 }
 
-function getCashAddress (address, cryptoCode) {
+function getCashAddress(address, cryptoCode) {
   if (!BCH_CODES.includes(cryptoCode)) return address
 
   return toCashAddress(address)
 }
 
-function formatToGetStatus (address, cryptoCode) {
+function formatToGetStatus(address, cryptoCode) {
   if (!BCH_CODES.includes(cryptoCode)) return address
 
   const [part1, part2] = getLegacyAddress(address, cryptoCode).split(':')
   return part2 || part1
 }
 
-function sendCoins (account, tx, settings, operatorId) {
+function sendCoins(account, tx) {
   const { toAddress, cryptoAtoms, cryptoCode } = tx
   return checkCryptoCode(cryptoCode)
     .then(() => getWallet(account, cryptoCode))
@@ -72,7 +72,7 @@ function sendCoins (account, tx, settings, operatorId) {
         address: getLegacyAddress(toAddress, cryptoCode),
         amount: cryptoAtoms.toNumber(),
         walletPassphrase: account[`${cryptoCode}WalletPassphrase`],
-        enforceMinConfirmsForChange: false
+        enforceMinConfirmsForChange: false,
       }
       return wallet.send(params)
     })
@@ -83,51 +83,55 @@ function sendCoins (account, tx, settings, operatorId) {
       return { txid: txid, fee: new BN(fee).decimalPlaces(0) }
     })
     .catch(err => {
-      if (err.message === 'insufficient funds') throw new E.InsufficientFundsError()
+      if (err.message === 'insufficient funds')
+        throw new E.InsufficientFundsError()
       throw err
     })
 }
 
-function balance (account, cryptoCode, settings, operatorId) {
+function balance(account, cryptoCode) {
   return checkCryptoCode(cryptoCode)
     .then(() => getWallet(account, cryptoCode))
     .then(wallet => new BN(wallet._wallet.spendableBalanceString))
 }
 
-function newAddress (account, info, tx, settings, operatorId) {
+function newAddress(account, info) {
   return checkCryptoCode(info.cryptoCode)
     .then(() => getWallet(account, info.cryptoCode))
     .then(wallet => {
-      return wallet.createAddress()
-        .then(result => {
-          const address = result.address
+      return wallet.createAddress().then(result => {
+        const address = result.address
 
-          // If a label was provided, set the label
-          if (info.label) {
-            return wallet.updateAddress({ address: address, label: info.label })
-              .then(() => getCashAddress(address, info.cryptoCode))
-          }
+        // If a label was provided, set the label
+        if (info.label) {
+          return wallet
+            .updateAddress({ address: address, label: info.label })
+            .then(() => getCashAddress(address, info.cryptoCode))
+        }
 
-          return getCashAddress(address, info.cryptoCode)
-        })
+        return getCashAddress(address, info.cryptoCode)
+      })
     })
 }
 
-function getStatus (account, tx, requested, settings, operatorId) {
+function getStatus(account, tx, requested) {
   const { toAddress, cryptoCode } = tx
   return checkCryptoCode(cryptoCode)
     .then(() => getWallet(account, cryptoCode))
-    .then(wallet => wallet.transfers({
-      type: 'receive',
-      address: formatToGetStatus(toAddress, cryptoCode)
-    }))
+    .then(wallet =>
+      wallet.transfers({
+        type: 'receive',
+        address: formatToGetStatus(toAddress, cryptoCode),
+      }),
+    )
     .then(({ transfers }) => {
-      const filterConfirmed = _.filter(it =>
-        it.state === 'confirmed' && it.type === 'receive'
+      const filterConfirmed = _.filter(
+        it => it.state === 'confirmed' && it.type === 'receive',
       )
-      const filterPending = _.filter(it =>
-        (it.state === 'confirmed' || it.state === 'unconfirmed') &&
-        it.type === 'receive'
+      const filterPending = _.filter(
+        it =>
+          (it.state === 'confirmed' || it.state === 'unconfirmed') &&
+          it.type === 'receive',
       )
 
       const sum = _.reduce((acc, val) => val.plus(acc), new BN(0))
@@ -136,40 +140,43 @@ function getStatus (account, tx, requested, settings, operatorId) {
       const confirmed = _.compose(sum, toBn, filterConfirmed)(transfers)
       const pending = _.compose(sum, toBn, filterPending)(transfers)
 
-      if (confirmed.gte(requested)) return { receivedCryptoAtoms: confirmed, status: 'confirmed' }
-      if (pending.gte(requested)) return { receivedCryptoAtoms: pending, status: 'authorized' }
-      if (pending.gt(0)) return { receivedCryptoAtoms: pending, status: 'insufficientFunds' }
+      if (confirmed.gte(requested))
+        return { receivedCryptoAtoms: confirmed, status: 'confirmed' }
+      if (pending.gte(requested))
+        return { receivedCryptoAtoms: pending, status: 'authorized' }
+      if (pending.gt(0))
+        return { receivedCryptoAtoms: pending, status: 'insufficientFunds' }
       return { receivedCryptoAtoms: pending, status: 'notSeen' }
     })
 }
 
-function newFunding (account, cryptoCode, settings, operatorId) {
-  return checkCryptoCode(cryptoCode)
-    .then(() => {
-      return getWallet(account, cryptoCode)
-        .then(wallet => {
-          return wallet.createAddress()
-            .then(result => {
-              const fundingAddress = result.address
-              return wallet.updateAddress({ address: fundingAddress, label: 'Funding Address' })
-                .then(() => ({
-                  fundingPendingBalance: new BN(wallet._wallet.balance).minus(wallet._wallet.confirmedBalance),
-                  fundingConfirmedBalance: new BN(wallet._wallet.confirmedBalance),
-                  fundingAddress: getCashAddress(fundingAddress, cryptoCode)
-                }))
-            })
-        })
+function newFunding(account, cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(() => {
+    return getWallet(account, cryptoCode).then(wallet => {
+      return wallet.createAddress().then(result => {
+        const fundingAddress = result.address
+        return wallet
+          .updateAddress({ address: fundingAddress, label: 'Funding Address' })
+          .then(() => ({
+            fundingPendingBalance: new BN(wallet._wallet.balance).minus(
+              wallet._wallet.confirmedBalance,
+            ),
+            fundingConfirmedBalance: new BN(wallet._wallet.confirmedBalance),
+            fundingAddress: getCashAddress(fundingAddress, cryptoCode),
+          }))
+      })
     })
+  })
 }
 
-function cryptoNetwork (account, cryptoCode, settings, operatorId) {
-  return checkCryptoCode(cryptoCode)
-    .then(() => account.environment === 'test' ? 'test' : 'main')
+function cryptoNetwork(account, cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(() =>
+    account.environment === 'test' ? 'test' : 'main',
+  )
 }
 
-function checkBlockchainStatus (cryptoCode) {
-  return checkCryptoCode(cryptoCode)
-    .then(() => Promise.resolve('ready'))
+function checkBlockchainStatus(cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(() => Promise.resolve('ready'))
 }
 
 module.exports = {
@@ -180,5 +187,5 @@ module.exports = {
   getStatus,
   newFunding,
   cryptoNetwork,
-  checkBlockchainStatus
+  checkBlockchainStatus,
 }

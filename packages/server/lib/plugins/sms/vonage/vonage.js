@@ -3,10 +3,10 @@ const { SMS } = require('@vonage/sms')
 
 const NAME = 'Vonage'
 
-function sendMessage (account, rec) {
+function sendMessage(account, rec) {
   const credentials = new Auth({
     apiKey: account.apiKey,
-    apiSecret: account.apiSecret
+    apiSecret: account.apiSecret,
   })
 
   const from = account.fromNumber
@@ -14,10 +14,9 @@ function sendMessage (account, rec) {
   const to = rec.sms.toNumber || account.toNumber
 
   const smsClient = new SMS(credentials)
-  smsClient.send({ from, text, to })
-    .catch(err => {
-      throw new Error(`Vonage error: ${err.message}`)
-    })
+  smsClient.send({ from, text, to }).catch(err => {
+    throw new Error(`Vonage error: ${err.message}`)
+  })
 }
 
 module.exports = {

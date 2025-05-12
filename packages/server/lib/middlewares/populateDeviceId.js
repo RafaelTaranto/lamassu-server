@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 
-function sha256 (buf) {
+function sha256(buf) {
   if (!buf) return null
   const hash = crypto.createHash('sha256')
 
@@ -9,10 +9,13 @@ function sha256 (buf) {
 }
 
 const populateDeviceId = function (req, res, next) {
-  const peerCert = req.socket.getPeerCertificate ? req.socket.getPeerCertificate() : null
+  const peerCert = req.socket.getPeerCertificate
+    ? req.socket.getPeerCertificate()
+    : null
   const deviceId = peerCert?.raw ? sha256(peerCert.raw) : null
-  
-  if (!deviceId) return res.status(500).json({ error: 'Unable to find certificate' })
+
+  if (!deviceId)
+    return res.status(500).json({ error: 'Unable to find certificate' })
   req.deviceId = deviceId
   req.deviceTime = req.get('date')
 

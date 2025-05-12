@@ -9,12 +9,17 @@ module.exports = { setup, updateCore }
 const es = common.es
 const logger = common.logger
 
-function updateCore (coinRec, isCurrentlyRunning) {
+function updateCore(coinRec, isCurrentlyRunning) {
   common.logger.info('Updating your Zcash wallet. This may take a minute...')
   common.es(`sudo supervisorctl stop zcash`)
   common.es(`curl -#Lo /tmp/zcash.tar.gz ${coinRec.url}`)
-  if (common.es(`sha256sum /tmp/zcash.tar.gz | awk '{print $1}'`).trim() !== coinRec.urlHash) {
-    common.logger.info('Failed to update Zcash: Package signature do not match!')
+  if (
+    common.es(`sha256sum /tmp/zcash.tar.gz | awk '{print $1}'`).trim() !==
+    coinRec.urlHash
+  ) {
+    common.logger.info(
+      'Failed to update Zcash: Package signature do not match!',
+    )
     return
   }
   common.es(`tar -xzf /tmp/zcash.tar.gz -C /tmp/`)
@@ -24,11 +29,17 @@ function updateCore (coinRec, isCurrentlyRunning) {
   common.es(`rm -r /tmp/${coinRec.dir.replace('/bin', '')}`)
   common.es(`rm /tmp/zcash.tar.gz`)
 
-  if (common.es(`grep "walletrequirebackup=" /mnt/blockchains/zcash/zcash.conf || true`)) {
+  if (
+    common.es(
+      `grep "walletrequirebackup=" /mnt/blockchains/zcash/zcash.conf || true`,
+    )
+  ) {
     common.logger.info(`walletrequirebackup already defined, skipping...`)
   } else {
     common.logger.info(`Setting 'walletrequirebackup=false' in config file...`)
-    common.es(`echo "\nwalletrequirebackup=false" >> /mnt/blockchains/zcash/zcash.conf`)
+    common.es(
+      `echo "\nwalletrequirebackup=false" >> /mnt/blockchains/zcash/zcash.conf`,
+    )
   }
 
   if (isCurrentlyRunning) {
@@ -39,7 +50,7 @@ function updateCore (coinRec, isCurrentlyRunning) {
   common.logger.info('Zcash is updated!')
 }
 
-function setup (dataDir) {
+function setup(dataDir) {
   es('sudo apt-get update')
   es('sudo apt-get install libgomp1 -y')
   const coinRec = coinUtils.getCryptoCurrency('ZEC')
@@ -54,7 +65,7 @@ function setup (dataDir) {
   common.writeSupervisorConfig(coinRec, cmd)
 }
 
-function buildConfig () {
+function buildConfig() {
   return `mainnet=1
 addnode=mainnet.z.cash
 rpcuser=lamassuserver

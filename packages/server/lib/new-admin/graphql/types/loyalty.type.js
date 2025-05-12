@@ -6,7 +6,7 @@ const typeDef = gql`
     customer: DiscountCustomer!
     discount: Int
   }
-  
+
   type DiscountCustomer {
     id: ID!
     phone: String
@@ -27,7 +27,10 @@ const typeDef = gql`
   type Mutation {
     createPromoCode(code: String!, discount: Int!): PromoCode @auth
     deletePromoCode(codeId: ID!): PromoCode @auth
-    createIndividualDiscount(customerId: ID!, discount: Int!): IndividualDiscount @auth
+    createIndividualDiscount(
+      customerId: ID!
+      discount: Int!
+    ): IndividualDiscount @auth
     deleteIndividualDiscount(discountId: ID!): IndividualDiscount @auth
   }
 `

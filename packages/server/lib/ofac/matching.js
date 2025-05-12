@@ -7,7 +7,7 @@ const stringSimilarity = _.curry(jaro)
 
 // birth date
 
-function isDateWithinSomeDaysOfPeriod (period, date, days) {
+function isDateWithinSomeDaysOfPeriod(period, date, days) {
   const inMillisecs = 24 * 60 * 60 * 1000
 
   const startTime = period.start.date.getTime() - days * inMillisecs
@@ -16,32 +16,35 @@ function isDateWithinSomeDaysOfPeriod (period, date, days) {
   const endTime = period.end.date.getTime() + days * inMillisecs
   const endDate = new Date(endTime)
 
-  return (startDate < date && date < endDate)
+  return startDate < date && date < endDate
 }
 
 const isBornTooLongSince = _.curry((days, dateObject, individual) => {
   if (!dateObject) return false
   if (_.isEmpty(individual.birthDatePeriods)) return false
-  const isWithinSomeYears = _.partialRight(isDateWithinSomeDaysOfPeriod, [dateObject.date, days])
+  const isWithinSomeYears = _.partialRight(isDateWithinSomeDaysOfPeriod, [
+    dateObject.date,
+    days,
+  ])
   return !_.some(isWithinSomeYears, individual.birthDatePeriods)
 })
 
 // algorithm
 
-function match (structs, candidate, options) {
-  const {threshold, fullNameThreshold, ratio = 0.5, verboseFor} = options
-  const {fullName, words, birthDate} = candidate
+function match(structs, candidate, options) {
+  const { threshold, fullNameThreshold, ratio = 0.5, verboseFor } = options
+  const { fullName, words, birthDate } = candidate
 
   // Accept aliases who's full name matches.
   const doesNameMatch = _.flow(
     _.get('fullName'),
     stringSimilarity(fullName),
-    _.lte(fullNameThreshold)
+    _.lte(fullNameThreshold),
   )
   const aliases = _.flatMap(_.get('aliases'), structs.individuals)
   const aliasIdsFromFullName = _.flow(
     _.filter(doesNameMatch),
-    _.map(_.get('id'))
+    _.map(_.get('id')),
   )(aliases)
 
   const phoneticWeight = ratio
@@ -60,12 +63,25 @@ function match (structs, candidate, options) {
 
       for (const aliasId of wordEntry.aliasIds) {
         const phoneticScore = phoneticMatches.has(aliasId) ? 1 : -1
-        const finalScore = stringWeight * stringScore + phoneticWeight * phoneticScore
+        const finalScore =
+          stringWeight * stringScore + phoneticWeight * phoneticScore
 
-        verbose && logger.debug(finalScore.toFixed(2), stringScore.toFixed(2), phoneticScore.toFixed(2), word.value, wordEntry.value)
+        verbose &&
+          logger.debug(
+            finalScore.toFixed(2),
+            stringScore.toFixed(2),
+            phoneticScore.toFixed(2),
+            word.value,
+            wordEntry.value,
+          )
 
         if (finalScore >= threshold) {
-          const entry = {aliasId, score: finalScore, word: word.value, value: wordEntry.value}
+          const entry = {
+            aliasId,
+            score: finalScore,
+            word: word.value,
+            value: wordEntry.value,
+          }
           const index = _.sortedIndexBy(x => -x.score, entry, matches)
           matches.splice(index, 0, entry)
         }
@@ -83,10 +99,10 @@ function match (structs, candidate, options) {
     _.countBy(_.identity),
     _.toPairs,
     _.filter(([aliasId, count]) => {
-      const {length} = structs.aliasesMap.get(aliasId).words
-      return (count >= _.min([2, words.length, length]))
+      const { length } = structs.aliasesMap.get(aliasId).words
+      return count >= _.min([2, words.length, length])
     }),
-    _.map(_.first)
+    _.map(_.first),
   )(matches)
 
   // Get the full record for each matched id
@@ -94,10 +110,9 @@ function match (structs, candidate, options) {
     const individualId = structs.aliasToIndividual.get(aliasId)
     return structs.individualsMap.get(individualId)
   }
-  const suspects = _.uniq(_.map(getIndividual, [
-    ...aliasIdsFromFullName,
-    ...aliasIdsFromNamePart
-  ]))
+  const suspects = _.uniq(
+    _.map(getIndividual, [...aliasIdsFromFullName, ...aliasIdsFromNamePart]),
+  )
 
   // Reject everyone who is born two years away.
   const twoYears = 365 * 2
@@ -105,4 +120,4 @@ function match (structs, candidate, options) {
   return _.reject(unqualified, suspects)
 }
 
-module.exports = {match}
+module.exports = { match }

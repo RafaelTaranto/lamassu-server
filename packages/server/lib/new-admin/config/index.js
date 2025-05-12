@@ -7,10 +7,10 @@ const countries = require('./data/countries.json')
 const currenciesRec = require('./data/currencies.json')
 const languageRec = require('./data/languages.json')
 
-function massageCurrencies (currencies) {
+function massageCurrencies(currencies) {
   const convert = r => ({
     code: r['Alphabetic Code'],
-    display: r['Currency']
+    display: r['Currency'],
   })
   const top5Codes = ['USD', 'EUR', 'GBP', 'CAD', 'AUD']
   const mapped = _.map(convert, currencies)
@@ -37,7 +37,7 @@ const massageCryptos = cryptos => {
     code: crypto['cryptoCode'],
     display: crypto['display'],
     codeDisplay: crypto['cryptoCodeDisplay'] ?? crypto['cryptoCode'],
-    isBeta: betaList.includes(crypto.cryptoCode)
+    isBeta: betaList.includes(crypto.cryptoCode),
   })
 
   return _.map(convert, cryptos)

@@ -7,17 +7,19 @@ const request = require('request-promise')
 const { utils: coinUtils } = require('@lamassu/coins')
 
 const logger = require('../../logger')
-const { isRemoteNode, isRemoteWallet } = require('../../environment-helper')
+const { isRemoteWallet } = require('../../environment-helper')
 const { isEnvironmentValid } = require('../../blockchain/install')
 
 const BLOCKCHAIN_DIR = process.env.BLOCKCHAIN_DIR
 
-
 module.exports = {
-  fetch, fetchDigest, parseConf, rpcConfig
+  fetch,
+  fetchDigest,
+  parseConf,
+  rpcConfig,
 }
 
-function fetch (account = {}, method, params) {
+function fetch(account = {}, method, params) {
   params = _.defaultTo([], params)
 
   return Promise.resolve(true)
@@ -25,18 +27,22 @@ function fetch (account = {}, method, params) {
       const data = {
         method,
         params,
-        id: uuid.v4()
+        id: uuid.v4(),
       }
 
-      if (_.isNil(account.port)) throw new Error('port attribute required for jsonRpc')
+      if (_.isNil(account.port))
+        throw new Error('port attribute required for jsonRpc')
 
-      const url = _.defaultTo(`http://${account.host}:${account.port}`, account.url)
+      const url = _.defaultTo(
+        `http://${account.host}:${account.port}`,
+        account.url,
+      )
 
       return axios({
         method: 'post',
-        auth: {username: account.username, password: account.password},
+        auth: { username: account.username, password: account.password },
         url,
-        data
+        data,
       })
     })
     .then(r => {
@@ -44,17 +50,19 @@ function fetch (account = {}, method, params) {
       return r.data.result
     })
     .catch(err => {
-      throw new Error(JSON.stringify({
-        responseMessage: _.get('message', err),
-        message: _.get('response.data.error.message', err),
-        code: _.get('response.data.error.code', err)
-      }))
+      throw new Error(
+        JSON.stringify({
+          responseMessage: _.get('message', err),
+          message: _.get('response.data.error.message', err),
+          code: _.get('response.data.error.code', err),
+        }),
+      )
     })
 }
 
-function generateDigestOptions (account = {}, method, params) {
+function generateDigestOptions(account = {}, method, params) {
   const headers = {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
   }
 
   const dataString = `{"jsonrpc":"2.0","id":"${uuid.v4()}","method":"${method}","params":${JSON.stringify(params)}}`
@@ -68,31 +76,30 @@ function generateDigestOptions (account = {}, method, params) {
     auth: {
       user: account.username,
       pass: account.password,
-      sendImmediately: false
-    }
+      sendImmediately: false,
+    },
   }
 
   return options
 }
 
 function fetchDigest(account = {}, method, params = []) {
-  return Promise.resolve(true)
-    .then(() => {
-      if (_.isNil(account.port))
-        throw new Error('port attribute required for jsonRpc')
+  return Promise.resolve(true).then(() => {
+    if (_.isNil(account.port))
+      throw new Error('port attribute required for jsonRpc')
 
-      const options = generateDigestOptions(account, method, params)
-      return request(options)
-    })
+    const options = generateDigestOptions(account, method, params)
+    return request(options)
+  })
 }
 
-function split (str) {
+function split(str) {
   const i = str.indexOf('=')
   if (i === -1) return []
   return [str.slice(0, i), str.slice(i + 1)]
 }
 
-function parseConf (confPath) {
+function parseConf(confPath) {
   const conf = fs.readFileSync(confPath)
   const lines = conf.toString().split('\n')
 
@@ -109,34 +116,36 @@ function parseConf (confPath) {
   return res
 }
 
-function rpcConfig (cryptoRec) {
+function rpcConfig(cryptoRec) {
   try {
     if (isRemoteWallet(cryptoRec) && isEnvironmentValid(cryptoRec)) {
       return {
         username: process.env[`${cryptoRec.cryptoCode}_NODE_USER`],
         password: process.env[`${cryptoRec.cryptoCode}_NODE_PASSWORD`],
         host: process.env[`${cryptoRec.cryptoCode}_NODE_RPC_HOST`],
-        port: process.env[`${cryptoRec.cryptoCode}_NODE_RPC_PORT`]
+        port: process.env[`${cryptoRec.cryptoCode}_NODE_RPC_PORT`],
       }
     }
 
     const configPath = coinUtils.configPath(cryptoRec, BLOCKCHAIN_DIR)
     const config = parseConf(configPath)
-    
+
     return {
       username: config.rpcuser,
       password: config.rpcpassword,
       host: 'localhost',
-      port: config.rpcport || cryptoRec.defaultPort
+      port: config.rpcport || cryptoRec.defaultPort,
     }
   } catch (err) {
     if (!isEnvironmentValid(cryptoRec)) {
-      logger.error('Environment is not correctly setup for remote wallet usage!')
+      logger.error(
+        `Environment is not correctly setup for remote wallet usage!, ${err}`,
+      )
     } else {
       logger.error('Wallet is currently not installed!')
     }
     return {
-      port: cryptoRec.defaultPort
+      port: cryptoRec.defaultPort,
     }
   }
 }

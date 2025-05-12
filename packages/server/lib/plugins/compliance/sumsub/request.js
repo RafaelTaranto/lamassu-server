@@ -4,7 +4,7 @@ const _ = require('lodash/fp')
 const FormData = require('form-data')
 
 const axiosConfig = {
-  baseURL: 'https://api.sumsub.com'
+  baseURL: 'https://api.sumsub.com',
 }
 
 const getSigBuilder = (apiToken, secretKey) => config => {
@@ -25,10 +25,13 @@ const getSigBuilder = (apiToken, secretKey) => config => {
   return config
 }
 
-const request = ((account, config) => {
+const request = (account, config) => {
   const instance = axios.create(axiosConfig)
-  instance.interceptors.request.use(getSigBuilder(account.apiToken, account.secretKey), Promise.reject)
+  instance.interceptors.request.use(
+    getSigBuilder(account.apiToken, account.secretKey),
+    Promise.reject,
+  )
   return instance(config)
-})
+}
 
 module.exports = request

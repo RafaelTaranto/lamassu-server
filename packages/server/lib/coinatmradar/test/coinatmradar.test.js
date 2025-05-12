@@ -80,7 +80,7 @@ const settings = {
         threshold: 123,
         id: '9c3b5af8-b1d1-4125-b169-0e913b33894c',
         direction: 'both',
-        triggerType: 'txAmount'
+        triggerType: 'txAmount',
       },
       {
         requirement: 'sms',
@@ -88,7 +88,7 @@ const settings = {
         thresholdDays: 1,
         id: 'b0e1e6a8-be1b-4e43-ac5f-3e4951e86f8b',
         direction: 'both',
-        triggerType: 'txVelocity'
+        triggerType: 'txVelocity',
       },
       {
         requirement: 'sms',
@@ -96,58 +96,58 @@ const settings = {
         thresholdDays: 1,
         id: '6ac38fe6-172c-48a4-8a7f-605213cbd600',
         direction: 'both',
-        triggerType: 'txVolume'
-      }
+        triggerType: 'txVolume',
+      },
     ],
     notifications_sms_transactions: true,
-    notifications_highValueTransaction: 50
+    notifications_highValueTransaction: 50,
   },
-  accounts: {}
+  accounts: {},
 }
 
 const rates = [
   {
     rates: {
       ask: new BN(19164.3),
-      bid: new BN(19164.2)
+      bid: new BN(19164.2),
     },
-    timestamp: +new Date()
+    timestamp: +new Date(),
   },
   {
     rates: {
       ask: new BN(594.54),
-      bid: new BN(594.09)
+      bid: new BN(594.09),
     },
-    timestamp: +new Date()
+    timestamp: +new Date(),
   },
   {
     rates: {
       ask: new BN(84.38),
-      bid: new BN(84.37)
+      bid: new BN(84.37),
     },
-    timestamp: +new Date()
+    timestamp: +new Date(),
   },
   {
     rates: {
       ask: new BN(102.8),
-      bid: new BN(101.64)
+      bid: new BN(101.64),
     },
-    timestamp: +new Date()
+    timestamp: +new Date(),
   },
   {
     rates: {
       ask: new BN(74.91),
-      bid: new BN(74.12)
+      bid: new BN(74.12),
     },
-    timestamp: +new Date()
+    timestamp: +new Date(),
   },
   {
     rates: {
       ask: new BN(284.4),
-      bid: new BN(284.4)
+      bid: new BN(284.4),
     },
-    timestamp: +new Date()
-  }
+    timestamp: +new Date(),
+  },
 ]
 
 const dbResponse = [
@@ -155,32 +155,32 @@ const dbResponse = [
     device_id:
       'mock7e531a2666987aa27b9917ca17df7998f72771c57fdb21c90bc033999edd17e4',
     last_online: new Date('2020-11-16T13:11:03.169Z'),
-    stale: false
+    stale: false,
   },
   {
     device_id:
       '9871e58aa2643ff9445cbc299b50397430ada75157d6c29b4c93548fff0f48f7',
     last_online: new Date('2020-11-16T16:21:35.948Z'),
-    stale: false
+    stale: false,
   },
   {
     device_id:
       '5ae0d02dedeb77b6521bd5eb7c9159bdc025873fa0bcb6f87aaddfbda0c50913',
     last_online: new Date('2020-11-19T15:07:57.089Z'),
-    stale: false
+    stale: false,
   },
   {
     device_id:
       'f02af604ca9010bd9ae04c427a24da90130da10d355f0a9b235886a89008fc05',
     last_online: new Date('2020-11-26T20:05:57.792Z'),
-    stale: false
+    stale: false,
   },
   {
     device_id:
       '490ab16ee0c124512dc769be1f3e7ee3894ce1e5b4b8b975e134fb326e551e88',
     last_online: new Date('2020-12-04T16:48:05.129Z'),
-    stale: false
-  }
+    stale: false,
+  },
 ]
 
 function validateData(data) {
@@ -189,7 +189,7 @@ function validateData(data) {
     operator: yup.object().shape({
       name: yup.string().nullable(),
       phone: yup.string().nullable(),
-      email: yup.string().email().nullable()
+      email: yup.string().email().nullable(),
     }),
     timestamp: yup.string().required('timestamp not provided'),
     machines: yup.array().of(
@@ -200,12 +200,12 @@ function validateData(data) {
           city: yup.string().nullable(),
           region: yup.string().nullable(),
           postalCode: yup.string().nullable(),
-          country: yup.string().nullable()
+          country: yup.string().nullable(),
         }),
         location: yup.object().required('location object not provided').shape({
           name: yup.string().nullable(),
           url: yup.string().nullable(),
-          phone: yup.string().nullable()
+          phone: yup.string().nullable(),
         }),
         status: yup
           .string()
@@ -231,7 +231,7 @@ function validateData(data) {
             .required('isIdDocScan boolean not defined'),
           isFingerprint: yup
             .boolean()
-            .required('isFingerprint boolean not defined')
+            .required('isFingerprint boolean not defined'),
         }),
         coins: yup.array().of(
           yup.object().shape({
@@ -240,11 +240,11 @@ function validateData(data) {
             cashOutFee: yup.number().nullable(),
             cashInFixedFee: yup.number().nullable(),
             cashInRate: yup.number().nullable(),
-            cashOutRate: yup.number().nullable()
-          })
-        )
-      })
-    )
+            cashOutRate: yup.number().nullable(),
+          }),
+        ),
+      }),
+    ),
   })
   return schema.validate(data)
 }
@@ -252,13 +252,13 @@ function validateData(data) {
 test('Verify axios request schema', async () => {
   const axios = require('axios')
 
-  jest.spyOn(axios, 'default').mockImplementation(
-    jest.fn(req =>
-      validateData(req.data)
-        .then(() => ({ status: 'mock status 200' }))
-        .catch(e => fail(e))
+  jest
+    .spyOn(axios, 'default')
+    .mockImplementation(
+      jest.fn(req =>
+        validateData(req.data).then(() => ({ status: 'mock status 200' })),
+      ),
     )
-  )
 
   db.any.mockResolvedValue(dbResponse)
   await car.update(rates, settings)

@@ -2,7 +2,9 @@ const request = require('./request')
 
 const createApplicant = (account, userId, level) => {
   if (!userId || !level) {
-    return Promise.reject(`Missing required fields: userId: ${userId}, level: ${level}`)
+    return Promise.reject(
+      `Missing required fields: userId: ${userId}, level: ${level}`,
+    )
   }
 
   const config = {
@@ -10,12 +12,12 @@ const createApplicant = (account, userId, level) => {
     url: `/resources/applicants?levelName=${level}`,
     data: {
       externalUserId: userId,
-      sourceKey: 'lamassu'
+      sourceKey: 'lamassu',
     },
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
+      Accept: 'application/json',
+    },
   }
 
   return request(account, config)
@@ -23,7 +25,9 @@ const createApplicant = (account, userId, level) => {
 
 const createLink = (account, userId, level) => {
   if (!userId || !level) {
-    return Promise.reject(`Missing required fields: userId: ${userId}, level: ${level}`)
+    return Promise.reject(
+      `Missing required fields: userId: ${userId}, level: ${level}`,
+    )
   }
 
   const config = {
@@ -31,8 +35,8 @@ const createLink = (account, userId, level) => {
     url: `/resources/sdkIntegrations/levels/${level}/websdkLink?ttlInSecs=${600}&externalUserId=${userId}`,
     headers: {
       'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
+      Accept: 'application/json',
+    },
   }
 
   return request(account, config)
@@ -47,9 +51,9 @@ const getApplicantByExternalId = (account, id) => {
     method: 'GET',
     url: `/resources/applicants/-;externalUserId=${id}/one`,
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
   }
 
   return request(account, config)
@@ -64,9 +68,9 @@ const getApplicantStatus = (account, id) => {
     method: 'GET',
     url: `/resources/applicants/${id}/status`,
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
   }
 
   return request(account, config)
@@ -81,9 +85,9 @@ const getApplicantById = (account, id) => {
     method: 'GET',
     url: `/resources/applicants/${id}/one`,
     headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    }
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
   }
 
   return request(account, config)
@@ -94,5 +98,5 @@ module.exports = {
   createApplicant,
   getApplicantByExternalId,
   getApplicantById,
-  getApplicantStatus
+  getApplicantStatus,
 }

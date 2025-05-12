@@ -9,34 +9,34 @@ const HOLLISTIC_COINS = {
   USDT: 'USDT',
   USDT_TRON: 'USDT',
   LTC: 'LTC',
-  TRX: 'TRX'
+  TRX: 'TRX',
 }
 
 const SINGLE_ASSET_COINS = {
   ZEC: {
     asset: 'ZEC',
-    blockchain: 'zcash'
+    blockchain: 'zcash',
   },
   BCH: {
     asset: 'BCH',
-    blockchain: 'bitcoin_cash'
-  }
+    blockchain: 'bitcoin_cash',
+  },
 }
 
 const TYPE = {
-    TRANSACTION: 'transaction',
-    ADDRESS: 'address'
+  TRANSACTION: 'transaction',
+  ADDRESS: 'address',
 }
 
 const SUPPORTED_COINS = { ...HOLLISTIC_COINS, ...SINGLE_ASSET_COINS }
 
-function rate (account, objectType, cryptoCode, objectId) {
+function rate(account, objectType, cryptoCode, objectId) {
   return isWalletScoringEnabled(account, cryptoCode).then(isEnabled => {
     if (!isEnabled) return Promise.resolve(null)
 
     const aml = new AML({
       key: account.apiKey,
-      secret: account.apiSecret
+      secret: account.apiSecret,
     })
 
     const isHolistic = Object.keys(HOLLISTIC_COINS).includes(cryptoCode)
@@ -44,38 +44,44 @@ function rate (account, objectType, cryptoCode, objectId) {
     const requestBody = {
       subject: {
         asset: isHolistic ? 'holistic' : SINGLE_ASSET_COINS[cryptoCode].asset,
-        blockchain: isHolistic ? 'holistic' : SINGLE_ASSET_COINS[cryptoCode].blockchain,
+        blockchain: isHolistic
+          ? 'holistic'
+          : SINGLE_ASSET_COINS[cryptoCode].blockchain,
         type: objectType,
-        hash: objectId
+        hash: objectId,
       },
-      type: objectType === TYPE.ADDRESS ? 'wallet_exposure' : 'source_of_funds'
+      type: objectType === TYPE.ADDRESS ? 'wallet_exposure' : 'source_of_funds',
     }
 
     const threshold = account.scoreThreshold
-    const endpoint = objectType === TYPE.ADDRESS ? '/v2/wallet/synchronous' : '/v2/analysis/synchronous'
+    const endpoint =
+      objectType === TYPE.ADDRESS
+        ? '/v2/wallet/synchronous'
+        : '/v2/analysis/synchronous'
 
-    return aml.client
-        .post(endpoint, requestBody)
-        .then((res) => {
-          const resScore = res.data?.risk_score
+    return aml.client.post(endpoint, requestBody).then(res => {
+      const resScore = res.data?.risk_score
 
-          // elliptic returns 0-1 score, but we're accepting 0-100 config
-          // normalize score to 0-10 where 0 is the lowest risk
-          // elliptic score can be null and contains decimals
-          return {score: (resScore || 0) * 10, isValid: ((resScore || 0) * 100) < threshold}
-        })
+      // elliptic returns 0-1 score, but we're accepting 0-100 config
+      // normalize score to 0-10 where 0 is the lowest risk
+      // elliptic score can be null and contains decimals
+      return {
+        score: (resScore || 0) * 10,
+        isValid: (resScore || 0) * 100 < threshold,
+      }
+    })
   })
 }
 
-function rateTransaction (account, cryptoCode, transactionId) {
+function rateTransaction(account, cryptoCode, transactionId) {
   return rate(account, TYPE.TRANSACTION, cryptoCode, transactionId)
 }
 
-function rateAddress (account, cryptoCode, address) {
+function rateAddress(account, cryptoCode, address) {
   return rate(account, TYPE.ADDRESS, cryptoCode, address)
 }
 
-function isWalletScoringEnabled (account, cryptoCode) {
+function isWalletScoringEnabled(account, cryptoCode) {
   const isAccountEnabled = !_.isNil(account) && account.enabled
 
   if (!isAccountEnabled) return Promise.resolve(false)
@@ -91,5 +97,5 @@ module.exports = {
   NAME,
   rateAddress,
   rateTransaction,
-  isWalletScoringEnabled
+  isWalletScoringEnabled,
 }

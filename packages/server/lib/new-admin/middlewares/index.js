@@ -5,5 +5,5 @@ const session = require('./session')
 module.exports = {
   cleanUserSessions,
   buildApolloContext,
-  session
+  session,
 }

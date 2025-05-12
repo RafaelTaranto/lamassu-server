@@ -4,7 +4,9 @@ const pgp = require('pg-promise')()
 const db = require('../../db')
 
 const getBills = filters => {
-  const deviceStatement = !_.isNil(filters.deviceId) ? `WHERE device_id = ${pgp.as.text(filters.deviceId)}` : ``
+  const deviceStatement = !_.isNil(filters.deviceId)
+    ? `WHERE device_id = ${pgp.as.text(filters.deviceId)}`
+    : ``
   const batchStatement = filter => {
     switch (filter) {
       case 'none':
@@ -12,7 +14,9 @@ const getBills = filters => {
       case 'any':
         return `WHERE b.cashbox_batch_id IS NOT NULL`
       default:
-        return _.isNil(filter) ? `` : `WHERE b.cashbox_batch_id = ${pgp.as.text(filter)}`
+        return _.isNil(filter)
+          ? ``
+          : `WHERE b.cashbox_batch_id = ${pgp.as.text(filter)}`
     }
   }
 
@@ -22,10 +26,12 @@ const getBills = filters => {
 
   const sql2 = `SELECT b.id, b.fiat, b.fiat_code, b.created, b.cashbox_batch_id, b.device_id FROM empty_unit_bills b ${deviceStatement} ${!_.isNil(filters.deviceId) && !_.isNil(filters.batch) ? `AND ${_.replace('WHERE', '', batchStatement(filters.batch))}` : `${batchStatement(filters.batch)}`}`
 
-  return Promise.all([db.any(sql), db.any(sql2)])
-    .then(([bills, operationalBills]) => _.map(_.mapKeys(_.camelCase), _.concat(bills, operationalBills)))
+  return Promise.all([db.any(sql), db.any(sql2)]).then(
+    ([bills, operationalBills]) =>
+      _.map(_.mapKeys(_.camelCase), _.concat(bills, operationalBills)),
+  )
 }
 
 module.exports = {
-  getBills
+  getBills,
 }

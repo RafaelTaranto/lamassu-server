@@ -1,11 +1,15 @@
-const { accounts: accountsConfig, countries, languages } = require('../../config')
+const {
+  accounts: accountsConfig,
+  countries,
+  languages,
+} = require('../../config')
 
 const resolver = {
   Query: {
     countries: () => countries,
     languages: () => languages,
-    accountsConfig: () => accountsConfig
-  }
+    accountsConfig: () => accountsConfig,
+  },
 }
 
 module.exports = resolver

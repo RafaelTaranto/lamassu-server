@@ -1,25 +1,25 @@
 const ph = require('./plugin-helper')
 
-function sendMessage (settings, rec) {
-  return Promise.resolve()
-    .then(() => {
-      const pluginCode = settings.config.notifications_thirdParty_email || 'mailgun'
-      const plugin = ph.load(ph.EMAIL, pluginCode)
-      const account = settings.accounts[pluginCode]
+function sendMessage(settings, rec) {
+  return Promise.resolve().then(() => {
+    const pluginCode =
+      settings.config.notifications_thirdParty_email || 'mailgun'
+    const plugin = ph.load(ph.EMAIL, pluginCode)
+    const account = settings.accounts[pluginCode]
 
-      return plugin.sendMessage(account, rec)
-    })
+    return plugin.sendMessage(account, rec)
+  })
 }
 
-function sendCustomerMessage (settings, rec) {
-  return Promise.resolve()
-    .then(() => {
-      const pluginCode = settings.config.notifications_thirdParty_email || 'mailgun'
-      const plugin = ph.load(ph.EMAIL, pluginCode)
-      const account = settings.accounts[pluginCode]
+function sendCustomerMessage(settings, rec) {
+  return Promise.resolve().then(() => {
+    const pluginCode =
+      settings.config.notifications_thirdParty_email || 'mailgun'
+    const plugin = ph.load(ph.EMAIL, pluginCode)
+    const account = settings.accounts[pluginCode]
 
-      return plugin.sendMessage(account, rec)
-    })
+    return plugin.sendMessage(account, rec)
+  })
 }
 
-module.exports = {sendMessage, sendCustomerMessage}
+module.exports = { sendMessage, sendCustomerMessage }

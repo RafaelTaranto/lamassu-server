@@ -11,13 +11,21 @@ const DEFAULT_FIAT_MARKET = 'EUR'
 const AMOUNT_PRECISION = 8
 const REQUIRED_CONFIG_FIELDS = ['key', 'secret', 'clientId', 'currencyMarket']
 
-const loadConfig = (account) => {
+const loadConfig = account => {
   const mapper = {
-    'key': 'apiKey',
-    'clientId': 'uid'
+    key: 'apiKey',
+    clientId: 'uid',
   }
-  const mapped = _.mapKeys(key => mapper[key] ? mapper[key] : key)(account)
+  const mapped = _.mapKeys(key => (mapper[key] ? mapper[key] : key))(account)
   return { ...mapped, timeout: 3000 }
 }
 
-module.exports = { loadConfig, DEFAULT_FIAT_MARKET, REQUIRED_CONFIG_FIELDS, CRYPTO, FIAT, ORDER_TYPE, AMOUNT_PRECISION }
+module.exports = {
+  loadConfig,
+  DEFAULT_FIAT_MARKET,
+  REQUIRED_CONFIG_FIELDS,
+  CRYPTO,
+  FIAT,
+  ORDER_TYPE,
+  AMOUNT_PRECISION,
+}

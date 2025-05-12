@@ -18,7 +18,7 @@ const CODES_DISPLAY = {
   LOW_CASH_OUT: 'Low Cash-out',
   LOW_RECYCLER_STACKER: 'Low Recycler Stacker',
   HIGH_RECYCLER_STACKER: 'High Recycler Stacker',
-  CASHBOX_REMOVED: 'Cashbox removed'
+  CASHBOX_REMOVED: 'Cashbox removed',
 }
 
 const NETWORK_DOWN_TIME = 3 * T.minute
@@ -32,7 +32,7 @@ const NOTIFICATION_TYPES = {
   CRYPTO_BALANCE: 'cryptoBalance',
   COMPLIANCE: 'compliance',
   ERROR: 'error',
-  SECURITY: 'security'
+  SECURITY: 'security',
 }
 
 module.exports = {
@@ -48,5 +48,5 @@ module.exports = {
   NETWORK_DOWN_TIME,
   STALE_STATE,
   ALERT_SEND_INTERVAL,
-  NOTIFICATION_TYPES
+  NOTIFICATION_TYPES,
 }

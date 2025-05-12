@@ -12,16 +12,20 @@ const rejectIncompatibleMachines = function (req, res, next) {
   const machineMajor = semver.major(machineVersion)
 
   if (serverMajor - machineMajor > 1) {
-    logger.error(`Machine version too old: ${machineVersion} deviceId: ${deviceId}`)
+    logger.error(
+      `Machine version too old: ${machineVersion} deviceId: ${deviceId}`,
+    )
     return res.status(400).json({
-      error: 'Machine version too old'
+      error: 'Machine version too old',
     })
   }
 
   if (serverMajor < machineMajor) {
-    logger.error(`Machine version too new: ${machineVersion} deviceId: ${deviceId}`)
+    logger.error(
+      `Machine version too new: ${machineVersion} deviceId: ${deviceId}`,
+    )
     return res.status(400).json({
-      error: 'Machine version too new'
+      error: 'Machine version too new',
     })
   }
 

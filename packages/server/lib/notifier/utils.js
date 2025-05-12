@@ -7,7 +7,7 @@ const {
   CODES_DISPLAY,
   NETWORK_DOWN_TIME,
   PING,
-  ALERT_SEND_INTERVAL
+  ALERT_SEND_INTERVAL,
 } = require('./codes')
 
 const DETAIL_TEMPLATE = {
@@ -20,16 +20,17 @@ const DETAIL_TEMPLATE = {
   cryptoAddress: '',
   direction: '',
   fiat: '',
-  fiatCode: ''
+  fiatCode: '',
 }
 
-function parseEventNote (event) {
+function parseEventNote(event) {
   return _.set('note', JSON.parse(event.note), event)
 }
 
-function checkPing (device) {
-  const age = Date.now() - (new Date(device.lastPing).getTime())
-  if (age > NETWORK_DOWN_TIME) return [{ code: PING, age, machineName: device.name }]
+function checkPing(device) {
+  const age = Date.now() - new Date(device.lastPing).getTime()
+  if (age > NETWORK_DOWN_TIME)
+    return [{ code: PING, age, machineName: device.name }]
   return []
 }
 
@@ -41,7 +42,7 @@ const codeDisplay = code => CODES_DISPLAY[code]
 
 const alertFingerprint = {
   fingerprint: null,
-  lastAlertTime: null
+  lastAlertTime: null,
 }
 
 const getAlertFingerprint = () => alertFingerprint.fingerprint
@@ -60,7 +61,7 @@ const shouldNotAlert = currentAlertFingerprint => {
   )
 }
 
-function buildAlertFingerprint (alertRec, notifications) {
+function buildAlertFingerprint(alertRec, notifications) {
   const sms = getAlertTypes(alertRec, notifications.sms)
   const email = getAlertTypes(alertRec, notifications.email)
   if (sms.length === 0 && email.length === 0) return null
@@ -72,7 +73,7 @@ function buildAlertFingerprint (alertRec, notifications) {
   return crypto.createHash('sha256').update(subject).digest('hex')
 }
 
-function sendNoAlerts (plugins, smsEnabled, emailEnabled) {
+function sendNoAlerts(plugins, smsEnabled, emailEnabled) {
   const subject = '[Lamassu] All clear'
 
   let rec = {}
@@ -83,14 +84,20 @@ function sendNoAlerts (plugins, smsEnabled, emailEnabled) {
   if (emailEnabled) {
     rec = _.set(['email', 'subject'])(subject)(rec)
     rec = _.set(['email', 'body'])('No errors are reported for your machines.')(
-      rec
+      rec,
     )
   }
 
   return plugins.sendMessage(rec)
 }
 
-const buildTransactionMessage = (tx, rec, highValueTx, machineName, customer) => {
+const buildTransactionMessage = (
+  tx,
+  rec,
+  highValueTx,
+  machineName,
+  customer,
+) => {
   const isCashOut = tx.direction === 'cashOut'
   const direction = isCashOut ? 'Cash Out' : 'Cash In'
   const crypto = `${coinUtils.toUnit(tx.cryptoAtoms, tx.cryptoCode)} ${
@@ -124,41 +131,49 @@ const buildTransactionMessage = (tx, rec, highValueTx, machineName, customer) =>
   const smsSubject = `A ${highValueTx ? 'high value ' : ''}${direction.toLowerCase()} transaction just happened at ${machineName} for ${fiat}`
   const emailSubject = `A ${highValueTx ? 'high value ' : ''}transaction just happened`
 
-  return [{
-    sms: {
-      body: `${smsSubject} – ${status}`
+  return [
+    {
+      sms: {
+        body: `${smsSubject} – ${status}`,
+      },
+      email: {
+        emailSubject,
+        body,
+      },
+      webhook: {
+        topic: `New transaction`,
+        content: body,
+      },
     },
-    email: {
-      emailSubject,
-      body
-    },
-    webhook: {
-      topic: `New transaction`,
-      content: body
-    }
-  }, highValueTx]
+    highValueTx,
+  ]
 }
 
-function formatCurrency (num = 0, code) {
-  const formattedNumber = Number(num).toLocaleString(undefined, {maximumFractionDigits:2, minimumFractionDigits:2})
+function formatCurrency(num = 0, code) {
+  const formattedNumber = Number(num).toLocaleString(undefined, {
+    maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+  })
   return `${formattedNumber} ${code}`
 }
 
-function formatAge (age, settings) {
+function formatAge(age, settings) {
   return prettyMs(age, settings)
 }
 
-function buildDetail (obj) {
+function buildDetail(obj) {
   // obj validation
   const objKeys = _.keys(obj)
   const detailKeys = _.keys(DETAIL_TEMPLATE)
-  if ((_.difference(objKeys, detailKeys)).length > 0) {
-    return Promise.reject(new Error('Error when building detail object: invalid properties'))
+  if (_.difference(objKeys, detailKeys).length > 0) {
+    return Promise.reject(
+      new Error('Error when building detail object: invalid properties'),
+    )
   }
   return { ...DETAIL_TEMPLATE, ...obj }
 }
 
-function deviceAlerts (config, alertRec, device) {
+function deviceAlerts(config, alertRec, device) {
   let alerts = []
   if (config.balance) {
     alerts = _.concat(alerts, alertRec.devices[device].balanceAlerts)
@@ -170,7 +185,7 @@ function deviceAlerts (config, alertRec, device) {
   return alerts
 }
 
-function getAlertTypes (alertRec, config) {
+function getAlertTypes(alertRec, config) {
   let alerts = []
   if (!isActive(config)) return alerts
 
@@ -200,5 +215,5 @@ module.exports = {
   formatCurrency,
   formatAge,
   buildDetail,
-  deviceAlerts
+  deviceAlerts,
 }

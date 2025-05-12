@@ -8,7 +8,7 @@ module.exports = { setup, updateCore }
 
 const coinRec = utils.getCryptoCurrency('XMR')
 
-function setup (dataDir) {
+function setup(dataDir) {
   common.firewall([coinRec.defaultPort])
   const auth = `lamassuserver:${common.randomPass()}`
   const config = buildConfig(auth)
@@ -18,19 +18,26 @@ function setup (dataDir) {
   common.writeSupervisorConfig(coinRec, cmd, walletCmd)
 }
 
-function updateCore (coinRec, isCurrentlyRunning) {
+function updateCore(coinRec, isCurrentlyRunning) {
   common.logger.info('Updating Monero. This may take a minute...')
   common.es(`sudo supervisorctl stop monero monero-wallet`)
   common.es(`curl -#o /tmp/monero.tar.gz ${coinRec.url}`)
-  if (common.es(`sha256sum /tmp/monero.tar.gz | awk '{print $1}'`).trim() !== coinRec.urlHash) {
-    common.logger.info('Failed to update Monero: Package signature do not match!')
+  if (
+    common.es(`sha256sum /tmp/monero.tar.gz | awk '{print $1}'`).trim() !==
+    coinRec.urlHash
+  ) {
+    common.logger.info(
+      'Failed to update Monero: Package signature do not match!',
+    )
     return
   }
   common.es(`tar -xf /tmp/monero.tar.gz -C /tmp/`)
 
   common.logger.info('Updating wallet...')
   common.es(`cp /tmp/${coinRec.dir}/monerod /usr/local/bin/monerod`)
-  common.es(`cp /tmp/${coinRec.dir}/monero-wallet-rpc /usr/local/bin/monero-wallet-rpc`)
+  common.es(
+    `cp /tmp/${coinRec.dir}/monero-wallet-rpc /usr/local/bin/monero-wallet-rpc`,
+  )
   common.es(`rm -r /tmp/${coinRec.dir.replace('/bin', '')}`)
   common.es(`rm /tmp/monero.tar.gz`)
 
@@ -42,7 +49,7 @@ function updateCore (coinRec, isCurrentlyRunning) {
   common.logger.info('Monero is updated!')
 }
 
-function buildConfig (auth) {
+function buildConfig(auth) {
   return `rpc-login=${auth}
 stagenet=0
 restricted-rpc=1

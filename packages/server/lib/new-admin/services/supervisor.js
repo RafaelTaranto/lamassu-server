@@ -6,8 +6,8 @@ const { promisify } = require('util')
 // [inet_http_server]
 // port = 127.0.0.1:9001
 
-function getAllProcessInfo () {
-  const convertStates = (state) => {
+function getAllProcessInfo() {
+  const convertStates = state => {
     // From http://supervisord.org/subprocess.html#process-states
     switch (state) {
       case 'STOPPED':
@@ -33,28 +33,30 @@ function getAllProcessInfo () {
   const client = xmlrpc.createClient({
     host: 'localhost',
     port: '9001',
-    path: '/RPC2'
+    path: '/RPC2',
   })
 
   client.methodCall[promisify.custom] = (method, params) => {
-    return new Promise((resolve, reject) => client.methodCall(method, params, (err, value) => {
-      if (err) reject(err)
-      else resolve(value)
-    }))
+    return new Promise((resolve, reject) =>
+      client.methodCall(method, params, (err, value) => {
+        if (err) reject(err)
+        else resolve(value)
+      }),
+    )
   }
 
   return promisify(client.methodCall)('supervisor.getAllProcessInfo', [])
-    .then((value) => {
-      return value.map(process => (
-        {
-          name: process.name,
-          state: convertStates(process.statename),
-          uptime: (process.statename === 'RUNNING') ? process.now - process.start : 0
-        }
-      ))
+    .then(value => {
+      return value.map(process => ({
+        name: process.name,
+        state: convertStates(process.statename),
+        uptime:
+          process.statename === 'RUNNING' ? process.now - process.start : 0,
+      }))
     })
-    .catch((error) => {
-      if (error.code === 'ECONNREFUSED') logger.error('Failed to connect to supervisord HTTP server.')
+    .catch(error => {
+      if (error.code === 'ECONNREFUSED')
+        logger.error('Failed to connect to supervisord HTTP server.')
       else logger.error(error)
     })
 }

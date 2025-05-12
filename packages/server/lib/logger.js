@@ -7,40 +7,42 @@ const LOG_LEVEL = process.env.LOG_LEVEL
 const logger = new winston.Logger({
   level: LOG_LEVEL,
   transports: [
-    new (winston.transports.Console)({
+    new winston.transports.Console({
       timestamp: true,
       colorize: true,
       handleExceptions: true,
-      humanReadableUnhandledException: true
+      humanReadableUnhandledException: true,
     }),
     new Postgres({
       connectionString: PSQL_URL,
       tableName: 'server_logs',
       handleExceptions: true,
-      humanReadableUnhandledException: true
-    })
+      humanReadableUnhandledException: true,
+    }),
   ],
   rewriters: [
-    (...[,, meta]) => {
+    (...[, , meta]) => {
       if (meta.isAxiosError) {
         return {
           message: meta.message,
           status: meta.response?.status,
           data: meta.response?.data,
           url: meta.config?.url,
-          method: meta.config?.method
+          method: meta.config?.method,
         }
       }
-      return meta instanceof Error ? { message: meta.message, stack: meta.stack, meta } : meta
-    }
+      return meta instanceof Error
+        ? { message: meta.message, stack: meta.stack, meta }
+        : meta
+    },
   ],
-  exitOnError: false
+  exitOnError: false,
 })
 
 logger.stream = {
   write: message => {
     logger.info(message.trim())
-  }
+  },
 }
 
 module.exports = logger

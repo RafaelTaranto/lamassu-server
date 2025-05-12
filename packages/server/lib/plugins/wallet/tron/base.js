@@ -14,46 +14,54 @@ const SWEEP_QUEUE = new PQueue({
   interval: 250,
 })
 
-function checkCryptoCode (cryptoCode) {
+function checkCryptoCode(cryptoCode) {
   if (cryptoCode === 'TRX' || coins.utils.isTrc20Token(cryptoCode)) {
     return Promise.resolve(cryptoCode)
   }
   return Promise.reject(new Error('cryptoCode must be TRX'))
 }
 
-function defaultWallet (account) {
+function defaultWallet(account) {
   const mnemonic = account.mnemonic
   if (!mnemonic) throw new Error('No mnemonic seed!')
 
-  return TronWeb.fromMnemonic(mnemonic.replace(/[\r\n]/gm, ' ').trim(), `${DEFAULT_PREFIX_PATH}/0`)
+  return TronWeb.fromMnemonic(
+    mnemonic.replace(/[\r\n]/gm, ' ').trim(),
+    `${DEFAULT_PREFIX_PATH}/0`,
+  )
 }
 
-function paymentWallet (account, index) {
+function paymentWallet(account, index) {
   const mnemonic = account.mnemonic
   if (!mnemonic) throw new Error('No mnemonic seed!')
 
-  return TronWeb.fromMnemonic(mnemonic.replace(/[\r\n]/gm, ' ').trim(), `${PAYMENT_PREFIX_PATH}/${index}`)
+  return TronWeb.fromMnemonic(
+    mnemonic.replace(/[\r\n]/gm, ' ').trim(),
+    `${PAYMENT_PREFIX_PATH}/${index}`,
+  )
 }
 
-function newAddress (account, info, tx, settings, operatorId) {
+function newAddress(account, info) {
   const wallet = paymentWallet(account, info.hdIndex)
   return Promise.resolve(wallet.address)
 }
 
-function defaultAddress (account) {
+function defaultAddress(account) {
   return defaultWallet(account).address
 }
 
-function balance (account, cryptoCode, settings, operatorId) {
-  return checkCryptoCode(cryptoCode)
-    .then(code => confirmedBalance(defaultAddress(account), code))
+function balance(account, cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(code =>
+    confirmedBalance(defaultAddress(account), code),
+  )
 }
 
 const confirmedBalance = (address, cryptoCode) => _balance(address, cryptoCode)
 
 const _balance = async (address, cryptoCode) => {
   if (coins.utils.isTrc20Token(cryptoCode)) {
-    const contractAddress = coins.utils.getTrc20Token(cryptoCode).contractAddress
+    const contractAddress =
+      coins.utils.getTrc20Token(cryptoCode).contractAddress
     const { abi } = await tronWeb.trx.getContract(contractAddress)
     const contract = tronWeb.contract(abi.entrys, contractAddress)
 
@@ -70,7 +78,12 @@ const sendCoins = async (account, tx) => {
   const isTrc20Token = coins.utils.isTrc20Token(cryptoCode)
 
   const txFunction = isTrc20Token ? generateTrc20Tx : generateTx
-  const rawTx = await txFunction(toAddress, defaultWallet(account), cryptoAtoms.toString(), cryptoCode)
+  const rawTx = await txFunction(
+    toAddress,
+    defaultWallet(account),
+    cryptoAtoms.toString(),
+    cryptoCode,
+  )
 
   let response = null
 
@@ -97,16 +110,26 @@ const generateTrc20Tx = async (toAddress, wallet, amount, cryptoCode) => {
   const functionSelector = 'transfer(address,uint256)'
   const parameters = [
     { type: 'address', value: tronWeb.address.toHex(toAddress) },
-    { type: 'uint256', value: amount }
+    { type: 'uint256', value: amount },
   ]
 
-  const tx = await tronWeb.transactionBuilder.triggerSmartContract(contractAddress, functionSelector, {}, parameters, wallet.address)
+  const tx = await tronWeb.transactionBuilder.triggerSmartContract(
+    contractAddress,
+    functionSelector,
+    {},
+    parameters,
+    wallet.address,
+  )
 
   return tronWeb.trx.sign(tx.transaction, wallet.privateKey.slice(2))
 }
 
 const generateTx = async (toAddress, wallet, amount) => {
-  const transaction = await tronWeb.transactionBuilder.sendTrx(toAddress, amount, wallet.address)
+  const transaction = await tronWeb.transactionBuilder.sendTrx(
+    toAddress,
+    amount,
+    wallet.address,
+  )
 
   const privateKey = wallet.privateKey
 
@@ -114,21 +137,19 @@ const generateTx = async (toAddress, wallet, amount) => {
   return tronWeb.trx.sign(transaction, privateKey.slice(2))
 }
 
-function newFunding (account, cryptoCode) {
-  return checkCryptoCode(cryptoCode)
-    .then(code => {
-      const fundingAddress = defaultAddress(account)
+function newFunding(account, cryptoCode) {
+  return checkCryptoCode(cryptoCode).then(code => {
+    const fundingAddress = defaultAddress(account)
 
-      return confirmedBalance(fundingAddress, code)
-        .then((balance) => ({
-          fundingPendingBalance: BN(0),
-          fundingConfirmedBalance: balance,
-          fundingAddress
-        }))
-    })
+    return confirmedBalance(fundingAddress, code).then(balance => ({
+      fundingPendingBalance: BN(0),
+      fundingConfirmedBalance: balance,
+      fundingAddress,
+    }))
+  })
 }
 
-function sweep (account, txId, cryptoCode, hdIndex) {
+function sweep(account, txId, cryptoCode, hdIndex) {
   const wallet = paymentWallet(account, hdIndex)
   const fromAddress = wallet.address
   const isTrc20Token = coins.utils.isTrc20Token(cryptoCode)
@@ -138,7 +159,12 @@ function sweep (account, txId, cryptoCode, hdIndex) {
   return SWEEP_QUEUE.add(async () => {
     const r = await confirmedBalance(fromAddress, cryptoCode)
     if (r.eq(0)) return
-    const signedTx = await txFunction(defaultAddress(account), wallet, r.toString(), cryptoCode)
+    const signedTx = await txFunction(
+      defaultAddress(account),
+      wallet,
+      r.toString(),
+      cryptoCode,
+    )
     let response = null
     try {
       response = await tronWeb.trx.sendRawTransaction(signedTx)
@@ -157,24 +183,28 @@ function connect(account) {
   const apiKey = account.apiKey
   tronWeb = new TronWeb({
     fullHost: endpoint,
-    headers: { "TRON-PRO-API-KEY": apiKey },
-    privateKey: '01'
+    headers: { 'TRON-PRO-API-KEY': apiKey },
+    privateKey: '01',
   })
 }
 
-function getStatus (account, tx, requested, settings, operatorId) {
+function getStatus(account, tx, requested) {
   const { toAddress, cryptoCode } = tx
   return checkCryptoCode(cryptoCode)
     .then(code => confirmedBalance(toAddress, code))
-    .then((confirmed) => {
-      if (confirmed.gte(requested)) return { receivedCryptoAtoms: confirmed, status: 'confirmed' }
-      if (confirmed.gt(0)) return { receivedCryptoAtoms: confirmed, status: 'insufficientFunds' }
+    .then(confirmed => {
+      if (confirmed.gte(requested))
+        return { receivedCryptoAtoms: confirmed, status: 'confirmed' }
+      if (confirmed.gt(0))
+        return { receivedCryptoAtoms: confirmed, status: 'insufficientFunds' }
       return { receivedCryptoAtoms: 0, status: 'notSeen' }
     })
 }
 
-function getTxHashesByAddress (cryptoCode, address) {
-  throw new Error(`Transactions hash retrieval is not implemented for this coin!`)
+function getTxHashesByAddress() {
+  throw new Error(
+    `Transactions hash retrieval is not implemented for this coin!`,
+  )
 }
 
 module.exports = {

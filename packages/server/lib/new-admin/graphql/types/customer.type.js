@@ -95,20 +95,37 @@ const typeDef = gql`
   }
 
   type Query {
-    customers(phone: String, name: String, email: String, address: String, id: String): [Customer] @auth
+    customers(
+      phone: String
+      name: String
+      email: String
+      address: String
+      id: String
+    ): [Customer] @auth
     customer(customerId: ID!): Customer @auth
     customerFilters: [Filter] @auth
   }
 
   type Mutation {
     setCustomer(customerId: ID!, customerInput: CustomerInput): Customer @auth
-    addCustomField(customerId: ID!, label: String!, value: String!): Boolean @auth
-    saveCustomField(customerId: ID!, fieldId: ID!, value: String!): Boolean @auth
+    addCustomField(customerId: ID!, label: String!, value: String!): Boolean
+      @auth
+    saveCustomField(customerId: ID!, fieldId: ID!, value: String!): Boolean
+      @auth
     removeCustomField(customerId: ID!, fieldId: ID!): Boolean @auth
     editCustomer(customerId: ID!, customerEdit: CustomerEdit): Customer @auth
-    deleteEditedData(customerId: ID!, customerEdit: CustomerEdit): Customer @auth
-    replacePhoto(customerId: ID!, photoType: String, newPhoto: Upload): Customer @auth
-    createCustomerNote(customerId: ID!, title: String!, content: String!): Boolean @auth
+    deleteEditedData(customerId: ID!, customerEdit: CustomerEdit): Customer
+      @auth
+    replacePhoto(
+      customerId: ID!
+      photoType: String
+      newPhoto: Upload
+    ): Customer @auth
+    createCustomerNote(
+      customerId: ID!
+      title: String!
+      content: String!
+    ): Boolean @auth
     editCustomerNote(noteId: ID!, newContent: String!): Boolean @auth
     deleteCustomerNote(noteId: ID!): Boolean @auth
     createCustomer(phoneNumber: String): Customer @auth

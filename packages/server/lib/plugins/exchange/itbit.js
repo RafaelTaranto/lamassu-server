@@ -9,17 +9,34 @@ const CRYPTO = [BTC, ETH, USDT, LN]
 const FIAT = ['USD']
 const DEFAULT_FIAT_MARKET = 'USD'
 const AMOUNT_PRECISION = 4
-const REQUIRED_CONFIG_FIELDS = ['clientKey', 'clientSecret', 'userId', 'walletId', 'currencyMarket']
+const REQUIRED_CONFIG_FIELDS = [
+  'clientKey',
+  'clientSecret',
+  'userId',
+  'walletId',
+  'currencyMarket',
+]
 
-const loadConfig = (account) => {
+const loadConfig = account => {
   const mapper = {
-    'clientKey': 'apiKey',
-    'clientSecret': 'secret',
-    'userId': 'uid'
+    clientKey: 'apiKey',
+    clientSecret: 'secret',
+    userId: 'uid',
   }
-  const mapped = _.mapKeys(key => mapper[key] ? mapper[key] : key)(_.omit(['walletId'], account))
+  const mapped = _.mapKeys(key => (mapper[key] ? mapper[key] : key))(
+    _.omit(['walletId'], account),
+  )
   return { ...mapped, timeout: 3000 }
 }
 const loadOptions = ({ walletId }) => ({ walletId })
 
-module.exports = { loadOptions, loadConfig, DEFAULT_FIAT_MARKET, REQUIRED_CONFIG_FIELDS, CRYPTO, FIAT, ORDER_TYPE, AMOUNT_PRECISION }
+module.exports = {
+  loadOptions,
+  loadConfig,
+  DEFAULT_FIAT_MARKET,
+  REQUIRED_CONFIG_FIELDS,
+  CRYPTO,
+  FIAT,
+  ORDER_TYPE,
+  AMOUNT_PRECISION,
+}

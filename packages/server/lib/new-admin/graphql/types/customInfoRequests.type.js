@@ -1,10 +1,9 @@
 const gql = require('graphql-tag')
 
 const typeDef = gql`
-
   type CustomInfoRequest {
-    id: ID!,
-    enabled: Boolean,
+    id: ID!
+    enabled: Boolean
     customRequest: JSON
   }
 
@@ -42,15 +41,31 @@ const typeDef = gql`
   type Query {
     customInfoRequests(onlyEnabled: Boolean): [CustomInfoRequest] @auth
     customerCustomInfoRequests(customerId: ID!): [CustomRequestData] @auth
-    customerCustomInfoRequest(customerId: ID!, infoRequestId: ID!): CustomRequestData @auth
+    customerCustomInfoRequest(
+      customerId: ID!
+      infoRequestId: ID!
+    ): CustomRequestData @auth
   }
 
   type Mutation {
-    insertCustomInfoRequest(customRequest: CustomRequestInput!): CustomInfoRequest @auth
+    insertCustomInfoRequest(
+      customRequest: CustomRequestInput!
+    ): CustomInfoRequest @auth
     removeCustomInfoRequest(id: ID!): CustomInfoRequest @auth
-    editCustomInfoRequest(id: ID!, customRequest: CustomRequestInput!): CustomInfoRequest @auth
-    setAuthorizedCustomRequest(customerId: ID!, infoRequestId: ID!, override: String!): Boolean @auth
-    setCustomerCustomInfoRequest(customerId: ID!, infoRequestId: ID!, data: JSON!): Boolean @auth
+    editCustomInfoRequest(
+      id: ID!
+      customRequest: CustomRequestInput!
+    ): CustomInfoRequest @auth
+    setAuthorizedCustomRequest(
+      customerId: ID!
+      infoRequestId: ID!
+      override: String!
+    ): Boolean @auth
+    setCustomerCustomInfoRequest(
+      customerId: ID!
+      infoRequestId: ID!
+      data: JSON!
+    ): Boolean @auth
   }
 `
 

@@ -4,20 +4,31 @@ const db = require('./db')
 
 const getSMSNotices = () => {
   const sql = `SELECT * FROM sms_notices ORDER BY created`
-  return db.any(sql).then(res => _.map(
-    it => ({
-      id: it.id,
-      event: _.camelCase(it.event),
-      message: it.message,
-      messageName: it.message_name,
-      enabled: it.enabled,
-      allowToggle: it.allow_toggle
-    }), res))
+  return db.any(sql).then(res =>
+    _.map(
+      it => ({
+        id: it.id,
+        event: _.camelCase(it.event),
+        message: it.message,
+        messageName: it.message_name,
+        enabled: it.enabled,
+        allowToggle: it.allow_toggle,
+      }),
+      res,
+    ),
+  )
 }
 
 const createSMSNotice = (event, messageName, message, enabled, allowToggle) => {
   const sql = `INSERT INTO sms_notices (id, event, message_name, message, enabled, allow_toggle) VALUES ($1, $2, $3, $4, $5, $6)`
-  return db.none(sql, [uuid.v4(), _.snakeCase(event), messageName, message, enabled, allowToggle])
+  return db.none(sql, [
+    uuid.v4(),
+    _.snakeCase(event),
+    messageName,
+    message,
+    enabled,
+    allowToggle,
+  ])
 }
 
 const editSMSNotice = (id, event, message) => {
@@ -52,5 +63,5 @@ module.exports = {
   deleteSMSNotice,
   getSMSNotice,
   enableSMSNotice,
-  disableSMSNotice
+  disableSMSNotice,
 }

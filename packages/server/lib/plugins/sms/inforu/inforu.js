@@ -2,10 +2,10 @@ const axios = require('axios')
 
 const NAME = 'InforU'
 
-function sendMessage (account, rec) {
+function sendMessage(account, rec) {
   const username = account.username
   const apiKey = account.apiKey
-  
+
   const to = rec.sms.toNumber || account.toNumber
   const text = rec.sms.body
   const from = account.fromNumber
@@ -15,32 +15,33 @@ function sendMessage (account, rec) {
   const config = {
     auth: {
       username: username,
-      password: apiKey
+      password: apiKey,
     },
     maxBodyLength: Infinity,
-    headers:{
-      'Content-Type': 'application/json'
-    }
+    headers: {
+      'Content-Type': 'application/json',
+    },
   }
 
   const data = {
     Message: text,
-    Recipients: [{ 
-      Phone: to 
-    }],
+    Recipients: [
+      {
+        Phone: to,
+      },
+    ],
     Settings: {
-        Sender: from
-    }
+      Sender: from,
+    },
   }
 
-  axios.post(url, data, config)
-    .catch(err => {
+  axios.post(url, data, config).catch(err => {
     //   console.log(err)
-      throw new Error(`inforu error: ${err.message}`)
-    })
+    throw new Error(`inforu error: ${err.message}`)
+  })
 }
 
 module.exports = {
   NAME,
-  sendMessage
+  sendMessage,
 }

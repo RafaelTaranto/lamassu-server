@@ -2,20 +2,19 @@ const Telnyx = require('telnyx')
 
 const NAME = 'Telnyx'
 
-function sendMessage (account, rec) {
+function sendMessage(account, rec) {
   const telnyx = Telnyx(account.apiKey)
 
   const from = account.fromNumber
   const text = rec.sms.body
   const to = rec.sms.toNumber || account.toNumber
 
-  return telnyx.messages.create({ from, to, text })
-    .catch(err => {
-      throw new Error(`Telnyx error: ${err.message}`)
-    })
+  return telnyx.messages.create({ from, to, text }).catch(err => {
+    throw new Error(`Telnyx error: ${err.message}`)
+  })
 }
 
 module.exports = {
   NAME,
-  sendMessage
+  sendMessage,
 }

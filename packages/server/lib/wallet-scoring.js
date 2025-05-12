@@ -2,7 +2,7 @@ const ph = require('./plugin-helper')
 const argv = require('minimist')(process.argv.slice(2))
 
 // TODO - This function should be rolled back after UI is created for this feature
-function loadWalletScoring (settings) {
+function loadWalletScoring(settings) {
   if (argv.mockScoring) {
     const mock = ph.load(ph.WALLET_SCORING, 'mock-scoring')
     return { plugin: mock, account: {} }
@@ -11,7 +11,7 @@ function loadWalletScoring (settings) {
   const scorechainAccount = settings.accounts['scorechain']
   if (scorechainAccount?.enabled) {
     const scorechain = ph.load(ph.WALLET_SCORING, 'scorechain')
-    return { plugin: scorechain, account: scorechainAccount}
+    return { plugin: scorechain, account: scorechainAccount }
   }
 
   const ellipticAccount = settings.accounts['elliptic']
@@ -20,35 +20,32 @@ function loadWalletScoring (settings) {
   return { plugin: elliptic, account: ellipticAccount }
 }
 
-function rateTransaction (settings, cryptoCode, address) {
-  return Promise.resolve()
-    .then(() => {
-      const { plugin, account } = loadWalletScoring(settings)
+function rateTransaction(settings, cryptoCode, address) {
+  return Promise.resolve().then(() => {
+    const { plugin, account } = loadWalletScoring(settings)
 
-      return plugin.rateAddress(account, cryptoCode, address)
-    })
+    return plugin.rateAddress(account, cryptoCode, address)
+  })
 }
 
-function rateAddress (settings, cryptoCode, address) {
-  return Promise.resolve()
-    .then(() => {
-      const { plugin, account } = loadWalletScoring(settings)
+function rateAddress(settings, cryptoCode, address) {
+  return Promise.resolve().then(() => {
+    const { plugin, account } = loadWalletScoring(settings)
 
-      return plugin.rateAddress(account, cryptoCode, address)
-    })
+    return plugin.rateAddress(account, cryptoCode, address)
+  })
 }
 
-function isWalletScoringEnabled (settings, cryptoCode) {
-  return Promise.resolve()
-    .then(() => {
-      const { plugin, account } = loadWalletScoring(settings)
+function isWalletScoringEnabled(settings, cryptoCode) {
+  return Promise.resolve().then(() => {
+    const { plugin, account } = loadWalletScoring(settings)
 
-      return plugin.isWalletScoringEnabled(account, cryptoCode)
-    })
+    return plugin.isWalletScoringEnabled(account, cryptoCode)
+  })
 }
 
 module.exports = {
   rateAddress,
   rateTransaction,
-  isWalletScoringEnabled
+  isWalletScoringEnabled,
 }

@@ -2,7 +2,7 @@ const db = require('../db')
 const cashInTx = require('../cash-in/cash-in-tx')
 const { CASH_OUT_TRANSACTION_STATES } = require('../cash-out/cash-out-helper')
 
-function transaction () {
+function transaction() {
   const sql = `SELECT DISTINCT * FROM (
     SELECT 'type' AS type, NULL AS label, 'Cash In' AS value UNION
     SELECT 'type' AS type, NULL AS label, 'Cash Out' AS value UNION
@@ -27,7 +27,7 @@ function transaction () {
 
   return db.any(sql)
 }
-function customer () {
+function customer() {
   const sql = `SELECT DISTINCT * FROM (
     SELECT 'phone' AS type, phone AS value FROM customers WHERE phone IS NOT NULL UNION
     SELECT 'email' AS type, email AS value FROM customers WHERE email IS NOT NULL UNION
