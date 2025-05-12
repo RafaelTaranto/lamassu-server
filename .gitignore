@@ -1,10 +1,9 @@
-node_modules
+**/node_modules
+**/.env
 
 .idea/
 .settings/
 
-certs/
-tests/stress/machines
-tests/stress/config.json
-
-.env
+packages/server/certs/
+packages/server/tests/stress/machines
+packages/server/tests/stress/config.json
