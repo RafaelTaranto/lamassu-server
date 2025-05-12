@@ -1,7 +1,7 @@
 import { useQuery, gql } from "@apollo/client";
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import Popper from '@material-ui/core/Popper'
-import { makeStyles } from '@material-ui/core/styles'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
+import Popper from '@mui/material/Popper'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { memo, useState, useEffect, useRef } from 'react'
@@ -175,17 +175,22 @@ const Header = memo(({ tree, user }) => {
                   className={classes.popper}
                   disablePortal={false}
                   placement="bottom-end"
-                  modifiers={{
-                    offset: {
+                  modifiers={[
+                    {
+                      name: 'offset',
                       enabled: true,
-                      offset: '100vw'
+                      options: {
+                        offset: ['100vw', '100vw']
+                      }
                     },
-                    preventOverflow: {
+                    {
+                      name: 'preventOverflow',
                       enabled: true,
-                      boundariesElement: 'viewport',
-                      padding: 0
+                      options: {
+                        rootBoundary: 'viewport',
+                      },
                     }
-                  }}>
+                  ]}>
                   <NotificationCenter
                     popperRef={popperRef}
                     buttonCoords={notifButtonCoords}

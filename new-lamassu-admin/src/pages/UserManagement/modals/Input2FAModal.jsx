@@ -1,5 +1,5 @@
 import { useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import Modal from 'src/components/Modal'

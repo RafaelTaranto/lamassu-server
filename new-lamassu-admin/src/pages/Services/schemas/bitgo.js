@@ -144,6 +144,6 @@ export default {
       environment: Yup.string('The environment must be a string')
         .matches(/(prod|test)/)
         .required('The environment is required')
-    })
+    });
   }
 }

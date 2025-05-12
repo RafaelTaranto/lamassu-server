@@ -1,4 +1,5 @@
-import { Box, makeStyles } from '@material-ui/core'
+import Box from '@mui/material/Box'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { Label1 } from 'src/components/typography'
 import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'

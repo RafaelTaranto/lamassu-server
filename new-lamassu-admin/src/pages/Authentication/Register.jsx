@@ -1,6 +1,7 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles, Grid } from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
+import Grid from '@mui/material/Grid'
+import { makeStyles } from '@mui/styles'
+import Paper from '@mui/material/Paper'
 import { Field, Form, Formik } from 'formik'
 import React, { useReducer } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
@@ -131,7 +132,7 @@ const Register = () => {
       spacing={0}
       direction="column"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.welcomeBackground}>
       <Grid>
         <div>
@@ -214,7 +215,7 @@ const Register = () => {
         </div>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default Register

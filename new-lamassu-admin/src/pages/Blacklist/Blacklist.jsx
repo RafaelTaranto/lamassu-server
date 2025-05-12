@@ -1,6 +1,10 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { Box, Dialog, DialogContent, DialogActions } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import Box from '@mui/material/Box'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import DialogActions from '@mui/material/DialogActions'
+import Switch from '@mui/material/Switch'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -11,7 +15,6 @@ import ReverseSettingsIcon from 'src/styling/icons/circle buttons/settings/white
 import SettingsIcon from 'src/styling/icons/circle buttons/settings/zodiac.svg?react'
 
 import { Link, Button, IconButton, SupportLinkButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import { fromNamespace, toNamespace } from 'src/utils/config'
 
 import styles from './Blacklist.styles'

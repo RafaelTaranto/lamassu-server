@@ -1,4 +1,5 @@
-import { makeStyles, Grid } from '@material-ui/core'
+import Grid from '@mui/material/Grid'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 
 import LoginCard from './LoginCard'
@@ -15,13 +16,13 @@ const Login = () => {
       spacing={0}
       direction="column"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.welcomeBackground}>
       <Grid>
         <LoginCard />
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default Login

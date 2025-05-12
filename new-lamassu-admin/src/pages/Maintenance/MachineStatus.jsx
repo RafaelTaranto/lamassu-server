@@ -1,5 +1,5 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import { formatDistance } from 'date-fns'
 import * as R from 'ramda'
 import React from 'react'

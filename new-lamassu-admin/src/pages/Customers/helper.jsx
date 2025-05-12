@@ -1,5 +1,6 @@
 import React from 'react'
-import { makeStyles, Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { parse, isValid, format } from 'date-fns/fp'
 import { Field, useFormikContext } from 'formik'
@@ -317,7 +318,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
           fullWidth
           label={`Available requests`}
           className={classes.picker}
-          getOptionSelected={R.eqProps('code')}
+          isOptionEqualToValue={R.eqProps('code')}
           labelProp={'display'}
           options={customInfoRequirementOptions}
           onChange={(evt, it) => {}}
@@ -343,7 +344,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
           }></Upload>
       )}
     </>
-  )
+  );
 }
 
 const customElements = {

@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import {
@@ -33,7 +33,7 @@ const SingleRowTable = ({
         <THead>
           <Th className={classes.head}>
             {title}
-            <IconButton onClick={onEdit} className={classes.button}>
+            <IconButton onClick={onEdit} className={classes.button} size="large">
               <EditIcon />
             </IconButton>
           </Th>
@@ -62,7 +62,7 @@ const SingleRowTable = ({
         </TBody>
       </Table>
     </>
-  )
+  );
 }
 
 export default SingleRowTable

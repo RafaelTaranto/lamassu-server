@@ -1,4 +1,5 @@
-import { makeStyles, Chip } from '@material-ui/core'
+import Chip from '@mui/material/Chip'
+import { makeStyles } from '@mui/styles'
 import { Form, Formik, Field } from 'formik'
 import * as R from 'ramda'
 import React from 'react'

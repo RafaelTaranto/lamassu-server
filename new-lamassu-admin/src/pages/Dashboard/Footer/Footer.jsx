@@ -1,6 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core'
-import Grid from '@material-ui/core/Grid'
+import { makeStyles } from '@mui/styles'
+import Grid from '@mui/material/Grid'
 import BigNumber from 'bignumber.js'
 import classnames from 'classnames'
 import * as R from 'ramda'

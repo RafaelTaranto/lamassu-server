@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import { Form, Formik, Field } from 'formik'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -64,7 +64,8 @@ const BlacklistAdvanced = ({
       view: it => (
         <IconButton
           className={classes.deleteButton}
-          onClick={() => setSelectedMessage(it)}>
+          onClick={() => setSelectedMessage(it)}
+          size="large">
           <EditIcon />
         </IconButton>
       )
@@ -81,7 +82,8 @@ const BlacklistAdvanced = ({
           disabled={
             !R.isNil(R.path(['allowToggle'], it)) &&
             !R.path(['allowToggle'], it)
-          }>
+          }
+          size="large">
           {R.path(['allowToggle'], it) ? (
             <DeleteIcon />
           ) : (

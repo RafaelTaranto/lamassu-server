@@ -1,4 +1,5 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
+import Switch from '@mui/material/Switch'
 import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
@@ -13,7 +14,6 @@ import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import StripesSvg from 'src/styling/icons/stripes.svg?react'
 
 import { Link, IconButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 
 import TableCtx from './Context'
 import styles from './Row.styles'
@@ -77,7 +77,8 @@ const ActionCol = ({ disabled, editing }) => {
           <IconButton
             disabled={disableEdit}
             className={classes.editButton}
-            onClick={() => onEdit && onEdit(values.id)}>
+            onClick={() => onEdit && onEdit(values.id)}
+            size="large">
             {disableEdit ? <DisabledEditIcon /> : <EditIcon />}
           </IconButton>
         </Td>
@@ -88,7 +89,8 @@ const ActionCol = ({ disabled, editing }) => {
             disabled={disabled}
             onClick={() => {
               setDeleteDialog(true)
-            }}>
+            }}
+            size="large">
             {disabled ? <DisabledDeleteIcon /> : <DeleteIcon />}
           </IconButton>
           <DeleteDialog
@@ -114,7 +116,7 @@ const ActionCol = ({ disabled, editing }) => {
         </Td>
       )}
     </>
-  )
+  );
 }
 
 const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {

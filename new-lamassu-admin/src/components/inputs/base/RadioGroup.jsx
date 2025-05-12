@@ -1,14 +1,12 @@
-import {
-  Radio,
-  RadioGroup as MRadioGroup,
-  FormControlLabel,
-  makeStyles
-} from '@material-ui/core'
+import Radio from '@mui/material/Radio'
+import MRadioGroup from '@mui/material/RadioGroup'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import { Label1 } from 'src/components/typography'
 
-import { offColor } from 'src/styling/variables'
+import { offColor, secondaryColor } from 'src/styling/variables'
 const styles = {
   label: {
     height: 16,
@@ -20,6 +18,9 @@ const styles = {
     marginTop: -8,
     marginLeft: 32,
     color: offColor
+  },
+  radio: {
+    color: secondaryColor
   }
 }
 
@@ -50,7 +51,7 @@ const RadioGroup = ({
               <FormControlLabel
                 disabled={option.disabled}
                 value={option.code}
-                control={<Radio className={radioClassName} />}
+                control={<Radio className={classnames(classes.radio, radioClassName)} />}
                 label={option.display}
                 className={classnames(labelClassName)}
               />

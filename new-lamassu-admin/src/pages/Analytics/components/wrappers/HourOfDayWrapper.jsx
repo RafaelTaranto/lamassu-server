@@ -1,5 +1,5 @@
-import { Box } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import Box from '@mui/material/Box'
+import { makeStyles } from '@mui/styles'
 import { getTimezoneOffset } from 'date-fns-tz'
 import * as R from 'ramda'
 import React, { useState } from 'react'

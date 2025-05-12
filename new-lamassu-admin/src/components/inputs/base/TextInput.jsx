@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core'
-import TextField from '@material-ui/core/TextField'
+import { makeStyles } from '@mui/styles'
+import TextField from '@mui/material/TextField'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { memo } from 'react'
@@ -35,6 +35,7 @@ const TextInput = memo(
 
     return (
       <TextField
+        variant="standard"
         id={name}
         onChange={onChange}
         onBlur={onBlur}
@@ -50,9 +51,8 @@ const TextInput = memo(
           },
           ...InputProps
         }}
-        {...props}
-      />
-    )
+        {...props} />
+    );
   }
 )
 

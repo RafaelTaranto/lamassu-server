@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
@@ -71,7 +71,7 @@ const CopyToClipboard = ({
         </>
       )}
     </div>
-  )
+  );
 }
 
 export default CopyToClipboard

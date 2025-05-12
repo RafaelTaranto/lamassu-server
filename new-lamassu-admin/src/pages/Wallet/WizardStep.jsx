@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Formik, Form, Field } from 'formik'
 import * as R from 'ramda'
@@ -165,7 +165,7 @@ const WizardStep = ({
             fullWidth
             label={`Select ${displayName}`}
             className={classes.picker}
-            getOptionSelected={R.eqProps('code')}
+            isOptionEqualToValue={R.eqProps('code')}
             labelProp={'display'}
             options={unfilled}
             onChange={(evt, it) => {
@@ -194,7 +194,7 @@ const WizardStep = ({
         </div>
       )}
     </>
-  )
+  );
 }
 
 export default WizardStep

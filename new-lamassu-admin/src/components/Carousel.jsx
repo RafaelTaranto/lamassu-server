@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import React, { memo } from 'react'
 import ReactCarousel from 'react-material-ui-carousel'
 import LeftArrow from 'src/styling/icons/arrow/carousel-left-arrow.svg?react'

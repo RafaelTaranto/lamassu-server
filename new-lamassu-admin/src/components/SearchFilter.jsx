@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import Chip from 'src/components/Chip'
 import { P, Label3 } from 'src/components/typography'

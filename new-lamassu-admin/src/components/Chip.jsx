@@ -1,5 +1,5 @@
-import Chip from '@material-ui/core/Chip'
-import { withStyles } from '@material-ui/core/styles'
+import Chip from '@mui/material/Chip'
+import { withStyles } from '@mui/styles'
 import React, { memo } from 'react'
 
 import {

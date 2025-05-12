@@ -1,5 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles, Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { DeleteDialog } from 'src/components/DeleteDialog'
@@ -144,7 +145,8 @@ const IndividualDiscounts = () => {
           onClick={() => {
             setDeleteDialog(true)
             setToBeDeleted({ variables: { discountId: t.id } })
-          }}>
+          }}
+          size="large">
           <DeleteIcon />
         </IconButton>
       )

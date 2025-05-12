@@ -1,4 +1,5 @@
-import { makeStyles, Paper } from '@material-ui/core'
+import Paper from '@mui/material/Paper'
+import { makeStyles } from '@mui/styles'
 import classNames from 'classnames'
 import { React } from 'react'
 import { P } from 'src/components/typography'

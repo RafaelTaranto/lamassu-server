@@ -1,6 +1,9 @@
 import { useMutation, useQuery, gql } from "@apollo/client";
-import { Dialog, DialogContent, SvgIcon, IconButton } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import SvgIcon from '@mui/material/SvgIcon'
+import IconButton from '@mui/material/IconButton'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { Form, Formik, FastField } from 'formik'
 import {QRCodeSVG as QRCode} from 'qrcode.react'
@@ -252,7 +255,7 @@ const AddMachine = memo(({ close, onPaired }) => {
           <div className={classes.wrapper}>
             <div className={classes.headerDiv}>
               <Title>Add Machine</Title>
-              <IconButton disableRipple={true} onClick={close}>
+              <IconButton onClick={close} size="large">
                 <SvgIcon color="error">
                   <CloseIcon />
                 </SvgIcon>
@@ -279,7 +282,7 @@ const AddMachine = memo(({ close, onPaired }) => {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 })
 
 export default AddMachine

@@ -1,5 +1,7 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles, Paper } from '@material-ui/core'
+import Paper from '@mui/material/Paper'
+import Switch from '@mui/material/Switch'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from 'src/components/Tooltip'
@@ -11,7 +13,6 @@ import ExpandIconOpen from 'src/styling/icons/action/expand/open.svg?react'
 import WhiteLogo from 'src/styling/icons/menu/logo-white.svg?react'
 
 import { IconButton, SupportLinkButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import { formatDate } from 'src/utils/timezones'
 
 import styles from './SMSNotices.styles'
@@ -180,7 +181,8 @@ const SMSNotices = () => {
             setPreviewOpen(false)
             setSelectedSMS(it)
             setShowModal(true)
-          }}>
+          }}
+          size="large">
           <EditIcon />
         </IconButton>
       )
@@ -221,7 +223,8 @@ const SMSNotices = () => {
             R.equals(selectedSMS, it)
               ? setPreviewOpen(!previewOpen)
               : setPreviewOpen(true)
-          }}>
+          }}
+          size="large">
           {R.equals(selectedSMS, it) && previewOpen ? (
             <ExpandIconOpen />
           ) : (

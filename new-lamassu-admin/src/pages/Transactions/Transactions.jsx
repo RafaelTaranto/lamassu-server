@@ -1,6 +1,6 @@
 import { useQuery, gql } from "@apollo/client";
 import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
 import React, { useEffect, useState } from 'react'

@@ -1,4 +1,5 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
+import Switch from '@mui/material/Switch'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
 import {
@@ -10,7 +11,6 @@ import {
   Th
 } from 'src/components/fake-table/Table'
 
-import { Switch } from 'src/components/inputs'
 import { fromNamespace, toNamespace } from 'src/utils/config'
 import { sentenceCase } from 'src/utils/string'
 

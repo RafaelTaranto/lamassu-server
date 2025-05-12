@@ -1,15 +1,16 @@
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import MenuItem from '@material-ui/core/MenuItem'
-import Select from '@material-ui/core/Select'
+import FormControl from '@mui/material/FormControl'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import classnames from 'classnames'
 import React from 'react'
 
 const Dropdown = ({ label, name, options, onChange, value, className }) => {
   return (
-    <FormControl className={classnames(className)}>
+    <FormControl variant="standard" className={classnames(className)}>
       <InputLabel>{label}</InputLabel>
       <Select
+        variant="standard"
         autoWidth={true}
         labelId={label}
         id={name}
@@ -22,7 +23,7 @@ const Dropdown = ({ label, name, options, onChange, value, className }) => {
         ))}
       </Select>
     </FormControl>
-  )
+  );
 }
 
 export default Dropdown

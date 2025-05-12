@@ -98,7 +98,8 @@ const SessionManagement = () => {
         <IconButton
           onClick={() => {
             deleteSession({ variables: { sid: s.sid } })
-          }}>
+          }}
+          size="large">
           <DeleteIcon />
         </IconButton>
       )

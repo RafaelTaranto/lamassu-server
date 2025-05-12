@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import { H4 } from 'src/components/typography'
 import DisabledEditIcon from 'src/styling/icons/action/edit/disabled.svg?react'
@@ -20,7 +20,8 @@ const Header = ({ title, editing, disabled, setEditing }) => {
         <IconButton
           onClick={() => setEditing(true)}
           className={classes.button}
-          disabled={disabled}>
+          disabled={disabled}
+          size="large">
           {disabled ? <DisabledEditIcon /> : <EditIcon />}
         </IconButton>
       )}
@@ -35,7 +36,7 @@ const Header = ({ title, editing, disabled, setEditing }) => {
         </div>
       )}
     </div>
-  )
+  );
 }
 
 export default Header

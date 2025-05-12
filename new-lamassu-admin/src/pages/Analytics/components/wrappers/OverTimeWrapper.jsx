@@ -1,9 +1,10 @@
-import { Box } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import Switch from '@mui/material/Switch'
+import Box from '@mui/material/Box'
+import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
 import { H2 } from 'src/components/typography'
 
-import { Select, Switch } from 'src/components/inputs'
+import { Select } from 'src/components/inputs'
 import { primaryColor } from 'src/styling/variables'
 
 import styles from '../../Analytics.styles'

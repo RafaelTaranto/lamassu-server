@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
 import { differenceInYears, format, parse } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { memo } from 'react'

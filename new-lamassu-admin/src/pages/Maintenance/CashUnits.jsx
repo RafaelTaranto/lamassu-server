@@ -1,5 +1,7 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { DialogActions, makeStyles, Box } from '@material-ui/core'
+import DialogActions from '@mui/material/DialogActions'
+import Box from '@mui/material/Box'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper'
@@ -200,158 +202,155 @@ const CashCassettes = () => {
     />
   )
 
-  return (
-    !dataLoading && (
-      <>
-        <TitleSection
-          title="Cash boxes & cassettes"
-          buttons={[
-            {
-              text: 'Cash box history',
-              icon: HistoryIcon,
-              inverseIcon: ReverseHistoryIcon,
-              toggle: setShowHistory
-            },
-            {
-              component: showHistory ? (
-                <LogsDowloaderPopover
-                  className={classes.downloadLogsButton}
-                  title="Download logs"
-                  name="cashboxHistory"
-                  query={GET_BATCHES_CSV}
-                  getLogs={logs => R.path(['cashboxBatchesCsv'])(logs)}
-                  timezone={timezone}
-                  args={{ timezone }}
-                />
-              ) : (
-                <></>
-              )
-            }
-          ]}
-          iconClassName={classes.listViewButton}
-          className={classes.tableWidth}
-          appendix={
-            <HelpTooltip width={220}>
-              <P>
-                For details on configuring cash boxes and cassettes, please read
-                the relevant knowledgebase article:
+  return (!dataLoading && (<>
+    <TitleSection
+      title="Cash boxes & cassettes"
+      buttons={[
+        {
+          text: 'Cash box history',
+          icon: HistoryIcon,
+          inverseIcon: ReverseHistoryIcon,
+          toggle: setShowHistory
+        },
+        {
+          component: showHistory ? (
+            <LogsDowloaderPopover
+              className={classes.downloadLogsButton}
+              title="Download logs"
+              name="cashboxHistory"
+              query={GET_BATCHES_CSV}
+              getLogs={logs => R.path(['cashboxBatchesCsv'])(logs)}
+              timezone={timezone}
+              args={{ timezone }}
+            />
+          ) : (
+            <></>
+          )
+        }
+      ]}
+      iconClassName={classes.listViewButton}
+      className={classes.tableWidth}
+      appendix={
+        <HelpTooltip width={220}>
+          <P>
+            For details on configuring cash boxes and cassettes, please read
+            the relevant knowledgebase article:
+          </P>
+          <SupportLinkButton
+            link="https://support.lamassu.is/hc/en-us/articles/4420839641229-Cash-Boxes-Cassettess"
+            label="Cash Boxes & Cassettes"
+            bottomSpace="1"
+          />
+        </HelpTooltip>
+      }>
+      {!showHistory && (
+        <Box alignItems="center" justifyContent="flex-end">
+          <Label1 className={classes.cashboxReset}>Cash box resets</Label1>
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="end"
+            mr="-4px">
+            {cashboxReset && (
+              <P className={classes.selection}>
+                {onlyFirstToUpper(cashboxReset)}
               </P>
-              <SupportLinkButton
-                link="https://support.lamassu.is/hc/en-us/articles/4420839641229-Cash-Boxes-Cassettess"
-                label="Cash Boxes & Cassettes"
-                bottomSpace="1"
-              />
-            </HelpTooltip>
-          }>
-          {!showHistory && (
-            <Box alignItems="center" justifyContent="flex-end">
-              <Label1 className={classes.cashboxReset}>Cash box resets</Label1>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="end"
-                mr="-4px">
-                {cashboxReset && (
-                  <P className={classes.selection}>
-                    {onlyFirstToUpper(cashboxReset)}
-                  </P>
-                )}
-                <IconButton
-                  onClick={() => setEditingSchema(true)}
-                  className={classes.button}>
-                  <EditIcon />
-                </IconButton>
-              </Box>
-            </Box>
-          )}
-        </TitleSection>
-        {!showHistory && (
-          <>
-            <DataTable
-              loading={dataLoading}
-              elements={elements}
-              data={machines}
-              Details={InnerCashUnitDetails}
-              emptyText="No machines so far"
-              expandable
-              tableClassName={classes.dataTable}
-            />
-
-            {data && R.isEmpty(machines) && (
-              <EmptyTable message="No machines so far" />
             )}
-          </>
-        )}
-        {showHistory && (
-          <CashboxHistory
-            machines={R.concat(machines, unpairedMachines)}
-            currency={fiatCurrency}
-            timezone={timezone}
-          />
-        )}
-        <CashCassettesFooter
-          currencyCode={fiatCurrency}
-          machines={machines}
-          config={config}
-          bills={R.path(['bills'])(data)}
-          deviceIds={deviceIds}
+            <IconButton
+              onClick={() => setEditingSchema(true)}
+              className={classes.button}
+              size="large">
+              <EditIcon />
+            </IconButton>
+          </Box>
+        </Box>
+      )}
+    </TitleSection>
+    {!showHistory && (
+      <>
+        <DataTable
+          loading={dataLoading}
+          elements={elements}
+          data={machines}
+          Details={InnerCashUnitDetails}
+          emptyText="No machines so far"
+          expandable
+          tableClassName={classes.dataTable}
         />
-        {wizard && (
-          <Wizard
-            machine={R.find(R.propEq('id', machineId), machines)}
-            cashoutSettings={getCashoutSettings(machineId)}
-            onClose={() => {
-              setWizard(false)
-            }}
-            error={error?.message}
-            save={onSave}
-            locale={locale}
-          />
-        )}
-        {editingSchema && (
-          <Modal
-            title={'Cash box resets'}
-            width={478}
-            handleClose={() => setEditingSchema(null)}
-            open={true}>
-            <P className={classes.descriptions}>
-              We can automatically assume you emptied a bill validator's cash
-              box when the machine detects that it has been removed.
-            </P>
-            <RadioGroup
-              name="set-automatic-reset"
-              value={selectedRadio ?? cashboxReset}
-              options={[radioButtonOptions[0]]}
-              onChange={handleRadioButtons}
-              className={classes.radioButtons}
-            />
-            <P className={classes.descriptions}>
-              Assume the cash box is emptied whenever it's removed, creating a
-              new batch on the history screen and setting its current balance to
-              zero.
-            </P>
-            <RadioGroup
-              name="set-manual-reset"
-              value={selectedRadio ?? cashboxReset}
-              options={[radioButtonOptions[1]]}
-              onChange={handleRadioButtons}
-              className={classes.radioButtons}
-            />
-            <P className={classes.descriptions}>
-              Cash boxes won't be assumed emptied when removed, nor their counts
-              modified. Instead, to update the count and create a new batch,
-              you'll click the 'Edit' button on this panel.
-            </P>
-            <DialogActions className={classes.actions}>
-              <Button onClick={() => saveCashboxOption(selectedRadio)}>
-                Confirm
-              </Button>
-            </DialogActions>
-          </Modal>
+
+        {data && R.isEmpty(machines) && (
+          <EmptyTable message="No machines so far" />
         )}
       </>
-    )
-  )
+    )}
+    {showHistory && (
+      <CashboxHistory
+        machines={R.concat(machines, unpairedMachines)}
+        currency={fiatCurrency}
+        timezone={timezone}
+      />
+    )}
+    <CashCassettesFooter
+      currencyCode={fiatCurrency}
+      machines={machines}
+      config={config}
+      bills={R.path(['bills'])(data)}
+      deviceIds={deviceIds}
+    />
+    {wizard && (
+      <Wizard
+        machine={R.find(R.propEq('id', machineId), machines)}
+        cashoutSettings={getCashoutSettings(machineId)}
+        onClose={() => {
+          setWizard(false)
+        }}
+        error={error?.message}
+        save={onSave}
+        locale={locale}
+      />
+    )}
+    {editingSchema && (
+      <Modal
+        title={'Cash box resets'}
+        width={478}
+        handleClose={() => setEditingSchema(null)}
+        open={true}>
+        <P className={classes.descriptions}>
+          We can automatically assume you emptied a bill validator's cash
+          box when the machine detects that it has been removed.
+        </P>
+        <RadioGroup
+          name="set-automatic-reset"
+          value={selectedRadio ?? cashboxReset}
+          options={[radioButtonOptions[0]]}
+          onChange={handleRadioButtons}
+          className={classes.radioButtons}
+        />
+        <P className={classes.descriptions}>
+          Assume the cash box is emptied whenever it's removed, creating a
+          new batch on the history screen and setting its current balance to
+          zero.
+        </P>
+        <RadioGroup
+          name="set-manual-reset"
+          value={selectedRadio ?? cashboxReset}
+          options={[radioButtonOptions[1]]}
+          onChange={handleRadioButtons}
+          className={classes.radioButtons}
+        />
+        <P className={classes.descriptions}>
+          Cash boxes won't be assumed emptied when removed, nor their counts
+          modified. Instead, to update the count and create a new batch,
+          you'll click the 'Edit' button on this panel.
+        </P>
+        <DialogActions className={classes.actions}>
+          <Button onClick={() => saveCashboxOption(selectedRadio)}>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Modal>
+    )}
+  </>));
 }
 
 export default CashCassettes

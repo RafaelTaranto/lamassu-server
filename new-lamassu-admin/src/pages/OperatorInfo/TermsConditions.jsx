@@ -1,5 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
+import Switch from '@mui/material/Switch'
 import classnames from 'classnames'
 import { Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'
@@ -12,7 +13,6 @@ import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import * as Yup from 'yup'
 
 import { Link, IconButton, SupportLinkButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import { TextInput } from 'src/components/inputs/formik'
 import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
 
@@ -233,7 +233,8 @@ const TermsConditions = () => {
         {!editing && (
           <IconButton
             className={classes.transparentButton}
-            onClick={() => setEditing(true)}>
+            onClick={() => setEditing(true)}
+            size="large">
             <EditIcon />
           </IconButton>
         )}
@@ -287,7 +288,7 @@ const TermsConditions = () => {
         )}
       </Formik>
     </>
-  )
+  );
 }
 
 export default TermsConditions

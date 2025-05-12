@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import React from 'react'
 import CustomerDataReversedIcon from 'src/styling/icons/customer-nav/data/comet.svg?react'

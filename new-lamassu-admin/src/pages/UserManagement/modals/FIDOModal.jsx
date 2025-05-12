@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import Modal from 'src/components/Modal'
 import { Info2, P } from 'src/components/typography'

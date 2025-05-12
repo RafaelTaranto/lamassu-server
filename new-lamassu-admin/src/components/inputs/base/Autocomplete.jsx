@@ -1,5 +1,5 @@
-import { Box } from '@material-ui/core'
-import MAutocomplete from '@material-ui/lab/Autocomplete'
+import Box from '@mui/material/Box'
+import MAutocomplete from '@mui/material/Autocomplete'
 import sort from 'match-sorter'
 import * as R from 'ramda'
 import React from 'react'
@@ -84,7 +84,7 @@ const Autocomplete = ({
       disableClearable
       ChipProps={{ onDelete: null }}
       clearOnEscape
-      getOptionSelected={R.eqProps(valueProp)}
+      isOptionEqualToValue={R.eqProps(valueProp)}
       {...props}
       renderInput={params => {
         return (
@@ -100,9 +100,9 @@ const Autocomplete = ({
           />
         )
       }}
-      renderOption={props => {
+      renderOption={(iprops, props) => {
         if (!props.warning && !props.warningMessage)
-          return R.path([labelProp])(props)
+          return <li {...iprops}>{R.path([labelProp])(props)}</li>
 
         const warningColors = {
           clean: spring4,
@@ -114,23 +114,25 @@ const Autocomplete = ({
           <Box
             width={18}
             height={18}
-            borderRadius={6}
+            borderRadius="6px"
             bgcolor={warningColors[props.warning]}
           />
         )
 
         return (
-          <Box
-            width="100%"
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-            alignItems="center">
-            <Box>{R.path([labelProp])(props)}</Box>
-            <HoverableTooltip parentElements={hoverableElement} width={250}>
-              <P>{props.warningMessage}</P>
-            </HoverableTooltip>
-          </Box>
+          <li {...iprops}>
+            <Box
+              width="100%"
+              display="flex"
+              flexDirection="row"
+              justifyContent="space-between"
+              alignItems="center">
+              <Box>{R.path([labelProp])(props)}</Box>
+              <HoverableTooltip parentElements={hoverableElement} width={250}>
+                <P>{props.warningMessage}</P>
+              </HoverableTooltip>
+            </Box>
+          </li>
         )
       }}
     />

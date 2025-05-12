@@ -1,5 +1,6 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
+import Switch from '@mui/material/Switch'
 import classnames from 'classnames'
 import { Form, Formik, Field as FormikField } from 'formik'
 import * as R from 'ramda'
@@ -7,7 +8,6 @@ import React, { useState } from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import PromptWhenDirty from 'src/components/PromptWhenDirty'
 import { HelpTooltip } from 'src/components/Tooltip'
-import Switch from 'src/components/inputs/base/Switch'
 import { P, H4, Info3, Label1, Label2, Label3 } from 'src/components/typography'
 import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
 import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
@@ -221,7 +221,8 @@ const ContactInfo = ({ wizard }) => {
           {!editing && (
             <IconButton
               className={classes.transparentButton}
-              onClick={() => setEditing(true)}>
+              onClick={() => setEditing(true)}
+              size="large">
               <EditIcon />
             </IconButton>
           )}
@@ -311,7 +312,7 @@ const ContactInfo = ({ wizard }) => {
         </div>
       )}
     </>
-  )
+  );
 }
 
 export default ContactInfo

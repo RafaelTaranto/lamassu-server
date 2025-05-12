@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import { compareAsc, differenceInDays, set } from 'date-fns/fp'
 import * as R from 'ramda'

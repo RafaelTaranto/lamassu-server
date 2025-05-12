@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import {

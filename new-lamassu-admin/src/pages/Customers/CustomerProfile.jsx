@@ -1,13 +1,12 @@
 import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
-import {
-  makeStyles,
-  Breadcrumbs,
-  Box,
-  DialogActions,
-  DialogContent,
-  Dialog
-} from '@material-ui/core'
-import NavigateNextIcon from '@material-ui/icons/NavigateNext'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import Box from '@mui/material/Box'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import Dialog from '@mui/material/Dialog'
+import Switch from '@mui/material/Switch'
+import { makeStyles } from '@mui/styles'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
@@ -22,7 +21,6 @@ import DataReversedIcon from 'src/styling/icons/button/data/white.svg?react'
 import DataIcon from 'src/styling/icons/button/data/zodiac.svg?react'
 
 import { Button, IconButton, ActionButton } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import {
   OVERRIDE_AUTHORIZED,
   OVERRIDE_REJECTED

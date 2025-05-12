@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { DeleteDialog } from 'src/components/DeleteDialog'
@@ -49,7 +49,8 @@ const BlacklistTable = ({
           onClick={() => {
             setDeleteDialog(true)
             setToBeDeleted(it)
-          }}>
+          }}
+          size="large">
           <DeleteIcon />
         </IconButton>
       )

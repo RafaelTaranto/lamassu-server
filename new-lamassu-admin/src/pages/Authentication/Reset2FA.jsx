@@ -1,6 +1,7 @@
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { makeStyles, Grid } from '@material-ui/core'
-import Paper from '@material-ui/core/Paper'
+import Grid from '@mui/material/Grid'
+import { makeStyles } from '@mui/styles'
+import Paper from '@mui/material/Paper'
 import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import React, { useReducer, useState } from 'react'
@@ -121,7 +122,7 @@ const Reset2FA = () => {
       spacing={0}
       direction="column"
       alignItems="center"
-      justify="center"
+      justifyContent="center"
       className={classes.welcomeBackground}>
       <Grid>
         <div>
@@ -205,7 +206,7 @@ const Reset2FA = () => {
         </div>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default Reset2FA

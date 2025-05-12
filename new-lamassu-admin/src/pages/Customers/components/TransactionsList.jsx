@@ -1,5 +1,6 @@
 import { toUnit } from '@lamassu/coins/lightUtils'
-import { makeStyles, Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
+import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import classnames from 'classnames'
 import * as R from 'ramda'

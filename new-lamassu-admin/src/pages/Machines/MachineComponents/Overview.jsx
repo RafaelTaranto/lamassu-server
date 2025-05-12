@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import { formatDistance } from 'date-fns'
 import React from 'react'

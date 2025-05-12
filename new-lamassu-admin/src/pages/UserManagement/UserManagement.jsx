@@ -1,5 +1,8 @@
 import { useQuery, useMutation, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles, Box, Chip } from '@material-ui/core'
+import Chip from '@mui/material/Chip'
+import Box from '@mui/material/Box'
+import Switch from '@mui/material/Switch'
+import { makeStyles } from '@mui/styles'
 import { startAttestation } from '@simplewebauthn/browser'
 import * as R from 'ramda'
 import React, { useReducer, useState, useContext } from 'react'
@@ -14,7 +17,6 @@ import UserRoleIcon from 'src/styling/icons/button/user-role/zodiac.svg?react'
 
 import AppContext from 'src/AppContext'
 import { ActionButton, Link } from 'src/components/buttons'
-import { Switch } from 'src/components/inputs'
 import { IP_CHECK_REGEX } from 'src/utils/constants'
 
 import styles from './UserManagement.styles'

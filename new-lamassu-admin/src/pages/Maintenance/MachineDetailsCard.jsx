@@ -1,5 +1,5 @@
-import { Grid /*, Divider */ } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import Grid from '@mui/material/Grid'
+import { makeStyles } from '@mui/styles'
 import BigNumber from 'bignumber.js'
 import React from 'react'
 

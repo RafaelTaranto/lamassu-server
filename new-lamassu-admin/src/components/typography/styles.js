@@ -48,7 +48,7 @@ export default {
     fontWeight: 700
   },
   p: {
-    extend: base,
+    ...base,
     fontSize: fontSize4,
     fontFamily: fontSecondary,
     fontWeight: 500

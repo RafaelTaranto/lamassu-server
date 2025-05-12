@@ -1,5 +1,5 @@
 import { useMutation, useLazyQuery, gql } from "@apollo/client";
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import { startAssertion } from '@simplewebauthn/browser'
 import { Field, Form, Formik } from 'formik'
 import React, { useState, useContext } from 'react'

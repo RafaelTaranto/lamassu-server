@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
 import { Carousel } from 'src/components/Carousel'

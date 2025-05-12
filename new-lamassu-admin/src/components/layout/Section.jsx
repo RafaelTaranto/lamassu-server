@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import React from 'react'
 import ErrorMessage from 'src/components/ErrorMessage'
 import Subtitle from 'src/components/Subtitle'

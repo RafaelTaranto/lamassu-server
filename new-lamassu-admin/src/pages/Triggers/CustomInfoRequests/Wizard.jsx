@@ -1,4 +1,4 @@
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import { Form, Formik } from 'formik'
 import * as R from 'ramda'
 import React, { useState } from 'react'

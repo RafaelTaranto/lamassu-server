@@ -1,4 +1,5 @@
-import { makeStyles, Box } from '@material-ui/core'
+import Box from '@mui/material/Box'
+import { makeStyles } from '@mui/styles'
 import * as R from 'ramda'
 import React, { memo } from 'react'
 import { H2, Label1, P } from 'src/components/typography'

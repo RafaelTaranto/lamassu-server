@@ -1,7 +1,7 @@
-import InputBase from '@material-ui/core/InputBase'
-import Paper from '@material-ui/core/Paper'
-import { makeStyles } from '@material-ui/core/styles'
-import MAutocomplete from '@material-ui/lab/Autocomplete'
+import InputBase from '@mui/material/InputBase'
+import Paper from '@mui/material/Paper'
+import { makeStyles } from '@mui/styles'
+import MAutocomplete from '@mui/material/Autocomplete'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
 import { P } from 'src/components/typography'
@@ -39,18 +39,20 @@ const SearchBox = memo(
         value={filters}
         options={options}
         getOptionLabel={it => it.label || it.value}
-        renderOption={it => (
-          <div className={classes.item}>
-            <P className={classes.itemLabel}>{it.label || it.value}</P>
-            <P className={classes.itemType}>{it.type}</P>
-          </div>
+        renderOption={(props, it) => (
+          <li {...props}>
+            <div className={classes.item}>
+              <P className={classes.itemLabel}>{it.label || it.value}</P>
+              <P className={classes.itemType}>{it.type}</P>
+            </div>
+          </li>
         )}
         autoHighlight
         disableClearable
         clearOnEscape
         multiple
         filterSelectedOptions
-        getOptionSelected={(option, value) => option.type === value.type}
+        isOptionEqualToValue={(option, value) => option.type === value.type}
         PaperComponent={({ children }) => (
           <Paper elevation={0} className={classes.popup}>
             <div className={classes.separator} />

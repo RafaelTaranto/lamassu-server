@@ -1,4 +1,6 @@
-import { makeStyles, Popper as MaterialPopper, Paper } from '@material-ui/core'
+import MaterialPopper from '@mui/material/Popper'
+import Paper from '@mui/material/Paper'
+import { makeStyles } from '@mui/styles'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -120,34 +122,42 @@ const Popover = ({
     right: ['left']
   }
 
-  const modifiers = R.mergeDeepLeft(props.modifiers, {
-    flip: {
+  const modifiers = [
+    {
+      name: 'flip',
       enabled: R.defaultTo(false, props.flip),
-      allowedAutoPlacements: flipPlacements[props.placement],
-      boundary: 'clippingParents'
+      options: {
+        allowedAutoPlacements: flipPlacements[props.placement]
+      }
     },
-    preventOverflow: {
-      enabled: R.defaultTo(true, props.preventOverflow),
-      boundariesElement: 'scrollParent'
-    },
-    offset: {
+    {
+      name: 'preventOverflow',
       enabled: true,
-      offset: '0, 10'
+      options: {
+        rootBoundary: 'scrollParent'
+      }
     },
-    arrow: {
+    {
+      name: 'offset',
+      enabled: true,
+      options: {
+        offset: [0, 10]
+      }
+    },
+    {
+      name: 'arrow',
       enabled: R.defaultTo(true, props.showArrow),
-      element: arrowRef
+      options: {
+        element: arrowRef
+      }
     },
-    computeStyle: {
-      gpuAcceleration: false
+    {
+      name: 'computeStyles',
+      options: {
+        gpuAcceleration: false
+      }
     }
-  })
-
-  if (props.preventOverflow === false) {
-    modifiers.hide = {
-      enabled: false
-    }
-  }
+  ]
 
   return (
     <>
