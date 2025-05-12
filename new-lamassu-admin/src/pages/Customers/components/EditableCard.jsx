@@ -74,8 +74,6 @@ const EditableCard = ({
   validationSchema,
   initialValues,
   deleteEditedData,
-  retrieveAdditionalData,
-  hasAdditionalData = true,
   editable,
   checkAgainstSanctions
 }) => {
@@ -168,16 +166,6 @@ const EditableCard = ({
               <div className="flex justify-end mt-5 gap-2">
                 {!editing && (
                   <>
-                    {!hasAdditionalData && (
-                      <ActionButton
-                        color="primary"
-                        type="button"
-                        Icon={DataIcon}
-                        InverseIcon={DataReversedIcon}
-                        onClick={() => retrieveAdditionalData()}>
-                        Retrieve API data
-                      </ActionButton>
-                    )}
                     {checkAgainstSanctions && (
                       <ActionButton
                         color="primary"

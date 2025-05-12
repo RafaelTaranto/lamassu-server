@@ -50,8 +50,6 @@ const CustomerData = ({
   updateCustomRequest,
   authorizeCustomRequest,
   updateCustomEntry,
-  retrieveAdditionalDataDialog,
-  setRetrieve,
   checkAgainstSanctions
 }) => {
   const [previewPhoto, setPreviewPhoto] = useState(null)
@@ -176,7 +174,6 @@ const CustomerData = ({
         })
       },
       validationSchema: smsDataSchema.smsData,
-      retrieveAdditionalData: () => setRetrieve(true),
       initialValues: initialValues.smsData,
       isAvailable: !R.isNil(phone),
       hasAdditionalData: !R.isNil(smsData) && !R.isEmpty(smsData),
@@ -440,7 +437,6 @@ const CustomerData = ({
       save,
       cancel,
       deleteEditedData,
-      retrieveAdditionalData,
       children,
       validationSchema,
       initialValues,
@@ -468,7 +464,6 @@ const CustomerData = ({
           save={save}
           cancel={cancel}
           deleteEditedData={deleteEditedData}
-          retrieveAdditionalData={retrieveAdditionalData}
           checkAgainstSanctions={checkAgainstSanctions}
           editable={editable}>
           {children}
@@ -546,7 +541,6 @@ const CustomerData = ({
           </div>
         )}
       </div>
-      {retrieveAdditionalDataDialog}
     </div>
   )
 }
