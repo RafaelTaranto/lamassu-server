@@ -32,7 +32,7 @@ const Input2FAModal = ({ showModal, handleClose, setConfirmation }) => {
 
   const [confirm2FA, { error: queryError }] = useLazyQuery(CONFIRM_2FA, {
     onCompleted: ({ confirm2FA: success }) =>
-      !success ? setInvalidCode(true) : onContinue()
+      !success ? setInvalidCode(true) : onContinue(),
   })
 
   const getErrorMsg = () => {

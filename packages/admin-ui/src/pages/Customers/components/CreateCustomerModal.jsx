@@ -17,13 +17,14 @@ const getValidationSchema = countryCodes =>
       .test('is-valid-number', 'That is not a valid phone number', value => {
         try {
           return countryCodes.some(countryCode =>
-            parsePhoneNumberWithError(value, countryCode).isValid()
+            parsePhoneNumberWithError(value, countryCode).isValid(),
           )
         } catch (e) {
+          console.error(e)
           return false
         }
       })
-      .trim()
+      .trim(),
   })
 
 const formatPhoneNumber = (countryCodes, numberStr) => {
@@ -36,7 +37,7 @@ const formatPhoneNumber = (countryCodes, numberStr) => {
 }
 
 const initialValues = {
-  phoneNumber: ''
+  phoneNumber: '',
 }
 
 const getErrorMsg = (formikErrors, formikTouched) => {
@@ -49,7 +50,7 @@ const getErrorMsg = (formikErrors, formikTouched) => {
 const CreateCustomerModal = ({ showModal, handleClose, onSubmit, locale }) => {
   const possibleCountries = R.append(
     locale?.country,
-    R.map(it => it.country, locale?.overrides ?? [])
+    R.map(it => it.country, locale?.overrides ?? []),
   )
 
   return (
@@ -68,9 +69,9 @@ const CreateCustomerModal = ({ showModal, handleClose, onSubmit, locale }) => {
             variables: {
               phoneNumber: formatPhoneNumber(
                 possibleCountries,
-                values.phoneNumber
-              )
-            }
+                values.phoneNumber,
+              ),
+            },
           })
         }}>
         {({ errors, touched }) => (

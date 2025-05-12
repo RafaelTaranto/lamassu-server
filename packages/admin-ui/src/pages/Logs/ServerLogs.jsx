@@ -13,7 +13,7 @@ import {
   TableRow,
   TableHeader,
   TableBody,
-  TableCell
+  TableCell,
 } from 'src/components/table/index.js'
 import { startCase } from 'src/utils/string.js'
 import { formatDate } from 'src/utils/timezones.js'
@@ -73,8 +73,8 @@ const Logs = () => {
   const { data, loading: dataLoading } = useQuery(GET_SERVER_DATA, {
     onCompleted: () => setSaveMessage(''),
     variables: {
-      limit: NUM_LOG_RESULTS
-    }
+      limit: NUM_LOG_RESULTS,
+    },
   })
   const { data: configResponse, loading: configLoading } = useQuery(GET_DATA)
   const timezone = R.path(['config', 'locale_timezone'], configResponse)
@@ -82,7 +82,7 @@ const Logs = () => {
   const defaultLogLevels = [
     { code: 'error', display: 'Error' },
     { code: 'info', display: 'Info' },
-    { code: 'debug', display: 'Debug' }
+    { code: 'debug', display: 'Debug' },
   ]
   const serverVersion = data?.serverVersion
   const processStates = data?.uptime ?? []
@@ -93,9 +93,9 @@ const Logs = () => {
     R.concat(defaultLogLevels),
     R.map(it => ({
       code: R.path(['logLevel'])(it),
-      display: startCase(R.path(['logLevel'])(it))
+      display: startCase(R.path(['logLevel'])(it)),
     })),
-    R.path(['serverLogs'])
+    R.path(['serverLogs']),
   )
 
   const handleLogLevelChange = logLevel => {
@@ -166,7 +166,7 @@ const Logs = () => {
                 data.serverLogs
                   .filter(
                     log =>
-                      logLevel === SHOW_ALL || log.logLevel === logLevel.code
+                      logLevel === SHOW_ALL || log.logLevel === logLevel.code,
                   )
                   .map((log, idx) => (
                     <TableRow key={idx} size="sm">
@@ -175,7 +175,7 @@ const Logs = () => {
                           formatDate(
                             log.timestamp,
                             timezone,
-                            'yyyy-MM-dd HH:mm'
+                            'yyyy-MM-dd HH:mm',
                           )}
                       </TableCell>
                       <TableCell>{log.logLevel}</TableCell>

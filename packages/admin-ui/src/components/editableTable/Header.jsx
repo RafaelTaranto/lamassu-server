@@ -5,7 +5,7 @@ import {
   Td,
   THead,
   TDoubleLevelHead,
-  ThDoubleLevel
+  ThDoubleLevel,
 } from 'src/components/fake-table/Table'
 
 import { sentenceCase } from 'src/utils/string'
@@ -24,11 +24,11 @@ const groupSecondHeader = elements => {
             {
               width: R.sum(R.map(R.prop('width'), group)),
               elements: group,
-              name: doubleHeader(group[0])
-            }
-          ]
+              name: doubleHeader(group[0]),
+            },
+          ],
     ),
-    R.reduce(R.concat, [])
+    R.reduce(R.concat, []),
   )
 
   return R.all(R.pipe(doubleHeader, R.isNil), elements)
@@ -47,7 +47,7 @@ const Header = () => {
     enableToggle,
     toggleWidth,
     orderedBy,
-    DEFAULT_COL_SIZE
+    DEFAULT_COL_SIZE,
   } = useContext(TableCtx)
 
   const mapElement2 = (it, idx) => {
@@ -66,11 +66,13 @@ const Header = () => {
 
   const mapElement = (
     { name, display, width = DEFAULT_COL_SIZE, header, textAlign },
-    idx
+    idx,
   ) => {
     const orderClasses = classnames({
       'whitespace-nowrap':
-        R.isNil(header) && !R.isNil(orderedBy) && R.equals(name, orderedBy.code)
+        R.isNil(header) &&
+        !R.isNil(orderedBy) &&
+        R.equals(name, orderedBy.code),
     })
 
     const attachOrderedByToComplexHeader = header => {
@@ -82,6 +84,7 @@ const Header = () => {
           spanChild.props.children = R.append(' -', spanChild.props.children)
           return cloneHeader
         } catch (e) {
+          console.error(e)
           return header
         }
       }

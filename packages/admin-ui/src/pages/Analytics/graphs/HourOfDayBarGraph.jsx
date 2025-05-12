@@ -11,7 +11,7 @@ import {
   subheaderDarkColor,
   fontColor,
   fontSecondary,
-  subheaderColor
+  subheaderColor,
 } from 'src/styling/variables'
 import { MINUTE } from 'src/utils/time'
 import { toUtc } from 'src/utils/timezones'
@@ -22,7 +22,6 @@ const Graph = ({
   setSelectionCoords,
   setSelectionData,
   setSelectionDateInterval,
-  selectedMachine
 }) => {
   const ref = useRef(null)
 
@@ -36,9 +35,9 @@ const Graph = ({
       top: 25,
       right: 0.5,
       bottom: 27,
-      left: 36.5
+      left: 36.5,
     }),
-    []
+    [],
   )
 
   const offset = getTimezoneOffset(timezone)
@@ -64,7 +63,7 @@ const Graph = ({
         const tzCreated = new Date(it.created).setTime(
           new Date(it.created).getTime() +
             new Date(it.created).getTimezoneOffset() * MINUTE +
-            offset
+            offset,
         )
         const created = new Date(tzCreated)
 
@@ -77,7 +76,7 @@ const Graph = ({
             created.getUTCHours() < new Date(upperBound).getUTCHours())
         )
       }, data),
-    [data, offset]
+    [data, offset],
   )
 
   const txClassByHourInterval = useCallback(
@@ -91,16 +90,16 @@ const Graph = ({
           return acc
         },
         { cashIn: 0, cashOut: 0 },
-        filterByHourInterval(lowerBound, upperBound)
+        filterByHourInterval(lowerBound, upperBound),
       ),
-    [filterByHourInterval]
+    [filterByHourInterval],
   )
 
   const x = d3
     .scaleUtc()
     .domain([
       toUtc(startOfDay(new Date())),
-      toUtc(add({ days: 1 }, startOfDay(new Date())))
+      toUtc(add({ days: 1 }, startOfDay(new Date()))),
     ])
     .rangeRound([GRAPH_MARGIN.left, GRAPH_WIDTH - GRAPH_MARGIN.right])
 
@@ -111,7 +110,7 @@ const Graph = ({
       const upperBound = R.clone(it)
       return [lowerBound, filterByHourInterval(lowerBound, upperBound)]
     },
-    R.init(getTickIntervals(x.domain(), 2))
+    R.init(getTickIntervals(x.domain(), 2)),
   )
 
   const groupedByTxClass = R.map(
@@ -121,7 +120,7 @@ const Graph = ({
       const upperBound = R.clone(it)
       return [lowerBound, txClassByHourInterval(lowerBound, upperBound)]
     },
-    R.init(getTickIntervals(x.domain(), 2))
+    R.init(getTickIntervals(x.domain(), 2)),
   )
 
   const y = d3
@@ -130,13 +129,13 @@ const Graph = ({
       0,
       d3.max(
         groupedByTxClass.map(it => it[1]),
-        d => d.cashIn + d.cashOut
+        d => d.cashIn + d.cashOut,
       ) !== 0
         ? d3.max(
             groupedByTxClass.map(it => it[1]),
-            d => d.cashIn + d.cashOut
+            d => d.cashIn + d.cashOut,
           )
-        : 50
+        : 50,
     ])
     .range([GRAPH_HEIGHT - GRAPH_MARGIN.bottom, GRAPH_MARGIN.top])
 
@@ -145,15 +144,15 @@ const Graph = ({
       g
         .attr(
           'transform',
-          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`
+          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`,
         )
         .call(
           d3
             .axisBottom(x)
             .ticks(d3.timeHour.every(2))
-            .tickFormat(d3.timeFormat('%H:%M'))
+            .tickFormat(d3.timeFormat('%H:%M')),
         ),
-    [GRAPH_MARGIN, x]
+    [GRAPH_MARGIN, x],
   )
 
   const buildYAxis = useCallback(
@@ -165,10 +164,10 @@ const Graph = ({
             .axisLeft(y)
             .ticks(GRAPH_HEIGHT / 100)
             .tickSize(0)
-            .tickFormat(``)
+            .tickFormat(``),
         )
         .call(g => g.select('.domain').remove()),
-    [GRAPH_MARGIN, y]
+    [GRAPH_MARGIN, y],
   )
 
   const buildVerticalLines = useCallback(
@@ -195,7 +194,7 @@ const Graph = ({
         })
         .attr('y1', GRAPH_MARGIN.top)
         .attr('y2', GRAPH_HEIGHT - GRAPH_MARGIN.bottom),
-    [GRAPH_MARGIN, x]
+    [GRAPH_MARGIN, x],
   )
 
   const buildHoverableEventRects = useCallback(
@@ -227,15 +226,15 @@ const Graph = ({
           const endDate = R.clone(date)
 
           const filteredData = groupedByDateInterval.find(it =>
-            R.equals(startDate, it[0])
+            R.equals(startDate, it[0]),
           )[1]
 
           const rectXCoords = {
             left: R.clone(d.target.getBoundingClientRect().x),
             right: R.clone(
               d.target.getBoundingClientRect().x +
-                d.target.getBoundingClientRect().width
-            )
+                d.target.getBoundingClientRect().width,
+            ),
           }
 
           const xCoord =
@@ -248,18 +247,18 @@ const Graph = ({
           setSelectionData(filteredData)
           setSelectionCoords({
             x: Math.round(xCoord),
-            y: Math.round(yCoord)
+            y: Math.round(yCoord),
           })
 
           d3.select(`#event-rect-${x(d.target.__data__)}`).attr(
             'fill',
-            subheaderColor
+            subheaderColor,
           )
         })
         .on('mouseleave', d => {
           d3.select(`#event-rect-${x(d.target.__data__)}`).attr(
             'fill',
-            'transparent'
+            'transparent',
           )
           setSelectionDateInterval(null)
           setSelectionData(null)
@@ -271,8 +270,8 @@ const Graph = ({
       setSelectionCoords,
       setSelectionData,
       setSelectionDateInterval,
-      x
-    ]
+      x,
+    ],
   )
 
   const buildEventRects = useCallback(
@@ -298,7 +297,7 @@ const Graph = ({
         .attr('height', GRAPH_HEIGHT - GRAPH_MARGIN.bottom - GRAPH_MARGIN.top)
         .attr('stroke', 'transparent')
         .attr('fill', 'transparent'),
-    [GRAPH_MARGIN, x]
+    [GRAPH_MARGIN, x],
   )
 
   const formatTicksText = useCallback(
@@ -309,7 +308,7 @@ const Graph = ({
         .style('fill', fontColor)
         .style('stroke-width', 0.5)
         .style('font-family', fontSecondary),
-    []
+    [],
   )
 
   const drawCashIn = useCallback(
@@ -334,7 +333,7 @@ const Graph = ({
             GRAPH_HEIGHT -
               y(interval[1].cashIn) -
               GRAPH_MARGIN.bottom -
-              BAR_MARGIN / 2
+              BAR_MARGIN / 2,
           )
         })
         .attr('width', d => {
@@ -348,7 +347,7 @@ const Graph = ({
         })
         .attr('rx', 2.5)
     },
-    [x, y, GRAPH_MARGIN, groupedByTxClass]
+    [x, y, GRAPH_MARGIN, groupedByTxClass],
   )
 
   const drawCashOut = useCallback(
@@ -377,7 +376,7 @@ const Graph = ({
             GRAPH_HEIGHT -
               y(interval[1].cashOut) -
               GRAPH_MARGIN.bottom -
-              BAR_MARGIN / 2
+              BAR_MARGIN / 2,
           )
         })
         .attr('width', d => {
@@ -391,7 +390,7 @@ const Graph = ({
         })
         .attr('rx', 2.5)
     },
-    [x, y, GRAPH_MARGIN, groupedByTxClass]
+    [x, y, GRAPH_MARGIN, groupedByTxClass],
   )
 
   const drawChart = useCallback(() => {
@@ -417,7 +416,7 @@ const Graph = ({
     buildVerticalLines,
     drawCashIn,
     formatTicksText,
-    drawCashOut
+    drawCashOut,
   ])
 
   useEffect(() => {
@@ -433,5 +432,5 @@ export default memo(
   (prev, next) =>
     R.equals(prev.period, next.period) &&
     R.equals(prev.selectedDay, next.selectedDay) &&
-    R.equals(prev.selectedMachine, next.selectedMachine)
+    R.equals(prev.selectedMachine, next.selectedMachine),
 )

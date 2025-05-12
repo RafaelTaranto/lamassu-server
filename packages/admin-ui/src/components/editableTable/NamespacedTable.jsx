@@ -18,7 +18,7 @@ const NamespacedTable = ({
 
   const innerData = R.map(it => ({
     id: it,
-    ...fromNamespace(it)(data)
+    ...fromNamespace(it)(data),
   }))(namespaces)
 
   return (

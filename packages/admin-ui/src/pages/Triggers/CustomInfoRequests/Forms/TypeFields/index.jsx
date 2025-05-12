@@ -33,7 +33,7 @@ const defaultValues = {
   inputLength: '',
   inputLabel1: '',
   inputLabel2: '',
-  listChoices: [{ text: '' }, { text: '' }]
+  listChoices: [{ text: '' }, { text: '' }],
 }
 
 const validationSchema = Yup.lazy(values => {
@@ -45,8 +45,8 @@ const validationSchema = Yup.lazy(values => {
           is: 'length',
           then: schema =>
             schema.min(0).required('The number of digits is required'),
-          otherwise: schema => schema.notRequired()
-        })
+          otherwise: schema => schema.notRequired(),
+        }),
       })
     case 'text':
       return Yup.object({
@@ -55,8 +55,8 @@ const validationSchema = Yup.lazy(values => {
         inputLabel2: Yup.string().when('constraintType', {
           is: 'spaceSeparation',
           then: schema => schema.label('Second word label').required(),
-          otherwise: schema => schema.notRequired()
-        })
+          otherwise: schema => schema.notRequired(),
+        }),
       })
     case 'choiceList':
       return Yup.object({
@@ -64,10 +64,10 @@ const validationSchema = Yup.lazy(values => {
         listChoices: Yup.array().test(
           'has-2-or-more',
           'Choice list needs to have two or more non empty fields',
-          (values, ctx) => {
+          values => {
             return R.filter(nonEmptyStr)(values).length > 1
-          }
-        )
+          },
+        ),
       })
     default:
       return Yup.mixed().notRequired()

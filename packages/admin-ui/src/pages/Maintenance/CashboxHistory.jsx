@@ -38,15 +38,15 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
           <>
             <TxOutIcon />
             <span>Cash cassette {i} refill</span>
-          </>
+          </>,
         ),
         R.assoc(
           `cash-cassette-${i}-empty`,
           <>
             <TxOutIcon />
             <span>Cash cassette {i} emptied</span>
-          </>
-        )
+          </>,
+        ),
       )(ret),
     {
       'cash-box-empty': (
@@ -54,9 +54,9 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
           <TxInIcon />
           <span>Cash box emptied</span>
         </>
-      )
+      ),
     },
-    R.range(1, 5)
+    R.range(1, 5),
   )
 
   const elements = [
@@ -69,7 +69,7 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
         <div className="flex items-center gap-2">
           {getOperationRender[it.operationType]}
         </div>
-      )
+      ),
     },
     {
       name: 'machine',
@@ -80,8 +80,8 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
         R.prop('deviceId'),
         id => R.find(R.propEq('id', id), machines),
         R.defaultTo({ name: <i>Unpaired device</i> }),
-        R.prop('name')
-      )
+        R.prop('name'),
+      ),
     },
     {
       name: 'billCount',
@@ -90,10 +90,10 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
       textAlign: 'left',
       input: NumberInput,
       inputProps: {
-        decimalPlaces: 0
+        decimalPlaces: 0,
       },
       view: it =>
-        R.isNil(it.customBillCount) ? it.billCount : it.customBillCount
+        R.isNil(it.customBillCount) ? it.billCount : it.customBillCount,
     },
     {
       name: 'total',
@@ -104,22 +104,22 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
         <span>
           {it.fiatTotal} {currency}
         </span>
-      )
+      ),
     },
     {
       name: 'date',
       header: 'Date',
       width: 135,
       textAlign: 'right',
-      view: it => formatDate(it.created, timezone, 'yyyy-MM-dd')
+      view: it => formatDate(it.created, timezone, 'yyyy-MM-dd'),
     },
     {
       name: 'time',
       header: 'Time (h:m)',
       width: 125,
       textAlign: 'right',
-      view: it => formatDate(it.created, timezone, 'HH:mm')
-    }
+      view: it => formatDate(it.created, timezone, 'HH:mm'),
+    },
   ]
 
   return (

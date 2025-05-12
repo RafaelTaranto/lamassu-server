@@ -5,7 +5,7 @@ import * as R from 'ramda'
 const WARNING_LEVELS = {
   CLEAN: 'clean',
   PARTIAL: 'partial',
-  IMPORTANT: 'important'
+  IMPORTANT: 'important',
 }
 
 const secretTest = (secret, message) => ({
@@ -16,7 +16,7 @@ const secretTest = (secret, message) => ({
       return this.createError()
     }
     return true
-  }
+  },
 })
 
 const leadingZerosTest = (value, context) => {
@@ -39,7 +39,7 @@ const buildCurrencyOptions = markets => {
       R.length(unavailableCryptosFiltered) > 1
         ? `${R.join(
             ', ',
-            R.slice(0, -1, unavailableCryptosFiltered)
+            R.slice(0, -1, unavailableCryptosFiltered),
           )} and ${R.last(unavailableCryptosFiltered)}`
         : unavailableCryptosFiltered[0]
 
@@ -56,7 +56,7 @@ const buildCurrencyOptions = markets => {
       warning: warningLevel,
       warningMessage: !R.isEmpty(unavailableCryptosFiltered)
         ? `No market pairs available for ${unavailableMarketsStr}`
-        : `All market pairs are available`
+        : `All market pairs are available`,
     }
   }, R.keys(markets))
 }

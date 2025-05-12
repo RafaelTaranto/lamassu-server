@@ -7,7 +7,7 @@ const TableCell = memo(
   ({ colspan, rightAlign, className, children, ...props }) => {
     const styles = {
       [classes.tableCell]: true,
-      'text-right': rightAlign
+      'text-right': rightAlign,
     }
 
     return (
@@ -18,7 +18,7 @@ const TableCell = memo(
         {children}
       </td>
     )
-  }
+  },
 )
 
 export default TableCell

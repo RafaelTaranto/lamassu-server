@@ -8,7 +8,7 @@ import { Table as EditableTable } from 'src/components/editableTable'
 import {
   mainFields,
   localeDefaults as defaults,
-  LocaleSchema as schema
+  LocaleSchema as schema,
 } from 'src/pages/Locales/helper'
 import { toNamespace } from 'src/utils/config'
 
@@ -51,7 +51,7 @@ function Locales({ isActive, doContinue }) {
   const { data } = useQuery(GET_DATA)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    onCompleted: doContinue
+    onCompleted: doContinue,
   })
 
   const save = it => {
@@ -61,7 +61,7 @@ function Locales({ isActive, doContinue }) {
 
   const cryptoCurrencies = getConfiguredCoins(
     data?.config || {},
-    data?.cryptoCurrencies || []
+    data?.cryptoCurrencies || [],
   )
 
   const onChangeCoin = (prev, curr, setValue) => setValue(curr)
@@ -83,7 +83,7 @@ function Locales({ isActive, doContinue }) {
           data={[]}
           elements={mainFields(
             R.mergeRight(data, { cryptoCurrencies }),
-            onChangeCoin
+            onChangeCoin,
           )}
         />
       </Section>

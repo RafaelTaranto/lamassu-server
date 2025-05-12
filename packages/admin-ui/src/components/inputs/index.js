@@ -14,5 +14,5 @@ export {
   Select,
   RadioGroup,
   CashIn,
-  CashOut
+  CashOut,
 }

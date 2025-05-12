@@ -25,29 +25,29 @@ const TriggerView = ({
   addNewTriger,
   emailAuth,
   complianceServices,
-  customInfoRequests
+  customInfoRequests,
 }) => {
   const currency = R.path(['fiatCurrency'])(
-    fromNamespace(namespaces.LOCALE)(config)
+    fromNamespace(namespaces.LOCALE)(config),
   )
   const [error, setError] = useState(null)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: () => toggleWizard(true),
     refetchQueries: () => ['getData'],
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const save = config => {
     setError(null)
     return saveConfig({
-      variables: { config: { triggers: toServer(config.triggers) } }
+      variables: { config: { triggers: toServer(config.triggers) } },
     })
   }
 
   const add = rawConfig => {
     const toSave = R.concat([
-      { id: uuidv4(), direction: 'both', ...rawConfig }
+      { id: uuidv4(), direction: 'both', ...rawConfig },
     ])(triggers)
     return saveConfig({ variables: { config: { triggers: toServer(toSave) } } })
   }

@@ -12,14 +12,14 @@ const SubpageButton = memo(
     InverseIcon,
     toggle,
     forceDisable = false,
-    children
+    children,
   }) => {
     const [active, setActive] = useState(false)
     const isActive = forceDisable ? false : active
     const classNames = {
       [classes.button]: true,
       [classes.normal]: !isActive,
-      [classes.active]: isActive
+      [classes.active]: isActive,
     }
 
     const normalButton = <Icon className={classes.buttonIcon} />
@@ -29,14 +29,14 @@ const SubpageButton = memo(
         <InverseIcon
           className={classnames(
             classes.buttonIcon,
-            classes.buttonIconActiveLeft
+            classes.buttonIconActiveLeft,
           )}
         />
         <H4 className="text-white">{children}</H4>
         <CancelIconInverse
           className={classnames(
             classes.buttonIcon,
-            classes.buttonIconActiveRight
+            classes.buttonIconActiveRight,
           )}
         />
       </>
@@ -56,7 +56,7 @@ const SubpageButton = memo(
         {isActive ? activeButton : normalButton}
       </button>
     )
-  }
+  },
 )
 
 export default SubpageButton

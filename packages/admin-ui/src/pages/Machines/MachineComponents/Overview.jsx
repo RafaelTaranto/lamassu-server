@@ -28,7 +28,7 @@ const Overview = ({ data, onActionSuccess }) => {
           <P noMargin>
             {data.lastPing
               ? formatDistance(new Date(data.lastPing), new Date(), {
-                  addSuffix: true
+                  addSuffix: true,
                 })
               : 'unknown'}
           </P>

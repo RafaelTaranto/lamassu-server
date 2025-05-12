@@ -24,7 +24,7 @@ const getOverridesFields = currency => {
       name: 'name',
       width: 280,
       size: 'sm',
-      view: it => `${it}`
+      view: it => `${it}`,
     },
     {
       header: cashInHeader,
@@ -32,7 +32,7 @@ const getOverridesFields = currency => {
       display: 'Cash-in',
       width: 130,
       textAlign: 'right',
-      suffix: '%'
+      suffix: '%',
     },
     {
       header: cashOutHeader,
@@ -42,8 +42,8 @@ const getOverridesFields = currency => {
       textAlign: 'right',
       suffix: '%',
       inputProps: {
-        decimalPlaces: 3
-      }
+        decimalPlaces: 3,
+      },
     },
     {
       name: 'fixedFee',
@@ -51,7 +51,7 @@ const getOverridesFields = currency => {
       width: 155,
       doubleHeader: 'Cash-in only',
       textAlign: 'right',
-      suffix: currency
+      suffix: currency,
     },
     {
       name: 'minimumTx',
@@ -59,7 +59,7 @@ const getOverridesFields = currency => {
       width: 155,
       doubleHeader: 'Cash-in only',
       textAlign: 'right',
-      suffix: currency
+      suffix: currency,
     },
     {
       name: 'cashOutFixedFee',
@@ -67,8 +67,8 @@ const getOverridesFields = currency => {
       width: 155,
       doubleHeader: 'Cash-out only',
       textAlign: 'right',
-      suffix: currency
-    }
+      suffix: currency,
+    },
   ]
 }
 

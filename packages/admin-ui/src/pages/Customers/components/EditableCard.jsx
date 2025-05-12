@@ -20,7 +20,7 @@ import SaveReversedIcon from 'src/styling/icons/circle buttons/save/white.svg?re
 import { ActionButton } from 'src/components/buttons'
 import {
   OVERRIDE_REJECTED,
-  OVERRIDE_PENDING
+  OVERRIDE_PENDING,
 } from 'src/pages/Customers/components/consts'
 
 const ReadOnlyField = ({ field, value }) => {
@@ -73,9 +73,8 @@ const EditableCard = ({
   children = () => {},
   validationSchema,
   initialValues,
-  deleteEditedData,
   editable,
-  checkAgainstSanctions
+  checkAgainstSanctions,
 }) => {
   const formRef = useRef()
 

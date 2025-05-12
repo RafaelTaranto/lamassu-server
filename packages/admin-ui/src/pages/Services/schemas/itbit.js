@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import {
   SecretInput,
   TextInput,
-  Autocomplete
+  Autocomplete,
 } from 'src/components/inputs/formik'
 
 import { buildCurrencyOptions, secretTest } from './helper'
@@ -19,24 +19,24 @@ const schema = markets => {
         display: 'User ID',
         component: TextInput,
         face: true,
-        long: true
+        long: true,
       },
       {
         code: 'walletId',
         display: 'Wallet ID',
         component: TextInput,
         face: true,
-        long: true
+        long: true,
       },
       {
         code: 'clientKey',
         display: 'Client key',
-        component: TextInput
+        component: TextInput,
       },
       {
         code: 'clientSecret',
         display: 'Client secret',
-        component: SecretInput
+        component: SecretInput,
       },
       {
         code: 'currencyMarket',
@@ -45,10 +45,10 @@ const schema = markets => {
         inputProps: {
           options: buildCurrencyOptions(markets),
           labelProp: 'display',
-          valueProp: 'code'
+          valueProp: 'code',
         },
-        face: true
-      }
+        face: true,
+      },
     ],
     getValidationSchema: account => {
       return Yup.object().shape({
@@ -65,10 +65,10 @@ const schema = markets => {
           .max(100, 'The client secret is too long')
           .test(secretTest(account?.clientSecret, 'client secret')),
         currencyMarket: Yup.string(
-          'The currency market must be a string'
-        ).required('The currency market is required')
+          'The currency market must be a string',
+        ).required('The currency market is required'),
       })
-    }
+    },
   }
 }
 

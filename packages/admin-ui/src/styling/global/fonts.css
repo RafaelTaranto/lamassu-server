@@ -26,14 +26,18 @@
   font-family: 'Mont';
   font-weight: 900;
   font-style: normal;
-  src: url('/fonts/MontHeavy/mont-heavy-webfont.woff2') format('woff2'), url('/fonts/MontHeavy/mont-heavy-webfont.woff') format('woff');
+  src:
+    url('/fonts/MontHeavy/mont-heavy-webfont.woff2') format('woff2'),
+    url('/fonts/MontHeavy/mont-heavy-webfont.woff') format('woff');
 }
 
 @font-face {
   font-family: 'Mont';
   font-weight: 700;
   font-style: normal;
-  src: url('/fonts/MontHeavy/mont-bold-webfont.woff2') format('woff2'), url('/fonts/MontHeavy/mont-bold-webfont.woff') format('woff');
+  src:
+    url('/fonts/MontHeavy/mont-bold-webfont.woff2') format('woff2'),
+    url('/fonts/MontHeavy/mont-bold-webfont.woff') format('woff');
 }
 
 /*!
@@ -63,14 +67,18 @@
   font-family: 'MuseoSans';
   font-weight: 500;
   font-style: normal;
-  src: url("/fonts/MuseoSans/MuseoSans_500-webfont.woff2") format("woff2"), url("/fonts/MuseoSans/MuseoSans_500-webfont.woff") format("woff");
+  src:
+    url('/fonts/MuseoSans/MuseoSans_500-webfont.woff2') format('woff2'),
+    url('/fonts/MuseoSans/MuseoSans_500-webfont.woff') format('woff');
 }
 
 @font-face {
   font-family: 'MuseoSans';
   font-weight: 700;
   font-style: normal;
-  src: url("/fonts/MuseoSans/MuseoSans_700-webfont.woff2") format("woff2"), url("/fonts/MuseoSans/MuseoSans_700-webfont.woff") format("woff");
+  src:
+    url('/fonts/MuseoSans/MuseoSans_700-webfont.woff2') format('woff2'),
+    url('/fonts/MuseoSans/MuseoSans_700-webfont.woff') format('woff');
 }
 
 /* BP-mono Freely distributed at http://backpacker.gr/fonts/5 */
@@ -78,5 +86,5 @@
   font-family: 'BPmono';
   font-weight: 500;
   font-style: normal;
-  src: url("/fonts/BPmono/BPmono.ttf") format("truetype"),
+  src: url('/fonts/BPmono/BPmono.ttf') format('truetype');
 }

@@ -108,10 +108,10 @@ const Customers = () => {
   const {
     data: customersResponse,
     loading: customerLoading,
-    refetch
+    refetch,
   } = useQuery(GET_CUSTOMERS, {
     variables,
-    onCompleted: data => setFilteredCustomers(R.path(['customers'])(data))
+    onCompleted: data => setFilteredCustomers(R.path(['customers'])(data)),
   })
 
   const { data: filtersResponse, loading: loadingFilters } =
@@ -122,9 +122,9 @@ const Customers = () => {
     refetchQueries: () => [
       {
         query: GET_CUSTOMERS,
-        variables
-      }
-    ]
+        variables,
+      },
+    ],
   })
 
   const configData = R.path(['config'])(customersResponse) ?? []
@@ -137,14 +137,14 @@ const Customers = () => {
     R.assoc(
       'authorizedStatus',
       getAuthorizedStatus(c, triggers, customRequirementsData),
-      c
+      c,
     )
 
   const byAuthorized = c => (c.authorizedStatus.label === 'Pending' ? 0 : 1)
   const byLastActive = c => new Date(R.prop('lastActive', c) ?? '0')
   const customersData = R.pipe(
     R.map(setAuthorizedStatus),
-    R.sortWith([R.ascend(byAuthorized), R.descend(byLastActive)])
+    R.sortWith([R.ascend(byAuthorized), R.descend(byLastActive)]),
   )(filteredCustomers ?? [])
 
   const onFilterChange = filters => {
@@ -157,7 +157,7 @@ const Customers = () => {
       name: filtersObject.name,
       email: filtersObject.email,
       address: filtersObject.address,
-      id: filtersObject.id
+      id: filtersObject.id,
     })
 
     refetch && refetch()
@@ -165,7 +165,7 @@ const Customers = () => {
 
   const onFilterDelete = filter => {
     const newFilters = R.filter(
-      f => !R.whereEq(R.pick(['type', 'value'], f), filter)
+      f => !R.whereEq(R.pick(['type', 'value'], f), filter),
     )(filters)
 
     setFilters(newFilters)
@@ -177,7 +177,7 @@ const Customers = () => {
       name: filtersObject.name,
       email: filtersObject.email,
       address: filtersObject.address,
-      id: filtersObject.id
+      id: filtersObject.id,
     })
 
     refetch && refetch()
@@ -192,7 +192,7 @@ const Customers = () => {
       name: filtersObject.name,
       email: filtersObject.email,
       address: filtersObject.address,
-      id: filtersObject.id
+      id: filtersObject.id,
     })
 
     refetch && refetch()
@@ -224,7 +224,7 @@ const Customers = () => {
         }
         labels={[
           { label: 'Cash-in', icon: <TxInIcon /> },
-          { label: 'Cash-out', icon: <TxOutIcon /> }
+          { label: 'Cash-out', icon: <TxOutIcon /> },
         ]}
       />
       {filters.length > 0 && (

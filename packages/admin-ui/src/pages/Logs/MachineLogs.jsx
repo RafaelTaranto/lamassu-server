@@ -12,7 +12,7 @@ import {
   TableRow,
   TableHeader,
   TableBody,
-  TableCell
+  TableCell,
 } from 'src/components/table/index.js'
 import { formatDate } from 'src/utils/timezones.js'
 
@@ -91,8 +91,8 @@ const Logs = () => {
     {
       variables: { deviceId, limit: NUM_LOG_RESULTS },
       skip: !selected,
-      onCompleted: () => setSaveMessage('')
-    }
+      onCompleted: () => setSaveMessage(''),
+    },
   )
 
   if (machineResponse?.machines?.length && !selected) {

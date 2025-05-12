@@ -15,7 +15,6 @@ import { formatDate } from 'src/utils/timezones'
 import Popper from './Popper'
 import DateRangePicker from './date-range-picker/DateRangePicker'
 import { RadioGroup } from './inputs'
-import typographyStyles from './typography/styles'
 import { H4, Info1, Label1, Label2 } from './typography/index.jsx'
 
 const DateContainer = ({ date, children }) => {
@@ -31,7 +30,7 @@ const DateContainer = ({ date, children }) => {
             <div className="flex flex-col">
               <Label2 noMargin>{`${format(
                 'MMM',
-                date
+                date,
               )} ${format('yyyy', date)}`}</Label2>
               <Label1 noMargin className="text-comet">
                 {format('EEEE', date)}
@@ -57,7 +56,7 @@ const LogsDownloaderPopover = ({
   getLogs,
   timezone,
   simplified,
-  className
+  className,
 }) => {
   const [selectedRadio, setSelectedRadio] = useState(ALL)
   const [selectedAdvancedRadio, setSelectedAdvancedRadio] = useState(ADVANCED)
@@ -65,12 +64,12 @@ const LogsDownloaderPopover = ({
   const [range, setRange] = useState({ from: null, until: null })
   const [anchorEl, setAnchorEl] = useState(null)
   const [fetchLogs] = useLazyQuery(query, {
-    onCompleted: data => createLogsFile(getLogs(data), range)
+    onCompleted: data => createLogsFile(getLogs(data), range),
   })
 
   const dateRangePickerClasses = {
     'block h-full': selectedRadio === RANGE,
-    hidden: selectedRadio === ALL
+    hidden: selectedRadio === ALL,
   }
 
   const handleRadioButtons = evt => {
@@ -88,7 +87,7 @@ const LogsDownloaderPopover = ({
     (from, until) => {
       setRange({ from, until })
     },
-    [setRange]
+    [setRange],
   )
 
   const downloadLogs = (range, args) => {
@@ -97,8 +96,8 @@ const LogsDownloaderPopover = ({
         variables: {
           ...args,
           simplified: selectedAdvancedRadio === SIMPLIFIED,
-          excludeTestingCustomers: true
-        }
+          excludeTestingCustomers: true,
+        },
       })
     }
 
@@ -112,8 +111,8 @@ const LogsDownloaderPopover = ({
           from: range.from,
           until: range.until,
           simplified: selectedAdvancedRadio === SIMPLIFIED,
-          excludeTestingCustomers: true
-        }
+          excludeTestingCustomers: true,
+        },
       })
     }
   }
@@ -124,7 +123,7 @@ const LogsDownloaderPopover = ({
     }
 
     const blob = new window.Blob([logs], {
-      type: 'text/plain;charset=utf-8'
+      type: 'text/plain;charset=utf-8',
     })
 
     FileSaver.saveAs(
@@ -132,8 +131,8 @@ const LogsDownloaderPopover = ({
       selectedRadio === ALL
         ? `${formatDateFile(new Date())}_${name}.csv`
         : `${formatDateFile(range.from)}_${formatDateFile(
-            range.until
-          )}_${name}.csv`
+            range.until,
+          )}_${name}.csv`,
     )
   }
 
@@ -147,12 +146,12 @@ const LogsDownloaderPopover = ({
 
   const radioButtonOptions = [
     { display: 'All logs', code: ALL },
-    { display: 'Date range', code: RANGE }
+    { display: 'Date range', code: RANGE },
   ]
 
   const advancedRadioButtonOptions = [
     { display: 'Advanced logs', code: ADVANCED },
-    { display: 'Simplified logs', code: SIMPLIFIED }
+    { display: 'Simplified logs', code: SIMPLIFIED },
   ]
 
   const open = Boolean(anchorEl)
@@ -201,9 +200,9 @@ const LogsDownloaderPopover = ({
                       hours: 23,
                       minutes: 59,
                       seconds: 59,
-                      milliseconds: 999
+                      milliseconds: 999,
                     },
-                    new Date()
+                    new Date(),
                   )}
                   onRangeChange={handleRangeChange}
                 />

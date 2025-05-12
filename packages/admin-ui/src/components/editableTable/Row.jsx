@@ -35,7 +35,7 @@ const ActionCol = ({ disabled, editing }) => {
     forceAdd,
     clearError,
     actionColSize,
-    error
+    error,
   } = useContext(TableCtx)
 
   const disableEdit = disabled || (disableRowEdit && disableRowEdit(values))
@@ -136,10 +136,10 @@ const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {
     PrefixComponent = Label2,
     suffix,
     SuffixComponent = Label2,
-    textStyle = it => {},
-    isHidden = it => false,
+    textStyle = () => {},
+    isHidden = () => false,
     view = it => it?.toString(),
-    inputProps = {}
+    inputProps = {},
   } = config
 
   const fields = names ?? [name]
@@ -158,7 +158,7 @@ const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {
     size,
     bold,
     textAlign: isEditing ? editingAlign : textAlign,
-    ...inputProps
+    ...inputProps,
   }
 
   const newAlign = isEditing ? editingAlign : textAlign
@@ -174,7 +174,7 @@ const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {
           className={{
             [moduleStyles.extraPaddingRight]: extraPaddingRight,
             [moduleStyles.extraPadding]: extraPadding,
-            'flex items-center': suffix || prefix
+            'flex items-center': suffix || prefix,
           }}
           width={width}
           size={size}
@@ -225,7 +225,7 @@ const groupStriped = elements => {
   return R.insert(
     index,
     { width, editable: false, view: () => <StripesSvg /> },
-    noStripe
+    noStripe,
   )
 }
 
@@ -238,7 +238,7 @@ const ERow = ({ editing, disabled, lastOfGroup, newRow }) => {
     error,
     enableToggle,
     rowSize,
-    stripeWhen
+    stripeWhen,
   } = useContext(TableCtx)
 
   const shouldStripe = !editing && stripeWhen && stripeWhen(values)
@@ -255,11 +255,11 @@ const ERow = ({ editing, disabled, lastOfGroup, newRow }) => {
     : -1
 
   const elementToFocusIndex = innerElements.findIndex(
-    it => it.editable === undefined || it.editable
+    it => it.editable === undefined || it.editable,
   )
 
   const classNames = {
-    [moduleStyles.lastOfGroup]: lastOfGroup
+    [moduleStyles.lastOfGroup]: lastOfGroup,
   }
 
   const touchedErrors = R.pick(R.keys(touched), errors)

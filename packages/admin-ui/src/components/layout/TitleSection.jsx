@@ -15,13 +15,13 @@ const TitleSection = ({
   buttons = [],
   children,
   appendix,
-  appendixRight
+  appendixRight,
 }) => {
   return (
     <div
       className={classnames(
         'flex justify-between items-center flex-row',
-        className
+        className,
       )}>
       <div className="flex items-center">
         <Title>{title}</Title>
@@ -44,7 +44,7 @@ const TitleSection = ({
                     {button.text}
                   </Info1>
                 </SubpageButton>
-              )
+              ),
             )}
           </>
         )}

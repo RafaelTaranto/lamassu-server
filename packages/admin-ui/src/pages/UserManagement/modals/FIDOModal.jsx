@@ -10,7 +10,7 @@ const ChangeRoleModal = ({ state, dispatch }) => {
   const handleClose = () => {
     dispatch({
       type: 'close',
-      payload: 'showFIDOModal'
+      payload: 'showFIDOModal',
     })
   }
 

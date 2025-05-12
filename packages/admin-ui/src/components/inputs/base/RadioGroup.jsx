@@ -13,7 +13,7 @@ const RadioGroup = ({
   onChange,
   className,
   labelClassName,
-  radioClassName
+  radioClassName,
 }) => {
   return (
     <>

@@ -10,7 +10,7 @@ import * as Yup from 'yup'
 import {
   RadioGroup,
   TextInput,
-  Autocomplete
+  Autocomplete,
 } from 'src/components/inputs/formik'
 import { MANUAL } from 'src/utils/constants'
 
@@ -24,7 +24,7 @@ const ID_CARD_DATA = 'idCardData'
 const getAuthorizedStatus = (it, triggers, customRequests) => {
   const fields = R.concat(
     ['frontCamera', 'idCardData', 'idCardPhoto', 'email', 'usSsn', 'sanctions'],
-    R.map(ite => ite.id, customRequests)
+    R.map(ite => ite.id, customRequests),
   )
   const fieldsWithPathSuffix = ['frontCamera', 'idCardPhoto']
 
@@ -34,13 +34,13 @@ const getAuthorizedStatus = (it, triggers, customRequests) => {
       : fieldName
     const manualOverrides = R.filter(
       ite => R.equals(R.toLower(ite.automation), MANUAL),
-      triggers?.overrides ?? []
+      triggers?.overrides ?? [],
     )
 
     return (
       !!R.find(
         ite => R.equals(ite.requirement, triggerName),
-        manualOverrides
+        manualOverrides,
       ) || R.equals(R.toLower(triggers.automation ?? ''), MANUAL)
     )
   }
@@ -50,7 +50,7 @@ const getAuthorizedStatus = (it, triggers, customRequests) => {
       if (uuidValidate(ite)) {
         const request = R.find(
           iter => iter.infoRequestId === ite,
-          it.customInfoRequests
+          it.customInfoRequests,
         )
         return !R.isNil(request) && R.equals(request.override, 'automatic')
       }
@@ -69,7 +69,7 @@ const getAuthorizedStatus = (it, triggers, customRequests) => {
       if (uuidValidate(ite)) {
         const request = R.find(
           iter => iter.infoRequestId === ite,
-          it.customInfoRequests
+          it.customInfoRequests,
         )
         return !R.isNil(request) && R.equals(request.override, 'blocked')
       }
@@ -115,11 +115,11 @@ const getName = it => {
 
 const entryOptions = [
   { display: 'Custom entry', code: 'custom' },
-  { display: 'Populate existing requirement', code: 'requirement' }
+  { display: 'Populate existing requirement', code: 'requirement' },
 ]
 
 const dataOptions = [
-  { display: 'Text', code: 'text' }
+  { display: 'Text', code: 'text' },
   // TODO: Requires backend modifications to support File and Image
   // { display: 'File', code: 'file' },
   // { display: 'Image', code: 'image' }
@@ -130,12 +130,12 @@ const requirementOptions = [
   { display: 'ID data', code: 'idCardData' },
   { display: 'US SSN', code: 'usSsn' },
   { display: 'Email', code: 'email' },
-  { display: 'Customer camera', code: 'frontCamera' }
+  { display: 'Customer camera', code: 'frontCamera' },
 ]
 
 const customTextOptions = [
   { label: 'Data entry title', name: 'title' },
-  { label: 'Data entry', name: 'data' }
+  { label: 'Data entry', name: 'data' },
 ]
 
 const customUploadOptions = [{ label: 'Data entry title', name: 'title' }]
@@ -144,40 +144,40 @@ const entryTypeSchema = Yup.lazy(values => {
   if (values.entryType === 'custom') {
     return Yup.object().shape({
       entryType: Yup.string().required(),
-      dataType: Yup.string().required()
+      dataType: Yup.string().required(),
     })
   } else if (values.entryType === 'requirement') {
     return Yup.object().shape({
       entryType: Yup.string().required(),
-      requirement: Yup.string().required()
+      requirement: Yup.string().required(),
     })
   }
 })
 
 const customFileSchema = Yup.object().shape({
   title: Yup.string().required(),
-  file: Yup.mixed().required()
+  file: Yup.mixed().required(),
 })
 
 const customImageSchema = Yup.object().shape({
   title: Yup.string().required(),
-  image: Yup.mixed().required()
+  image: Yup.mixed().required(),
 })
 
 const customTextSchema = Yup.object().shape({
   title: Yup.string().required(),
-  data: Yup.string().required()
+  data: Yup.string().required(),
 })
 
 const updateRequirementOptions = it => [
   {
     display: 'Custom information requirement',
-    code: 'custom'
+    code: 'custom',
   },
-  ...it
+  ...it,
 ]
 
-const EntryType = ({ customInfoRequirementOptions }) => {
+const EntryType = () => {
   const { values } = useFormikContext()
 
   const displayCustomOptions = values.entryType === CUSTOM
@@ -265,7 +265,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
           isOptionEqualToValue={R.eqProps('code')}
           labelProp={'display'}
           options={customInfoRequirementOptions}
-          onChange={(evt, it) => {}}
+          onChange={() => {}}
         />
       )}
       <div className="mb-6">
@@ -297,29 +297,29 @@ const customElements = {
     options: customTextOptions,
     Component: ManualDataEntry,
     initialValues: { data: '', title: '' },
-    saveType: 'customEntry'
+    saveType: 'customEntry',
   },
   file: {
     schema: customFileSchema,
     options: customUploadOptions,
     Component: ManualDataEntry,
     initialValues: { file: null, title: '' },
-    saveType: 'customEntryUpload'
+    saveType: 'customEntryUpload',
   },
   image: {
     schema: customImageSchema,
     options: customUploadOptions,
     Component: ManualDataEntry,
     initialValues: { image: null, title: '' },
-    saveType: 'customEntryUpload'
-  }
+    saveType: 'customEntryUpload',
+  },
 }
 
 const entryType = {
   schema: entryTypeSchema,
   options: entryOptions,
   Component: EntryType,
-  initialValues: { entryType: '' }
+  initialValues: { entryType: '' },
 }
 
 // Customer data
@@ -330,44 +330,44 @@ const customerDataElements = {
       name: 'firstName',
       label: 'First name',
       component: TextInput,
-      editable: true
+      editable: true,
     },
     {
       name: 'documentNumber',
       label: 'ID number',
       component: TextInput,
-      editable: true
+      editable: true,
     },
     {
       name: 'dateOfBirth',
       label: 'Birthdate',
       component: TextInput,
-      editable: true
+      editable: true,
     },
     {
       name: 'gender',
       label: 'Gender',
       component: TextInput,
-      editable: true
+      editable: true,
     },
     {
       name: 'lastName',
       label: 'Last name',
       component: TextInput,
-      editable: true
+      editable: true,
     },
     {
       name: 'expirationDate',
       label: 'Expiration date',
       component: TextInput,
-      editable: true
+      editable: true,
     },
     {
       name: 'country',
       label: 'Country',
       component: TextInput,
-      editable: true
-    }
+      editable: true,
+    },
   ],
   usSsn: [
     {
@@ -375,8 +375,8 @@ const customerDataElements = {
       label: 'US SSN',
       component: TextInput,
       size: 190,
-      editable: true
-    }
+      editable: true,
+    },
   ],
   email: [
     {
@@ -384,11 +384,11 @@ const customerDataElements = {
       label: 'Email',
       component: TextInput,
       size: 190,
-      editable: false
-    }
+      editable: false,
+    },
   ],
   idCardPhoto: [{ name: 'idCardPhoto' }],
-  frontCamera: [{ name: 'frontCamera' }]
+  frontCamera: [{ name: 'frontCamera' }],
 }
 
 const customerDataSchemas = {
@@ -399,7 +399,7 @@ const customerDataSchemas = {
     dateOfBirth: Yup.string()
       .test({
         test: val => isValid(parse(new Date(), 'yyyy-MM-dd', val)),
-        message: 'Date must be in format YYYY-MM-DD'
+        message: 'Date must be in format YYYY-MM-DD',
       })
       .required(),
     gender: Yup.string().required(),
@@ -407,22 +407,22 @@ const customerDataSchemas = {
     expirationDate: Yup.string()
       .test({
         test: val => isValid(parse(new Date(), 'yyyy-MM-dd', val)),
-        message: 'Date must be in format YYYY-MM-DD'
+        message: 'Date must be in format YYYY-MM-DD',
       })
-      .required()
+      .required(),
   }),
   usSsn: Yup.object().shape({
-    usSsn: Yup.string().required()
+    usSsn: Yup.string().required(),
   }),
   idCardPhoto: Yup.object().shape({
-    idCardPhoto: Yup.mixed().required()
+    idCardPhoto: Yup.mixed().required(),
   }),
   frontCamera: Yup.object().shape({
-    frontCamera: Yup.mixed().required()
+    frontCamera: Yup.mixed().required(),
   }),
   email: Yup.object().shape({
-    email: Yup.string().required()
-  })
+    email: Yup.string().required(),
+  }),
 }
 
 const requirementElements = {
@@ -437,44 +437,44 @@ const requirementElements = {
       dateOfBirth: '',
       gender: '',
       country: '',
-      expirationDate: ''
+      expirationDate: '',
     },
-    saveType: 'customerData'
+    saveType: 'customerData',
   },
   usSsn: {
     schema: customerDataSchemas.usSsn,
     options: customerDataElements.usSsn,
     Component: ManualDataEntry,
     initialValues: { usSsn: '' },
-    saveType: 'customerData'
+    saveType: 'customerData',
   },
   email: {
     schema: customerDataSchemas.email,
     options: customerDataElements.email,
     Component: ManualDataEntry,
     initialValues: { email: '' },
-    saveType: 'customerData'
+    saveType: 'customerData',
   },
   idCardPhoto: {
     schema: customerDataSchemas.idCardPhoto,
     options: customerDataElements.idCardPhoto,
     Component: ManualDataEntry,
     initialValues: { idCardPhoto: null },
-    saveType: 'customerDataUpload'
+    saveType: 'customerDataUpload',
   },
   frontCamera: {
     schema: customerDataSchemas.frontCamera,
     options: customerDataElements.frontCamera,
     Component: ManualDataEntry,
     initialValues: { frontCamera: null },
-    saveType: 'customerDataUpload'
+    saveType: 'customerDataUpload',
   },
   custom: {
     // schema: customerDataSchemas.customInfoRequirement,
     Component: ManualDataEntry,
     initialValues: { customInfoRequirement: null },
-    saveType: 'customInfoRequirement'
-  }
+    saveType: 'customInfoRequirement',
+  },
 }
 
 const tryFormatDate = rawDate => {
@@ -485,6 +485,7 @@ const tryFormatDate = rawDate => {
       ''
     )
   } catch (err) {
+    console.error(err)
     return ''
   }
 }
@@ -493,8 +494,8 @@ const formatDates = values => {
   R.map(
     elem =>
       (values[elem] = format('yyyyMMdd')(
-        parse(new Date(), 'yyyy-MM-dd', values[elem])
-      ))
+        parse(new Date(), 'yyyy-MM-dd', values[elem]),
+      )),
   )(['dateOfBirth', 'expirationDate'])
   return values
 }
@@ -520,13 +521,13 @@ const addPhotoDir = R.map(it => {
 const standardizeKeys = R.map(R.compose(R.fromPairs, R.map(mapKeys), R.toPairs))
 
 const filterByPhotoAvailable = R.filter(
-  tx => !R.isNil(tx.date) && !R.isNil(tx.path)
+  tx => !R.isNil(tx.date) && !R.isNil(tx.path),
 )
 
 const formatPhotosData = R.compose(
   filterByPhotoAvailable,
   addPhotoDir,
-  standardizeKeys
+  standardizeKeys,
 )
 
 export {
@@ -543,5 +544,5 @@ export {
   tryFormatDate,
   REQUIREMENT,
   CUSTOM,
-  ID_CARD_DATA
+  ID_CARD_DATA,
 }

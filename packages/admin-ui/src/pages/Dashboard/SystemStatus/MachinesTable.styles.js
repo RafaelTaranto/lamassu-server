@@ -2,28 +2,28 @@ import {
   backgroundColor,
   offColor,
   errorColor,
-  primaryColor
+  primaryColor,
 } from 'src/styling/variables'
 
 const styles = {
   label: {
     margin: 0,
-    color: offColor
+    color: offColor,
   },
   row: {
     backgroundColor: backgroundColor,
-    borderBottom: 'none'
+    borderBottom: 'none',
   },
   clickableRow: {
-    cursor: 'pointer'
+    cursor: 'pointer',
   },
   header: {
     display: 'flex',
     alignItems: 'center',
-    whiteSpace: 'pre'
+    whiteSpace: 'pre',
   },
   error: {
-    color: errorColor
+    color: errorColor,
   },
   button: {
     color: primaryColor,
@@ -32,46 +32,46 @@ const styles = {
     padding: 0,
     textTransform: 'none',
     '&:hover': {
-      backgroundColor: 'transparent'
+      backgroundColor: 'transparent',
     },
-    marginBottom: -40
+    marginBottom: -40,
   },
   buttonLabel: {
     position: 'absolute',
     bottom: 160,
-    marginBottom: 0
+    marginBottom: 0,
   },
   statusHeader: {
-    marginLeft: 2
+    marginLeft: 2,
   },
   tableBody: {
-    overflow: 'auto'
+    overflow: 'auto',
   },
   tl2: {
-    display: 'inline'
+    display: 'inline',
   },
   label1: {
-    display: 'inline'
+    display: 'inline',
   },
   machinesTableContainer: {
-    height: 220
+    height: 220,
   },
   expandedMachinesTableContainer: {
-    height: 414
+    height: 414,
   },
   centerLabel: {
     marginBottom: 0,
     padding: 0,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   machineNameWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   machineRedirectIcon: {
-    marginLeft: 10
-  }
+    marginLeft: 10,
+  },
 }
 
 export default styles

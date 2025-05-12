@@ -27,23 +27,23 @@ const validationSchema = Yup.object().shape({
   username: Yup.string()
     .email('Username field should be in an email format!')
     .required('Username field is required!'),
-  role: Yup.string().required('Role field is required!')
+  role: Yup.string().required('Role field is required!'),
 })
 
 const initialValues = {
   username: '',
-  role: ''
+  role: '',
 }
 
 const radioOptions = [
   {
     code: 'user',
-    display: 'Regular user'
+    display: 'Regular user',
   },
   {
     code: 'superuser',
-    display: 'Superuser'
-  }
+    display: 'Superuser',
+  },
 ]
 
 const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
@@ -62,18 +62,18 @@ const CreateUserModal = ({ state, dispatch }) => {
     setCreateUserURL(null)
     dispatch({
       type: 'close',
-      payload: 'showCreateUserModal'
+      payload: 'showCreateUserModal',
     })
   }
 
   const [createUser, { error }] = useMutation(CREATE_USER, {
     onCompleted: ({ createRegisterToken: token }) => {
       setCreateUserURL(urlResolver(`/register?t=${token.token}`))
-    }
+    },
   })
 
   const roleClass = (formikErrors, formikTouched) => ({
-    [classes.error]: formikErrors.role && formikTouched.role
+    [classes.error]: formikErrors.role && formikTouched.role,
   })
 
   return (
@@ -91,7 +91,7 @@ const CreateUserModal = ({ state, dispatch }) => {
             onSubmit={values => {
               setUsernameField(values.username)
               createUser({
-                variables: { username: values.username, role: values.role }
+                variables: { username: values.username, role: values.role },
               })
             }}>
             {({ errors, touched }) => (
@@ -107,7 +107,7 @@ const CreateUserModal = ({ state, dispatch }) => {
                 <H3
                   className={classnames(
                     roleClass(errors, touched),
-                    classes.modalLabel2
+                    classes.modalLabel2,
                   )}>
                   Role
                 </H3>

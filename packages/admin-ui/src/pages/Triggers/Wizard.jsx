@@ -19,7 +19,7 @@ const getStep = (
   customInfoRequests,
   complianceServices,
   emailAuth,
-  triggers
+  triggers,
 ) => {
   switch (step) {
     // case 1:
@@ -32,7 +32,7 @@ const getStep = (
         triggers,
         customInfoRequests,
         complianceServices,
-        emailAuth
+        emailAuth,
       )
     default:
       return Fragment
@@ -97,7 +97,7 @@ const getTypeText = (config, currency) => {
           {singularOrPlural(
             config.threshold.threshold,
             'transaction',
-            'transactions'
+            'transactions',
           )}{' '}
           in {orUnderline(config.threshold.thresholdDays)}{' '}
           {singularOrPlural(config.threshold.thresholdDays, 'day', 'days')}
@@ -189,11 +189,11 @@ const Wizard = ({
   customInfoRequests,
   complianceServices,
   emailAuth,
-  triggers
+  triggers,
 }) => {
   const [liveValues, setLiveValues] = useState({})
   const [{ step, config }, setState] = useState({
-    step: 1
+    step: 1,
   })
 
   const isLastStep = step === LAST_STEP
@@ -203,7 +203,7 @@ const Wizard = ({
     customInfoRequests,
     complianceServices,
     emailAuth,
-    triggers
+    triggers,
   )
 
   const onContinue = async it => {
@@ -215,7 +215,7 @@ const Wizard = ({
 
     setState({
       step: step + 1,
-      config: newConfig
+      config: newConfig,
     })
   }
 
@@ -228,12 +228,12 @@ const Wizard = ({
     const hasRequirementError = requirements().hasRequirementError(
       errors,
       touched,
-      values
+      values,
     )
     const hasCustomRequirementError = requirements().hasCustomRequirementError(
       errors,
       touched,
-      values
+      values,
     )
 
     const hasAmountError =

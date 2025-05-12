@@ -29,15 +29,15 @@ const ActionButton = memo(
             'text-white',
             {
               [moduleStyles.buttonSm]: size === 'sm',
-              [moduleStyles.buttonXl]: size === 'xl'
-            }
+              [moduleStyles.buttonXl]: size === 'xl',
+            },
           )}
           {...props}>
           {children}
         </button>
       </div>
     )
-  }
+  },
 )
 
 export default ActionButton

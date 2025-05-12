@@ -34,7 +34,7 @@ const initialState = {
   userID: null,
   secret: null,
   otpauth: null,
-  result: null
+  result: null,
 }
 
 const reducer = (state, action) => {
@@ -63,7 +63,7 @@ const Reset2FA = () => {
     onCompleted: ({ validateReset2FALink: info }) => {
       if (!info) {
         dispatch({
-          type: 'failure'
+          type: 'failure',
         })
       } else {
         dispatch({
@@ -71,22 +71,22 @@ const Reset2FA = () => {
           payload: {
             userID: info.user_id,
             secret: info.secret,
-            otpauth: info.otpauth
-          }
+            otpauth: info.otpauth,
+          },
         })
       }
     },
     onError: () => {
       dispatch({
-        type: 'failure'
+        type: 'failure',
       })
-    }
+    },
   })
 
   const [reset2FA, { error: mutationError }] = useMutation(RESET_2FA, {
     onCompleted: ({ reset2FA: success }) => {
       success ? history.push('/') : setInvalidToken(true)
-    }
+    },
   })
 
   const getErrorMsg = () => {
@@ -107,8 +107,8 @@ const Reset2FA = () => {
       variables: {
         token: token,
         userID: state.userID,
-        code: twoFAConfirmation
-      }
+        code: twoFAConfirmation,
+      },
     })
   }
 

@@ -14,7 +14,7 @@ const timezones = {
   'America/Regina': { short: 'CST', long: 'Saskatchewan' },
   'America/Mexico_City': {
     short: 'CST',
-    long: 'Guadalajara, Mexico City, Monterrey'
+    long: 'Guadalajara, Mexico City, Monterrey',
   },
   'America/Belize': { short: 'CST', long: 'Central America' },
   'America/Detroit': { short: 'EST', long: 'Eastern Time' },
@@ -27,7 +27,7 @@ const timezones = {
   'America/Montevideo': { short: 'UYT', long: 'Montevideo' },
   'America/Argentina/Buenos_Aires': {
     short: null,
-    long: 'Buenos Aires, Georgetown'
+    long: 'Buenos Aires, Georgetown',
   },
   'America/Godthab': { short: null, long: 'Greenland' },
   'America/Los_Angeles': { short: 'PST', long: 'Pacific Time' },
@@ -41,23 +41,23 @@ const timezones = {
   'Atlantic/Canary': { short: 'WET', long: 'Canary Islands' },
   'Europe/Belgrade': {
     short: 'CET',
-    long: 'Belgrade, Bratislava, Budapest, Ljubljana, Prague'
+    long: 'Belgrade, Bratislava, Budapest, Ljubljana, Prague',
   },
   'Europe/Sarajevo': { short: 'CET', long: 'Sarajevo, Skopje, Warsaw, Zagreb' },
   'Europe/Brussels': {
     short: 'CET',
-    long: 'Brussels, Copenhagen, Madrid, Paris'
+    long: 'Brussels, Copenhagen, Madrid, Paris',
   },
   'Europe/Amsterdam': {
     short: 'CET',
-    long: 'Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna'
+    long: 'Amsterdam, Berlin, Bern, Rome, Stockholm, Vienna',
   },
   'Africa/Algiers': { short: 'CET', long: 'West Central Africa' },
   'Europe/Bucharest': { short: 'EET', long: 'Bucharest' },
   'Africa/Cairo': { short: 'EET', long: 'Cairo' },
   'Europe/Helsinki': {
     short: 'EET',
-    long: 'Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius'
+    long: 'Helsinki, Kiev, Riga, Sofia, Tallinn, Vilnius',
   },
   'Europe/Athens': { short: 'EET', long: 'Athens, Istanbul, Minsk' },
   'Asia/Jerusalem': { short: 'IST', long: 'Jerusalem' },
@@ -82,7 +82,7 @@ const timezones = {
   'Asia/Krasnoyarsk': { short: 'KRAT', long: 'Krasnoyarsk' },
   'Asia/Shanghai': {
     short: 'CST',
-    long: 'Beijing, Chongqing, Hong Kong SAR, Urumqi'
+    long: 'Beijing, Chongqing, Hong Kong SAR, Urumqi',
   },
   'Asia/Kuala_Lumpur': { short: 'MYT', long: 'Kuala Lumpur, Singapore' },
   'Asia/Taipei': { short: 'CST', long: 'Taipei' },
@@ -100,12 +100,12 @@ const timezones = {
   'Pacific/Guam': { short: 'ChST', long: 'Guam, Port Moresby' },
   'Asia/Magadan': {
     short: 'MAGT',
-    long: 'Magadan, Solomon Islands, New Caledonia'
+    long: 'Magadan, Solomon Islands, New Caledonia',
   },
   'Asia/Kamchatka': { short: 'PETT', long: 'Kamchatka, Marshall Islands' },
   'Pacific/Fiji': { short: 'FJT', long: 'Fiji Islands' },
   'Pacific/Auckland': { short: 'NZDT', long: 'Auckland, Wellington' },
-  'Pacific/Tongatapu': { short: null, long: "Nuku'alofa" }
+  'Pacific/Tongatapu': { short: null, long: "Nuku'alofa" },
 }
 
 const buildTzLabels = timezoneList => {
@@ -115,29 +115,29 @@ const buildTzLabels = timezoneList => {
       const isNegative = getTimezoneOffset(value[0]) < 0
       const duration = intervalToDuration({
         start: 0,
-        end: Math.abs(getTimezoneOffset(value[0]))
+        end: Math.abs(getTimezoneOffset(value[0])),
       })
 
       const hours = duration.hours.toLocaleString('en-US', {
         minimumIntegerDigits: 2,
-        useGrouping: false
+        useGrouping: false,
       })
       const minutes = duration.minutes.toLocaleString('en-US', {
         minimumIntegerDigits: 2,
-        useGrouping: false
+        useGrouping: false,
       })
 
       const prefix = `(GMT${isNegative ? `-` : `+`}${hours}:${minutes})`
 
       acc.push({
         label: `${prefix} - ${value[1].long}`,
-        code: value[0]
+        code: value[0],
       })
 
       return acc
     },
     [],
-    pairs
+    pairs,
   )
 }
 

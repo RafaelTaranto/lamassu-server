@@ -70,14 +70,14 @@ const Triggers = () => {
   const enabledCustomInfoRequests = R.pipe(
     R.path(['customInfoRequests']),
     R.defaultTo([]),
-    R.filter(R.propEq('enabled', true))
+    R.filter(R.propEq('enabled', true)),
   )(customInfoReqData)
 
   const emailAuth =
     data?.config?.triggersConfig_customerAuthentication === 'EMAIL'
 
   const complianceServices = R.filter(R.propEq('class', 'compliance'))(
-    data?.accountsConfig || []
+    data?.accountsConfig || [],
   )
   const triggers = fromServer(data?.config?.triggers ?? [])
   const complianceConfig =
@@ -87,7 +87,7 @@ const Triggers = () => {
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
     refetchQueries: () => ['getData'],
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const [saveAccount] = useMutation(SAVE_ACCOUNT, {
@@ -96,7 +96,7 @@ const Triggers = () => {
       toggleWizard('newTrigger')()
     },
     refetchQueries: () => ['getData'],
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const addressReuseSave = rawConfig => {
@@ -105,7 +105,7 @@ const Triggers = () => {
   }
 
   const titleSectionWidth = {
-    'w-230': !subMenu === 'customInfoRequests'
+    'w-230': !subMenu === 'customInfoRequests',
   }
 
   const setBlur = shouldBlur => {
@@ -128,7 +128,7 @@ const Triggers = () => {
   const twilioSave = it => {
     setError(null)
     return saveAccount({
-      variables: { accounts: { twilio: it } }
+      variables: { accounts: { twilio: it } },
     })
   }
   const addNewTriger = () => {
@@ -149,7 +149,7 @@ const Triggers = () => {
             toggle: show => {
               refetch()
               setSubMenu(show ? 'advancedSettings' : false)
-            }
+            },
           },
           {
             text: 'Custom info requests',
@@ -159,8 +159,8 @@ const Triggers = () => {
             toggle: show => {
               refetch()
               setSubMenu(show ? 'customInfoRequests' : false)
-            }
-          }
+            },
+          },
         ]}
         className={classnames(titleSectionWidth)}>
         {!subMenu && (

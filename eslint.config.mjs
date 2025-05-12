@@ -2,7 +2,6 @@ import js from '@eslint/js'
 import globals from 'globals'
 import pluginReact from 'eslint-plugin-react'
 import json from '@eslint/json'
-import css from '@eslint/css'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
@@ -16,7 +15,13 @@ export default defineConfig([
   },
   {
     files: ['packages/admin-ui/**/*.{js,mjs,jsx}'],
-    languageOptions: { sourceType: 'module', globals: globals.browser }
+    languageOptions: {
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        process: 'readonly'
+      }
+    }
   },
   {
     files: ['packages/server/**/*.{js,cjs}'],
@@ -36,14 +41,7 @@ export default defineConfig([
     extends: ['json/recommended']
   },
   {
-    files: ['**/*.css'],
-    plugins: { css },
-    language: 'css/css',
-    extends: ['css/recommended']
-  },
-  {
     rules: {
-      // 'no-unused-vars': 'on',
       'react/prop-types': 'off',
       'react/display-name': 'off',
       'react/no-unescaped-entities': 'off',

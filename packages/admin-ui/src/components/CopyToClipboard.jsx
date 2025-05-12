@@ -14,7 +14,7 @@ const CopyToClipboard = ({
   buttonClassname,
   children,
   wrapperClassname,
-  removeSpace = true
+  removeSpace = true,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null)
 
@@ -68,7 +68,7 @@ const CopyToClipboard = ({
         </>
       )}
     </div>
-  );
+  )
 }
 
 export default CopyToClipboard

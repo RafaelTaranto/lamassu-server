@@ -16,7 +16,7 @@ const initialState = {
   form: null,
   selected: null,
   isNew: false,
-  iError: false
+  iError: false,
 }
 
 const reducer = (state, action) => {
@@ -26,7 +26,7 @@ const reducer = (state, action) => {
         form: null,
         selected: action.selected,
         isNew: null,
-        iError: false
+        iError: false,
       }
     case 'new':
       return { form: state.form, selected: null, isNew: true, iError: false }
@@ -35,7 +35,7 @@ const reducer = (state, action) => {
         form: action.form,
         selected: action.form.code,
         isNew: true,
-        iError: false
+        iError: false,
       }
     case 'error':
       return R.merge(state, { innerError: true })
@@ -62,11 +62,11 @@ const WizardStep = ({
   fiatCurrency,
   filled,
   unfilled,
-  getValue
+  getValue,
 }) => {
   const [{ innerError, selected, form, isNew }, dispatch] = useReducer(
     reducer,
-    initialState
+    initialState,
   )
 
   useEffect(() => {
@@ -83,7 +83,7 @@ const WizardStep = ({
   const label = isLastStep ? 'Finish' : 'Next'
   const displayName = name ?? type
   const subtitleClass = classnames('mt-8 mb-5 mx-0', {
-    'text-tomato': innerError
+    'text-tomato': innerError,
   })
   return (
     <>
@@ -115,7 +115,7 @@ const WizardStep = ({
           initialValues={{ zeroConfLimit: '' }}
           enableReinitialize
           validationSchema={stepSchema}>
-          {({ values, setFieldValue }) => (
+          {({ setFieldValue }) => (
             <Form>
               <div className="flex flex-row">
                 <Field
@@ -127,7 +127,7 @@ const WizardStep = ({
                   onChange={event => {
                     dispatch({
                       type: 'select',
-                      selected: event.target.value
+                      selected: event.target.value,
                     })
                     setFieldValue(event.target.id, event.target.value)
                   }}
@@ -143,7 +143,7 @@ const WizardStep = ({
         {!R.isEmpty(unfilled) && !R.isNil(unfilled) && (
           <RadioGroup
             value={isNew}
-            onChange={(evt, it) => {
+            onChange={() => {
               dispatch({ type: 'new' })
             }}
             labelClassName="w-[150px] h-12"
@@ -170,7 +170,7 @@ const WizardStep = ({
           save={it => innerContinue({ [type]: form.code }, { [form.code]: it })}
           elements={schemas[form.code].elements}
           validationSchema={schemas[form.code].getValidationSchema(
-            accounts[form.code]
+            accounts[form.code],
           )}
           value={getValue(form.code)}
           buttonLabel={label}

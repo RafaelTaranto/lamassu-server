@@ -8,10 +8,10 @@ import {
   neon,
   subheaderDarkColor,
   fontColor,
-  fontSecondary
+  fontSecondary,
 } from 'src/styling/variables'
 
-const Graph = ({ data, machines, currency, selectedMachine }) => {
+const Graph = ({ data, machines, currency }) => {
   const ref = useRef(null)
 
   const AMOUNT_OF_MACHINES = 5
@@ -24,9 +24,9 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
       top: 25,
       right: 0.5,
       bottom: 27,
-      left: 36.5
+      left: 36.5,
     }),
-    []
+    [],
   )
 
   const machinesClone = R.clone(machines)
@@ -41,7 +41,7 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
             if (!R.isNil(machinesClone[it])) return machinesClone[it]
             return { code: `ghostMachine${it}`, display: `` }
           },
-          R.times(R.identity, AMOUNT_OF_MACHINES)
+          R.times(R.identity, AMOUNT_OF_MACHINES),
         )
 
   const txByDevice = R.reduce(
@@ -50,14 +50,14 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
       return acc
     },
     {},
-    filledMachines
+    filledMachines,
   )
 
   const getDeviceVolume = deviceId =>
     R.reduce(
       (acc, value) => acc + BigNumber(value.fiat).toNumber(),
       0,
-      txByDevice[deviceId]
+      txByDevice[deviceId],
     )
 
   const getDeviceVolumeByTxClass = deviceId =>
@@ -70,18 +70,18 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
         return acc
       },
       { cashIn: 0, cashOut: 0 },
-      txByDevice[deviceId]
+      txByDevice[deviceId],
     )
 
   const devicesByVolume = R.sort(
     (a, b) => b[1] - a[1],
-    R.map(m => [m.code, getDeviceVolume(m.code)], filledMachines)
+    R.map(m => [m.code, getDeviceVolume(m.code)], filledMachines),
   )
 
   const topMachines = R.take(AMOUNT_OF_MACHINES, devicesByVolume)
 
   const txClassVolumeByDevice = R.fromPairs(
-    R.map(v => [v[0], getDeviceVolumeByTxClass(v[0])], topMachines)
+    R.map(v => [v[0], getDeviceVolumeByTxClass(v[0])], topMachines),
   )
 
   const x = d3
@@ -94,7 +94,9 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
     .scaleLinear()
     .domain([
       0,
-      d3.max(topMachines, d => d[1]) !== 0 ? d3.max(topMachines, d => d[1]) : 50
+      d3.max(topMachines, d => d[1]) !== 0
+        ? d3.max(topMachines, d => d[1])
+        : 50,
     ])
     .range([GRAPH_HEIGHT - GRAPH_MARGIN.bottom, GRAPH_MARGIN.top])
 
@@ -104,7 +106,7 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
         .attr('class', 'x-axis-1')
         .attr(
           'transform',
-          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`
+          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`,
         )
         .call(
           d3
@@ -113,12 +115,12 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
               d =>
                 `${
                   R.find(it => it.code === d[0], filledMachines).display ?? ''
-                }`
+                }`,
             )
             .tickSize(0)
-            .tickPadding(10)
+            .tickPadding(10),
         ),
-    [GRAPH_MARGIN, x, filledMachines]
+    [GRAPH_MARGIN, x, filledMachines],
   )
 
   const buildXAxis2 = useCallback(
@@ -126,7 +128,7 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
       g.attr('class', 'x-axis-2')
         .attr(
           'transform',
-          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`
+          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`,
         )
         .call(
           d3
@@ -134,24 +136,24 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
             .tickFormat(d =>
               R.includes(`ghostMachine`, d[0])
                 ? ``
-                : `${d[1].toFixed(2)} ${currency}`
+                : `${d[1].toFixed(2)} ${currency}`,
             )
             .tickSize(0)
-            .tickPadding(10)
+            .tickPadding(10),
         )
     },
-    [GRAPH_MARGIN, x, currency]
+    [GRAPH_MARGIN, x, currency],
   )
 
   const positionXAxisLabels = useCallback(() => {
-    d3.selectAll('.x-axis-1 .tick text').attr('transform', function (d) {
+    d3.selectAll('.x-axis-1 .tick text').attr('transform', function () {
       const widthPerEntry = (x.range()[1] - x.range()[0]) / AMOUNT_OF_MACHINES
       return `translate(${-widthPerEntry / 2.25 + this.getBBox().width / 2}, 0)`
     })
   }, [x])
 
   const positionXAxis2Labels = useCallback(() => {
-    d3.selectAll('.x-axis-2 .tick text').attr('transform', function (d) {
+    d3.selectAll('.x-axis-2 .tick text').attr('transform', function () {
       const widthPerEntry = (x.range()[1] - x.range()[0]) / AMOUNT_OF_MACHINES
       return `translate(${widthPerEntry / 2.25 - this.getBBox().width / 2}, 0)`
     })
@@ -166,10 +168,10 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
             .axisLeft(y)
             .ticks(GRAPH_HEIGHT / 100)
             .tickSize(0)
-            .tickFormat(``)
+            .tickFormat(``),
         )
         .call(g => g.select('.domain').remove()),
-    [GRAPH_MARGIN, y]
+    [GRAPH_MARGIN, y],
   )
 
   const formatTicksText = useCallback(
@@ -180,7 +182,7 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
         .style('fill', fontColor)
         .style('stroke-width', 0.5)
         .style('font-family', fontSecondary),
-    []
+    [],
   )
 
   const buildGrid = useCallback(
@@ -213,10 +215,10 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
               return 0.5 + x(d) - paddedXValue
             })
             .attr('y1', GRAPH_MARGIN.top)
-            .attr('y2', GRAPH_HEIGHT - GRAPH_MARGIN.bottom)
+            .attr('y2', GRAPH_HEIGHT - GRAPH_MARGIN.bottom),
         )
     },
-    [GRAPH_MARGIN, x]
+    [GRAPH_MARGIN, x],
   )
 
   const drawCashIn = useCallback(
@@ -231,13 +233,13 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
           R.clamp(
             0,
             GRAPH_HEIGHT,
-            GRAPH_HEIGHT - y(d[1].cashIn) - GRAPH_MARGIN.bottom - BAR_MARGIN
-          )
+            GRAPH_HEIGHT - y(d[1].cashIn) - GRAPH_MARGIN.bottom - BAR_MARGIN,
+          ),
         )
         .attr('width', x.bandwidth())
         .attr('rx', 2.5)
     },
-    [txClassVolumeByDevice, x, y, GRAPH_MARGIN]
+    [txClassVolumeByDevice, x, y, GRAPH_MARGIN],
   )
 
   const drawCashOut = useCallback(
@@ -252,7 +254,7 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
           d =>
             y(d[1].cashIn + d[1].cashOut) -
             GRAPH_MARGIN.top +
-            GRAPH_MARGIN.bottom
+            GRAPH_MARGIN.bottom,
         )
         .attr('height', d => {
           return R.clamp(
@@ -261,13 +263,13 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
             GRAPH_HEIGHT -
               y(d[1].cashOut) -
               GRAPH_MARGIN.bottom -
-              BAR_MARGIN / 2
+              BAR_MARGIN / 2,
           )
         })
         .attr('width', x.bandwidth())
         .attr('rx', 2.5)
     },
-    [txClassVolumeByDevice, x, y, GRAPH_MARGIN]
+    [txClassVolumeByDevice, x, y, GRAPH_MARGIN],
   )
 
   const drawChart = useCallback(() => {
@@ -295,7 +297,7 @@ const Graph = ({ data, machines, currency, selectedMachine }) => {
     formatTicksText,
     buildGrid,
     drawCashIn,
-    drawCashOut
+    drawCashOut,
   ])
 
   useEffect(() => {
@@ -310,5 +312,5 @@ export default memo(
   Graph,
   (prev, next) =>
     R.equals(prev.period, next.period) &&
-    R.equals(prev.selectedMachine, next.selectedMachine)
+    R.equals(prev.selectedMachine, next.selectedMachine),
 )

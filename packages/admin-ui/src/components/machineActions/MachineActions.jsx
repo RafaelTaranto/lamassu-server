@@ -49,7 +49,7 @@ const isStaticState = machineState => {
     'unpaired',
     'maintenance',
     'virgin',
-    'wifiList'
+    'wifiList',
   ]
   return staticStates.includes(machineState)
 }
@@ -73,7 +73,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
 
   const [fetchMachineEvents, { loading: loadingEvents }] = useLazyQuery(
     MACHINE,
-    preflightOptions
+    preflightOptions,
   )
 
   const [simpleMachineAction] = useMutation(MACHINE_ACTION)
@@ -86,7 +86,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
     onCompleted: () => {
       onActionSuccess && onActionSuccess()
       setAction({ display: action.display, command: null })
-    }
+    },
   })
 
   const confirmDialogOpen = Boolean(action.command)
@@ -100,7 +100,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
           ? warningMessage
           : null
         setAction({ ...actionToDo, message })
-      }
+      },
     })
     fetchMachineEvents()
   }
@@ -118,7 +118,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
             setAction({
               command: 'rename',
               display: 'Rename',
-              confirmationMessage: 'Write the new name for this machine'
+              confirmationMessage: 'Write the new name for this machine',
             })
           }>
           Rename
@@ -131,7 +131,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
           onClick={() =>
             setAction({
               command: 'unpair',
-              display: 'Unpair'
+              display: 'Unpair',
             })
           }>
           Unpair
@@ -144,7 +144,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
           onClick={() =>
             setAction({
               command: 'reboot',
-              display: 'Reboot'
+              display: 'Reboot',
             })
           }>
           Reboot
@@ -159,7 +159,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
               command: 'shutdown',
               display: 'Shutdown',
               message:
-                'In order to bring it back online, the machine will need to be visited and its power reset.'
+                'In order to bring it back online, the machine will need to be visited and its power reset.',
             })
           }>
           Shutdown
@@ -172,7 +172,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
           onClick={() => {
             machineStatusPreflight({
               command: 'restartServices',
-              display: 'Restart services for'
+              display: 'Restart services for',
             })
           }}>
           Restart services
@@ -188,7 +188,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
                 command: 'emptyUnit',
                 display: 'Empty',
                 message:
-                  "Triggering this action will move all cash inside the machine towards its cashbox (if possible), allowing for the collection of cash from the machine via only its cashbox. Depending on how full the cash units are, it's possible that this action will need to be used more than once to ensure that the unit is left completely empty."
+                  "Triggering this action will move all cash inside the machine towards its cashbox (if possible), allowing for the collection of cash from the machine via only its cashbox. Depending on how full the cash units are, it's possible that this action will need to be used more than once to ensure that the unit is left completely empty.",
               })
             }}>
             Empty Unit
@@ -205,7 +205,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
                 command: 'refillUnit',
                 display: 'Refill',
                 message:
-                  'Triggering this action will refill the recyclers in this machine, by using bills present in its cassettes. This action may require manual operation of the cassettes and close attention to make sure that the denominations in the cassettes match the denominations in the recyclers.'
+                  'Triggering this action will refill the recyclers in this machine, by using bills present in its cassettes. This action may require manual operation of the cassettes and close attention to make sure that the denominations in the cassettes match the denominations in the recyclers.',
               })
             }}>
             Refill Unit
@@ -228,8 +228,8 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
             simpleMachineAction({
               variables: {
                 deviceId: machine.deviceId,
-                action: 'diagnostics'
-              }
+                action: 'diagnostics',
+              },
             })
           }
           deviceId={machine.deviceId}
@@ -253,8 +253,8 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
             variables: {
               deviceId: machine.deviceId,
               action: `${action?.command}`,
-              ...(action?.command === 'rename' && { newName: value })
-            }
+              ...(action?.command === 'rename' && { newName: value }),
+            },
           })
         }}
         onDismissed={() => {

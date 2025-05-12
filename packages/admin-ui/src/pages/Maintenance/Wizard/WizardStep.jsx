@@ -46,8 +46,8 @@ const cassetesArtworks = (step, numberOfCassettes, numberOfRecyclers) => {
           tejo4CassetteOne,
           tejo4CassetteTwo,
           tejo4CassetteThree,
-          tejo4CassetteFour
-        ]
+          tejo4CassetteFour,
+        ],
       ][numberOfCassettes - 1][step - cassetteStepsStart]
     : [
         /* TODO: Recycler artwork */
@@ -58,8 +58,8 @@ const cassetesArtworks = (step, numberOfCassettes, numberOfRecyclers) => {
           tejo4CassetteOne,
           tejo4CassetteTwo,
           tejo4CassetteThree,
-          tejo4CassetteFour
-        ]
+          tejo4CassetteFour,
+        ],
       ][numberOfRecyclers - 1][step - cassetteStepsStart]
 }
 
@@ -69,13 +69,13 @@ const getCashUnitFieldName = (step, numberOfCassettes, numberOfRecyclers) => {
   if (isCassetteStep(step, numberOfCassettes))
     return {
       name: `cassette${step - cassetteStepsStart + 1}`,
-      category: 'cassette'
+      category: 'cassette',
     }
   const recyclerStepsStart = CASHBOX_STEP + numberOfCassettes + 1
   if (isRecyclerStep(step, numberOfCassettes, numberOfRecyclers))
     return {
       name: `recycler${Math.ceil(step - recyclerStepsStart + 1)}`,
-      category: 'recycler'
+      category: 'recycler',
     }
 }
 
@@ -84,18 +84,17 @@ const WizardStep = ({
   name,
   machine,
   cashoutSettings,
-  error,
   lastStep,
   steps,
   fiatCurrency,
   onContinue,
-  initialValues
+  initialValues,
 }) => {
   const label = lastStep ? 'Finish' : 'Confirm'
 
   const stepOneRadioOptions = [
     { display: 'Yes', code: 'YES' },
-    { display: 'No', code: 'NO' }
+    { display: 'No', code: 'NO' },
   ]
 
   const numberOfCassettes = machine.numberOfCassettes
@@ -111,7 +110,7 @@ const WizardStep = ({
     cassetteCount,
     count =>
       100 * (count / getCashUnitCapacity(machine.model, cashUnitCategory)),
-    R.clamp(0, 100)
+    R.clamp(0, 100),
   )
 
   return (
@@ -155,7 +154,7 @@ const WizardStep = ({
                     <div
                       className={classnames(
                         classes.horizontalAlign,
-                        'items-center'
+                        'items-center',
                       )}>
                       <P>Since previous update</P>
                       <HelpTooltip width={215}>
@@ -168,7 +167,7 @@ const WizardStep = ({
                     <div
                       className={classnames(
                         classes.horizontalAlign,
-                        'items-baseline'
+                        'items-baseline',
                       )}>
                       <Info1 noMargin className="mr-1">
                         {machine?.cashUnits.cashbox}
@@ -203,7 +202,7 @@ const WizardStep = ({
                   src={cassetesArtworks(
                     step,
                     numberOfCassettes,
-                    numberOfRecyclers
+                    numberOfRecyclers,
                   )}></img>
                 <div className={classes.formWrapper}>
                   <div className={classes.verticalAlign}>
@@ -232,7 +231,7 @@ const WizardStep = ({
                     <div
                       className={classnames(
                         classes.horizontalAlign,
-                        'items-baseline'
+                        'items-baseline',
                       )}>
                       <Field
                         component={NumberInput}

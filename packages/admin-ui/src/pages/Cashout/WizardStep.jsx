@@ -19,23 +19,23 @@ import tejo4CassetteFour from 'src/styling/icons/cassettes/tejo/4-cassettes/4-ca
 
 const getCassetesArtworks = () => ({
   1: {
-    1: cassetteOne
+    1: cassetteOne,
   },
   2: {
     1: cassetteOne,
-    2: cassetteTwo
+    2: cassetteTwo,
   },
   3: {
     1: tejo3CassetteOne,
     2: tejo3CassetteTwo,
-    3: tejo3CassetteThree
+    3: tejo3CassetteThree,
   },
   4: {
     1: tejo4CassetteOne,
     2: tejo4CassetteTwo,
     3: tejo4CassetteThree,
-    4: tejo4CassetteFour
-  }
+    4: tejo4CassetteFour,
+  },
 })
 
 const WizardStep = ({
@@ -48,7 +48,7 @@ const WizardStep = ({
   steps,
   fiatCurrency,
   options,
-  numberOfCassettes
+  numberOfCassettes,
 }) => {
   const label = isLastStep ? 'Finish' : 'Next'
   const cassetteIcon = getCassetesArtworks()[numberOfCassettes]
@@ -68,7 +68,7 @@ const WizardStep = ({
             cassette1: '',
             cassette2: '',
             cassette3: '',
-            cassette4: ''
+            cassette4: '',
           }}
           enableReinitialize
           validationSchema={schema}>
@@ -101,7 +101,7 @@ const WizardStep = ({
                         </Info1>
                       </div>
                     </div>
-                  )
+                  ),
               )}
               <img
                 className="relative -top-5 right-4"

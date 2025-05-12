@@ -7,7 +7,7 @@ import {
   Redirect,
   Switch,
   useHistory,
-  useLocation
+  useLocation,
 } from 'react-router-dom'
 import Login from 'src/pages/Authentication/Login'
 import Register from 'src/pages/Authentication/Register'
@@ -30,7 +30,7 @@ const tree = getLamassuRoutes()
 const map = R.map(R.when(R.has('children'), R.prop('children')))
 const mappedRoutes = R.compose(R.flatten, map)(tree)
 const parentRoutes = R.filter(R.has('children'))(mappedRoutes).concat(
-  R.filter(R.has('children'))(tree)
+  R.filter(R.has('children'))(tree),
 )
 const leafRoutes = R.compose(R.flatten, map)(mappedRoutes)
 
@@ -41,8 +41,8 @@ const hasSidebar = route =>
     R.compose(
       R.flatten,
       R.map(R.prop('children')),
-      R.filter(R.has('children'))
-    )(mappedRoutes)
+      R.filter(R.has('children')),
+    )(mappedRoutes),
   )
 
 const getParent = route =>
@@ -51,9 +51,9 @@ const getParent = route =>
       'route',
       R.dropLast(
         1,
-        R.dropLastWhile(x => x !== '/', route)
-      )
-    )
+        R.dropLastWhile(x => x !== '/', route),
+      ),
+    ),
   )(flattened)
 
 const Routes = () => {
@@ -68,7 +68,7 @@ const Routes = () => {
     '/login',
     '/register',
     '/resetpassword',
-    '/reset2fa'
+    '/reset2fa',
   ]
 
   if (!wizardTested && !R.contains(location.pathname)(dontTriggerPages)) {
@@ -94,7 +94,7 @@ const Routes = () => {
             R.findIndex(R.propEq('route', location.state.prev))(leafRoutes) >
             R.findIndex(R.propEq('route', location.pathname))(leafRoutes)
               ? 'right'
-              : 'left'
+              : 'left',
         }
       : { timeout: 400 }
 

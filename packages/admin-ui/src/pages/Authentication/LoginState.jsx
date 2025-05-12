@@ -44,13 +44,13 @@ const GET_USER_DATA = gql`
 const validationSchema = Yup.object().shape({
   email: Yup.string().label('Email').required().email(),
   password: Yup.string().required('Password field is required'),
-  rememberMe: Yup.boolean()
+  rememberMe: Yup.boolean(),
 })
 
 const initialValues = {
   email: '',
   password: '',
-  rememberMe: false
+  rememberMe: false,
 }
 
 const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
@@ -62,7 +62,7 @@ const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
   return null
 }
 
-const LoginState = ({ state, dispatch, strategy }) => {
+const LoginState = ({ dispatch, strategy }) => {
   const history = useHistory()
   const { setUserData } = useContext(AppContext)
 
@@ -72,8 +72,8 @@ const LoginState = ({ state, dispatch, strategy }) => {
     const options = {
       variables: {
         username,
-        password
-      }
+        password,
+      },
     }
     const { data: loginResponse } = await login(options)
 
@@ -84,16 +84,16 @@ const LoginState = ({ state, dispatch, strategy }) => {
       payload: {
         clientField: username,
         passwordField: password,
-        rememberMeField: rememberMe
-      }
+        rememberMeField: rememberMe,
+      },
     })
   }
 
   const [validateAssertion, { error: FIDOMutationError }] = useMutation(
     VALIDATE_ASSERTION,
     {
-      onCompleted: ({ validateAssertion: success }) => success && getUserData()
-    }
+      onCompleted: ({ validateAssertion: success }) => success && getUserData(),
+    },
   )
 
   const [assertionOptions, { error: assertionQueryError }] = useLazyQuery(
@@ -105,15 +105,15 @@ const LoginState = ({ state, dispatch, strategy }) => {
             validateAssertion({
               variables: {
                 assertionResponse: res,
-                domain: window.location.hostname
-              }
+                domain: window.location.hostname,
+              },
             })
           })
           .catch(err => {
             console.error(err)
           })
-      }
-    }
+      },
+    },
   )
 
   const [getUserData, { error: userDataQueryError }] = useLazyQuery(
@@ -122,8 +122,8 @@ const LoginState = ({ state, dispatch, strategy }) => {
       onCompleted: ({ userData }) => {
         setUserData(userData)
         history.push('/')
-      }
-    }
+      },
+    },
   )
 
   return (
@@ -149,7 +149,7 @@ const LoginState = ({ state, dispatch, strategy }) => {
               loginMutationError ||
                 FIDOMutationError ||
                 assertionQueryError ||
-                userDataQueryError
+                userDataQueryError,
             )}
           />
           <Field
@@ -164,7 +164,7 @@ const LoginState = ({ state, dispatch, strategy }) => {
               loginMutationError ||
                 FIDOMutationError ||
                 assertionQueryError ||
-                userDataQueryError
+                userDataQueryError,
             )}
           />
           <div className="mt-9 flex">
@@ -183,7 +183,7 @@ const LoginState = ({ state, dispatch, strategy }) => {
               loginMutationError ||
                 FIDOMutationError ||
                 assertionQueryError ||
-                userDataQueryError
+                userDataQueryError,
             ) && (
               <P className="text-tomato">
                 {getErrorMsg(
@@ -192,7 +192,7 @@ const LoginState = ({ state, dispatch, strategy }) => {
                   loginMutationError ||
                     FIDOMutationError ||
                     assertionQueryError ||
-                    userDataQueryError
+                    userDataQueryError,
                 )}
               </P>
             )}
@@ -202,11 +202,11 @@ const LoginState = ({ state, dispatch, strategy }) => {
                 onClick={() => {
                   return strategy === 'FIDOUsernameless'
                     ? assertionOptions({
-                        variables: { domain: window.location.hostname }
+                        variables: { domain: window.location.hostname },
                       })
                     : dispatch({
                         type: 'FIDO',
-                        payload: {}
+                        payload: {},
                       })
                 }}
                 buttonClassName="w-full"

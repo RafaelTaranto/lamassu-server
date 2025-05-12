@@ -8,7 +8,7 @@ import {
   differenceInMilliseconds,
   format,
   startOfWeek,
-  startOfYear
+  startOfYear,
 } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react'
@@ -21,7 +21,7 @@ import {
   fontColor,
   primaryColor,
   fontSecondary,
-  subheaderColor
+  subheaderColor,
 } from 'src/styling/variables'
 import { numberToFiatAmount } from 'src/utils/number'
 import { MINUTE, DAY, WEEK, MONTH } from 'src/utils/time'
@@ -33,7 +33,7 @@ const Graph = ({
   setSelectionCoords,
   setSelectionData,
   setSelectionDateInterval,
-  log = false
+  log = false,
 }) => {
   const ref = useRef(null)
 
@@ -46,9 +46,9 @@ const Graph = ({
       top: 25,
       right: 3.5,
       bottom: 27,
-      left: 38
+      left: 38,
     }),
-    []
+    [],
   )
 
   const offset = getTimezoneOffset(timezone)
@@ -58,7 +58,7 @@ const Graph = ({
     day: [NOW - DAY, NOW],
     threeDays: [NOW - 3 * DAY, NOW],
     week: [NOW - WEEK, NOW],
-    month: [NOW - MONTH, NOW]
+    month: [NOW - MONTH, NOW],
   }
 
   const dataPoints = useMemo(
@@ -67,28 +67,28 @@ const Graph = ({
         freq: 24,
         step: 60 * 60 * 1000,
         tick: d3.utcHour.every(1),
-        labelFormat: '%H:%M'
+        labelFormat: '%H:%M',
       },
       threeDays: {
         freq: 12,
         step: 6 * 60 * 60 * 1000,
         tick: d3.utcDay.every(1),
-        labelFormat: '%a %d'
+        labelFormat: '%a %d',
       },
       week: {
         freq: 7,
         step: 24 * 60 * 60 * 1000,
         tick: d3.utcDay.every(1),
-        labelFormat: '%a %d'
+        labelFormat: '%a %d',
       },
       month: {
         freq: 30,
         step: 24 * 60 * 60 * 1000,
         tick: d3.utcDay.every(1),
-        labelFormat: '%d'
-      }
+        labelFormat: '%d',
+      },
     }),
-    []
+    [],
   )
 
   const getPastAndCurrentDayLabels = useCallback(d => {
@@ -105,11 +105,11 @@ const Graph = ({
     const previousDateMonth = previousDate.getUTCMonth()
 
     const daysOfWeek = Array.from(Array(7)).map((_, i) =>
-      format('EEE', add({ days: i }, startOfWeek(new Date())))
+      format('EEE', add({ days: i }, startOfWeek(new Date()))),
     )
 
     const months = Array.from(Array(12)).map((_, i) =>
-      format('LLL', add({ months: i }, startOfYear(new Date())))
+      format('LLL', add({ months: i }, startOfYear(new Date()))),
     )
 
     return {
@@ -120,7 +120,7 @@ const Graph = ({
       current:
         currentDateMonth !== previousDateMonth
           ? months[currentDateMonth]
-          : `${daysOfWeek[currentDateWeekday]} ${currentDateDay}`
+          : `${daysOfWeek[currentDateWeekday]} ${currentDateDay}`,
     }
   }, [])
 
@@ -142,7 +142,7 @@ const Graph = ({
 
       return points
     },
-    [NOW, dataPoints, period.code]
+    [NOW, dataPoints, period.code],
   )
 
   const buildAreas = useCallback(
@@ -167,7 +167,7 @@ const Graph = ({
 
       return points
     },
-    [NOW, dataPoints, period.code]
+    [NOW, dataPoints, period.code],
   )
 
   const x = d3
@@ -192,14 +192,14 @@ const Graph = ({
       else if (i === dates.length - 1)
         return addMilliseconds(
           -dataPoints[period.code].step,
-          dates[dates.length - 2]
+          dates[dates.length - 2],
         )
       else return date
     })
     .map(date => {
       const middleOfBin = addMilliseconds(
         dataPoints[period.code].step / 2,
-        date
+        date,
       )
 
       const txs = data.filter(tx => {
@@ -236,7 +236,7 @@ const Graph = ({
     .scaleLog()
     .domain([
       min === 0 ? 0.9 : min * 0.9,
-      (max === min ? min + Math.pow(10, 2 * min + 1) : max) * 2
+      (max === min ? min + Math.pow(10, 2 * min + 1) : max) * 2,
     ])
     .clamp(true)
     .range([GRAPH_HEIGHT - GRAPH_MARGIN.bottom, GRAPH_MARGIN.top])
@@ -247,7 +247,7 @@ const Graph = ({
     const fullBreakpoints = [
       graphLimits[1],
       ...R.filter(it => it > dataLimits[0] && it < dataLimits[1], breakpoints),
-      dataLimits[0]
+      dataLimits[0],
     ]
 
     const intervals = []
@@ -278,7 +278,7 @@ const Graph = ({
       g
         .attr(
           'transform',
-          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`
+          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`,
         )
         .call(
           d3
@@ -286,18 +286,18 @@ const Graph = ({
             .ticks(dataPoints[period.code].tick)
             .tickFormat(d => {
               return d3.timeFormat(dataPoints[period.code].labelFormat)(
-                d.getTime() + d.getTimezoneOffset() * MINUTE
+                d.getTime() + d.getTimezoneOffset() * MINUTE,
               )
             })
-            .tickSizeOuter(0)
+            .tickSizeOuter(0),
         )
         .call(g =>
           g
             .select('.domain')
             .attr('stroke', primaryColor)
-            .attr('stroke-width', 1)
+            .attr('stroke-width', 1),
         ),
-    [GRAPH_MARGIN, dataPoints, period.code, x]
+    [GRAPH_MARGIN, dataPoints, period.code, x],
   )
 
   const buildYAxis = useCallback(
@@ -315,12 +315,12 @@ const Graph = ({
               if (d >= 1000) return numberToFiatAmount(d / 1000) + 'k'
 
               return numberToFiatAmount(d)
-            })
+            }),
         )
         .select('.domain')
         .attr('stroke', primaryColor)
         .attr('stroke-width', 1),
-    [GRAPH_MARGIN, y, log]
+    [GRAPH_MARGIN, y, log],
   )
 
   const buildGrid = useCallback(
@@ -337,7 +337,7 @@ const Graph = ({
             .attr('x1', d => 0.5 + x(d))
             .attr('x2', d => 0.5 + x(d))
             .attr('y1', GRAPH_MARGIN.top)
-            .attr('y2', GRAPH_HEIGHT - GRAPH_MARGIN.bottom)
+            .attr('y2', GRAPH_HEIGHT - GRAPH_MARGIN.bottom),
         )
         // Horizontal lines
         .call(g =>
@@ -348,13 +348,13 @@ const Graph = ({
               d3
                 .axisLeft(y)
                 .scale()
-                .ticks(GRAPH_HEIGHT / 100)
+                .ticks(GRAPH_HEIGHT / 100),
             )
             .join('line')
             .attr('y1', d => 0.5 + y(d))
             .attr('y2', d => 0.5 + y(d))
             .attr('x1', GRAPH_MARGIN.left)
-            .attr('x2', GRAPH_WIDTH)
+            .attr('x2', GRAPH_WIDTH),
         )
         // Vertical transparent rectangles for events
         .call(g =>
@@ -370,14 +370,14 @@ const Graph = ({
               const intervals = getAreaInterval(
                 buildAreas(x.domain()).map(it => Math.round(x(it) * 100) / 100),
                 x.range(),
-                x2.range()
+                x2.range(),
               )
               const interval = getAreaIntervalByX(intervals, xValue)
               return Math.round((interval[0] - interval[1]) * 100) / 100
             })
             .attr(
               'height',
-              GRAPH_HEIGHT - GRAPH_MARGIN.bottom - GRAPH_MARGIN.top
+              GRAPH_HEIGHT - GRAPH_MARGIN.bottom - GRAPH_MARGIN.top,
             )
             .attr('stroke', 'transparent')
             .attr('fill', 'transparent')
@@ -387,7 +387,7 @@ const Graph = ({
               const intervals = getAreaInterval(
                 buildAreas(x.domain()).map(it => Math.round(x(it) * 100) / 100),
                 x.range(),
-                x2.range()
+                x2.range(),
               )
 
               const dateInterval = getDateIntervalByX(areas, intervals, xValue)
@@ -405,8 +405,8 @@ const Graph = ({
                 left: R.clone(d.target.getBoundingClientRect().x),
                 right: R.clone(
                   d.target.getBoundingClientRect().x +
-                    d.target.getBoundingClientRect().width
-                )
+                    d.target.getBoundingClientRect().width,
+                ),
               }
 
               const xCoord =
@@ -421,7 +421,7 @@ const Graph = ({
               setSelectionData(filteredData)
               setSelectionCoords({
                 x: Math.round(xCoord),
-                y: Math.round(yCoord)
+                y: Math.round(yCoord),
               })
 
               d3.select(d.target).attr('fill', subheaderColor)
@@ -431,7 +431,7 @@ const Graph = ({
               setSelectionDateInterval(null)
               setSelectionData(null)
               setSelectionCoords(null)
-            })
+            }),
         )
         // Thick vertical lines
         .call(g =>
@@ -442,7 +442,7 @@ const Graph = ({
               buildTicks(x.domain()).filter(x => {
                 if (period.code === 'day') return x.getUTCHours() === 0
                 return x.getUTCDate() === 1
-              })
+              }),
             )
             .join('line')
             .attr('class', 'dateSeparator')
@@ -451,7 +451,7 @@ const Graph = ({
             .attr('y1', GRAPH_MARGIN.top - 50)
             .attr('y2', GRAPH_HEIGHT - GRAPH_MARGIN.bottom)
             .attr('stroke-width', 5)
-            .join('text')
+            .join('text'),
         )
         // Left side breakpoint label
         .call(g => {
@@ -509,8 +509,8 @@ const Graph = ({
       offset,
       setSelectionCoords,
       setSelectionData,
-      setSelectionDateInterval
-    ]
+      setSelectionDateInterval,
+    ],
   )
 
   const formatTicksText = useCallback(
@@ -521,7 +521,7 @@ const Graph = ({
         .style('fill', fontColor)
         .style('stroke-width', 0.5)
         .style('font-family', fontSecondary),
-    []
+    [],
   )
 
   const formatText = useCallback(
@@ -532,7 +532,7 @@ const Graph = ({
         .style('fill', offColor)
         .style('stroke-width', 0.5)
         .style('font-family', fontSecondary),
-    []
+    [],
   )
 
   const formatTicks = useCallback(() => {
@@ -574,7 +574,7 @@ const Graph = ({
             .line()
             .curve(d3.curveMonotoneX)
             .x(d => x(d.date))
-            .y(d => y(d.cashIn))
+            .y(d => y(d.cashIn)),
         )
 
       g.append('g')
@@ -599,10 +599,10 @@ const Graph = ({
             .line()
             .curve(d3.curveMonotoneX)
             .x(d => x(d.date))
-            .y(d => y(d.cashOut))
+            .y(d => y(d.cashOut)),
         )
     },
-    [x, y, bins, GRAPH_MARGIN]
+    [x, y, bins, GRAPH_MARGIN],
   )
 
   const drawChart = useCallback(() => {
@@ -626,7 +626,7 @@ const Graph = ({
     drawData,
     formatText,
     formatTicks,
-    formatTicksText
+    formatTicksText,
   ])
 
   useEffect(() => {
@@ -642,5 +642,5 @@ export default memo(
   (prev, next) =>
     R.equals(prev.period, next.period) &&
     R.equals(prev.selectedMachine, next.selectedMachine) &&
-    R.equals(prev.log, next.log)
+    R.equals(prev.log, next.log),
 )

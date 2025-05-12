@@ -23,14 +23,14 @@ const DateRangePicker = ({ minDate, maxDate, className, onRangeChange }) => {
     if (from && !to) {
       if (differenceInDays(from, day) >= 0) {
         setTo(
-          set({ hours: 23, minutes: 59, seconds: 59, milliseconds: 999 }, day)
+          set({ hours: 23, minutes: 59, seconds: 59, milliseconds: 999 }, day),
         )
       } else {
         setTo(
           set(
             { hours: 23, minutes: 59, seconds: 59, milliseconds: 999 },
-            R.clone(from)
-          )
+            R.clone(from),
+          ),
         )
         setFrom(day)
       }

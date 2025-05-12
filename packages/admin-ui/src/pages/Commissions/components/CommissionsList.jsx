@@ -4,7 +4,7 @@ import {
   overridesDefaults,
   getCommissions,
   getListCommissionsSchema,
-  commissionsList
+  commissionsList,
 } from 'src/pages/Commissions/helper'
 
 import { Table as EditableTable } from 'src/components/editableTable'
@@ -12,39 +12,39 @@ import { Select } from 'src/components/inputs'
 
 const SHOW_ALL = {
   code: 'SHOW_ALL',
-  display: 'Show all'
+  display: 'Show all',
 }
 
 const ORDER_OPTIONS = [
   {
     code: 'machine',
-    display: 'Machine name'
+    display: 'Machine name',
   },
   {
     code: 'cryptoCurrencies',
-    display: 'Cryptocurrency'
+    display: 'Cryptocurrency',
   },
   {
     code: 'cashIn',
-    display: 'Cash-in'
+    display: 'Cash-in',
   },
   {
     code: 'cashOut',
-    display: 'Cash-out'
+    display: 'Cash-out',
   },
   {
     code: 'fixedFee',
-    display: 'Fixed fee'
+    display: 'Fixed fee',
   },
   {
     code: 'minimumTx',
-    display: 'Minimum Tx'
-  }
+    display: 'Minimum Tx',
+  },
 ]
 
 const getElement = (code, display) => ({
   code: code,
-  display: display || code
+  display: display || code,
 })
 
 const sortCommissionsBy = prop => {
@@ -61,12 +61,13 @@ const sortCommissionsBy = prop => {
 const filterCommissions = (coinFilter, machineFilter) =>
   R.compose(
     R.filter(
-      it => (machineFilter === SHOW_ALL) | (machineFilter.code === it.machine)
+      it => (machineFilter === SHOW_ALL) | (machineFilter.code === it.machine),
     ),
     R.filter(
       it =>
-        (coinFilter === SHOW_ALL) | (coinFilter.code === it.cryptoCurrencies[0])
-    )
+        (coinFilter === SHOW_ALL) |
+        (coinFilter.code === it.cryptoCurrencies[0]),
+    ),
   )
 
 const CommissionsList = memo(
@@ -79,7 +80,7 @@ const CommissionsList = memo(
 
     const getMachineCoins = deviceId => {
       const override = R.prop('overrides', localeConfig)?.find(
-        R.propEq('machine', deviceId)
+        R.propEq('machine', deviceId),
       )
 
       const machineCoins = override
@@ -96,20 +97,20 @@ const CommissionsList = memo(
 
     const machineData = R.sortBy(
       R.prop('display'),
-      R.map(getMachineElement)(R.prop('machines', data))
+      R.map(getMachineElement)(R.prop('machines', data)),
     )
 
     const machinesCoinsTuples = R.unnest(
-      R.map(getMachineCoins)(machineData.map(R.prop('code')))
+      R.map(getMachineCoins)(machineData.map(R.prop('code'))),
     )
 
     const commissions = R.map(([deviceId, cryptoCode]) =>
-      getCommissions(cryptoCode, deviceId, config)
+      getCommissions(cryptoCode, deviceId, config),
     )(machinesCoinsTuples)
 
     const tableData = R.compose(
       sortCommissionsBy(orderProp),
-      filterCommissions(coinFilter, machineFilter)
+      filterCommissions(coinFilter, machineFilter),
     )(commissions)
 
     return (
@@ -155,7 +156,7 @@ const CommissionsList = memo(
         </div>
       </div>
     )
-  }
+  },
 )
 
 export default CommissionsList

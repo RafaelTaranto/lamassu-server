@@ -15,7 +15,7 @@ const formatDate = (date, timezone, pattern) => {
   const browserTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   const newDate = utcToZonedTime(
     timezone,
-    zonedTimeToUtc(browserTimezone, date)
+    zonedTimeToUtc(browserTimezone, date),
   )
   return format(pattern, newDate)
 }

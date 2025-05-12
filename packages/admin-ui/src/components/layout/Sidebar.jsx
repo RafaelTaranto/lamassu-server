@@ -14,7 +14,7 @@ const Sidebar = ({
   onClick,
   children,
   itemRender,
-  loading = false
+  loading = false,
 }) => {
   return (
     <div className={styles.sidebar}>
@@ -30,7 +30,7 @@ const Sidebar = ({
                 [styles.activeLink]: isSelected(it),
                 [styles.customRenderActiveLink]: itemRender && isSelected(it),
                 [styles.customRenderLink]: itemRender,
-                [styles.link]: true
+                [styles.link]: true,
               })}>
               {itemRender ? itemRender(it, isSelected(it)) : displayName(it)}
             </div>
@@ -54,7 +54,7 @@ const Stepper = ({ step, it, idx, steps }) => {
         className={classnames({
           [styles.itemText]: true,
           [styles.itemTextActive]: active,
-          [styles.itemTextPast]: past
+          [styles.itemTextPast]: past,
         })}>
         {it.label}
       </span>
@@ -65,7 +65,7 @@ const Stepper = ({ step, it, idx, steps }) => {
         <div
           className={classnames({
             [styles.stepperPath]: true,
-            [styles.stepperPast]: past
+            [styles.stepperPast]: past,
           })}></div>
       )}
     </div>

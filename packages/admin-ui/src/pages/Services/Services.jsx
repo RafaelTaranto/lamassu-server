@@ -38,7 +38,7 @@ const Services = () => {
   const { data: marketsData, loading: marketsLoading } = useQuery(GET_MARKETS)
   const [saveAccount] = useMutation(SAVE_ACCOUNT, {
     onCompleted: () => setEditingSchema(null),
-    refetchQueries: ['getData']
+    refetchQueries: ['getData'],
   })
 
   const markets = marketsData?.getMarkets
@@ -52,7 +52,7 @@ const Services = () => {
     const values = accounts[code] || {}
     return R.map(({ display, code, long }) => ({
       label: display,
-      value: long ? formatLong(values[code]) : values[code]
+      value: long ? formatLong(values[code]) : values[code],
     }))(faceElements)
   }
 
@@ -75,8 +75,8 @@ const Services = () => {
         inputProps: {
           isPasswordFilled:
             !R.isNil(accounts[code]) &&
-            !R.isNil(R.path([elem.code], accounts[code]))
-        }
+            !R.isNil(R.path([elem.code], accounts[code])),
+        },
       }
     }, elements)
   }
@@ -87,11 +87,11 @@ const Services = () => {
     const mapToCode = R.map(R.prop(['code']))
     const passwordFields = R.compose(
       mapToCode,
-      filterBySecretComponent
+      filterBySecretComponent,
     )(elements)
     return R.mapObjIndexed(
       (value, key) => (R.includes(key, passwordFields) ? '' : value),
-      account
+      account,
     )
   }
 
@@ -124,7 +124,7 @@ const Services = () => {
             <FormRenderer
               save={it =>
                 saveAccount({
-                  variables: { accounts: { [editingSchema.code]: it } }
+                  variables: { accounts: { [editingSchema.code]: it } },
                 })
               }
               elements={getElements(editingSchema)}

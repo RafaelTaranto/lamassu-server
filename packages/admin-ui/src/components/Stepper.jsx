@@ -18,13 +18,13 @@ const Stepper = memo(({ steps, currentStep, color = 'spring', className }) => {
   const separatorClasses = {
     'w-7 h-[2px] border-2 z-1': true,
     'border-spring': color === 'spring',
-    'border-zodiac': color === 'zodiac'
+    'border-zodiac': color === 'zodiac',
   }
 
   const separatorEmptyClasses = {
     'w-7 h-[2px] border-2 z-1': true,
     'border-dust': color === 'spring',
-    'border-comet': color === 'zodiac'
+    'border-comet': color === 'zodiac',
   }
 
   return (

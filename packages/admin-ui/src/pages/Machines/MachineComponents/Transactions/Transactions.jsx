@@ -77,9 +77,9 @@ const Transactions = ({ id }) => {
     {
       variables: {
         limit: NUM_LOG_RESULTS,
-        deviceId: id
-      }
-    }
+        deviceId: id,
+      },
+    },
   )
 
   const { data: configData, loading: configLoading } = useQuery(GET_DATA)
@@ -102,20 +102,20 @@ const Transactions = ({ id }) => {
       header: '',
       width: 0,
       size: 'sm',
-      view: it => (it.txClass === 'cashOut' ? <TxOutIcon /> : <TxInIcon />)
+      view: it => (it.txClass === 'cashOut' ? <TxOutIcon /> : <TxInIcon />),
     },
     {
       header: 'Customer',
       width: 122,
       size: 'sm',
-      view: Customer.displayName
+      view: Customer.displayName,
     },
     {
       header: 'Cash',
       width: 144,
       textAlign: 'right',
       size: 'sm',
-      view: it => `${Number.parseFloat(it.fiat)} ${it.fiatCode}`
+      view: it => `${Number.parseFloat(it.fiat)} ${it.fiatCode}`,
     },
     {
       header: 'Crypto',
@@ -125,7 +125,7 @@ const Transactions = ({ id }) => {
       view: it =>
         `${toUnit(new BigNumber(it.cryptoAtoms), it.cryptoCode).toFormat(5)} ${
           it.cryptoCode
-        }`
+        }`,
     },
     {
       header: 'Address',
@@ -133,21 +133,21 @@ const Transactions = ({ id }) => {
       className: 'overflow-hidden whitespace-nowrap text-ellipsis',
       size: 'sm',
       textAlign: 'left',
-      width: 140
+      width: 140,
     },
     {
       header: 'Date',
       view: it => formatDate(it.created, timezone, 'yyyy‑MM‑dd'),
       textAlign: 'left',
       size: 'sm',
-      width: 140
+      width: 140,
     },
     {
       header: 'Status',
       view: it => getStatus(it),
       size: 'sm',
-      width: 20
-    }
+      width: 20,
+    },
   ]
 
   const handleClick = e => {

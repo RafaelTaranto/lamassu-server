@@ -14,11 +14,10 @@ const FormRenderer = ({
   save,
   buttonLabel = 'Save changes',
   buttonClass,
-  xs = 12
 }) => {
   const initialValues = R.compose(
     R.mergeAll,
-    R.map(({ code }) => ({ [code]: (value && value[code]) ?? '' }))
+    R.map(({ code }) => ({ [code]: (value && value[code]) ?? '' })),
   )(elements)
 
   const values = R.merge(initialValues, value)
@@ -31,10 +30,10 @@ const FormRenderer = ({
       R.filter(
         elem =>
           R.prop('component', elem) === SecretInput &&
-          R.isEmpty(it[R.prop('code', elem)])
-      )
+          R.isEmpty(it[R.prop('code', elem)]),
+      ),
     )(elements)
-    return save(R.omit(emptySecretFields, it)).catch(s => {
+    return save(R.omit(emptySecretFields, it)).catch(() => {
       setSaveError({ save: 'Failed to save changes' })
     })
   }
@@ -62,7 +61,7 @@ const FormRenderer = ({
                     fullWidth={true}
                   />
                 </div>
-              )
+              ),
             )}
           </div>
           <div className="flex flex-row mt-auto mb-8">

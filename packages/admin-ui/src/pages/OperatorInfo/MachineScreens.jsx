@@ -19,24 +19,24 @@ const SAVE_CONFIG = gql`
   }
 `
 
-const MachineScreens = memo(({ wizard }) => {
+const MachineScreens = memo(() => {
   const { data } = useQuery(GET_CONFIG)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const save = it => {
     const formatConfig = R.compose(
       toNamespace(namespaces.MACHINE_SCREENS),
       toNamespace('rates'),
-      R.mergeRight(ratesScreenConfig)
+      R.mergeRight(ratesScreenConfig),
     )
 
     return saveConfig({
       variables: {
-        config: formatConfig({ active: it })
-      }
+        config: formatConfig({ active: it }),
+      },
     })
   }
 
@@ -47,7 +47,7 @@ const MachineScreens = memo(({ wizard }) => {
     data?.config &&
     R.compose(
       fromNamespace('rates'),
-      fromNamespace(namespaces.MACHINE_SCREENS)
+      fromNamespace(namespaces.MACHINE_SCREENS),
     )(data.config)
 
   if (!machineScreensConfig) return null

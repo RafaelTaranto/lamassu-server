@@ -13,20 +13,19 @@ const GraphTooltip = ({
   coords,
   data,
   dateInterval,
-  period,
   currency,
-  representing
+  representing,
 }) => {
   const formattedDateInterval = !R.includes('hourOfDay', representing.code)
     ? [
         formatDate(dateInterval[1], null, 'MMM d'),
         formatDate(dateInterval[1], null, 'HH:mm'),
-        formatDate(dateInterval[0], null, 'HH:mm')
+        formatDate(dateInterval[0], null, 'HH:mm'),
       ]
     : [
         formatDate(dateInterval[1], null, 'MMM d'),
         formatDateNonUtc(dateInterval[1], 'HH:mm'),
-        formatDateNonUtc(dateInterval[0], 'HH:mm')
+        formatDateNonUtc(dateInterval[0], 'HH:mm'),
       ]
 
   const transactions = R.reduce(
@@ -37,7 +36,7 @@ const GraphTooltip = ({
       return acc
     },
     { volume: 0, cashIn: 0, cashOut: 0 },
-    data
+    data,
   )
 
   return (

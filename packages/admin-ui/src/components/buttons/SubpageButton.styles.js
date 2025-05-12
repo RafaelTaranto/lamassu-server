@@ -8,10 +8,10 @@ export default {
     extend: baseButton,
     padding: 0,
     color: white,
-    borderRadius: baseButton.height / 2
+    borderRadius: baseButton.height / 2,
   },
   normalButton: {
-    width: baseButton.height
+    width: baseButton.height,
   },
   activeButton: {
     display: 'flex',
@@ -21,26 +21,26 @@ export default {
     fontWeight: 'bold',
     padding: '0 5px',
     '&:hover': {
-      backgroundColor: offColor
-    }
+      backgroundColor: offColor,
+    },
   },
   buttonIcon: {
     width: 16,
     height: 16,
     overflow: 'visible',
     '& g': {
-      strokeWidth: 1.8
-    }
+      strokeWidth: 1.8,
+    },
   },
   buttonIconActiveLeft: {
     marginRight: 12,
-    marginLeft: 4
+    marginLeft: 4,
   },
   buttonIconActiveRight: {
     marginRight: 5,
-    marginLeft: 20
+    marginLeft: 20,
   },
   white: {
-    color: white
-  }
+    color: white,
+  },
 }

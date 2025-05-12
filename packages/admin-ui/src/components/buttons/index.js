@@ -15,5 +15,5 @@ export {
   IDButton,
   AddButton,
   SupportLinkButton,
-  SubpageButton
+  SubpageButton,
 }

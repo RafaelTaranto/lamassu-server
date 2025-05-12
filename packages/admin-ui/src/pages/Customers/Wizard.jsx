@@ -13,7 +13,7 @@ import {
   requirementElements,
   formatDates,
   REQUIREMENT,
-  ID_CARD_DATA
+  ID_CARD_DATA,
 } from './helper'
 
 const LAST_STEP = 2
@@ -41,12 +41,12 @@ const Wizard = ({
   error,
   customInfoRequirementOptions,
   addCustomerData,
-  addPhoto
+  addPhoto,
 }) => {
   const [selectedValues, setSelectedValues] = useState(null)
 
   const [{ step, config }, setState] = useState({
-    step: 1
+    step: 1,
   })
 
   const isIdCardData = values => values?.requirement === ID_CARD_DATA
@@ -67,7 +67,7 @@ const Wizard = ({
         case 'customerDataUpload':
           return addPhoto({
             newPhoto: R.head(R.values(it)),
-            photoType: R.head(R.keys(it))
+            photoType: R.head(R.keys(it)),
           })
         case 'customEntry':
           return save(newConfig)
@@ -82,7 +82,7 @@ const Wizard = ({
 
     setState({
       step: step + 1,
-      config: newConfig
+      config: newConfig,
     })
   }
 

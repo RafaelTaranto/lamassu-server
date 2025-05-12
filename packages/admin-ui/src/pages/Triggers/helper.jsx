@@ -18,24 +18,24 @@ const threshold = Yup.object().shape({
   thresholdDays: Yup.number()
     .transform(transformNumber)
     .nullable()
-    .label('Invalid threshold days')
+    .label('Invalid threshold days'),
 })
 
 const requirement = Yup.object().shape({
   requirement: Yup.string().required(),
-  suspensionDays: Yup.number().transform(transformNumber).nullable()
+  suspensionDays: Yup.number().transform(transformNumber).nullable(),
 })
 
 const Schema = Yup.object()
   .shape({
     triggerType,
     requirement,
-    threshold
+    threshold,
     // direction
   })
   .test(({ threshold, triggerType }, context) => {
     const errorMessages = {
-      txAmount: threshold => 'Amount must be greater than or equal to 0',
+      txAmount: () => 'Amount must be greater than or equal to 0',
       txVolume: threshold => {
         const thresholdMessage = 'Volume must be greater than or equal to 0'
         const thresholdDaysMessage = 'Days must be greater than 0'
@@ -52,7 +52,7 @@ const Schema = Yup.object()
         if (threshold.thresholdDays <= 0) message.push(thresholdDaysMessage)
         return message.join(', ')
       },
-      consecutiveDays: threshold => 'Days must be greater than 0'
+      consecutiveDays: () => 'Days must be greater than 0',
     }
     const thresholdValidator = {
       txAmount: threshold => threshold.threshold >= 0,
@@ -60,14 +60,14 @@ const Schema = Yup.object()
         threshold.threshold >= 0 && threshold.thresholdDays > 0,
       txVelocity: threshold =>
         threshold.threshold > 0 && threshold.thresholdDays > 0,
-      consecutiveDays: threshold => threshold.thresholdDays > 0
+      consecutiveDays: threshold => threshold.thresholdDays > 0,
     }
 
     if (triggerType && thresholdValidator[triggerType](threshold)) return
 
     return context.createError({
       path: 'threshold',
-      message: errorMessages[triggerType](threshold)
+      message: errorMessages[triggerType](threshold),
     })
   })
   .test(({ requirement }, context) => {
@@ -80,7 +80,7 @@ const Schema = Yup.object()
 
     return context.createError({
       path: 'requirement',
-      message: 'Suspension days must be greater than 0'
+      message: 'Suspension days must be greater than 0',
     })
   })
 
@@ -88,16 +88,16 @@ const Schema = Yup.object()
 const typeSchema = Yup.object()
   .shape({
     triggerType: Yup.string('The trigger type must be a string').required(
-      'The trigger type is required'
+      'The trigger type is required',
     ),
     threshold: Yup.object({
       threshold: Yup.number().transform(transformNumber).nullable(),
-      thresholdDays: Yup.number().transform(transformNumber).nullable()
-    })
+      thresholdDays: Yup.number().transform(transformNumber).nullable(),
+    }),
   })
   .test(({ threshold, triggerType }, context) => {
     const errorMessages = {
-      txAmount: threshold => 'Amount must be greater than or equal to 0',
+      txAmount: () => 'Amount must be greater than or equal to 0',
       txVolume: threshold => {
         const thresholdMessage = 'Volume must be greater than or equal to 0'
         const thresholdDaysMessage = 'Days must be greater than 0'
@@ -118,7 +118,7 @@ const typeSchema = Yup.object()
           message.push(thresholdDaysMessage)
         return message.join(', ')
       },
-      consecutiveDays: threshold => 'Days must be greater than 0'
+      consecutiveDays: () => 'Days must be greater than 0',
     }
     const thresholdValidator = {
       txAmount: threshold => threshold.threshold >= 0,
@@ -126,7 +126,7 @@ const typeSchema = Yup.object()
         threshold.threshold >= 0 && threshold.thresholdDays > 0,
       txVelocity: threshold =>
         threshold.threshold > 0 && threshold.thresholdDays > 0,
-      consecutiveDays: threshold => threshold.thresholdDays > 0
+      consecutiveDays: threshold => threshold.thresholdDays > 0,
     }
 
     if (!triggerType) return
@@ -135,7 +135,7 @@ const typeSchema = Yup.object()
 
     return context.createError({
       path: 'threshold',
-      message: errorMessages[triggerType](threshold)
+      message: errorMessages[triggerType](threshold),
     })
   })
 
@@ -143,10 +143,10 @@ const typeOptions = [
   { display: 'Transaction amount', code: 'txAmount' },
   {
     display: 'Transaction volume',
-    code: 'txVolume'
+    code: 'txVolume',
   },
   { display: 'Transaction velocity', code: 'txVelocity' },
-  { display: 'Consecutive days', code: 'consecutiveDays' }
+  { display: 'Consecutive days', code: 'consecutiveDays' },
 ]
 
 const Type = ({ ...props }) => {
@@ -154,7 +154,7 @@ const Type = ({ ...props }) => {
     useFormikContext()
 
   const typeClass = {
-    'text-tomato': errors.triggerType && touched.triggerType
+    'text-tomato': errors.triggerType && touched.triggerType,
   }
 
   const containsType = R.contains(values?.triggerType)
@@ -177,7 +177,7 @@ const Type = ({ ...props }) => {
   const triggerTypeError = !!(hasDaysError || hasAmountError)
 
   const thresholdClass = {
-    'text-tomato': triggerTypeError
+    'text-tomato': triggerTypeError,
   }
 
   const isRadioGroupActive = () => {
@@ -205,7 +205,7 @@ const Type = ({ ...props }) => {
           handleChange(e)
           setTouched({
             threshold: false,
-            thresholdDays: false
+            thresholdDays: false,
           })
         }}
       />
@@ -277,8 +277,8 @@ const type = currency => ({
   props: { currency },
   initialValues: {
     triggerType: '',
-    threshold: { threshold: '', thresholdDays: '' }
-  }
+    threshold: { threshold: '', thresholdDays: '' },
+  },
 })
 
 const requirementSchema = Yup.object()
@@ -288,17 +288,17 @@ const requirementSchema = Yup.object()
       suspensionDays: Yup.number().when('requirement', {
         is: value => value === 'suspend',
         then: schema => schema.nullable().transform(transformNumber),
-        otherwise: schema => schema.nullable().transform(() => null)
+        otherwise: schema => schema.nullable().transform(() => null),
       }),
       customInfoRequestId: Yup.string().when('requirement', {
         is: value => value !== 'custom',
-        then: schema => schema.nullable().transform(() => '')
+        then: schema => schema.nullable().transform(() => ''),
       }),
       externalService: Yup.string().when('requirement', {
         is: value => value !== 'external',
-        then: schema => schema.nullable().transform(() => '')
-      })
-    }).required()
+        then: schema => schema.nullable().transform(() => ''),
+      }),
+    }).required(),
   })
   .test(({ requirement }, context) => {
     const requirementValidator = (requirement, type) => {
@@ -323,19 +323,19 @@ const requirementSchema = Yup.object()
     if (requirement && !requirementValidator(requirement, 'suspend'))
       return context.createError({
         path: 'requirement',
-        message: 'Suspension days must be greater than 0'
+        message: 'Suspension days must be greater than 0',
       })
 
     if (requirement && !requirementValidator(requirement, 'custom'))
       return context.createError({
         path: 'requirement',
-        message: 'You must select an item'
+        message: 'You must select an item',
       })
 
     if (requirement && !requirementValidator(requirement, 'external'))
       return context.createError({
         path: 'requirement',
-        message: 'You must select an item'
+        message: 'You must select an item',
       })
   })
 
@@ -343,25 +343,25 @@ const requirementOptions = [
   { display: 'SMS verification', code: 'sms' },
   {
     display: 'Email verification',
-    code: 'email'
+    code: 'email',
   },
   { display: 'ID card image', code: 'idCardPhoto' },
   {
     display: 'ID data',
-    code: 'idCardData'
+    code: 'idCardData',
   },
   { display: 'Customer camera', code: 'facephoto' },
   { display: 'Sanctions', code: 'sanctions' },
   {
     display: 'US SSN',
-    code: 'usSsn'
+    code: 'usSsn',
   }, // { display: 'Super user', code: 'superuser' },
   { display: 'Suspend', code: 'suspend' },
   { display: 'Block', code: 'block' },
   {
     display: 'External verification',
-    code: 'external'
-  }
+    code: 'external',
+  },
 ]
 
 const hasRequirementError = (errors, touched, values) =>
@@ -386,7 +386,7 @@ const Requirement = ({
   triggers,
   emailAuth,
   complianceServices,
-  customInfoRequests = []
+  customInfoRequests = [],
 }) => {
   const { touched, errors, values, handleChange, setTouched } =
     useFormikContext()
@@ -400,12 +400,12 @@ const Requirement = ({
       if (value.requirement.requirement === 'custom')
         acc.push({
           triggerType: value.triggerType,
-          id: value.requirement.customInfoRequestId
+          id: value.requirement.customInfoRequestId,
         })
       return acc
     },
     [],
-    triggers
+    triggers,
   )
 
   const availableCustomRequirements = R.filter(
@@ -413,24 +413,24 @@ const Requirement = ({
       !R.includes(
         {
           triggerType: config.triggerType,
-          id: it.id
+          id: it.id,
         },
-        customRequirementsInUse
+        customRequirementsInUse,
       ),
-    customInfoRequests
+    customInfoRequests,
   )
 
   const makeCustomReqOptions = () =>
     availableCustomRequirements.map(it => ({
       value: it.id,
-      display: it.customRequest.name
+      display: it.customRequest.name,
     }))
 
   const enableCustomRequirement = !R.isEmpty(availableCustomRequirements)
 
   const customInfoOption = {
     display: 'Custom information requirement',
-    code: 'custom'
+    code: 'custom',
   }
 
   const itemToRemove = emailAuth ? 'sms' : 'email'
@@ -444,7 +444,7 @@ const Requirement = ({
       (!!errors.requirement && !isSuspend && !isCustom && !isExternal) ||
       (isSuspend && hasRequirementError(errors, touched, values)) ||
       (isCustom && hasCustomRequirementError(errors, touched, values)) ||
-      (isExternal && hasExternalRequirementError(errors, touched, values))
+      (isExternal && hasExternalRequirementError(errors, touched, values)),
   }
 
   return (
@@ -462,7 +462,7 @@ const Requirement = ({
         onChange={e => {
           handleChange(e)
           setTouched({
-            suspensionDays: false
+            suspensionDays: false,
           })
         }}
       />
@@ -496,7 +496,7 @@ const Requirement = ({
             name="requirement.externalService"
             options={complianceServices.map(it => ({
               value: it.code,
-              display: it.display
+              display: it.display,
             }))}
           />
         </div>
@@ -510,7 +510,7 @@ const requirements = (
   triggers,
   customInfoRequests,
   complianceServices,
-  emailAuth
+  emailAuth,
 ) => ({
   schema: requirementSchema,
   options: requirementOptions,
@@ -520,7 +520,7 @@ const requirements = (
     triggers,
     customInfoRequests,
     emailAuth,
-    complianceServices
+    complianceServices,
   },
   hasRequirementError: hasRequirementError,
   hasCustomRequirementError: hasCustomRequirementError,
@@ -530,9 +530,9 @@ const requirements = (
       requirement: '',
       suspensionDays: '',
       customInfoRequestId: '',
-      externalService: ''
-    }
-  }
+      externalService: '',
+    },
+  },
 })
 
 const getView = (data, code, compare) => it => {
@@ -553,7 +553,7 @@ const RequirementInput = ({ customInfoRequests = [] }) => {
   const isSuspend = requirement === 'suspend'
   const display = customRequestId
     ? (R.path(['customRequest', 'name'])(
-        R.find(customReqIdMatches(customRequestId))(customInfoRequests)
+        R.find(customReqIdMatches(customRequestId))(customInfoRequests),
       ) ?? '')
     : getView(requirementOptions, 'display')(requirement)
 
@@ -579,12 +579,12 @@ const RequirementView = ({
   suspensionDays,
   customInfoRequestId,
   externalService,
-  customInfoRequests = []
+  customInfoRequests = [],
 }) => {
   const display =
     requirement === 'custom'
       ? (R.path(['customRequest', 'name'])(
-          R.find(customReqIdMatches(customInfoRequestId))(customInfoRequests)
+          R.find(customReqIdMatches(customInfoRequestId))(customInfoRequests),
         ) ?? '')
       : requirement === 'external'
         ? `External verification (${onlyFirstToUpper(externalService)})`
@@ -607,7 +607,7 @@ const DisplayThreshold = ({ config, currency, isEdit }) => {
   const inputClasses = {
     '-mt-1': true,
     'w-13': config?.triggerType === 'txVelocity',
-    'w-15': config?.triggerType === 'consecutiveDays'
+    'w-15': config?.triggerType === 'consecutiveDays',
   }
 
   const threshold = config?.threshold?.threshold
@@ -712,8 +712,8 @@ const getElements = (currency, customInfoRequests) => [
       options: typeOptions,
       valueProp: 'code',
       labelProp: 'display',
-      optionsLimit: null
-    }
+      optionsLimit: null,
+    },
   },
   {
     name: 'requirement',
@@ -723,7 +723,7 @@ const getElements = (currency, customInfoRequests) => [
     input: () => <RequirementInput customInfoRequests={customInfoRequests} />,
     view: it => (
       <RequirementView {...it} customInfoRequests={customInfoRequests} />
-    )
+    ),
   },
   {
     name: 'threshold',
@@ -731,16 +731,16 @@ const getElements = (currency, customInfoRequests) => [
     width: 254,
     textAlign: 'right',
     input: () => <ThresholdInput currency={currency} />,
-    view: (it, config) => <ThresholdView config={config} currency={currency} />
-  }
+    view: (it, config) => <ThresholdView config={config} currency={currency} />,
+  },
 ]
 
 const triggerOrder = R.map(R.prop('code'))(typeOptions)
 const sortBy = [
   R.comparator(
     (a, b) =>
-      triggerOrder.indexOf(a.triggerType) < triggerOrder.indexOf(b.triggerType)
-  )
+      triggerOrder.indexOf(a.triggerType) < triggerOrder.indexOf(b.triggerType),
+  ),
 ]
 
 const fromServer = triggers => {
@@ -758,14 +758,14 @@ const fromServer = triggers => {
         requirement,
         suspensionDays,
         customInfoRequestId,
-        externalService
+        externalService,
       },
       threshold: {
         threshold,
-        thresholdDays
+        thresholdDays,
       },
-      ...rest
-    })
+      ...rest,
+    }),
   )(triggers)
 }
 
@@ -777,7 +777,7 @@ const toServer = triggers =>
     thresholdDays: threshold.thresholdDays,
     customInfoRequestId: requirement.customInfoRequestId,
     externalService: requirement.externalService,
-    ...rest
+    ...rest,
   }))(triggers)
 
 export {
@@ -789,5 +789,5 @@ export {
   fromServer,
   toServer,
   getView,
-  requirementOptions
+  requirementOptions,
 }

@@ -8,7 +8,7 @@ const TableRow = memo(
       'h-8': !header && size === 'sm',
       'h-9 font-bold text-base ': !header && size === 'lg',
       'bg-misty-rose': error,
-      'bg-spring3': success
+      'bg-spring3': success,
     }
 
     return (
@@ -16,7 +16,7 @@ const TableRow = memo(
         {children}
       </tr>
     )
-  }
+  },
 )
 
 export default TableRow

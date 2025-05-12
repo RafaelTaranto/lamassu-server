@@ -8,44 +8,37 @@ import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
 
 import { getFormattedPhone, getName } from './helper'
 
-const CustomersList = ({
-  data,
-  locale,
-  onClick,
-  loading,
-  triggers,
-  customRequests
-}) => {
+const CustomersList = ({ data, locale, onClick, loading }) => {
   const elements = [
     {
       header: 'Phone/email',
       width: 199,
       view: it => `${getFormattedPhone(it.phone, locale.country) || ''} 
-      ${it.email || ''}`
+      ${it.email || ''}`,
     },
     {
       header: 'Name',
       width: 241,
-      view: getName
+      view: getName,
     },
     {
       header: 'Total Txs',
       width: 126,
       textAlign: 'right',
-      view: it => `${Number.parseInt(it.totalTxs)}`
+      view: it => `${Number.parseInt(it.totalTxs)}`,
     },
     {
       header: 'Total spent',
       width: 152,
       textAlign: 'right',
       view: it =>
-        `${Number.parseFloat(it.totalSpent)} ${it.lastTxFiatCode ?? ''}`
+        `${Number.parseFloat(it.totalSpent)} ${it.lastTxFiatCode ?? ''}`,
     },
     {
       header: 'Last active',
       width: 133,
       view: it =>
-        (it.lastActive && format('yyyy-MM-dd', new Date(it.lastActive))) ?? ''
+        (it.lastActive && format('yyyy-MM-dd', new Date(it.lastActive))) ?? '',
     },
     {
       header: 'Last transaction',
@@ -62,13 +55,13 @@ const CustomersList = ({
             {hasLastTx && lastIcon}
           </>
         )
-      }
+      },
     },
     {
       header: 'Status',
       width: 191,
-      view: it => <MainStatus statuses={[it.authorizedStatus]} />
-    }
+      view: it => <MainStatus statuses={[it.authorizedStatus]} />,
+    },
   ]
 
   return (

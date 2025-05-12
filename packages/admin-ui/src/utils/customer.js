@@ -8,7 +8,7 @@ const formatFullName = R.pipe(
   R.values,
   R.reject(R.allPass([R.isNil, R.isEmpty])),
   R.map(onlyFirstToUpper),
-  R.join(' ')
+  R.join(' '),
 )
 
 const formatName = idCardData => {
@@ -29,7 +29,7 @@ const displayName = ({
   customerName,
   customerIdCardData,
   customerPhone,
-  customerEmail
+  customerEmail,
 }) =>
   isAnonymous
     ? 'Anonymous'

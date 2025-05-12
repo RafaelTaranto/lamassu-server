@@ -23,12 +23,12 @@ const CoinATMRadar = memo(({ wizard }) => {
   const { data } = useQuery(GET_CONFIG)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    refetchQueries: ['getData']
+    refetchQueries: ['getData'],
   })
 
   const save = it =>
     saveConfig({
-      variables: { config: toNamespace(namespaces.COIN_ATM_RADAR, it) }
+      variables: { config: toNamespace(namespaces.COIN_ATM_RADAR, it) },
     })
 
   const coinAtmRadarConfig =
@@ -54,12 +54,12 @@ const CoinATMRadar = memo(({ wizard }) => {
         elements={[
           {
             name: 'commissions',
-            display: 'Commissions'
+            display: 'Commissions',
           },
           {
             name: 'limitsAndVerification',
-            display: 'Limits and verification'
-          }
+            display: 'Limits and verification',
+          },
         ]}
         save={save}
       />

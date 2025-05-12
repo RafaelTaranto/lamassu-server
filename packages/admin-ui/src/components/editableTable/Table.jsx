@@ -19,7 +19,7 @@ const DEFAULT_COL_SIZE = 100
 
 const getWidth = R.compose(
   R.reduce(R.add)(0),
-  R.map(it => it.width ?? DEFAULT_COL_SIZE)
+  R.map(it => it.width ?? DEFAULT_COL_SIZE),
 )
 
 const ETable = ({
@@ -54,7 +54,7 @@ const ETable = ({
   createText = 'Add override',
   forceAdd = false,
   tbodyWrapperClass,
-  orderedBy = null
+  orderedBy = null,
 }) => {
   const [editingId, setEditingId] = useState(null)
   const [adding, setAdding] = useState(false)
@@ -80,6 +80,7 @@ const ETable = ({
       try {
         await save({ [name]: list }, it)
       } catch (err) {
+        console.error(err)
         setSaving(false)
         return
       }
@@ -152,7 +153,7 @@ const ETable = ({
     stripeWhen,
     forceAdd,
     orderedBy,
-    DEFAULT_COL_SIZE
+    DEFAULT_COL_SIZE,
   }
 
   return (

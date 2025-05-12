@@ -17,5 +17,5 @@ export {
   defaultToZero,
   transformNumber,
   numberToFiatAmount,
-  numberToCryptoAmount
+  numberToCryptoAmount,
 }

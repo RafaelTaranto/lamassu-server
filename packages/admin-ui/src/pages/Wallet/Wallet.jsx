@@ -1,4 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import Modal from 'src/components/Modal'
@@ -68,14 +68,14 @@ const Wallet = ({ name: SCREEN_KEY }) => {
 
   const [saveConfig, { error }] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const { data: marketsData } = useQuery(GET_MARKETS)
 
   const [saveAccount] = useMutation(SAVE_ACCOUNT, {
     onCompleted: () => setEditingSchema(null),
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const save = (rawConfig, accounts) => {
@@ -114,7 +114,7 @@ const Wallet = ({ name: SCREEN_KEY }) => {
 
   const wizardSave = it =>
     saveAccount({
-      variables: { accounts: { [editingSchema.code]: it } }
+      variables: { accounts: { [editingSchema.code]: it } },
     }).then(it => {
       onChangeFunction()
       setOnChangeFunction(null)
@@ -131,8 +131,8 @@ const Wallet = ({ name: SCREEN_KEY }) => {
               text: 'Advanced settings',
               icon: SettingsIcon,
               inverseIcon: ReverseSettingsIcon,
-              toggle: setAdvancedSettings
-            }
+              toggle: setAdvancedSettings,
+            },
           ]}
           appendix={
             <HelpTooltip width={340}>
@@ -188,7 +188,9 @@ const Wallet = ({ name: SCREEN_KEY }) => {
               <FormRenderer
                 save={wizardSave}
                 elements={editingSchema.elements}
-                validationSchema={editingSchema.getValidationSchema(accounts[editingSchema.code])}
+                validationSchema={editingSchema.getValidationSchema(
+                  accounts[editingSchema.code],
+                )}
                 value={accounts[editingSchema.code]}
               />
             </Modal>

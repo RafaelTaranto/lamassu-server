@@ -13,7 +13,7 @@ const PhotosCard = memo(({ photosData, timezone }) => {
 
   const sortedPhotosData = R.sortWith(
     [(a, b) => R.has('id', a) - R.has('id', b), R.descend(R.prop('date'))],
-    photosData
+    photosData,
   )
 
   const singlePhoto = R.head(sortedPhotosData)

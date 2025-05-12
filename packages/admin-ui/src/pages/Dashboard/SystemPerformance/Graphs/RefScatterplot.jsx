@@ -17,9 +17,9 @@ const Graph = ({ data, timeFrame, timezone }) => {
       top: 20,
       right: 3.5,
       bottom: 27,
-      left: 33.5
+      left: 33.5,
     }),
-    []
+    [],
   )
 
   const offset = getTimezoneOffset(timezone)
@@ -28,7 +28,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
   const periodDomains = {
     Day: [NOW - DAY, NOW],
     Week: [NOW - WEEK, NOW],
-    Month: [NOW - MONTH, NOW]
+    Month: [NOW - MONTH, NOW],
   }
 
   const dataPoints = useMemo(
@@ -37,27 +37,27 @@ const Graph = ({ data, timeFrame, timezone }) => {
         freq: 24,
         step: 60 * 60 * 1000,
         tick: d3.utcHour.every(4),
-        labelFormat: '%H:%M'
+        labelFormat: '%H:%M',
       },
       Week: {
         freq: 7,
         step: 24 * 60 * 60 * 1000,
         tick: d3.utcDay.every(1),
-        labelFormat: '%a %d'
+        labelFormat: '%a %d',
       },
       Month: {
         freq: 30,
         step: 24 * 60 * 60 * 1000,
         tick: d3.utcDay.every(2),
-        labelFormat: '%d'
-      }
+        labelFormat: '%d',
+      },
     }),
-    []
+    [],
   )
 
   const filterDay = useCallback(
     x => (timeFrame === 'Day' ? x.getUTCHours() === 0 : x.getUTCDate() === 1),
-    [timeFrame]
+    [timeFrame],
   )
 
   const getPastAndCurrentDayLabels = useCallback(d => {
@@ -74,11 +74,11 @@ const Graph = ({ data, timeFrame, timezone }) => {
     const previousDateMonth = previousDate.getUTCMonth()
 
     const daysOfWeek = Array.from(Array(7)).map((_, i) =>
-      format('EEE', add({ days: i }, startOfWeek(new Date())))
+      format('EEE', add({ days: i }, startOfWeek(new Date()))),
     )
 
     const months = Array.from(Array(12)).map((_, i) =>
-      format('LLL', add({ months: i }, startOfYear(new Date())))
+      format('LLL', add({ months: i }, startOfYear(new Date()))),
     )
 
     return {
@@ -89,7 +89,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
       current:
         currentDateMonth !== previousDateMonth
           ? months[currentDateMonth]
-          : `${daysOfWeek[currentDateWeekday]} ${currentDateDay}`
+          : `${daysOfWeek[currentDateWeekday]} ${currentDateDay}`,
     }
   }, [])
 
@@ -111,7 +111,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
 
       return points
     },
-    [NOW, dataPoints, timeFrame]
+    [NOW, dataPoints, timeFrame],
   )
 
   const x = d3
@@ -123,7 +123,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
     .scaleLinear()
     .domain([
       0,
-      (d3.max(data, d => new BigNumber(d.fiat).toNumber()) ?? 1000) * 1.05
+      (d3.max(data, d => new BigNumber(d.fiat).toNumber()) ?? 1000) * 1.05,
     ])
     .nice()
     .range([GRAPH_HEIGHT - GRAPH_MARGIN.bottom, GRAPH_MARGIN.top])
@@ -137,7 +137,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
         .attr('height', GRAPH_HEIGHT - GRAPH_MARGIN.top - GRAPH_MARGIN.bottom)
         .attr('fill', 'var(--ghost)')
     },
-    [GRAPH_MARGIN]
+    [GRAPH_MARGIN],
   )
 
   const buildXAxis = useCallback(
@@ -145,7 +145,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
       g
         .attr(
           'transform',
-          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`
+          `translate(0, ${GRAPH_HEIGHT - GRAPH_MARGIN.bottom})`,
         )
         .call(
           d3
@@ -153,12 +153,12 @@ const Graph = ({ data, timeFrame, timezone }) => {
             .ticks(dataPoints[timeFrame].tick)
             .tickFormat(d => {
               return d3.timeFormat(dataPoints[timeFrame].labelFormat)(
-                d.getTime() + d.getTimezoneOffset() * MINUTE
+                d.getTime() + d.getTimezoneOffset() * MINUTE,
               )
-            })
+            }),
         )
         .call(g => g.select('.domain').remove()),
-    [GRAPH_MARGIN, dataPoints, timeFrame, x]
+    [GRAPH_MARGIN, dataPoints, timeFrame, x],
   )
 
   const buildYAxis = useCallback(
@@ -173,12 +173,12 @@ const Graph = ({ data, timeFrame, timezone }) => {
               if (d >= 1000) return numberToFiatAmount(d / 1000) + 'k'
 
               return numberToFiatAmount(d)
-            })
+            }),
         )
         .call(g => g.select('.domain').remove())
         .selectAll('text')
         .attr('dy', '-0.25rem'),
-    [GRAPH_MARGIN, y]
+    [GRAPH_MARGIN, y],
   )
 
   const buildGrid = useCallback(
@@ -196,7 +196,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
             .attr('x2', d => 0.5 + x(d))
             .attr('y1', GRAPH_MARGIN.top)
             .attr('y2', GRAPH_HEIGHT - GRAPH_MARGIN.bottom)
-            .attr('stroke-width', 1)
+            .attr('stroke-width', 1),
         )
         // Horizontal lines
         .call(g =>
@@ -208,7 +208,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
             .attr('y1', d => 0.5 + y(d))
             .attr('y2', d => 0.5 + y(d))
             .attr('x1', GRAPH_MARGIN.left)
-            .attr('x2', GRAPH_WIDTH)
+            .attr('x2', GRAPH_WIDTH),
         )
         // Thick vertical lines
         .call(g =>
@@ -223,7 +223,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
             .attr('y1', GRAPH_MARGIN.top - 10)
             .attr('y2', GRAPH_HEIGHT - GRAPH_MARGIN.bottom)
             .attr('stroke-width', 2)
-            .join('text')
+            .join('text'),
         )
         // Left side breakpoint label
         .call(g => {
@@ -262,7 +262,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
             .text(labels.current)
         })
     },
-    [GRAPH_MARGIN, buildTicks, getPastAndCurrentDayLabels, x, y, filterDay]
+    [GRAPH_MARGIN, buildTicks, getPastAndCurrentDayLabels, x, y, filterDay],
   )
 
   const formatTicksText = useCallback(
@@ -273,7 +273,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
         .style('fill', 'var(--comet)')
         .style('stroke-width', 0)
         .style('font-family', 'var(--museo)'),
-    []
+    [],
   )
 
   const formatText = useCallback(
@@ -284,7 +284,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
         .style('fill', 'var(--comet)')
         .style('stroke-width', 0)
         .style('font-family', 'var(--museo)'),
-    []
+    [],
   )
 
   const formatTicks = useCallback(() => {
@@ -304,11 +304,11 @@ const Graph = ({ data, timeFrame, timezone }) => {
         })
         .attr('cy', d => y(new BigNumber(d.fiat).toNumber()))
         .attr('fill', d =>
-          d.txClass === 'cashIn' ? 'var(--java)' : 'var(--neon)'
+          d.txClass === 'cashIn' ? 'var(--java)' : 'var(--neon)',
         )
         .attr('r', 3.5)
     },
-    [data, offset, x, y]
+    [data, offset, x, y],
   )
 
   const drawChart = useCallback(() => {
@@ -334,7 +334,7 @@ const Graph = ({ data, timeFrame, timezone }) => {
     drawData,
     formatText,
     formatTicks,
-    formatTicksText
+    formatTicksText,
   ])
 
   useEffect(() => {

@@ -49,7 +49,7 @@
 }
 
 .li::after {
-  content: "";
+  content: '';
   display: block;
   background: white;
   width: 0;

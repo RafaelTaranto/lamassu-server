@@ -15,7 +15,7 @@ const ThirdPartyProvider = () => {
     save,
     data: _data,
     error,
-    accountsConfig
+    accountsConfig,
   } = useContext(NotificationsCtx)
 
   const data = fromNamespace('thirdParty')(_data)
@@ -25,7 +25,7 @@ const ThirdPartyProvider = () => {
   const getDisplayName = type => it =>
     R.compose(
       R.prop('display'),
-      R.find(R.propEq('code', it))
+      R.find(R.propEq('code', it)),
     )(filterOptions(type))
 
   const innerSave = async value => {
@@ -35,7 +35,7 @@ const ThirdPartyProvider = () => {
 
   const ThirdPartySchema = Yup.object().shape({
     sms: Yup.string('SMS must be a string').required('SMS is required'),
-    email: Yup.string('Email must be a string').required('Email is required')
+    email: Yup.string('Email must be a string').required('Email is required'),
   })
 
   const elements = [
@@ -48,8 +48,8 @@ const ThirdPartyProvider = () => {
       inputProps: {
         options: filterOptions('sms'),
         valueProp: 'code',
-        labelProp: 'display'
-      }
+        labelProp: 'display',
+      },
     },
     {
       name: 'email',
@@ -60,13 +60,13 @@ const ThirdPartyProvider = () => {
       inputProps: {
         options: filterOptions('email'),
         valueProp: 'code',
-        labelProp: 'display'
-      }
-    }
+        labelProp: 'display',
+      },
+    },
   ]
   const values = {
     sms: data.sms ?? 'twilio',
-    email: data.email ?? 'mailgun'
+    email: data.email ?? 'mailgun',
   }
 
   return (

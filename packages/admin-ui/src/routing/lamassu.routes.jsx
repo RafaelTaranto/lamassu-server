@@ -37,7 +37,7 @@ const getLamassuRoutes = () => [
     label: 'Transactions',
     route: '/transactions',
     allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-    component: Transactions
+    component: Transactions,
   },
   {
     key: 'maintenance',
@@ -53,44 +53,44 @@ const getLamassuRoutes = () => [
         label: 'Cash units',
         route: '/maintenance/cash-units',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: CashUnits
+        component: CashUnits,
       },
       {
         key: 'funding',
         label: 'Funding',
         route: '/maintenance/funding',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Funding
+        component: Funding,
       },
       {
         key: 'logs',
         label: 'Machine logs',
         route: '/maintenance/logs',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: MachineLogs
+        component: MachineLogs,
       },
       {
         key: 'machine-status',
         label: 'Machine status',
         route: '/maintenance/machine-status',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: MachineStatus
+        component: MachineStatus,
       },
       {
         key: 'server-logs',
         label: 'Server',
         route: '/maintenance/server-logs',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: ServerLogs
-      }
-    ]
+        component: ServerLogs,
+      },
+    ],
   },
   {
     key: 'analytics',
     label: 'Analytics',
     route: '/analytics',
     allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-    component: Analytics
+    component: Analytics,
   },
   {
     key: 'settings',
@@ -106,42 +106,42 @@ const getLamassuRoutes = () => [
         label: 'Commissions',
         route: '/settings/commissions',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Commissions
+        component: Commissions,
       },
       {
         key: namespaces.LOCALE,
         label: 'Locales',
         route: '/settings/locale',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Locales
+        component: Locales,
       },
       {
         key: namespaces.CASH_OUT,
         label: 'Cash-out',
         route: '/settings/cash-out',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Cashout
+        component: Cashout,
       },
       {
         key: namespaces.NOTIFICATIONS,
         label: 'Notifications',
         route: '/settings/notifications',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Notifications
+        component: Notifications,
       },
       {
         key: 'services',
         label: 'Third-party services',
         route: '/settings/3rd-party-services',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Services
+        component: Services,
       },
       {
         key: namespaces.WALLETS,
         label: 'Wallet',
         route: '/settings/wallet-settings',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: WalletSettings
+        component: WalletSettings,
       },
       {
         key: namespaces.OPERATOR_INFO,
@@ -154,7 +154,7 @@ const getLamassuRoutes = () => [
             <Redirect
               to={{
                 pathname: this.children[0].route,
-                state: { prev: this.state?.prev }
+                state: { prev: this.state?.prev },
               }}
             />
           )
@@ -165,46 +165,46 @@ const getLamassuRoutes = () => [
             label: 'Contact information',
             route: '/settings/operator-info/contact-info',
             allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-            component: ContactInfo
+            component: ContactInfo,
           },
           {
             key: 'receipt-printing',
             label: 'Receipt',
             route: '/settings/operator-info/receipt-printing',
             allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-            component: ReceiptPrinting
+            component: ReceiptPrinting,
           },
           {
             key: 'sms-notices',
             label: 'SMS notices',
             route: '/settings/operator-info/sms-notices',
             allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-            component: SMSNotices
+            component: SMSNotices,
           },
           {
             key: 'coin-atm-radar',
             label: 'Coin ATM Radar',
             route: '/settings/operator-info/coin-atm-radar',
             allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-            component: CoinAtmRadar
+            component: CoinAtmRadar,
           },
           {
             key: 'terms-conditions',
             label: 'Terms & Conditions',
             route: '/settings/operator-info/terms-conditions',
             allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-            component: TermsConditions
+            component: TermsConditions,
           },
           {
             key: 'machine-screens',
             label: 'Machine screens',
             route: '/settings/operator-info/machine-screens',
             allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-            component: MachineScreens
-          }
-        ]
-      }
-    ]
+            component: MachineScreens,
+          },
+        ],
+      },
+    ],
   },
   {
     key: 'compliance',
@@ -220,21 +220,21 @@ const getLamassuRoutes = () => [
         label: 'Triggers',
         route: '/compliance/triggers',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Triggers
+        component: Triggers,
       },
       {
         key: 'customers',
         label: 'Customers',
         route: '/compliance/customers',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Customers
+        component: Customers,
       },
       {
         key: 'blacklist',
         label: 'Blacklist',
         route: '/compliance/blacklist',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Blacklist
+        component: Blacklist,
       },
       {
         key: 'loyalty',
@@ -247,7 +247,7 @@ const getLamassuRoutes = () => [
             <Redirect
               to={{
                 pathname: this.children[0].route,
-                state: { prev: this.state?.prev }
+                state: { prev: this.state?.prev },
               }}
             />
           )
@@ -258,24 +258,24 @@ const getLamassuRoutes = () => [
             label: 'Individual discounts',
             route: '/compliance/loyalty/individual-discounts',
             allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-            component: IndividualDiscounts
+            component: IndividualDiscounts,
           },
           {
             key: 'promo-codes',
             label: 'Promo codes',
             route: '/compliance/loyalty/codes',
             allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-            component: PromoCodes
-          }
-        ]
+            component: PromoCodes,
+          },
+        ],
       },
       {
         key: 'customer',
         route: '/compliance/customer/:id',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: CustomerProfile
-      }
-    ]
+        component: CustomerProfile,
+      },
+    ],
   },
   {
     key: 'system',
@@ -291,17 +291,17 @@ const getLamassuRoutes = () => [
         label: 'User management',
         route: '/system/user-management',
         allowedRoles: [ROLES.SUPERUSER],
-        component: UserManagement
+        component: UserManagement,
       },
       {
         key: 'session-management',
         label: 'Session management',
         route: '/system/session-management',
         allowedRoles: [ROLES.SUPERUSER],
-        component: SessionManagement
-      }
-    ]
-  }
+        component: SessionManagement,
+      },
+    ],
+  },
 ]
 
 export default getLamassuRoutes

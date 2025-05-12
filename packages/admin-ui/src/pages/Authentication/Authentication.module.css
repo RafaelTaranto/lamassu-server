@@ -1,5 +1,6 @@
 .welcomeBackground {
-  background: var(--ghost) url(/wizard-background.svg) no-repeat fixed center center;
+  background: var(--ghost) url(/wizard-background.svg) no-repeat fixed center
+    center;
   background-size: cover;
   height: 100vh;
   width: 100vw;
@@ -22,7 +23,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-bottom: 30px
+  margin-bottom: 30px;
 }
 
 .icon {
@@ -70,4 +71,3 @@
 .confirm2FAInput {
   margin-top: 25px;
 }
-

@@ -35,7 +35,7 @@ const Alerts = ({ onReset, onExpand, size }) => {
   const alerts = R.path(['alerts'])(data) ?? []
   const machines = R.compose(
     R.map(R.prop('name')),
-    R.indexBy(R.prop('deviceId'))
+    R.indexBy(R.prop('deviceId')),
   )(data?.machines ?? [])
   const alertsLength = alerts.length
 

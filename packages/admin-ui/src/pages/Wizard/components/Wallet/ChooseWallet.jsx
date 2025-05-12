@@ -1,4 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { H4, Info3 } from 'src/components/typography'
@@ -45,7 +45,7 @@ const isLocalHosted = it =>
     'litecoind',
     'dashd',
     'zcashd',
-    'bitcoincashd'
+    'bitcoincashd',
   ])
 
 const ChooseWallet = ({ data: currentData, addData }) => {
@@ -53,7 +53,7 @@ const ChooseWallet = ({ data: currentData, addData }) => {
   const schema = _schema()
   const { data } = useQuery(GET_CONFIG)
   const [saveAccounts] = useMutation(SAVE_ACCOUNTS, {
-    onCompleted: () => submit()
+    onCompleted: () => submit(),
   })
 
   const [selected, setSelected] = useState(null)
@@ -143,7 +143,7 @@ const ChooseWallet = ({ data: currentData, addData }) => {
             save={saveWallet(selected)}
             elements={schema.infura.elements}
             validationSchema={schema.infura.getValidationSchema(
-              accounts.infura
+              accounts.infura,
             )}
             buttonLabel={'Continue'}
             buttonClass={classes.formButton}
@@ -158,7 +158,7 @@ const ChooseWallet = ({ data: currentData, addData }) => {
             save={saveWallet(selected)}
             elements={schema.trongrid.elements}
             validationSchema={schema.trongrid.getValidationSchema(
-              accounts.trongrid
+              accounts.trongrid,
             )}
             buttonLabel={'Continue'}
             buttonClass={classes.formButton}

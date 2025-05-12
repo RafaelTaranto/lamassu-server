@@ -28,14 +28,14 @@ const GET_CONFIG = gql`
 const StyledCell = styled(TableCell)({
   borderBottom: '4px solid white',
   padding: 0,
-  paddingLeft: '15px'
+  paddingLeft: '15px',
 })
 
 const HeaderCell = styled(TableCell)({
   borderBottom: '4px solid white',
   padding: 0,
   paddingLeft: '15px',
-  backgroundColor: 'white'
+  backgroundColor: 'white',
 })
 
 const MachinesTable = ({ machines = [], numToRender }) => {
@@ -44,7 +44,7 @@ const MachinesTable = ({ machines = [], numToRender }) => {
   const { data } = useQuery(GET_CONFIG)
   const fillingPercentageSettings = fromNamespace(
     'notifications',
-    R.path(['config'], data) ?? {}
+    R.path(['config'], data) ?? {},
   )
 
   const getPercent = (notes, capacity = 500) => {
@@ -55,7 +55,7 @@ const MachinesTable = ({ machines = [], numToRender }) => {
     const percent = getPercent(notes, capacity)
     const percentageThreshold = R.pipe(
       R.path([`fillingPercentageCassette${cassetteIdx}`]),
-      R.defaultTo(PERCENTAGE_THRESHOLD)
+      R.defaultTo(PERCENTAGE_THRESHOLD),
     )(fillingPercentageSettings)
     return percent < percentageThreshold ? (
       <TL2 className="text-tomato">{`${percent}%`}</TL2>
@@ -66,13 +66,13 @@ const MachinesTable = ({ machines = [], numToRender }) => {
 
   const redirect = ({ name, deviceId }) => {
     return history.push(`/machines/${deviceId}`, {
-      selectedMachine: name
+      selectedMachine: name,
     })
   }
 
   const maxNumberOfCassettes = Math.max(
     ...R.map(it => it.numberOfCassettes, machines),
-    0
+    0,
   )
 
   return (
@@ -119,7 +119,7 @@ const MachinesTable = ({ machines = [], numToRender }) => {
                     sx={{
                       borderBottom: '4px solid white',
                       padding: 0,
-                      paddingLeft: '15px'
+                      paddingLeft: '15px',
                     }}
                     align="left">
                     <div className="flex items-center">
@@ -138,14 +138,14 @@ const MachinesTable = ({ machines = [], numToRender }) => {
                       <StyledCell key={idx} align="left">
                         {makePercentageText(
                           it,
-                          machine.cashUnits[`cassette${it}`]
+                          machine.cashUnits[`cassette${it}`],
                         )}
                       </StyledCell>
                     ) : (
                       <StyledCell key={idx} align="left">
                         <TL2>{`— %`}</TL2>
                       </StyledCell>
-                    )
+                    ),
                   )}
                 </TableRow>
               )

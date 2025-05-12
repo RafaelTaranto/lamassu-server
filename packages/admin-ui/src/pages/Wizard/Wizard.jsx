@@ -21,7 +21,7 @@ const GET_DATA = gql`
   }
 `
 
-const Wizard = ({ fromAuthRegister }) => {
+const Wizard = () => {
   const { data, loading } = useQuery(GET_DATA)
   const history = useHistory()
   const { setWizardTested } = useContext(AppContext)
@@ -68,7 +68,7 @@ const Wizard = ({ fromAuthRegister }) => {
     'flex flex-col justify-between py-4 px-0 bg-white': true,
     'bg-[url(/wizard-background.svg)] bg-no-repeat bg-center bg-fixed bg-cover':
       isWelcome,
-    'blur-sm pointer-events-none': footerExp
+    'blur-sm pointer-events-none': footerExp,
   }
 
   return (

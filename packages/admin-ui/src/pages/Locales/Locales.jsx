@@ -20,7 +20,7 @@ import {
   LocaleSchema,
   OverridesSchema,
   localeDefaults,
-  overridesDefaults
+  overridesDefaults,
 } from './helper'
 
 const GET_DATA = gql`
@@ -113,7 +113,7 @@ const Locales = ({ name: SCREEN_KEY }) => {
   const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
     refetchQueries: () => ['getData'],
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const [dataToSave, setDataToSave] = useState(null)
@@ -229,7 +229,7 @@ const Locales = ({ name: SCREEN_KEY }) => {
           elements={overrides(data, localeOverrides, onChangeCoin)}
           disableAdd={R.compose(R.isEmpty, R.difference)(
             data?.machines.map(m => m.deviceId) ?? [],
-            localeOverrides?.map(o => o.machine) ?? []
+            localeOverrides?.map(o => o.machine) ?? [],
           )}
           setEditing={onEditingOverrides}
           forceDisable={isEditingDefault}

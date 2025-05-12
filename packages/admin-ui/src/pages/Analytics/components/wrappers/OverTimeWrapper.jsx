@@ -18,7 +18,7 @@ const OverTimeDotGraphHeader = ({
   selectedMachine,
   handleMachineChange,
   timezone,
-  currency
+  currency,
 }) => {
   const [logarithmic, setLogarithmic] = useState()
 
@@ -35,7 +35,7 @@ const OverTimeDotGraphHeader = ({
           d="M 5 6 l 20 0"
         />
       </svg>
-    )
+    ),
   }
 
   return (

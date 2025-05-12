@@ -22,7 +22,7 @@ const getElements = (config, bills, setWizard, widths, setMachineId) => {
       header: 'Machine',
       width: widths.name,
       view: m => <>{m.name}</>,
-      input: ({ field: { value: name } }) => <>{name}</>
+      input: ({ field: { value: name } }) => <>{name}</>,
     },
     {
       name: 'cashbox',
@@ -39,8 +39,8 @@ const getElements = (config, bills, setWizard, widths, setMachineId) => {
         />
       ),
       inputProps: {
-        decimalPlaces: 0
-      }
+        decimalPlaces: 0,
+      },
     },
     {
       name: 'cassettes',
@@ -111,8 +111,8 @@ const getElements = (config, bills, setWizard, widths, setMachineId) => {
         )
       },
       inputProps: {
-        decimalPlaces: 0
-      }
+        decimalPlaces: 0,
+      },
     },
     {
       name: 'edit',
@@ -131,8 +131,8 @@ const getElements = (config, bills, setWizard, widths, setMachineId) => {
             </SvgIcon>
           </IconButton>
         )
-      }
-    }
+      },
+    },
   ]
 
   return elements

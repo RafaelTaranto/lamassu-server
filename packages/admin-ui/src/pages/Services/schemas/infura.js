@@ -10,14 +10,14 @@ export default {
       code: 'endpoint',
       display: 'Endpoint',
       component: TextInputFormik,
-      face: true
-    }
+      face: true,
+    },
   ],
   getValidationSchema: () => {
     return Yup.object().shape({
       endpoint: Yup.string('The endpoint must be a string')
         .max(100, 'The endpoint is too long')
-        .required('The endpoint is required')
+        .required('The endpoint is required'),
     })
-  }
+  },
 }

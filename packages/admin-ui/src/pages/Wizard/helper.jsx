@@ -15,7 +15,7 @@ import Welcome from './components/Welcome'
 const getConfiguredCoins = (config, crypto) => {
   const wallet = fromNamespace(namespaces.WALLETS, config)
   return R.filter(it =>
-    WalletSchema.isValidSync(fromNamespace(it.code, wallet))
+    WalletSchema.isValidSync(fromNamespace(it.code, wallet)),
   )(crypto)
 }
 
@@ -25,7 +25,7 @@ const hasValidWallet = (config, crypto) => {
 
   const hasValidConfig = R.compose(
     R.any(R.identity),
-    R.map(it => WalletSchema.isValidSync(it))
+    R.map(it => WalletSchema.isValidSync(it)),
   )(coins)
 
   return hasValidConfig
@@ -60,7 +60,7 @@ const getWizardStep = (config, crypto) => {
 const STEPS = [
   {
     id: 'welcome',
-    Component: Welcome
+    Component: Welcome,
   },
   {
     id: 'wallet',
@@ -69,7 +69,7 @@ const STEPS = [
     subtitle: 'Wallet settings',
     text: `Your wallet settings are the first step for this wizard. 
     We'll start by setting up one of cryptocurrencies to get you up and running,
-    but you can later set up as many as you want.`
+    but you can later set up as many as you want.`,
   },
   {
     id: 'locale',
@@ -78,7 +78,7 @@ const STEPS = [
     subtitle: 'Locales',
     text: `From the Locales panel, you can define default settings
     that will be applied to all machines you add to your network later on.
-    These settings may be overridden for specific machines in the Overrides section.`
+    These settings may be overridden for specific machines in the Overrides section.`,
   },
   {
     id: 'twilio',
@@ -93,7 +93,7 @@ const STEPS = [
         You'll need to configure Twilio if you're offering cash-out or any
         compliance options
       </>
-    )
+    ),
   },
   {
     id: 'commissions',
@@ -105,8 +105,8 @@ const STEPS = [
           you'll later add to your network. Default settings keep you from
           having to enter the same values everytime you add a new machine. Once
           a machine is added, you may override these values per machine and per
-          cryptocurrency in the overrides section.`
-  }
+          cryptocurrency in the overrides section.`,
+  },
   // {
   //   id: 'notifications',
   //   Component: Notifications,

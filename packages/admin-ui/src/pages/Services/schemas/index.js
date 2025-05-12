@@ -48,7 +48,7 @@ const schemas = (markets = {}) => {
     [trongrid.code]: trongrid,
     [binance.code]: binance,
     [bitfinex.code]: bitfinex,
-    [sumsub.code]: sumsub
+    [sumsub.code]: sumsub,
   }
 }
 

@@ -1,9 +1,9 @@
-@import "./fonts.css";
+@import './fonts.css';
 
 /* TODO remove important */
 @layer theme, base, mui, components, utilities;
-@import "tailwindcss/theme.css" layer(theme);
-@import "tailwindcss/utilities.css" layer(utilities) important;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities) important;
 
 :root {
   --zodiac: #1b2559;
@@ -11,7 +11,6 @@
   --spring2: #44e188;
   --spring3: #ecfbef;
   --spring4: #3fd07e;
-
 
   --comet: #5f668a;
   --comet2: #72799d;
@@ -27,7 +26,7 @@
 
   --java: #16d6d3;
   --neon: #5a67ff;
-  --malachite: #00CD5A;
+  --malachite: #00cd5a;
   --orange-yellow: #ffcc00;
 
   --mont: 'Mont';
@@ -110,14 +109,14 @@ html {
 }
 
 a::-moz-focus-inner,
-input[type="submit"]::-moz-focus-inner,
-input[type="button"]::-moz-focus-inner {
+input[type='submit']::-moz-focus-inner,
+input[type='button']::-moz-focus-inner {
   border: 0;
 }
 
 a::-moz-focus-inner,
-input[type="submit"]::-moz-focus-inner,
-input[type="button"]::-moz-focus-inner {
+input[type='submit']::-moz-focus-inner,
+input[type='button']::-moz-focus-inner {
   border: 0;
 }
 

@@ -28,8 +28,8 @@ const Reset2FAModal = ({ state, dispatch, user, requiresConfirmation }) => {
     {
       onCompleted: ({ createReset2FAToken: token }) => {
         setReset2FAUrl(urlResolver(`/reset2fa?t=${token.token}`))
-      }
-    }
+      },
+    },
   )
 
   const [confirmation, setConfirmation] = useState(null)
@@ -40,22 +40,22 @@ const Reset2FAModal = ({ state, dispatch, user, requiresConfirmation }) => {
       createReset2FAToken({
         variables: {
           confirmationCode: confirmation,
-          userID: user?.id
-        }
+          userID: user?.id,
+        },
       })
   }, [
     confirmation,
     createReset2FAToken,
     requiresConfirmation,
     state.showReset2FAModal,
-    user?.id
+    user?.id,
   ])
 
   const handleClose = () => {
     setConfirmation(null)
     dispatch({
       type: 'close',
-      payload: 'showReset2FAModal'
+      payload: 'showReset2FAModal',
     })
   }
 

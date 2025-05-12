@@ -10,7 +10,7 @@ import {
   lastDayOfMonth,
   startOfMonth,
   startOfWeek,
-  sub
+  sub,
 } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -24,7 +24,7 @@ const Calendar = ({ minDate, maxDate, handleSelect, ...props }) => {
   const [currentDisplayedMonth, setCurrentDisplayedMonth] = useState(new Date())
 
   const weekdays = Array.from(Array(7)).map((_, i) =>
-    format('EEEEE', add({ days: i }, startOfWeek(new Date())))
+    format('EEEEE', add({ days: i }, startOfWeek(new Date()))),
   )
 
   const monthLength = month => getDaysInMonth(month)
@@ -33,21 +33,21 @@ const Calendar = ({ minDate, maxDate, handleSelect, ...props }) => {
     const lastMonth = sub({ months: 1 }, month)
     const lastMonthRange = R.range(0, getDay(startOfMonth(month))).reverse()
     const lastMonthDays = R.map(i =>
-      sub({ days: i }, lastDayOfMonth(lastMonth))
+      sub({ days: i }, lastDayOfMonth(lastMonth)),
     )(lastMonthRange)
 
     const thisMonthRange = R.range(0, monthLength(month))
     const thisMonthDays = R.map(i => add({ days: i }, startOfMonth(month)))(
-      thisMonthRange
+      thisMonthRange,
     )
 
     const nextMonth = add({ months: 1 }, month)
     const nextMonthRange = R.range(
       0,
-      42 - lastMonthDays.length - thisMonthDays.length
+      42 - lastMonthDays.length - thisMonthDays.length,
     )
     const nextMonthDays = R.map(i => add({ days: i }, startOfMonth(nextMonth)))(
-      nextMonthRange
+      nextMonthRange,
     )
 
     return R.concat(R.concat(lastMonthDays, thisMonthDays), nextMonthDays)
@@ -63,7 +63,7 @@ const Calendar = ({ minDate, maxDate, handleSelect, ...props }) => {
         isSameMonth(minDate, prevMonth) ||
           differenceInMonths(minDate, prevMonth) > 0
           ? prevMonth
-          : currentDisplayedMonth
+          : currentDisplayedMonth,
       )
     }
   }
@@ -75,7 +75,7 @@ const Calendar = ({ minDate, maxDate, handleSelect, ...props }) => {
         isSameMonth(maxDate, nextMonth) ||
           differenceInMonths(nextMonth, maxDate) > 0
           ? nextMonth
-          : currentDisplayedMonth
+          : currentDisplayedMonth,
       )
     }
   }
@@ -91,7 +91,7 @@ const Calendar = ({ minDate, maxDate, handleSelect, ...props }) => {
         <span>
           {`${format('MMMM', currentDisplayedMonth)} ${format(
             'yyyy',
-            currentDisplayedMonth
+            currentDisplayedMonth,
           )}`}
         </span>
         <button

@@ -12,7 +12,7 @@ const CashUnitDetails = ({
   bills,
   currency,
   config,
-  hideMachineData = false
+  hideMachineData = false,
 }) => {
   const billCount = R.countBy(it => it.fiat)(bills)
   const fillingPercentageSettings = fromNamespace('notifications', config)

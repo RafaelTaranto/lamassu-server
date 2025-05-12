@@ -7,7 +7,7 @@ const Table = memo(({ className, children, ...props }) => {
       {...props}
       className={classnames(
         'table-fixed border-separate border-spacing-0',
-        className
+        className,
       )}>
       {children}
     </table>

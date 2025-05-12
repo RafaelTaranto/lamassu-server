@@ -18,7 +18,7 @@ const VolumeOverTimeGraphHeader = ({
   selectedMachine,
   handleMachineChange,
   timezone,
-  currency
+  currency,
 }) => {
   const [logarithmic, setLogarithmic] = useState()
 
@@ -42,7 +42,7 @@ const VolumeOverTimeGraphHeader = ({
           strokeLinecap="round"
         />
       </svg>
-    )
+    ),
   }
 
   return (

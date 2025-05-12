@@ -90,8 +90,8 @@ const PaperWalletDialog = ({ onConfirmed, onDissmised, open, props }) => {
           borderRadius: 8,
           minWidth: 656,
           bottom: 125,
-          right: 7
-        }
+          right: 7,
+        },
       }}
       {...props}>
       <div className="p-2">
@@ -136,20 +136,20 @@ const Blacklist = () => {
       setErrorMsg(errorMessage)
     },
     onCompleted: () => setDeleteDialog(false),
-    refetchQueries: () => ['getBlacklistData']
+    refetchQueries: () => ['getBlacklistData'],
   })
 
   const [addEntry] = useMutation(ADD_ROW, {
-    refetchQueries: () => ['getBlacklistData']
+    refetchQueries: () => ['getBlacklistData'],
   })
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const [editMessage] = useMutation(EDIT_BLACKLIST_MESSAGE, {
     onError: e => setEditMessageError(e),
-    refetchQueries: () => ['getBlacklistData']
+    refetchQueries: () => ['getBlacklistData'],
   })
 
   const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
@@ -172,7 +172,7 @@ const Blacklist = () => {
 
   const handleConfirmDialog = confirm => {
     addressReuseSave({
-      enablePaperWalletOnly: confirm
+      enablePaperWalletOnly: confirm,
     })
     setConfirmDialog(false)
   }
@@ -193,6 +193,7 @@ const Blacklist = () => {
         setErrorMsg(`Server error${': ' + res?.errors[0]?.message}`)
       }
     } catch (e) {
+      console.error(e)
       setErrorMsg('Server error')
     }
   }
@@ -201,8 +202,8 @@ const Blacklist = () => {
     editMessage({
       variables: {
         id: r.id,
-        content: r.content
-      }
+        content: r.content,
+      },
     })
   }
 
@@ -222,8 +223,8 @@ const Blacklist = () => {
             text: 'Advanced settings',
             icon: SettingsIcon,
             inverseIcon: ReverseSettingsIcon,
-            toggle: setAdvancedSettings
-          }
+            toggle: setAdvancedSettings,
+          },
         ]}>
         {!advancedSettings && (
           <div className="flex items-center justify-end">
@@ -234,7 +235,7 @@ const Blacklist = () => {
                 onChange={e =>
                   enablePaperWalletOnly
                     ? addressReuseSave({
-                        enablePaperWalletOnly: e.target.checked
+                        enablePaperWalletOnly: e.target.checked,
                       })
                     : setConfirmDialog(true)
                 }

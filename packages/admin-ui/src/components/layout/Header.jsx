@@ -177,16 +177,16 @@ const Header = memo(({ tree, user }) => {
                       name: 'offset',
                       enabled: true,
                       options: {
-                        offset: ['100vw', '100vw']
-                      }
+                        offset: ['100vw', '100vw'],
+                      },
                     },
                     {
                       name: 'preventOverflow',
                       enabled: true,
                       options: {
-                        rootBoundary: 'viewport'
-                      }
-                    }
+                        rootBoundary: 'viewport',
+                      },
+                    },
                   ]}>
                   <NotificationCenter
                     popperRef={popperRef}

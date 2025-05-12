@@ -17,11 +17,11 @@ const NoteEdit = ({ note, cancel, edit, timezone }) => {
   const formRef = useRef()
 
   const validationSchema = Yup.object().shape({
-    content: Yup.string()
+    content: Yup.string(),
   })
 
   const initialValues = {
-    content: note.content
+    content: note.content,
   }
 
   return (
@@ -33,8 +33,8 @@ const NoteEdit = ({ note, cancel, edit, timezone }) => {
             { delimited: ', ' },
             intervalToDuration({
               start: toTimezone(new Date(note.lastEditedAt), timezone),
-              end: toTimezone(new Date(), timezone)
-            })
+              end: toTimezone(new Date(), timezone),
+            }),
           )}
           {` ago`}
         </P>
@@ -74,7 +74,7 @@ const NoteEdit = ({ note, cancel, edit, timezone }) => {
           edit({
             noteId: note.id,
             newContent: content,
-            oldContent: note.content
+            oldContent: note.content,
           })
         }
         innerRef={formRef}>

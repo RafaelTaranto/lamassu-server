@@ -7,5 +7,5 @@ export const isLoggedIn = userData =>
 
 export const ROLES = {
   USER: 'user',
-  SUPERUSER: 'superuser'
+  SUPERUSER: 'superuser',
 }

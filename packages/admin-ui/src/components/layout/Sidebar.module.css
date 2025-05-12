@@ -39,7 +39,7 @@
 }
 
 .link::after {
-  content: "";
+  content: '';
   display: block;
   background: var(--zodiac);
   width: 4px;

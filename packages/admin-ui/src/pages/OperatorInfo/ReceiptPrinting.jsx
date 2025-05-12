@@ -24,7 +24,7 @@ const ReceiptPrinting = memo(({ wizard }) => {
   const { data } = useQuery(GET_CONFIG)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const saveSwitch = object => {
@@ -32,15 +32,15 @@ const ReceiptPrinting = memo(({ wizard }) => {
       variables: {
         config: toNamespace(
           namespaces.RECEIPT,
-          R.mergeRight(receiptPrintingConfig, object)
-        )
-      }
+          R.mergeRight(receiptPrintingConfig, object),
+        ),
+      },
     })
   }
 
   const save = it =>
     saveConfig({
-      variables: { config: toNamespace(namespaces.RECEIPT, it) }
+      variables: { config: toNamespace(namespaces.RECEIPT, it) },
     })
 
   const receiptPrintingConfig =
@@ -76,36 +76,36 @@ const ReceiptPrinting = memo(({ wizard }) => {
         elements={[
           {
             name: 'operatorWebsite',
-            display: 'Operator website'
+            display: 'Operator website',
           },
           {
             name: 'operatorEmail',
-            display: 'Operator email'
+            display: 'Operator email',
           },
           {
             name: 'operatorPhone',
-            display: 'Operator phone'
+            display: 'Operator phone',
           },
           {
             name: 'companyNumber',
-            display: 'Company registration number'
+            display: 'Company registration number',
           },
           {
             name: 'machineLocation',
-            display: 'Machine location'
+            display: 'Machine location',
           },
           {
             name: 'customerNameOrPhoneNumber',
-            display: 'Customer name or phone number (if known)'
+            display: 'Customer name or phone number (if known)',
           },
           {
             name: 'exchangeRate',
-            display: 'Exchange rate'
+            display: 'Exchange rate',
           },
           {
             name: 'addressQRCode',
-            display: 'Address QR code'
-          }
+            display: 'Address QR code',
+          },
         ]}
         save={save}
       />

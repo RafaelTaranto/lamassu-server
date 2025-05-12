@@ -10,7 +10,7 @@ const Link = memo(
       [classes.primary]: color === 'primary',
       [classes.secondary]: color === 'secondary',
       [classes.noColor]: color === 'noColor',
-      [classes.action]: color === 'action'
+      [classes.action]: color === 'action',
     }
 
     return (
@@ -21,7 +21,7 @@ const Link = memo(
         {children}
       </button>
     )
-  }
+  },
 )
 
 export default Link

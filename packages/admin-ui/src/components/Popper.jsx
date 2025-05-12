@@ -14,7 +14,7 @@ const Popover = ({ children, bgColor = white, className, ...props }) => {
     top: ['bottom'],
     bottom: ['top'],
     left: ['right'],
-    right: ['left']
+    right: ['left'],
   }
 
   const modifiers = [
@@ -22,36 +22,36 @@ const Popover = ({ children, bgColor = white, className, ...props }) => {
       name: 'flip',
       enabled: R.defaultTo(false, props.flip),
       options: {
-        allowedAutoPlacements: flipPlacements[props.placement]
-      }
+        allowedAutoPlacements: flipPlacements[props.placement],
+      },
     },
     {
       name: 'preventOverflow',
       enabled: true,
       options: {
-        rootBoundary: 'scrollParent'
-      }
+        rootBoundary: 'scrollParent',
+      },
     },
     {
       name: 'offset',
       enabled: true,
       options: {
-        offset: [0, 10]
-      }
+        offset: [0, 10],
+      },
     },
     {
       name: 'arrow',
       enabled: R.defaultTo(true, props.showArrow),
       options: {
-        element: arrowRef
-      }
+        element: arrowRef,
+      },
     },
     {
       name: 'computeStyles',
       options: {
-        gpuAcceleration: false
-      }
-    }
+        gpuAcceleration: false,
+      },
+    },
   ]
 
   return (

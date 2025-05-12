@@ -42,7 +42,7 @@ const SessionManagement = () => {
   const { data: tknResponse, loading: sessionsLoading } = useQuery(GET_SESSIONS)
 
   const [deleteSession] = useMutation(DELETE_SESSION, {
-    refetchQueries: () => ['sessions']
+    refetchQueries: () => ['sessions'],
   })
 
   const { data: configResponse, loading: configLoading } = useQuery(GET_DATA)
@@ -56,7 +56,7 @@ const SessionManagement = () => {
       width: 207,
       textAlign: 'left',
       size: 'sm',
-      view: s => s.sess.user.username
+      view: s => s.sess.user.username,
     },
     {
       header: 'Last known use',
@@ -67,7 +67,7 @@ const SessionManagement = () => {
         if (R.isNil(s.sess.ua)) return 'No Record'
         const ua = parser(s.sess.ua)
         return `${ua.browser.name} ${ua.browser.version} on ${ua.os.name} ${ua.os.version}`
-      }
+      },
     },
     {
       header: 'Last known location',
@@ -76,7 +76,7 @@ const SessionManagement = () => {
       size: 'sm',
       view: s => {
         return isLocalhost(s.sess.ipAddress) ? 'This device' : s.sess.ipAddress
-      }
+      },
     },
     {
       header: 'Expiration date',
@@ -87,8 +87,8 @@ const SessionManagement = () => {
         `${formatDate(s.expire, timezone, 'yyyy-MM-dd')} ${formatDate(
           s.expire,
           timezone,
-          'HH:mm:ss'
-        )}`
+          'HH:mm:ss',
+        )}`,
     },
     {
       header: '',
@@ -104,8 +104,8 @@ const SessionManagement = () => {
             <DeleteIcon />
           </SvgIcon>
         </IconButton>
-      )
-    }
+      ),
+    },
   ]
 
   return (

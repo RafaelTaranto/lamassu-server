@@ -50,7 +50,7 @@ const ImagePopper = memo(
         </div>
       </ClickAwayListener>
     )
-  }
+  },
 )
 
 export default ImagePopper

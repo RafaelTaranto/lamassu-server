@@ -12,13 +12,13 @@ export default {
       display: 'API token',
       component: TextInput,
       face: true,
-      long: true
+      long: true,
     },
     {
       code: 'confidenceFactor',
       display: 'Confidence factor',
       component: NumberInput,
-      face: true
+      face: true,
     },
     {
       code: 'rbf',
@@ -30,10 +30,10 @@ export default {
           'Lower the confidence of RBF transactions (Available when using bitcoind.)',
         label: 'Lower the confidence of RBF transactions',
         requirement: 'bitcoind',
-        rightSideLabel: true
+        rightSideLabel: true,
       },
-      face: true
-    }
+      face: true,
+    },
   ],
   getValidationSchema: () => {
     return Yup.object().shape({
@@ -44,7 +44,7 @@ export default {
         .integer('The confidence factor must be an integer')
         .min(0, 'The confidence factor must be between 0 and 100')
         .max(100, 'The confidence factor must be between 0 and 100')
-        .required('The confidence factor is required')
+        .required('The confidence factor is required'),
     })
-  }
+  },
 }

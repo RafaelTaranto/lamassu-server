@@ -30,39 +30,39 @@ const PREFILL = {
         name: 'has-code',
         message: 'The confirmation code is missing from the message!',
         exclusive: false,
-        test: value => value?.match(/#code/g)?.length > 0
+        test: value => value?.match(/#code/g)?.length > 0,
       })
       .test({
         name: 'has-single-code',
         message: 'There should be a single confirmation code!',
         exclusive: false,
-        test: value => value?.match(/#code/g)?.length === 1
-      })
+        test: value => value?.match(/#code/g)?.length === 1,
+      }),
   },
   cashOutDispenseReady: {
-    validator: Yup.string().required('The message content is required!').trim()
+    validator: Yup.string().required('The message content is required!').trim(),
   },
   smsReceipt: {
-    validator: Yup.string().trim()
-  }
+    validator: Yup.string().trim(),
+  },
 }
 
 const CHIPS = {
   smsCode: [
     { code: '#code', display: 'Confirmation code', obligatory: true },
-    { code: '#timestamp', display: 'Timestamp', obligatory: false }
+    { code: '#timestamp', display: 'Timestamp', obligatory: false },
   ],
   cashOutDispenseReady: [
-    { code: '#timestamp', display: 'Timestamp', obligatory: false }
+    { code: '#timestamp', display: 'Timestamp', obligatory: false },
   ],
-  smsReceipt: [{ code: '#timestamp', display: 'Timestamp', obligatory: false }]
+  smsReceipt: [{ code: '#timestamp', display: 'Timestamp', obligatory: false }],
 }
 
 const DEFAULT_MESSAGES = {
   smsCode: 'Your cryptomat code: #code',
   cashOutDispenseReady:
     'Your cash is waiting! Go to the Cryptomat and press Redeem within 24 hours. [#timestamp]',
-  smsReceipt: ''
+  smsReceipt: '',
 }
 
 const SMSNoticesModal = ({
@@ -70,18 +70,18 @@ const SMSNoticesModal = ({
   onClose,
   sms,
   creationError,
-  submit
+  submit,
 }) => {
   const initialValues = {
     event: !R.isNil(sms) ? sms.event : '',
-    message: !R.isNil(sms) ? sms.message : ''
+    message: !R.isNil(sms) ? sms.message : '',
   }
 
   const validationSchema = Yup.object().shape({
     event: Yup.string().required('An event is required!'),
     message:
       PREFILL[sms?.event]?.validator ??
-      Yup.string().required('The message content is required!').trim()
+      Yup.string().required('The message content is required!').trim(),
   })
 
   const handleSubmit = values => {
@@ -90,14 +90,14 @@ const SMSNoticesModal = ({
           variables: {
             id: sms.id,
             event: values.event,
-            message: values.message
-          }
+            message: values.message,
+          },
         })
       : submit({
           variables: {
             event: values.event,
-            message: values.message
-          }
+            message: values.message,
+          },
         })
     onClose()
   }
@@ -160,8 +160,8 @@ const SMSNoticesModal = ({
                               'message',
                               values.message.concat(
                                 R.last(values.message) === ' ' ? '' : ' ',
-                                ite.code
-                              )
+                                ite.code,
+                              ),
                             )
                           }}
                         />

@@ -1,4 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
 
@@ -30,12 +30,12 @@ const SAVE_CONFIG = gql`
 const Commissions = ({ name: SCREEN_KEY, id: deviceId }) => {
   const { data, loading } = useQuery(GET_DATA)
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    refetchQueries: () => ['getData']
+    refetchQueries: () => ['getData'],
   })
 
   const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)
   const currency = R.path(['fiatCurrency'])(
-    fromNamespace(namespaces.LOCALE)(data?.config)
+    fromNamespace(namespaces.LOCALE)(data?.config),
   )
 
   const saveOverrides = it => {
@@ -49,7 +49,7 @@ const Commissions = ({ name: SCREEN_KEY, id: deviceId }) => {
     const overrides = config.overrides
       ? R.concat(
           R.filter(R.propEq('machine', 'ALL_MACHINES'), config.overrides),
-          R.filter(R.propEq('machine', deviceId), config.overrides)
+          R.filter(R.propEq('machine', deviceId), config.overrides),
         )
       : []
 
@@ -64,7 +64,7 @@ const Commissions = ({ name: SCREEN_KEY, id: deviceId }) => {
             cashOut: config.cashOut,
             fixedFee: config.fixedFee,
             minimumTx: config.minimumTx,
-            cashOutFixedFee: config.cashOutFixedFee
+            cashOutFixedFee: config.cashOutFixedFee,
           },
           R.project(
             ['cashIn', 'cashOut', 'fixedFee', 'minimumTx', 'cashOutFixedFee'],
@@ -72,11 +72,11 @@ const Commissions = ({ name: SCREEN_KEY, id: deviceId }) => {
               o =>
                 R.includes(coin.code, o.cryptoCurrencies) ||
                 R.includes('ALL_COINS', o.cryptoCurrencies),
-              overrides
-            )
-          )
+              overrides,
+            ),
+          ),
         ),
-      data.cryptoCurrencies
+      data.cryptoCurrencies,
     )
   }
 

@@ -1,6 +1,5 @@
 import Paper from '@mui/material/Paper'
 import React, { useReducer } from 'react'
-import { H5 } from 'src/components/typography'
 import Logo from 'src/styling/icons/menu/logo.svg?react'
 
 import Input2FAState from './Input2FAState'
@@ -18,7 +17,7 @@ const initialState = {
   clientField: '',
   passwordField: '',
   rememberMeField: false,
-  loginState: STATES.LOGIN
+  loginState: STATES.LOGIN,
 }
 
 const reducer = (state, action) => {

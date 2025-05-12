@@ -12,14 +12,14 @@ const CustomerNotes = ({
   createNote,
   deleteNote,
   editNote,
-  timezone
+  timezone,
 }) => {
   const [openModal, setOpenModal] = useState(false)
   const [editing, setEditing] = useState(null)
 
   const customerNotes = R.sort(
     (a, b) => new Date(b?.created).getTime() - new Date(a?.created).getTime(),
-    customer.notes ?? []
+    customer.notes ?? [],
   )
 
   const handleModalClose = () => {
@@ -39,7 +39,7 @@ const CustomerNotes = ({
     if (!R.equals(it.newContent, it.oldContent)) {
       editNote({
         noteId: it.noteId,
-        newContent: it.newContent
+        newContent: it.newContent,
       })
     }
     setEditing(null)

@@ -2,7 +2,7 @@ import {
   inputFontSize,
   inputFontSizeLg,
   inputFontSizeSm,
-  inputFontWeightBold
+  inputFontWeightBold,
 } from './variables'
 
 const respondTo = breakpoint =>
@@ -20,7 +20,7 @@ const bySize = size => {
 }
 
 const bold = {
-  fontWeight: inputFontWeightBold
+  fontWeight: inputFontWeightBold,
 }
 
 export { respondTo, bySize, bold }

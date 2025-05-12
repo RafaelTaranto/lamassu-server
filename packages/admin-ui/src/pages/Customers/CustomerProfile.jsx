@@ -16,7 +16,7 @@ import DataIcon from 'src/styling/icons/button/data/zodiac.svg?react'
 import { ActionButton } from 'src/components/buttons'
 import {
   OVERRIDE_AUTHORIZED,
-  OVERRIDE_REJECTED
+  OVERRIDE_REJECTED,
 } from 'src/pages/Customers/components/consts'
 // TODO: Enable for next release
 // import DiscountReversedIcon from 'src/styling/icons/button/discount/white.svg?react'
@@ -30,7 +30,7 @@ import {
   CustomerDetails,
   TransactionsList,
   CustomerSidebar,
-  Wizard
+  Wizard,
 } from './components'
 import { getFormattedPhone, getName, formatPhotosData } from './helper'
 
@@ -298,67 +298,67 @@ const CustomerProfile = memo(() => {
   const {
     data: customerResponse,
     refetch: getCustomer,
-    loading: customerLoading
+    loading: customerLoading,
   } = useQuery(GET_CUSTOMER, {
-    variables: { customerId }
+    variables: { customerId },
   })
 
   const { data: configResponse, loading: configLoading } = useQuery(GET_DATA)
 
   const { data: activeCustomRequests } = useQuery(GET_ACTIVE_CUSTOM_REQUESTS, {
     variables: {
-      onlyEnabled: true
-    }
+      onlyEnabled: true,
+    },
   })
 
   const [setCustomEntry] = useMutation(SET_CUSTOM_ENTRY, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [editCustomEntry] = useMutation(EDIT_CUSTOM_ENTRY, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [replaceCustomerPhoto] = useMutation(REPLACE_CUSTOMER_PHOTO, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [editCustomerData] = useMutation(EDIT_CUSTOMER, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [deleteCustomerEditedData] = useMutation(DELETE_EDITED_CUSTOMER, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [setCustomer] = useMutation(SET_CUSTOMER, {
     onCompleted: () => {
       getCustomer()
     },
-    onError: error => setError(error)
+    onError: error => setError(error),
   })
 
   const [authorizeCustomRequest] = useMutation(SET_AUTHORIZED_REQUEST, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [setCustomerCustomInfoRequest] = useMutation(
     SET_CUSTOMER_CUSTOM_INFO_REQUEST,
     {
-      onCompleted: () => getCustomer()
-    }
+      onCompleted: () => getCustomer(),
+    },
   )
 
   const [createNote] = useMutation(CREATE_NOTE, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [deleteNote] = useMutation(DELETE_NOTE, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [editNote] = useMutation(EDIT_NOTE, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const saveCustomEntry = it => {
@@ -366,8 +366,8 @@ const CustomerProfile = memo(() => {
       variables: {
         customerId,
         label: it.title,
-        value: it.data
-      }
+        value: it.data,
+      },
     })
     setWizard(null)
   }
@@ -377,31 +377,31 @@ const CustomerProfile = memo(() => {
       variables: {
         customerId,
         fieldId: it.fieldId,
-        value: it.value
-      }
+        value: it.value,
+      },
     })
   }
 
   const [enableTestCustomer] = useMutation(ENABLE_TEST_CUSTOMER, {
     variables: { customerId },
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [disableTestCustomer] = useMutation(DISABLE_TEST_CUSTOMER, {
     variables: { customerId },
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const [checkAgainstSanctions] = useLazyQuery(CHECK_AGAINST_SANCTIONS, {
-    onCompleted: () => getCustomer()
+    onCompleted: () => getCustomer(),
   })
 
   const updateCustomer = it =>
     setCustomer({
       variables: {
         customerId,
-        customerInput: it
-      }
+        customerInput: it,
+      },
     })
 
   const replacePhoto = it => {
@@ -409,8 +409,8 @@ const CustomerProfile = memo(() => {
       variables: {
         customerId,
         newPhoto: it.newPhoto,
-        photoType: it.photoType
-      }
+        photoType: it.photoType,
+      },
     })
     setWizard(null)
   }
@@ -419,8 +419,8 @@ const CustomerProfile = memo(() => {
     editCustomerData({
       variables: {
         customerId,
-        customerEdit: it
-      }
+        customerEdit: it,
+      },
     })
     setWizard(null)
   }
@@ -429,8 +429,8 @@ const CustomerProfile = memo(() => {
     deleteCustomerEditedData({
       variables: {
         customerId,
-        customerEdit: it
-      }
+        customerEdit: it,
+      },
     })
 
   const createCustomerNote = it =>
@@ -438,23 +438,23 @@ const CustomerProfile = memo(() => {
       variables: {
         customerId,
         title: it.title,
-        content: it.content
-      }
+        content: it.content,
+      },
     })
 
   const deleteCustomerNote = it =>
     deleteNote({
       variables: {
-        noteId: it.noteId
-      }
+        noteId: it.noteId,
+      },
     })
 
   const editCustomerNote = it =>
     editNote({
       variables: {
         noteId: it.noteId,
-        newContent: it.newContent
-      }
+        newContent: it.newContent,
+      },
     })
 
   const onClickSidebarItem = code => setClickedItem(code)
@@ -464,7 +464,7 @@ const CustomerProfile = memo(() => {
   const customerData = R.path(['customer'])(customerResponse) ?? []
   const rawTransactions = R.path(['transactions'])(customerData) ?? []
   const sortedTransactions = R.sort(R.descend(R.prop('cryptoAtoms')))(
-    rawTransactions
+    rawTransactions,
   )
   const name = getName(customerData)
   const blocked =
@@ -477,12 +477,12 @@ const CustomerProfile = memo(() => {
   const isPhotos = clickedItem === 'photos'
 
   const frontCameraData = R.pick(['frontCameraPath', 'frontCameraAt'])(
-    customerData
+    customerData,
   )
   const txPhotosData =
     sortedTransactions &&
     R.map(R.pick(['id', 'txCustomerPhotoPath', 'txCustomerPhotoAt']))(
-      sortedTransactions
+      sortedTransactions,
     )
 
   const photosData = formatPhotosData(R.append(frontCameraData, txPhotosData))
@@ -491,8 +491,8 @@ const CustomerProfile = memo(() => {
         {
           photoDir: 'id-card-photo',
           path: customerData.idCardPhotoPath,
-          date: customerData.idCardPhotoAt
-        }
+          date: customerData.idCardPhotoAt,
+        },
       ]
     : []
 
@@ -503,7 +503,7 @@ const CustomerProfile = memo(() => {
   const customInfoRequirementOptions =
     activeCustomRequests?.customInfoRequests?.map(it => ({
       value: it.id,
-      display: it.customRequest.name
+      display: it.customRequest.name,
     })) ?? []
 
   const email = R.path(['email'])(customerData)
@@ -565,7 +565,7 @@ const CustomerProfile = memo(() => {
                       InverseIcon={AuthorizeReversedIcon}
                       onClick={() =>
                         updateCustomer({
-                          suspendedUntil: null
+                          suspendedUntil: null,
                         })
                       }>
                       {`Unsuspend customer`}
@@ -582,7 +582,7 @@ const CustomerProfile = memo(() => {
                       updateCustomer({
                         authorizedOverride: blocked
                           ? OVERRIDE_AUTHORIZED
-                          : OVERRIDE_REJECTED
+                          : OVERRIDE_REJECTED,
                       })
                     }>
                     {`${blocked ? 'Authorize' : 'Block'} customer`}

@@ -12,19 +12,19 @@ const schema = {
     {
       code: 'apiToken',
       display: 'API Token',
-      component: SecretInput
+      component: SecretInput,
     },
     {
       code: 'secretKey',
       display: 'Secret Key',
-      component: SecretInput
+      component: SecretInput,
     },
     {
       code: 'applicantLevel',
       display: 'Applicant Level',
       component: TextInput,
-      face: true
-    }
+      face: true,
+    },
   ],
   getValidationSchema: account => {
     return Yup.object().shape({
@@ -36,9 +36,9 @@ const schema = {
         .test(secretTest(account?.secretKey, 'secret key')),
       applicantLevel: Yup.string('The applicant level must be a string')
         .max(100, 'The applicant level is too long')
-        .required('The applicant level is required')
+        .required('The applicant level is required'),
     })
-  }
+  },
 }
 
 export default schema

@@ -7,7 +7,7 @@ import { MAX_NUMBER_OF_CASSETTES } from 'src/utils/constants'
 import {
   cashUnitCapacity,
   getCashUnitCapacity,
-  modelPrettifier
+  modelPrettifier,
 } from 'src/utils/machine'
 import { defaultToZero } from 'src/utils/number'
 
@@ -19,7 +19,7 @@ const MODAL_HEIGHT = 535
 
 const CASSETTE_FIELDS = R.map(
   it => `cassette${it}`,
-  R.range(1, MAX_NUMBER_OF_CASSETTES + 1)
+  R.range(1, MAX_NUMBER_OF_CASSETTES + 1),
 )
 
 const RECYCLER_FIELDS = [
@@ -28,7 +28,7 @@ const RECYCLER_FIELDS = [
   'recycler3',
   'recycler4',
   'recycler5',
-  'recycler6'
+  'recycler6',
 ]
 
 const canManuallyLoadRecyclers = ({ model }) => ['grandola'].includes(model)
@@ -36,7 +36,7 @@ const canManuallyLoadRecyclers = ({ model }) => ['grandola'].includes(model)
 const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
   const [{ step, config }, setState] = useState({
     step: 0,
-    config: { active: true }
+    config: { active: true },
   })
 
   const isCashOutDisabled =
@@ -60,7 +60,7 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
     if (isLastStep) {
       const wasCashboxEmptied = [
         config?.wasCashboxEmptied,
-        it?.wasCashboxEmptied
+        it?.wasCashboxEmptied,
       ].includes('YES')
 
       const cassettes = buildCashUnitObj(CASSETTE_FIELDS, it)
@@ -71,7 +71,7 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
       const cashUnits = {
         cashbox: wasCashboxEmptied ? 0 : machine?.cashUnits.cashbox,
         ...cassettes,
-        ...recyclers
+        ...recyclers,
       }
 
       save(machine.id, cashUnits)
@@ -80,7 +80,7 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
 
     setState({
       step: step + 1,
-      config: newConfig
+      config: newConfig,
     })
   }
 
@@ -102,11 +102,11 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
               modelPrettifier[machine.model]
             } maximum cassette capacity is ${getCashUnitCapacity(
               machine.model,
-              'cassette'
-            )} bills`
-          )
-      })
-    }))
+              'cassette',
+            )} bills`,
+          ),
+      }),
+    })),
   )
 
   const makeRecyclerSteps = R.pipe(
@@ -126,10 +126,10 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
             `${modelPrettifier[machine.model]}
               maximum recycler capacity is ${
                 cashUnitCapacity[machine.model].recycler
-              } bills`
-          )
-      })
-    }))
+              } bills`,
+          ),
+      }),
+    })),
   )
 
   const makeCassettesInitialValues = () =>
@@ -140,7 +140,7 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
             return acc
           },
           {},
-          R.range(1, numberOfCassettes + 1)
+          R.range(1, numberOfCassettes + 1),
         )
       : {}
 
@@ -153,7 +153,7 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
             return acc
           },
           {},
-          R.range(1, numberOfRecyclers + 1)
+          R.range(1, numberOfRecyclers + 1),
         )
       : {}
 
@@ -163,19 +163,19 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
   const steps = R.pipe(
     R.concat(
       makeRecyclerSteps(
-        canManuallyLoadRecyclers(machine) ? numberOfRecyclers : 0
-      )
+        canManuallyLoadRecyclers(machine) ? numberOfRecyclers : 0,
+      ),
     ),
     R.concat(makeCassetteSteps(isCashOutDisabled ? 0 : numberOfCassettes)),
     R.concat([
       {
         type: 'cashbox',
         schema: Yup.object().shape({
-          wasCashboxEmptied: Yup.string().required('Select one option.')
+          wasCashboxEmptied: Yup.string().required('Select one option.'),
         }),
-        cashoutRequired: false
-      }
-    ])
+        cashoutRequired: false,
+      },
+    ]),
   )([])
 
   return (

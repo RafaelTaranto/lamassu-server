@@ -7,7 +7,7 @@ import { labels as timezoneList } from 'src/utils/timezone-list'
 const getFields = (getData, names, onChange, auxElements = []) => {
   return R.filter(
     it => R.includes(it.name, names),
-    allFields(getData, onChange, auxElements)
+    allFields(getData, onChange, auxElements),
   )
 }
 
@@ -17,7 +17,7 @@ const allFields = (getData, onChange, auxElements = []) => {
 
     return R.compose(
       it => `${R.prop(code)(it)} ${it?.isBeta ? '(Beta)' : ''}`,
-      R.find(R.propEq(compare ?? 'code', it))
+      R.find(R.propEq(compare ?? 'code', it)),
     )(data)
   }
 
@@ -60,8 +60,8 @@ const allFields = (getData, onChange, auxElements = []) => {
         options: it =>
           R.concat(findSuggestion(it))(suggestionFilter(machineData)),
         valueProp: 'deviceId',
-        labelProp: 'name'
-      }
+        labelProp: 'name',
+      },
     },
     {
       name: 'country',
@@ -72,8 +72,8 @@ const allFields = (getData, onChange, auxElements = []) => {
       inputProps: {
         options: countryData,
         valueProp: 'code',
-        labelProp: 'display'
-      }
+        labelProp: 'display',
+      },
     },
     {
       name: 'fiatCurrency',
@@ -84,8 +84,8 @@ const allFields = (getData, onChange, auxElements = []) => {
       inputProps: {
         options: currencyData,
         valueProp: 'code',
-        labelProp: 'code'
-      }
+        labelProp: 'code',
+      },
     },
     {
       name: 'languages',
@@ -97,8 +97,8 @@ const allFields = (getData, onChange, auxElements = []) => {
         options: languageData,
         valueProp: 'code',
         labelProp: 'display',
-        multiple: true
-      }
+        multiple: true,
+      },
     },
     {
       name: 'cryptoCurrencies',
@@ -112,8 +112,8 @@ const allFields = (getData, onChange, auxElements = []) => {
         labelProp: 'codeLabel',
         multiple: true,
         optionsLimit: null,
-        onChange
-      }
+        onChange,
+      },
     },
     {
       name: 'timezone',
@@ -124,9 +124,9 @@ const allFields = (getData, onChange, auxElements = []) => {
       inputProps: {
         options: timezonesData,
         valueProp: 'code',
-        labelProp: 'label'
-      }
-    }
+        labelProp: 'label',
+      },
+    },
   ]
 }
 
@@ -137,7 +137,7 @@ const mainFields = (auxData, configureCoin) => {
     getData,
     ['country', 'fiatCurrency', 'languages', 'cryptoCurrencies', 'timezone'],
     configureCoin,
-    undefined
+    undefined,
   )
 }
 
@@ -148,7 +148,7 @@ const overrides = (auxData, auxElements, configureCoin) => {
     getData,
     ['machine', 'country', 'languages', 'cryptoCurrencies'],
     configureCoin,
-    auxElements
+    auxElements,
   )
 }
 
@@ -157,14 +157,14 @@ const LocaleSchema = Yup.object().shape({
   fiatCurrency: Yup.string().label('Fiat currency').required(),
   languages: Yup.array().label('Languages').required().min(1).max(4),
   cryptoCurrencies: Yup.array().label('Crypto currencies').required().min(1),
-  timezone: Yup.string().label('Timezone').required()
+  timezone: Yup.string().label('Timezone').required(),
 })
 
 const OverridesSchema = Yup.object().shape({
   machine: Yup.string().label('Machine').required(),
   country: Yup.string().label('Country').required(),
   languages: Yup.array().label('Languages').required().min(1).max(4),
-  cryptoCurrencies: Yup.array().label('Crypto currencies').required().min(1)
+  cryptoCurrencies: Yup.array().label('Crypto currencies').required().min(1),
 })
 
 const localeDefaults = {
@@ -172,14 +172,14 @@ const localeDefaults = {
   fiatCurrency: '',
   languages: [],
   cryptoCurrencies: [],
-  timezone: ''
+  timezone: '',
 }
 
 const overridesDefaults = {
   machine: '',
   country: '',
   languages: [],
-  cryptoCurrencies: []
+  cryptoCurrencies: [],
 }
 
 export {
@@ -188,5 +188,5 @@ export {
   LocaleSchema,
   OverridesSchema,
   localeDefaults,
-  overridesDefaults
+  overridesDefaults,
 }

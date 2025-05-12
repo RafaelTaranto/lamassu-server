@@ -27,10 +27,10 @@ const Upload = ({ type }) => {
       setData({
         preview: isImage
           ? URL.createObjectURL(R.head(acceptedData))
-          : R.head(acceptedData).name
+          : R.head(acceptedData).name,
       })
     },
-    [isImage, type, setFieldValue]
+    [isImage, type, setFieldValue],
   )
 
   const { getRootProps, getInputProps } = useDropzone({ onDrop })

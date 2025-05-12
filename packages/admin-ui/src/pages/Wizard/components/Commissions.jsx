@@ -23,7 +23,7 @@ function Commissions({ isActive, doContinue }) {
   const { data } = useQuery(GET_DATA)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    onCompleted: doContinue
+    onCompleted: doContinue,
   })
 
   const save = it => {
@@ -32,7 +32,7 @@ function Commissions({ isActive, doContinue }) {
   }
 
   const currency = R.path(['fiatCurrency'])(
-    fromNamespace(namespaces.LOCALE)(data?.config)
+    fromNamespace(namespaces.LOCALE)(data?.config),
   )
 
   const locale = fromNamespace(namespaces.LOCALE)(data?.config)

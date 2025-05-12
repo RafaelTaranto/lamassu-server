@@ -45,22 +45,22 @@ const validationSchema = Yup.object({
     .required('A password is required')
     .min(
       PASSWORD_MIN_LENGTH,
-      `Your password must contain at least ${PASSWORD_MIN_LENGTH} characters`
+      `Your password must contain at least ${PASSWORD_MIN_LENGTH} characters`,
     ),
   confirmPassword: Yup.string()
     .required('Please confirm the password')
-    .oneOf([Yup.ref('password')], 'Passwords must match')
+    .oneOf([Yup.ref('password')], 'Passwords must match'),
 })
 
 const initialValues = {
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
 }
 
 const initialState = {
   username: null,
   role: null,
-  result: ''
+  result: '',
 }
 
 const reducer = (state, action) => {
@@ -72,7 +72,7 @@ const getErrorMsg = (
   formikErrors,
   formikTouched,
   queryError,
-  mutationError
+  mutationError,
 ) => {
   if (!formikErrors || !formikTouched) return null
   if (queryError || mutationError) return 'Internal server error'
@@ -94,32 +94,32 @@ const Register = () => {
     onCompleted: ({ validateRegisterLink: info }) => {
       if (!info) {
         return dispatch({
-          type: 'failure'
+          type: 'failure',
         })
       }
       dispatch({
         type: 'success',
         payload: {
           username: info.username,
-          role: info.role
-        }
+          role: info.role,
+        },
       })
     },
     onError: () =>
       dispatch({
-        type: 'failure'
-      })
+        type: 'failure',
+      }),
   }
 
   const { error: queryError, loading } = useQuery(
     VALIDATE_REGISTER_LINK,
-    queryOptions
+    queryOptions,
   )
 
   const [register, { error: mutationError }] = useMutation(REGISTER, {
     onCompleted: ({ register: success }) => {
       if (success) history.push('/wizard', { fromAuthRegister: true })
-    }
+    },
   })
 
   return (
@@ -148,8 +148,8 @@ const Register = () => {
                         token: token,
                         username: state.username,
                         password: values.password,
-                        role: state.role
-                      }
+                        role: state.role,
+                      },
                     })
                   }}>
                   {({ errors, touched }) => (
@@ -175,14 +175,14 @@ const Register = () => {
                           errors,
                           touched,
                           queryError,
-                          mutationError
+                          mutationError,
                         ) && (
                           <P className="text-tomato">
                             {getErrorMsg(
                               errors,
                               touched,
                               queryError,
-                              mutationError
+                              mutationError,
                             )}
                           </P>
                         )}

@@ -60,7 +60,7 @@ const SystemStatus = ({ onReset, onExpand, size }) => {
 
   const machinesTableContainerClasses = {
     'h-55': !showAllItems,
-    'h-103': showAllItems
+    'h-103': showAllItems,
   }
   // const uptime = data?.uptime ?? [{}]
   return (

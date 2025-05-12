@@ -15,5 +15,5 @@ export {
   SecretInput,
   RadioGroup,
   CashCassetteInput,
-  Dropdown
+  Dropdown,
 }

@@ -12,8 +12,8 @@ const options = [
   {
     display: 'Space separation',
     subtitle: '(e.g. first and last name)',
-    code: 'spaceSeparation'
-  }
+    code: 'spaceSeparation',
+  },
 ]
 
 const TextEntry = () => {
@@ -22,7 +22,7 @@ const TextEntry = () => {
     'mt-0': true,
     'text-tomato':
       !R.path(['values', 'constraintType'])(context) &&
-      R.path(['errors', 'constraintType'])(context)
+      R.path(['errors', 'constraintType'])(context),
   }
 
   const getLabelInputs = () => {

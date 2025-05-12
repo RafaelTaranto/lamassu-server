@@ -1,4 +1,4 @@
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql } from '@apollo/client'
 import { getEquivalentCode } from '@lamassu/coins/lightUtils'
 import * as R from 'ramda'
 import React, { useState } from 'react'
@@ -41,7 +41,7 @@ const isConfigurable = it =>
 const ChooseExchange = ({ data: currentData, addData }) => {
   const { data } = useQuery(GET_CONFIG)
   const [saveAccounts] = useMutation(SAVE_ACCOUNTS, {
-    onCompleted: () => submit()
+    onCompleted: () => submit(),
   })
 
   const [selected, setSelected] = useState(null)
@@ -75,7 +75,7 @@ const ChooseExchange = ({ data: currentData, addData }) => {
     itbit:
       'https://support.lamassu.is/hc/en-us/articles/360026195032-itBit-trading',
     bitstamp:
-      'https://support.lamassu.is/hc/en-us/articles/115001206911-Bitstamp-trading'
+      'https://support.lamassu.is/hc/en-us/articles/115001206911-Bitstamp-trading',
   }
 
   return (
@@ -113,7 +113,9 @@ const ChooseExchange = ({ data: currentData, addData }) => {
             value={accounts[selected]}
             save={saveExchange(selected)}
             elements={schema[selected].elements}
-            validationSchema={schema[selected].getValidationSchema(accounts[selected])}
+            validationSchema={schema[selected].getValidationSchema(
+              accounts[selected],
+            )}
             buttonLabel={'Continue'}
             buttonClass={classes.formButton}
           />

@@ -25,16 +25,16 @@ const TransactionsList = ({ customer, data, loading }) => {
       size: 127,
       value: ifNotNull(
         customer.totalTxs,
-        `${Number.parseInt(customer.totalTxs)}`
-      )
+        `${Number.parseInt(customer.totalTxs)}`,
+      ),
     },
     {
       header: 'Transaction volume',
       size: 167,
       value: ifNotNull(
         customer.totalSpent,
-        `${Number.parseFloat(customer.totalSpent)} ${customer.lastTxFiatCode}`
-      )
+        `${Number.parseFloat(customer.totalSpent)} ${customer.lastTxFiatCode}`,
+      ),
     },
     {
       header: 'Last active',
@@ -43,7 +43,7 @@ const TransactionsList = ({ customer, data, loading }) => {
         !R.isNil(timezone) &&
         ((customer.lastActive &&
           formatDate(customer.lastActive, timezone, 'yyyy-MM-dd')) ??
-          '')
+          ''),
     },
     {
       header: 'Last transaction',
@@ -54,14 +54,14 @@ const TransactionsList = ({ customer, data, loading }) => {
           <LastTxIcon className="mr-3" />
           {`${Number.parseFloat(customer.lastTxFiat)} 
             ${customer.lastTxFiatCode}`}
-        </>
-      )
+        </>,
+      ),
     },
     {
       header: 'Last used machine',
       size: 198,
-      value: ifNotNull(lastUsedMachineName, <>{lastUsedMachineName}</>)
-    }
+      value: ifNotNull(lastUsedMachineName, <>{lastUsedMachineName}</>),
+    },
   ]
 
   const tableElements = [
@@ -75,12 +75,12 @@ const TransactionsList = ({ customer, data, loading }) => {
             <TxInIcon className="mr-3" />
           )}
         </>
-      )
+      ),
     },
     {
       header: 'Machine',
       width: 160,
-      view: R.path(['machineName'])
+      view: R.path(['machineName']),
     },
     {
       header: 'Transaction ID',
@@ -89,7 +89,7 @@ const TransactionsList = ({ customer, data, loading }) => {
         <CopyToClipboard className="font-museo whitespace-nowrap overflow-hidden text-ellipsis">
           {it.id}
         </CopyToClipboard>
-      )
+      ),
     },
     {
       header: 'Cash',
@@ -100,7 +100,7 @@ const TransactionsList = ({ customer, data, loading }) => {
           {`${Number.parseFloat(it.fiat)} `}
           <Label2 inline>{it.fiatCode}</Label2>
         </>
-      )
+      ),
     },
     {
       header: 'Crypto',
@@ -109,22 +109,22 @@ const TransactionsList = ({ customer, data, loading }) => {
       view: it => (
         <>
           {`${toUnit(new BigNumber(it.cryptoAtoms), it.cryptoCode).toFormat(
-            5
+            5,
           )} `}
           <Label2 inline>{it.cryptoCode}</Label2>
         </>
-      )
+      ),
     },
     {
       header: 'Date',
       width: 100,
-      view: it => formatDate(it.created, timezone, 'yyyy‑MM‑dd')
+      view: it => formatDate(it.created, timezone, 'yyyy‑MM‑dd'),
     },
     {
       header: 'Time (h:m:s)',
       width: 130,
-      view: it => formatDate(it.created, timezone, 'HH:mm:ss')
-    }
+      view: it => formatDate(it.created, timezone, 'HH:mm:ss'),
+    },
   ]
 
   return (

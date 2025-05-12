@@ -52,7 +52,7 @@ const GET_DATA = gql`
 const SystemPerformance = () => {
   const [selectedRange, setSelectedRange] = useState('Day')
   const { data, loading } = useQuery(GET_DATA, {
-    variables: { excludeTestingCustomers: true }
+    variables: { excludeTestingCustomers: true },
   })
   const fiatLocale = fromNamespace('locale')(data?.config).fiatCurrency
   const timezone = fromNamespace('locale')(data?.config).timezone
@@ -62,7 +62,7 @@ const SystemPerformance = () => {
   const periodDomains = {
     Day: [NOW - DAY, NOW],
     Week: [NOW - WEEK, NOW],
-    Month: [NOW - MONTH, NOW]
+    Month: [NOW - MONTH, NOW],
   }
 
   const isInRangeAndNoError = getLastTimePeriod => t => {
@@ -74,11 +74,11 @@ const SystemPerformance = () => {
         t.error === null &&
         isAfter(
           toTimezone(t.created, timezone),
-          toTimezone(periodDomains[selectedRange][1], timezone)
+          toTimezone(periodDomains[selectedRange][1], timezone),
         ) &&
         isAfter(
           toTimezone(periodDomains[selectedRange][0], timezone),
-          toTimezone(t.created, timezone)
+          toTimezone(t.created, timezone),
         )
       )
     }
@@ -86,11 +86,11 @@ const SystemPerformance = () => {
       t.error === null &&
       isAfter(
         toTimezone(periodDomains[selectedRange][1], timezone),
-        toTimezone(t.created, timezone)
+        toTimezone(t.created, timezone),
       ) &&
       isAfter(
         toTimezone(t.created, timezone),
-        toTimezone(periodDomains[selectedRange][0], timezone)
+        toTimezone(periodDomains[selectedRange][0], timezone),
       )
     )
   }
@@ -104,10 +104,10 @@ const SystemPerformance = () => {
   }
 
   const transactionsToShow = R.map(convertFiatToLocale)(
-    R.filter(isInRangeAndNoError(false), data?.transactions ?? [])
+    R.filter(isInRangeAndNoError(false), data?.transactions ?? []),
   )
   const transactionsLastTimePeriod = R.map(convertFiatToLocale)(
-    R.filter(isInRangeAndNoError(true), data?.transactions ?? [])
+    R.filter(isInRangeAndNoError(true), data?.transactions ?? []),
   )
 
   const getNumTransactions = () => {
@@ -121,7 +121,7 @@ const SystemPerformance = () => {
     return R.reduce(
       (acc, value) => acc.plus(value.profit),
       new BigNumber(0),
-      transactions
+      transactions,
     )
   }
 
@@ -141,7 +141,7 @@ const SystemPerformance = () => {
 
   const getDirectionPercent = () => {
     const [cashIn, cashOut] = R.partition(R.propEq('txClass', 'cashIn'))(
-      transactionsToShow
+      transactionsToShow,
     )
     const totalLength = cashIn.length + cashOut.length
     if (totalLength === 0) {
@@ -150,7 +150,7 @@ const SystemPerformance = () => {
 
     return {
       cashIn: Math.round((cashIn.length / totalLength) * 100),
-      cashOut: Math.round((cashOut.length / totalLength) * 100)
+      cashOut: Math.round((cashOut.length / totalLength) * 100),
     }
   }
 
@@ -160,7 +160,7 @@ const SystemPerformance = () => {
     'text-tomato': percentChange < 0,
     'text-spring4': percentChange > 0,
     'text-comet': percentChange === 0,
-    'flex items-center justify-center gap-1': true
+    'flex items-center justify-center gap-1': true,
   }
 
   const getPercentageIcon = () => {
