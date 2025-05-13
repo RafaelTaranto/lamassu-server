@@ -13,9 +13,12 @@ function isRemoteWallet(crypto) {
   return process.env[`${crypto.cryptoCode}_WALLET_LOCATION`] === 'remote'
 }
 
+const skip2fa = process.env.SKIP_2FA === 'true'
+
 module.exports = {
   isDevMode,
   isProdMode,
   isRemoteNode,
   isRemoteWallet,
+  skip2fa,
 }

@@ -4,6 +4,8 @@ const pgp = require('pg-promise')()
 const { getTimezoneOffset } = require('date-fns-tz')
 const { millisecondsToMinutes } = require('date-fns/fp')
 
+const { skip2fa } = require('./environment-helper')
+
 const BN = require('./bn')
 const dbm = require('./postgresql_interface')
 const db = require('./db')
@@ -961,6 +963,7 @@ function plugins(settings, deviceId) {
           sms: smsObj,
         }
 
+        if (skip2fa) return '123'
         return sms.sendMessage(settings, rec).then(() => code)
       })
   }
