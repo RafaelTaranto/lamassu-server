@@ -2,10 +2,10 @@ import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
 import { CopyToClipboard as ReactCopyToClipboard } from 'react-copy-to-clipboard'
-import Popover from 'src/components/Popper.jsx'
-import CopyIcon from 'src/styling/icons/action/copy/copy.svg?react'
+import Popover from './Popper.jsx'
+import CopyIcon from '../styling/icons/action/copy/copy.svg?react'
 
-import { comet } from 'src/styling/variables.js'
+import { comet } from '../styling/variables.js'
 
 import { Label1, Mono } from './typography/index.jsx'
 

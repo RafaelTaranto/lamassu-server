@@ -1,7 +1,7 @@
 import MUIToggleButtonGroup from '@mui/material/ToggleButtonGroup'
 import ToggleButton from '@mui/material/ToggleButton'
 import React from 'react'
-import { H4, P } from 'src/components/typography'
+import { H4, P } from '../../typography'
 
 const ToggleButtonGroup = ({
   name,

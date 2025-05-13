@@ -1,8 +1,8 @@
 import Button from '@mui/material/Button'
 import classnames from 'classnames'
 import React, { useState } from 'react'
-import CollapsibleCard, { cardState } from 'src/components/CollapsibleCard'
-import { H4, Label1 } from 'src/components/typography'
+import CollapsibleCard, { cardState } from '../../components/CollapsibleCard'
+import { H4, Label1 } from '../../components/typography'
 
 import Alerts from './Alerts'
 import SystemStatus from './SystemStatus'

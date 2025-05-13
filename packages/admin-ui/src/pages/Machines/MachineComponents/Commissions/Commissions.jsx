@@ -2,8 +2,12 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
 
-import { Table as EditableTable } from 'src/components/editableTable'
-import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
+import { Table as EditableTable } from '../../../../components/editableTable'
+import {
+  fromNamespace,
+  toNamespace,
+  namespaces,
+} from '../../../../utils/config'
 
 import { overrides } from './helper'
 

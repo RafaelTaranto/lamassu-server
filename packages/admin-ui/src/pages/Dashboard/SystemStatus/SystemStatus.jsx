@@ -3,8 +3,8 @@ import Button from '@mui/material/Button'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
-import { cardState as cardState_ } from 'src/components/CollapsibleCard'
-import { H4, TL2, Label1 } from 'src/components/typography'
+import { cardState as cardState_ } from '../../../components/CollapsibleCard'
+import { H4, TL2, Label1 } from '../../../components/typography'
 
 import MachinesTable from './MachinesTable'
 

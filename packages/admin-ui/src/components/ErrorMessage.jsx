@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import React from 'react'
-import ErrorIcon from 'src/styling/icons/warning-icon/tomato.svg?react'
+import ErrorIcon from '../styling/icons/warning-icon/tomato.svg?react'
 
 import { Info3 } from './typography'
 

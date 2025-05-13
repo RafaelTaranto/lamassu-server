@@ -1,8 +1,8 @@
 import React from 'react'
 
-import Modal from 'src/components/Modal'
-import { Info2, P } from 'src/components/typography'
-import { Button } from 'src/components/buttons'
+import Modal from '../../../components/Modal'
+import { Info2, P } from '../../../components/typography'
+import { Button } from '../../../components/buttons'
 
 import classes from '../UserManagement.module.css'
 

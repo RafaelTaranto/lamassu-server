@@ -1,9 +1,9 @@
 import classnames from 'classnames'
 import { useFormikContext, Field as FormikField } from 'formik'
 import React from 'react'
-import { Label1, Info1, TL2 } from 'src/components/typography'
+import { Label1, Info1, TL2 } from '../../../components/typography'
 
-import { NumberInput } from 'src/components/inputs/formik'
+import { NumberInput } from '../../../components/inputs/formik'
 
 const EditableNumber = ({
   label,

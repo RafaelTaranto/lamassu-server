@@ -1,8 +1,8 @@
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import * as R from 'ramda'
 import React, { useState, memo } from 'react'
-import Popper from 'src/components/Popper'
-import HelpIcon from 'src/styling/icons/action/help/zodiac.svg?react'
+import Popper from './Popper'
+import HelpIcon from '../styling/icons/action/help/zodiac.svg?react'
 
 const usePopperHandler = () => {
   const [helpPopperAnchorEl, setHelpPopperAnchorEl] = useState(null)

@@ -1,7 +1,7 @@
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import Sidebar, { Stepper } from 'src/components/layout/Sidebar'
-import TitleSection from 'src/components/layout/TitleSection'
+import Sidebar, { Stepper } from '../../../../components/layout/Sidebar'
+import TitleSection from '../../../../components/layout/TitleSection'
 
 import AllSet from './AllSet'
 import Blockcypher from './Blockcypher'

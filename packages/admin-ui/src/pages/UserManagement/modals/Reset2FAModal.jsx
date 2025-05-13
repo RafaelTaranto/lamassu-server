@@ -1,11 +1,11 @@
 import { useMutation, gql } from '@apollo/client'
 import React, { useEffect, useState } from 'react'
 
-import ErrorMessage from 'src/components/ErrorMessage'
-import Modal from 'src/components/Modal'
-import { Info2, P, Mono } from 'src/components/typography'
-import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
-import { urlResolver } from 'src/utils/urlResolver'
+import ErrorMessage from '../../../components/ErrorMessage'
+import Modal from '../../../components/Modal'
+import { Info2, P, Mono } from '../../../components/typography'
+import CopyToClipboard from '../../../components/CopyToClipboard.jsx'
+import { urlResolver } from '../../../utils/urlResolver'
 
 import Input2FAModal from './Input2FAModal'
 import classes from '../UserManagement.module.css'

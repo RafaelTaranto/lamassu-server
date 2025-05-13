@@ -3,7 +3,7 @@ import CardContent from '@mui/material/CardContent'
 import classnames from 'classnames'
 import React from 'react'
 
-import { Link } from 'src/components/buttons'
+import { Link } from '../buttons'
 import styles from './Table.module.css'
 
 const Table = ({ children, className, ...props }) => (

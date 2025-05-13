@@ -1,6 +1,6 @@
 import React from 'react'
 
-// import OperatorInfo from 'src/pages/OperatorInfo'
+// import OperatorInfo from '../../OperatorInfo'
 
 function WizardOperatorInfo() {
   return (

@@ -2,15 +2,15 @@ import classnames from 'classnames'
 import { Formik, Form, Field } from 'formik'
 import * as R from 'ramda'
 import React, { useReducer, useEffect } from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
-import Stepper from 'src/components/Stepper'
-import { H4, Info2 } from 'src/components/typography'
-import FormRenderer from 'src/pages/Services/FormRenderer'
+import ErrorMessage from '../../components/ErrorMessage'
+import Stepper from '../../components/Stepper'
+import { H4, Info2 } from '../../components/typography'
+import FormRenderer from '../Services/FormRenderer'
 
-import { Button } from 'src/components/buttons'
-import { RadioGroup, Autocomplete } from 'src/components/inputs'
-import { NumberInput } from 'src/components/inputs/formik'
-import { startCase } from 'src/utils/string'
+import { Button } from '../../components/buttons'
+import { RadioGroup, Autocomplete } from '../../components/inputs'
+import { NumberInput } from '../../components/inputs/formik'
+import { startCase } from '../../utils/string'
 
 const initialState = {
   form: null,

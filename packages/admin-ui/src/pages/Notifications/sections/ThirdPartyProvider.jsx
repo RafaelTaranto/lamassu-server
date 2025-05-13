@@ -1,10 +1,10 @@
 import * as R from 'ramda'
 import React, { useContext } from 'react'
-import Autocomplete from 'src/components/inputs/formik/Autocomplete'
+import Autocomplete from '../../../components/inputs/formik/Autocomplete'
 import * as Yup from 'yup'
 
-import { Table as EditableTable } from 'src/components/editableTable'
-import { toNamespace, fromNamespace } from 'src/utils/config'
+import { Table as EditableTable } from '../../../components/editableTable'
+import { toNamespace, fromNamespace } from '../../../utils/config'
 
 import NotificationsCtx from '../NotificationsContext'
 

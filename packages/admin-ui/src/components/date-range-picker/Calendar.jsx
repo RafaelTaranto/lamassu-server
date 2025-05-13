@@ -14,8 +14,8 @@ import {
 } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import Arrow from 'src/styling/icons/arrow/month_change.svg?react'
-import RightArrow from 'src/styling/icons/arrow/month_change_right.svg?react'
+import Arrow from '../../styling/icons/arrow/month_change.svg?react'
+import RightArrow from '../../styling/icons/arrow/month_change_right.svg?react'
 
 import Tile from './Tile'
 import classes from './Calendar.module.css'

@@ -1,6 +1,6 @@
 import * as R from 'ramda'
 import React, { useState, memo } from 'react'
-import Section from 'src/components/layout/Section'
+import Section from '../../../components/layout/Section'
 import {
   mainFields,
   overrides,
@@ -9,9 +9,9 @@ import {
   defaults,
   overridesDefaults,
   getOrder,
-} from 'src/pages/Commissions/helper'
+} from '../helper'
 
-import { Table as EditableTable } from 'src/components/editableTable'
+import { Table as EditableTable } from '../../../components/editableTable'
 
 const CommissionsDetails = memo(
   ({ config, locale, currency, data, error, save, saveOverrides }) => {

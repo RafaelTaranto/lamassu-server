@@ -1,6 +1,6 @@
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { H2 } from 'src/components/typography'
+import { H2 } from '../../../../components/typography'
 
 import Graph from '../../graphs/Graph'
 import LegendEntry from '../LegendEntry'

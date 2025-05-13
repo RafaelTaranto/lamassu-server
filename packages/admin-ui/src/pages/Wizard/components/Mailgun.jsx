@@ -1,16 +1,16 @@
 import { useMutation, useQuery, gql } from '@apollo/client'
 import React, { useState, useEffect } from 'react'
-import { H4, Info3 } from 'src/components/typography'
-import FormRenderer from 'src/pages/Services/FormRenderer'
-import InverseLinkIcon from 'src/styling/icons/action/external link/white.svg?react'
-import LinkIcon from 'src/styling/icons/action/external link/zodiac.svg?react'
-import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
+import { H4, Info3 } from '../../../components/typography'
+import FormRenderer from '../../Services/FormRenderer'
+import InverseLinkIcon from '../../../styling/icons/action/external link/white.svg?react'
+import LinkIcon from '../../../styling/icons/action/external link/zodiac.svg?react'
+import WarningIcon from '../../../styling/icons/warning-icon/comet.svg?react'
 
-import { ActionButton } from 'src/components/buttons'
-import { RadioGroup } from 'src/components/inputs'
-import mailgunSchema from 'src/pages/Services/schemas/mailgun'
-import classes from 'src/pages/Wizard/Radio.module.css'
-import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
+import { ActionButton } from '../../../components/buttons'
+import { RadioGroup } from '../../../components/inputs'
+import mailgunSchema from '../../Services/schemas/mailgun'
+import classes from '../Radio.module.css'
+import { fromNamespace, toNamespace, namespaces } from '../../../utils/config'
 
 const GET_CONFIG = gql`
   {

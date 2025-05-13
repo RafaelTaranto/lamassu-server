@@ -1,11 +1,11 @@
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
-import Popper from 'src/components/Popper'
-import ZoomIconInverse from 'src/styling/icons/circle buttons/search/white.svg?react'
-import ZoomIcon from 'src/styling/icons/circle buttons/search/zodiac.svg?react'
+import Popper from './Popper'
+import ZoomIconInverse from '../styling/icons/circle buttons/search/white.svg?react'
+import ZoomIcon from '../styling/icons/circle buttons/search/zodiac.svg?react'
 
-import { FeatureButton } from 'src/components/buttons'
+import { FeatureButton } from './buttons'
 
 const ImagePopper = memo(
   ({ className, width, height, popupWidth, popupHeight, src }) => {

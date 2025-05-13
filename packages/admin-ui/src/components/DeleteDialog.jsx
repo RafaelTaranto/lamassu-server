@@ -3,10 +3,10 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import IconButton from '@mui/material/IconButton'
 import React from 'react'
-import { H4, P } from 'src/components/typography'
-import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
+import { H4, P } from './typography'
+import CloseIcon from '../styling/icons/action/close/zodiac.svg?react'
 
-import { Button } from 'src/components/buttons'
+import { Button } from './buttons'
 
 import ErrorMessage from './ErrorMessage'
 import SvgIcon from '@mui/material/SvgIcon'

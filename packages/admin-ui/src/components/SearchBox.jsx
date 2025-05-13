@@ -3,8 +3,8 @@ import Paper from '@mui/material/Paper'
 import MAutocomplete from '@mui/material/Autocomplete'
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
-import { P } from 'src/components/typography'
-import SearchIcon from 'src/styling/icons/circle buttons/search/zodiac.svg?react'
+import { P } from './typography'
+import SearchIcon from '../styling/icons/circle buttons/search/zodiac.svg?react'
 
 const SearchBox = memo(
   ({

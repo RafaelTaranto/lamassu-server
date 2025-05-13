@@ -1,16 +1,16 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
-import Section from 'src/components/layout/Section'
-import TitleSection from 'src/components/layout/TitleSection'
+import Section from '../../../components/layout/Section'
+import TitleSection from '../../../components/layout/TitleSection'
 
-import { Table as EditableTable } from 'src/components/editableTable'
+import { Table as EditableTable } from '../../../components/editableTable'
 import {
   mainFields,
   localeDefaults as defaults,
   LocaleSchema as schema,
-} from 'src/pages/Locales/helper'
-import { toNamespace } from 'src/utils/config'
+} from '../../Locales/helper'
+import { toNamespace } from '../../../utils/config'
 
 import { getConfiguredCoins } from '../helper'
 

@@ -1,7 +1,7 @@
 import * as R from 'ramda'
 import React, { memo } from 'react'
-import { H2, Label1, P } from 'src/components/typography'
-import IdIcon from 'src/styling/icons/ID/card/zodiac.svg?react'
+import { H2, Label1, P } from '../../../components/typography'
+import IdIcon from '../../../styling/icons/ID/card/zodiac.svg?react'
 
 import { getFormattedPhone, getName } from '../helper'
 

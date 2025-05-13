@@ -1,10 +1,10 @@
 import Paper from '@mui/material/Paper'
 import * as R from 'ramda'
 import { React } from 'react'
-import { H3, P } from 'src/components/typography'
-import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
+import { H3, P } from '../../../../components/typography'
+import DeleteIcon from '../../../../styling/icons/action/delete/enabled.svg?react'
 
-import { formatDate } from 'src/utils/timezones'
+import { formatDate } from '../../../../utils/timezones'
 
 const formatContent = content => {
   const fragments = R.split(/\n/)(content)

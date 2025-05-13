@@ -4,12 +4,12 @@ import Paper from '@mui/material/Paper'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
-import { H2, Label3, P } from 'src/components/typography'
-import Logo from 'src/styling/icons/menu/logo.svg?react'
+import { H2, Label3, P } from '../../components/typography'
+import Logo from '../../styling/icons/menu/logo.svg?react'
 import * as Yup from 'yup'
 
-import { Button } from 'src/components/buttons'
-import { SecretInput } from 'src/components/inputs/formik/'
+import { Button } from '../../components/buttons'
+import { SecretInput } from '../../components/inputs/formik'
 
 import classes from './Authentication.module.css'
 

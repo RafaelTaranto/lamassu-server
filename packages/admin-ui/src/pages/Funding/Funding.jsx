@@ -6,16 +6,16 @@ import { format } from 'date-fns/fp'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import TableLabel from 'src/pages/Funding/TableLabel.jsx'
-import Title from 'src/components/Title.jsx'
+import TableLabel from './TableLabel.jsx'
+import Title from '../../components/Title.jsx'
 import {
   Tr,
   Td,
   THead,
   TBody,
   Table,
-} from 'src/components/fake-table/Table.jsx'
-import Sidebar from 'src/components/layout/Sidebar.jsx'
+} from '../../components/fake-table/Table.jsx'
+import Sidebar from '../../components/layout/Sidebar.jsx'
 import {
   H3,
   Info1,
@@ -23,10 +23,10 @@ import {
   Info3,
   Label1,
   Label3,
-} from 'src/components/typography/index.jsx'
-import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
+} from '../../components/typography/index.jsx'
+import CopyToClipboard from '../../components/CopyToClipboard.jsx'
 
-import { primaryColor } from 'src/styling/variables.js'
+import { primaryColor } from '../../styling/variables.js'
 
 import classes from './Funding.module.css'
 

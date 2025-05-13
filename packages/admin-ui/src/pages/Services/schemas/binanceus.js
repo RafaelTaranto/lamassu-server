@@ -4,7 +4,7 @@ import {
   SecretInput,
   TextInput,
   Autocomplete,
-} from 'src/components/inputs/formik'
+} from '../../../components/inputs/formik'
 
 import { secretTest, buildCurrencyOptions } from './helper'
 

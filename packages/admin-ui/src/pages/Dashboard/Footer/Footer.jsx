@@ -2,11 +2,11 @@ import { useQuery, gql } from '@apollo/client'
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
 import React from 'react'
-import { Label2 } from 'src/components/typography'
-import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import { Label2 } from '../../../components/typography'
+import TxInIcon from '../../../styling/icons/direction/cash-in.svg?react'
+import TxOutIcon from '../../../styling/icons/direction/cash-out.svg?react'
 
-import { fromNamespace } from 'src/utils/config'
+import { fromNamespace } from '../../../utils/config'
 
 import classes from './Footer.module.css'
 

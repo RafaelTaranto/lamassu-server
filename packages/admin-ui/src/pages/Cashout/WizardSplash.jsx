@@ -1,8 +1,8 @@
 import React from 'react'
-import { H1, P, Info2 } from 'src/components/typography'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import { H1, P, Info2 } from '../../components/typography'
+import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
 
-import { Button } from 'src/components/buttons'
+import { Button } from '../../components/buttons'
 
 const WizardSplash = ({ name, onContinue }) => {
   return (

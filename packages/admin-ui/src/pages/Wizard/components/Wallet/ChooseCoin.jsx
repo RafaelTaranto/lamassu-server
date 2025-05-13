@@ -1,12 +1,12 @@
 import { useQuery, gql } from '@apollo/client'
 import { Formik, Form, Field } from 'formik'
 import React, { useState } from 'react'
-import PromptWhenDirty from 'src/components/PromptWhenDirty'
-import { H4 } from 'src/components/typography'
+import PromptWhenDirty from '../../../../components/PromptWhenDirty'
+import { H4 } from '../../../../components/typography'
 import * as Yup from 'yup'
 
-import { Button } from 'src/components/buttons'
-import { RadioGroup } from 'src/components/inputs/formik'
+import { Button } from '../../../../components/buttons'
+import { RadioGroup } from '../../../../components/inputs/formik'
 
 import classes from './Shared.module.css'
 

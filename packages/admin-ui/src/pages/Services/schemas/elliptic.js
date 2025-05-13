@@ -1,6 +1,6 @@
-import CheckboxFormik from 'src/components/inputs/formik/Checkbox'
-import NumberInputFormik from 'src/components/inputs/formik/NumberInput'
-import SecretInputFormik from 'src/components/inputs/formik/SecretInput'
+import CheckboxFormik from '../../../components/inputs/formik/Checkbox'
+import NumberInputFormik from '../../../components/inputs/formik/NumberInput'
+import SecretInputFormik from '../../../components/inputs/formik/SecretInput'
 import * as Yup from 'yup'
 
 import { secretTest, leadingZerosTest } from './helper'

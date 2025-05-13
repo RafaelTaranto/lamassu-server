@@ -1,8 +1,8 @@
 import React from 'react'
-import { H1, P } from 'src/components/typography'
-import CustomReqLogo from 'src/styling/icons/compliance/custom-requirement.svg?react'
+import { H1, P } from '../../../components/typography'
+import CustomReqLogo from '../../../styling/icons/compliance/custom-requirement.svg?react'
 
-import { Button } from 'src/components/buttons'
+import { Button } from '../../../components/buttons'
 
 const WizardSplash = ({ onContinue }) => {
   return (

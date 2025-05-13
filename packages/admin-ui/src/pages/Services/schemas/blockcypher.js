@@ -1,6 +1,10 @@
 import * as Yup from 'yup'
 
-import { Checkbox, TextInput, NumberInput } from 'src/components/inputs/formik'
+import {
+  Checkbox,
+  TextInput,
+  NumberInput,
+} from '../../../components/inputs/formik'
 
 export default {
   code: 'blockcypher',

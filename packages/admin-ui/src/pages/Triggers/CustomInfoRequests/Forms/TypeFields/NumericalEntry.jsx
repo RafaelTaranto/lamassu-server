@@ -2,9 +2,9 @@ import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
 import React from 'react'
-import NumberInput from 'src/components/inputs/formik/NumberInput'
-import RadioGroup from 'src/components/inputs/formik/RadioGroup'
-import { TL1, H4 } from 'src/components/typography'
+import NumberInput from '../../../../../components/inputs/formik/NumberInput'
+import RadioGroup from '../../../../../components/inputs/formik/RadioGroup'
+import { TL1, H4 } from '../../../../../components/typography'
 
 const options = [
   { display: 'None', code: 'none' },

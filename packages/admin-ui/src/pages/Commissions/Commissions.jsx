@@ -1,14 +1,14 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { HelpTooltip } from 'src/components/Tooltip'
-import TitleSection from 'src/components/layout/TitleSection'
-import ReverseListingViewIcon from 'src/styling/icons/circle buttons/listing-view/white.svg?react'
-import ListingViewIcon from 'src/styling/icons/circle buttons/listing-view/zodiac.svg?react'
-import OverrideLabelIcon from 'src/styling/icons/status/spring2.svg?react'
+import { HelpTooltip } from '../../components/Tooltip'
+import TitleSection from '../../components/layout/TitleSection'
+import ReverseListingViewIcon from '../../styling/icons/circle buttons/listing-view/white.svg?react'
+import ListingViewIcon from '../../styling/icons/circle buttons/listing-view/zodiac.svg?react'
+import OverrideLabelIcon from '../../styling/icons/status/spring2.svg?react'
 
-import { SupportLinkButton } from 'src/components/buttons'
-import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
+import { SupportLinkButton } from '../../components/buttons'
+import { fromNamespace, toNamespace, namespaces } from '../../utils/config'
 
 import { P } from '../../components/typography'
 

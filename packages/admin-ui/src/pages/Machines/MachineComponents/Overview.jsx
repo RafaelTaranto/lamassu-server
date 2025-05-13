@@ -1,10 +1,10 @@
 import BigNumber from 'bignumber.js'
 import { formatDistance } from 'date-fns'
 import React from 'react'
-import { Status } from 'src/components/Status'
-import MachineActions from 'src/components/machineActions/MachineActions'
-import { H3, Label1, P } from 'src/components/typography'
-import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
+import { Status } from '../../../components/Status'
+import MachineActions from '../../../components/machineActions/MachineActions'
+import { H3, Label1, P } from '../../../components/typography'
+import CopyToClipboard from '../../../components/CopyToClipboard.jsx'
 
 const Overview = ({ data, onActionSuccess }) => {
   return (

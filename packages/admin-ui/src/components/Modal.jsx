@@ -4,8 +4,8 @@ import SvgIcon from '@mui/material/SvgIcon'
 import Paper from '@mui/material/Paper'
 import classnames from 'classnames'
 import React from 'react'
-import { H1, H4 } from 'src/components/typography'
-import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
+import { H1, H4 } from './typography'
+import CloseIcon from '../styling/icons/action/close/zodiac.svg?react'
 
 const Modal = ({
   width,

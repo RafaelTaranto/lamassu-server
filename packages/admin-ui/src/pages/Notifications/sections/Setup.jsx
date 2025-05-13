@@ -8,10 +8,10 @@ import {
   Tr,
   Td,
   Th,
-} from 'src/components/fake-table/Table'
+} from '../../../components/fake-table/Table'
 
-import { fromNamespace, toNamespace } from 'src/utils/config'
-import { sentenceCase } from 'src/utils/string'
+import { fromNamespace, toNamespace } from '../../../utils/config'
+import { sentenceCase } from '../../../utils/string'
 
 import NotificationsCtx from '../NotificationsContext'
 

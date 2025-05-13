@@ -1,7 +1,7 @@
 import React, { memo, useState } from 'react'
 import styles from './Carousel.module.css'
-import LeftArrow from 'src/styling/icons/arrow/carousel-left-arrow.svg?react'
-import RightArrow from 'src/styling/icons/arrow/carousel-right-arrow.svg?react'
+import LeftArrow from '../styling/icons/arrow/carousel-left-arrow.svg?react'
+import RightArrow from '../styling/icons/arrow/carousel-right-arrow.svg?react'
 
 export const Carousel = memo(({ photosData, slidePhoto }) => {
   const [activeIndex, setActiveIndex] = useState(0)

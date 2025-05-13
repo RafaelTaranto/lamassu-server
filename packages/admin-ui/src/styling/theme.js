@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles'
 
-import typographyStyles from 'src/components/typography/styles'
+import typographyStyles from '../components/typography/styles'
 
 import {
   backgroundColor,

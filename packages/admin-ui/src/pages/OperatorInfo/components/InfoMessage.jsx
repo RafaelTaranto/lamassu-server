@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Label1 } from 'src/components/typography'
+import { Label1 } from '../../../components/typography'
 
 const InfoMessage = ({ Icon, children }) => (
   <div className="flex my-13 gap-4">

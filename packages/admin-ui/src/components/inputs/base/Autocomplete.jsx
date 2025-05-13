@@ -3,8 +3,8 @@ import classnames from 'classnames'
 import sort from 'match-sorter'
 import * as R from 'ramda'
 import React from 'react'
-import { HoverableTooltip } from 'src/components/Tooltip'
-import { P } from 'src/components/typography'
+import { HoverableTooltip } from '../../Tooltip'
+import { P } from '../../typography'
 
 import TextInput from './TextInput'
 

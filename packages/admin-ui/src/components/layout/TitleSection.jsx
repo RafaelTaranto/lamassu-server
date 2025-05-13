@@ -1,11 +1,11 @@
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
-import Title from 'src/components/Title'
-import { Info1, Label1 } from 'src/components/typography'
+import ErrorMessage from '../ErrorMessage'
+import Title from '../Title'
+import { Info1, Label1 } from '../typography'
 
-import { SubpageButton } from 'src/components/buttons'
+import { SubpageButton } from '../buttons'
 
 const TitleSection = ({
   className,

@@ -1,11 +1,11 @@
 import { Form, Formik } from 'formik'
 import * as R from 'ramda'
 import React, { useState, Fragment } from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
-import Modal from 'src/components/Modal'
-import Stepper from 'src/components/Stepper'
+import ErrorMessage from '../../components/ErrorMessage'
+import Modal from '../../components/Modal'
+import Stepper from '../../components/Stepper'
 
-import { Button } from 'src/components/buttons'
+import { Button } from '../../components/buttons'
 
 import {
   entryType,

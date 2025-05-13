@@ -2,10 +2,10 @@ import classnames from 'classnames'
 import { Formik, Form, FastField } from 'formik'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
+import ErrorMessage from '../../components/ErrorMessage'
 
-import { Button } from 'src/components/buttons'
-import { SecretInput } from 'src/components/inputs/formik'
+import { Button } from '../../components/buttons'
+import { SecretInput } from '../../components/inputs/formik'
 
 const FormRenderer = ({
   validationSchema,

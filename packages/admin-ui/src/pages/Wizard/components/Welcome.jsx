@@ -1,7 +1,7 @@
 import React from 'react'
-import { H1, P } from 'src/components/typography'
+import { H1, P } from '../../../components/typography'
 
-import { Button } from 'src/components/buttons'
+import { Button } from '../../../components/buttons'
 
 function Welcome({ doContinue }) {
   return (

@@ -1,12 +1,12 @@
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { memo } from 'react'
-import CompleteStageIconSpring from 'src/styling/icons/stage/spring/complete.svg?react'
-import CurrentStageIconSpring from 'src/styling/icons/stage/spring/current.svg?react'
-import EmptyStageIconSpring from 'src/styling/icons/stage/spring/empty.svg?react'
-import CompleteStageIconZodiac from 'src/styling/icons/stage/zodiac/complete.svg?react'
-import CurrentStageIconZodiac from 'src/styling/icons/stage/zodiac/current.svg?react'
-import EmptyStageIconZodiac from 'src/styling/icons/stage/zodiac/empty.svg?react'
+import CompleteStageIconSpring from '../styling/icons/stage/spring/complete.svg?react'
+import CurrentStageIconSpring from '../styling/icons/stage/spring/current.svg?react'
+import EmptyStageIconSpring from '../styling/icons/stage/spring/empty.svg?react'
+import CompleteStageIconZodiac from '../styling/icons/stage/zodiac/complete.svg?react'
+import CurrentStageIconZodiac from '../styling/icons/stage/zodiac/current.svg?react'
+import EmptyStageIconZodiac from '../styling/icons/stage/zodiac/empty.svg?react'
 
 import classes from './Stepper.module.css'
 

@@ -5,7 +5,7 @@ import {
   subheaderDarkColor,
   offColor,
   offDarkColor,
-} from 'src/styling/variables'
+} from '../../styling/variables'
 
 const colors = (color1, color2, color3) => {
   return {

@@ -1,10 +1,10 @@
 import { useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper.jsx'
-import Title from 'src/components/Title.jsx'
-import Sidebar from 'src/components/layout/Sidebar.jsx'
-import { Info3, H4 } from 'src/components/typography/index.jsx'
+import LogsDowloaderPopover from '../../components/LogsDownloaderPopper.jsx'
+import Title from '../../components/Title.jsx'
+import Sidebar from '../../components/layout/Sidebar.jsx'
+import { Info3, H4 } from '../../components/typography/index.jsx'
 
 import {
   Table,
@@ -13,8 +13,8 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-} from 'src/components/table/index.js'
-import { formatDate } from 'src/utils/timezones.js'
+} from '../../components/table/index.js'
+import { formatDate } from '../../utils/timezones.js'
 
 import classes from './Logs.module.css'
 

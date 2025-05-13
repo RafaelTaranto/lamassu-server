@@ -9,12 +9,12 @@ import TableRow from '@mui/material/TableRow'
 import * as R from 'ramda'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Status } from 'src/components/Status'
-import { Label2, TL2 } from 'src/components/typography'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
-import MachineLinkIcon from 'src/styling/icons/month arrows/right.svg?react'
+import { Status } from '../../../components/Status'
+import { Label2, TL2 } from '../../../components/typography'
+import TxOutIcon from '../../../styling/icons/direction/cash-out.svg?react'
+import MachineLinkIcon from '../../../styling/icons/month arrows/right.svg?react'
 
-import { fromNamespace } from 'src/utils/config'
+import { fromNamespace } from '../../../utils/config'
 
 // percentage threshold where below this number the text in the cash cassettes percentage turns red
 const PERCENTAGE_THRESHOLD = 20

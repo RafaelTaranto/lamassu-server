@@ -1,7 +1,7 @@
 import { Field } from 'formik'
 import React from 'react'
-import TextInputFormik from 'src/components/inputs/formik/TextInput'
-import { H4, P } from 'src/components/typography'
+import TextInputFormik from '../../../../components/inputs/formik/TextInput'
+import { H4, P } from '../../../../components/typography'
 import * as Yup from 'yup'
 
 const ScreenInformation = () => {

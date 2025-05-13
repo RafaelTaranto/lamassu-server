@@ -2,12 +2,12 @@ import IconButton from '@mui/material/IconButton'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
-import TitleSection from 'src/components/layout/TitleSection'
-import DataTable from 'src/components/tables/DataTable'
-import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
+import TitleSection from '../../components/layout/TitleSection'
+import DataTable from '../../components/tables/DataTable'
+import DeleteIcon from '../../styling/icons/action/delete/enabled.svg?react'
 import parser from 'ua-parser-js'
 
-import { formatDate } from 'src/utils/timezones'
+import { formatDate } from '../../utils/timezones'
 import SvgIcon from '@mui/material/SvgIcon'
 
 const GET_SESSIONS = gql`

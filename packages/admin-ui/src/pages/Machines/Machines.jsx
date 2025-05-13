@@ -4,7 +4,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { Link, useLocation, useHistory } from 'react-router-dom'
-import { TL1, TL2, Label3 } from 'src/components/typography'
+import { TL1, TL2, Label3 } from '../../components/typography'
 
 import Cassettes from './MachineComponents/Cassettes'
 import Commissions from './MachineComponents/Commissions'

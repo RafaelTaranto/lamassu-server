@@ -1,13 +1,13 @@
 import Paper from '@mui/material/Paper'
 import * as R from 'ramda'
 import React, { memo } from 'react'
-import { Info2, Label3, P } from 'src/components/typography'
-import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import { Info2, Label3, P } from '../../../../components/typography'
+import TxInIcon from '../../../../styling/icons/direction/cash-in.svg?react'
+import TxOutIcon from '../../../../styling/icons/direction/cash-out.svg?react'
 
-import { numberToFiatAmount } from 'src/utils/number'
-import { singularOrPlural } from 'src/utils/string'
-import { formatDate, formatDateNonUtc } from 'src/utils/timezones'
+import { numberToFiatAmount } from '../../../../utils/number'
+import { singularOrPlural } from '../../../../utils/string'
+import { formatDate, formatDateNonUtc } from '../../../../utils/timezones'
 
 const GraphTooltip = ({
   coords,

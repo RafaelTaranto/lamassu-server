@@ -1,14 +1,14 @@
 import { Form, Formik, Field } from 'formik'
 import * as R from 'ramda'
 import React from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
-import Modal from 'src/components/Modal'
-import { HelpTooltip } from 'src/components/Tooltip'
-import { H3, P, H1 } from 'src/components/typography'
+import ErrorMessage from '../../components/ErrorMessage'
+import Modal from '../../components/Modal'
+import { HelpTooltip } from '../../components/Tooltip'
+import { H3, P, H1 } from '../../components/typography'
 import * as Yup from 'yup'
 
-import { Button } from 'src/components/buttons'
-import { TextInput, NumberInput } from 'src/components/inputs/formik'
+import { Button } from '../../components/buttons'
+import { TextInput, NumberInput } from '../../components/inputs/formik'
 
 const initialValues = {
   code: '',

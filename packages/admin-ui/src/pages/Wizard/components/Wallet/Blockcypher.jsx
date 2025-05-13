@@ -1,11 +1,11 @@
 import { useMutation, useQuery, gql } from '@apollo/client'
 import React, { useState } from 'react'
-import { P, H4 } from 'src/components/typography'
-import FormRenderer from 'src/pages/Services/FormRenderer'
+import { P, H4 } from '../../../../components/typography'
+import FormRenderer from '../../../Services/FormRenderer'
 
-import { SupportLinkButton, Button } from 'src/components/buttons'
-import { RadioGroup } from 'src/components/inputs'
-import blockcypherSchema from 'src/pages/Services/schemas/blockcypher'
+import { SupportLinkButton, Button } from '../../../../components/buttons'
+import { RadioGroup } from '../../../../components/inputs'
+import blockcypherSchema from '../../../Services/schemas/blockcypher'
 
 import classes from './Shared.module.css'
 

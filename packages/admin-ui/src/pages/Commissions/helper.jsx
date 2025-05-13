@@ -1,16 +1,16 @@
 import * as R from 'ramda'
 import React from 'react'
-import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
+import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
 import { v4 as uuidv4 } from 'uuid'
 import * as Yup from 'yup'
 
-import { Autocomplete, NumberInput } from 'src/components/inputs/formik'
-import { bold } from 'src/styling/helpers'
-import { primaryColor, secondaryColorDark } from 'src/styling/variables'
-import denominations from 'src/utils/bill-denominations'
-import { getBillOptions } from 'src/utils/bill-options'
-import { CURRENCY_MAX } from 'src/utils/constants'
+import { Autocomplete, NumberInput } from '../../components/inputs/formik'
+import { bold } from '../../styling/helpers'
+import { primaryColor, secondaryColorDark } from '../../styling/variables'
+import denominations from '../../utils/bill-denominations'
+import { getBillOptions } from '../../utils/bill-options'
+import { CURRENCY_MAX } from '../../utils/constants'
 
 const ALL_MACHINES = {
   name: 'All Machines',

@@ -1,6 +1,6 @@
 import * as R from 'ramda'
 
-import _schema from 'src/pages/Services/schemas'
+import _schema from '../../../Services/schemas'
 
 const contains = crypto => R.compose(R.contains(crypto), R.prop('cryptos'))
 const sameClass = type => R.propEq('class', type)

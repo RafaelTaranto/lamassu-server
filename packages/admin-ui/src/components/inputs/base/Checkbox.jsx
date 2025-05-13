@@ -2,10 +2,10 @@ import Checkbox from '@mui/material/Checkbox'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import React from 'react'
-import { Label2, Info3 } from 'src/components/typography'
-import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
+import { Label2, Info3 } from '../../typography'
+import WarningIcon from '../../../styling/icons/warning-icon/comet.svg?react'
 
-import { fontSize2, fontSize3 } from 'src/styling/variables'
+import { fontSize2, fontSize3 } from '../../../styling/variables'
 
 const CheckboxInput = ({ name, onChange, value, settings, ...props }) => {
   const { enabled, label, disabledMessage, rightSideLabel } = settings

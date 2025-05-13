@@ -1,9 +1,9 @@
 import Chip from '@mui/material/Chip'
 import classnames from 'classnames'
 import React from 'react'
-import { Info2, Label1, Label2 } from 'src/components/typography'
+import { Info2, Label1, Label2 } from '../../typography'
 
-import { numberToFiatAmount } from 'src/utils/number'
+import { numberToFiatAmount } from '../../../utils/number'
 
 import classes from './Cashbox.module.css'
 import { primaryColor as zodiac, tomato } from '../../../styling/variables.js'

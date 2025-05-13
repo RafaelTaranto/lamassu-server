@@ -7,19 +7,12 @@ import {
   CellMeasurer,
   CellMeasurerCache,
 } from 'react-virtualized'
-import {
-  Table,
-  TBody,
-  THead,
-  Tr,
-  Td,
-  Th,
-} from 'src/components/fake-table/Table'
-import { H4 } from 'src/components/typography'
-import ExpandClosedIcon from 'src/styling/icons/action/expand/closed.svg?react'
-import ExpandOpenIcon from 'src/styling/icons/action/expand/open.svg?react'
+import { Table, TBody, THead, Tr, Td, Th } from '../fake-table/Table'
+import { H4 } from '../typography'
+import ExpandClosedIcon from '../../styling/icons/action/expand/closed.svg?react'
+import ExpandOpenIcon from '../../styling/icons/action/expand/open.svg?react'
 
-import { EmptyTable } from 'src/components/table'
+import { EmptyTable } from '../table'
 
 const Row = ({
   id,

@@ -1,7 +1,7 @@
 import ClickAwayListener from '@mui/material/ClickAwayListener'
 import classnames from 'classnames'
 import React, { useState, memo } from 'react'
-import Popover from 'src/components/Popper'
+import Popover from '../Popper'
 
 import classes from './IDButton.module.css'
 

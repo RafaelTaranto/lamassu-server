@@ -1,10 +1,10 @@
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import Modal from 'src/components/Modal'
+import Modal from '../../components/Modal'
 import * as Yup from 'yup'
 
-import _schema from 'src/pages/Services/schemas'
-import { toNamespace } from 'src/utils/config'
+import _schema from '../Services/schemas'
+import { toNamespace } from '../../utils/config'
 
 import WizardSplash from './WizardSplash'
 import WizardStep from './WizardStep'

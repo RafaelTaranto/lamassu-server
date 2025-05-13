@@ -2,9 +2,9 @@ import Paper from '@mui/material/Paper'
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
 import { React, useState } from 'react'
-import { InformativeDialog } from 'src/components/InformativeDialog'
-import { Label2, H3 } from 'src/components/typography'
-import CameraIcon from 'src/styling/icons/ID/photo/comet.svg?react'
+import { InformativeDialog } from '../../components/InformativeDialog'
+import { Label2, H3 } from '../../components/typography'
+import CameraIcon from '../../styling/icons/ID/photo/comet.svg?react'
 
 import PhotosCarousel from './components/PhotosCarousel'
 

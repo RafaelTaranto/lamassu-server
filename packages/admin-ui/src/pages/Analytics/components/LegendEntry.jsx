@@ -1,5 +1,5 @@
 import React from 'react'
-import { P } from 'src/components/typography'
+import { P } from '../../../components/typography'
 
 const LegendEntry = ({ IconElement, IconComponent, label }) => {
   return (

@@ -3,7 +3,7 @@ import {
   offColor,
   errorColor,
   primaryColor,
-} from 'src/styling/variables'
+} from '../../../styling/variables'
 
 const styles = {
   label: {

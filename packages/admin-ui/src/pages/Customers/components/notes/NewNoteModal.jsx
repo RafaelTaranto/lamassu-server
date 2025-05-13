@@ -1,11 +1,11 @@
 import { Form, Formik, Field } from 'formik'
 import { React } from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
-import Modal from 'src/components/Modal'
+import ErrorMessage from '../../../../components/ErrorMessage'
+import Modal from '../../../../components/Modal'
 import * as Yup from 'yup'
 
-import { Button } from 'src/components/buttons'
-import { TextInput } from 'src/components/inputs/formik'
+import { Button } from '../../../../components/buttons'
+import { TextInput } from '../../../../components/inputs/formik'
 
 const initialValues = {
   title: '',

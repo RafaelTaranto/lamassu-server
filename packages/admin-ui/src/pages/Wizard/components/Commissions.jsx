@@ -1,12 +1,12 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
-import Section from 'src/components/layout/Section'
-import TitleSection from 'src/components/layout/TitleSection'
-import { mainFields, defaults, getSchema } from 'src/pages/Commissions/helper'
+import Section from '../../../components/layout/Section'
+import TitleSection from '../../../components/layout/TitleSection'
+import { mainFields, defaults, getSchema } from '../../Commissions/helper'
 
-import { Table as EditableTable } from 'src/components/editableTable'
-import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
+import { Table as EditableTable } from '../../../components/editableTable'
+import { fromNamespace, toNamespace, namespaces } from '../../../utils/config'
 
 const GET_DATA = gql`
   query getData {

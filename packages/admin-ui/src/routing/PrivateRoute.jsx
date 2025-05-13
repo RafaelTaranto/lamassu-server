@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { Route, Redirect } from 'react-router-dom'
 
-import AppContext from 'src/AppContext'
+import AppContext from '../AppContext'
 
 import { isLoggedIn } from './utils'
 

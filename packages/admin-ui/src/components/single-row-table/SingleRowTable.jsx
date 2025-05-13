@@ -1,15 +1,8 @@
 import IconButton from '@mui/material/IconButton'
 import SvgIcon from '@mui/material/SvgIcon'
 import React from 'react'
-import {
-  Table,
-  THead,
-  TBody,
-  Td,
-  Th,
-  Tr,
-} from 'src/components/fake-table/Table'
-import EditIcon from 'src/styling/icons/action/edit/white.svg?react'
+import { Table, THead, TBody, Td, Th, Tr } from '../fake-table/Table'
+import EditIcon from '../../styling/icons/action/edit/white.svg?react'
 
 import { Label1, P } from '../typography/index.jsx'
 

@@ -1,12 +1,12 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { P, H4 } from 'src/components/typography'
-import { getElements, WalletSchema } from 'src/pages/Wallet/helper'
+import { P, H4 } from '../../../../components/typography'
+import { getElements, WalletSchema } from '../../../Wallet/helper'
 
-import { Button } from 'src/components/buttons'
-import { NamespacedTable as EditableTable } from 'src/components/editableTable'
-import { toNamespace, namespaces } from 'src/utils/config'
+import { Button } from '../../../../components/buttons'
+import { NamespacedTable as EditableTable } from '../../../../components/editableTable'
+import { toNamespace, namespaces } from '../../../../utils/config'
 
 import classes from './Shared.module.css'
 

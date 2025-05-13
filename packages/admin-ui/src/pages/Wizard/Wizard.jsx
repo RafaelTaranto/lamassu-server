@@ -4,9 +4,9 @@ import DialogContent from '@mui/material/DialogContent'
 import classnames from 'classnames'
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { getWizardStep, STEPS } from 'src/pages/Wizard/helper'
+import { getWizardStep, STEPS } from './helper'
 
-import AppContext from 'src/AppContext'
+import AppContext from '../../AppContext'
 
 import Footer from './components/Footer'
 

@@ -1,12 +1,12 @@
 import { useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { H2 } from 'src/components/typography'
+import { H2 } from '../../components/typography'
 import { v4 as uuidv4 } from 'uuid'
 
-import { Button } from 'src/components/buttons'
-import { Table as EditableTable } from 'src/components/editableTable'
-import { fromNamespace, namespaces } from 'src/utils/config'
+import { Button } from '../../components/buttons'
+import { Table as EditableTable } from '../../components/editableTable'
+import { fromNamespace, namespaces } from '../../utils/config'
 
 import Wizard from './Wizard'
 import { Schema, getElements, sortBy, toServer } from './helper'

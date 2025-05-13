@@ -2,8 +2,8 @@ import Chip from '@mui/material/Chip'
 import * as R from 'ramda'
 import React from 'react'
 
-import { onlyFirstToUpper } from 'src/utils/string.js'
-import { Label1 } from 'src/components/typography/index.jsx'
+import { onlyFirstToUpper } from '../../utils/string.js'
+import { Label1 } from '../../components/typography/index.jsx'
 
 const Uptime = ({ process }) => {
   const uptime = time => {

@@ -1,9 +1,9 @@
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
-import { Carousel } from 'src/components/Carousel'
-import { Label1 } from 'src/components/typography'
+import { Carousel } from '../../../components/Carousel'
+import { Label1 } from '../../../components/typography'
 
-import { formatDate } from 'src/utils/timezones'
+import { formatDate } from '../../../utils/timezones'
 
 import CopyToClipboard from '../../../components/CopyToClipboard.jsx'
 

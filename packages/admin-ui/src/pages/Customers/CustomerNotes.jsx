@@ -1,6 +1,6 @@
 import * as R from 'ramda'
 import { React, useState } from 'react'
-import { H3 } from 'src/components/typography'
+import { H3 } from '../../components/typography'
 
 import NewNoteCard from './components/notes/NewNoteCard'
 import NewNoteModal from './components/notes/NewNoteModal'

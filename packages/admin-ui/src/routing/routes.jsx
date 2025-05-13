@@ -9,15 +9,15 @@ import {
   useHistory,
   useLocation,
 } from 'react-router-dom'
-import Login from 'src/pages/Authentication/Login'
-import Register from 'src/pages/Authentication/Register'
-import Reset2FA from 'src/pages/Authentication/Reset2FA'
-import ResetPassword from 'src/pages/Authentication/ResetPassword'
+import Login from '../pages/Authentication/Login'
+import Register from '../pages/Authentication/Register'
+import Reset2FA from '../pages/Authentication/Reset2FA'
+import ResetPassword from '../pages/Authentication/ResetPassword'
 
-import AppContext from 'src/AppContext'
-import Dashboard from 'src/pages/Dashboard'
-import Machines from 'src/pages/Machines'
-import Wizard from 'src/pages/Wizard'
+import AppContext from '../AppContext'
+import Dashboard from '../pages/Dashboard'
+import Machines from '../pages/Machines'
+import Wizard from '../pages/Wizard'
 
 import PrivateRoute from './PrivateRoute'
 import PublicRoute from './PublicRoute'

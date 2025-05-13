@@ -2,9 +2,9 @@ import { useFormikContext } from 'formik'
 import * as R from 'ramda'
 import React, { useState, useCallback } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Label3, H3 } from 'src/components/typography'
-import UploadPhotoIcon from 'src/styling/icons/button/photo/zodiac-resized.svg?react'
-import UploadFileIcon from 'src/styling/icons/button/upload-file/zodiac-resized.svg?react'
+import { Label3, H3 } from '../../../components/typography'
+import UploadPhotoIcon from '../../../styling/icons/button/photo/zodiac-resized.svg?react'
+import UploadFileIcon from '../../../styling/icons/button/upload-file/zodiac-resized.svg?react'
 
 import classes from './Upload.module.css'
 
