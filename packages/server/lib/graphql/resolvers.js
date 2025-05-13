@@ -1,3 +1,5 @@
+const { skip2fa } = require('../environment-helper')
+
 const _ = require('lodash/fp')
 const nmd = require('nano-markdown')
 
@@ -291,6 +293,7 @@ const dynamicConfig = ({ deviceId, operatorId, pid, pq, settings }) => {
     }),
 
     _.update('coins', _.map(setZeroConfLimit(settings.config))),
+    _.set('skip2fa', skip2fa),
     _.set('reboot', !!pid && state.reboots?.[operatorId]?.[deviceId] === pid),
     _.set(
       'shutdown',

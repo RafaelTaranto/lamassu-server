@@ -220,6 +220,7 @@ module.exports = gql`
     emptyUnit: Boolean!
     refillUnit: Boolean!
     diagnostics: Boolean!
+    skip2fa: Boolean!
   }
 
   type Configs {
