@@ -1,9 +1,9 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { memo } from 'react'
-import { H4 } from 'src/components/typography'
+import { H4 } from '../../components/typography'
 
-import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
+import { fromNamespace, toNamespace, namespaces } from '../../utils/config'
 
 import SwitchRow from './components/SwitchRow.jsx'
 

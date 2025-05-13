@@ -1,12 +1,12 @@
 import * as R from 'ramda'
 import * as Yup from 'yup'
 
-import { Autocomplete, NumberInput } from 'src/components/inputs/formik'
-import { bold } from 'src/styling/helpers'
-import denominations from 'src/utils/bill-denominations'
-import { getBillOptions } from 'src/utils/bill-options'
-import { CURRENCY_MAX } from 'src/utils/constants'
-import { transformNumber } from 'src/utils/number'
+import { Autocomplete, NumberInput } from '../../components/inputs/formik'
+import { bold } from '../../styling/helpers'
+import denominations from '../../utils/bill-denominations'
+import { getBillOptions } from '../../utils/bill-options'
+import { CURRENCY_MAX } from '../../utils/constants'
+import { transformNumber } from '../../utils/number'
 
 const widthsByNumberOfUnits = {
   2: { machine: 325, cassette: 340 },

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Label1, Info2 } from 'src/components/typography'
+import { Label1, Info2 } from '../../../components/typography'
 
 const DetailsCard = ({ it }) => {
   const customRequest = it.customRequest

@@ -7,9 +7,9 @@ import {
   Autocomplete,
   Checkbox,
   NumberInput,
-} from 'src/components/inputs/formik'
-import { CURRENCY_MAX } from 'src/utils/constants'
-import { defaultToZero } from 'src/utils/number'
+} from '../../components/inputs/formik'
+import { CURRENCY_MAX } from '../../utils/constants'
+import { defaultToZero } from '../../utils/number'
 
 const filterClass = type => R.filter(it => it.class === type)
 const filterCoins = ({ id }) => R.filter(it => R.contains(id)(it.cryptos))

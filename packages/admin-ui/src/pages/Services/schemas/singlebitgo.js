@@ -4,7 +4,7 @@ import {
   TextInput,
   SecretInput,
   Autocomplete,
-} from 'src/components/inputs/formik'
+} from '../../../components/inputs/formik'
 
 const singleBitgo = code => ({
   code: 'bitgo',

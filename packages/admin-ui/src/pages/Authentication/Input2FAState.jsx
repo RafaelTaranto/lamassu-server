@@ -2,11 +2,11 @@ import { useMutation, useLazyQuery, gql } from '@apollo/client'
 import { Form, Formik } from 'formik'
 import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { TL1, P } from 'src/components/typography'
+import { TL1, P } from '../../components/typography'
 
-import AppContext from 'src/AppContext'
-import { Button } from 'src/components/buttons'
-import { CodeInput } from 'src/components/inputs/base'
+import AppContext from '../../AppContext'
+import { Button } from '../../components/buttons'
+import { CodeInput } from '../../components/inputs/base'
 
 import { STATES } from './states'
 

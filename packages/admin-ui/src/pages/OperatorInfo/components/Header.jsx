@@ -1,7 +1,7 @@
 import React from 'react'
-import { H4, P } from 'src/components/typography/index.jsx'
-import { HelpTooltip } from 'src/components/Tooltip.jsx'
-import { SupportLinkButton } from 'src/components/buttons/index.js'
+import { H4, P } from '../../../components/typography/index.jsx'
+import { HelpTooltip } from '../../../components/Tooltip.jsx'
+import { SupportLinkButton } from '../../../components/buttons/index.js'
 
 const Header = ({ title, tooltipText, articleUrl }) => (
   <div className="flex items-center">

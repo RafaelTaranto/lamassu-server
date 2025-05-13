@@ -3,8 +3,8 @@ import DialogContent from '@mui/material/DialogContent'
 import SvgIcon from '@mui/material/SvgIcon'
 import IconButton from '@mui/material/IconButton'
 import React, { memo } from 'react'
-import { H1 } from 'src/components/typography'
-import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
+import { H1 } from './typography'
+import CloseIcon from '../styling/icons/action/close/zodiac.svg?react'
 
 export const InformativeDialog = memo(
   ({ title = '', open, onDissmised, data, ...props }) => {

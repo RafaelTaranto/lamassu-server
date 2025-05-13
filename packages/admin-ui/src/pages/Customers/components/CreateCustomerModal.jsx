@@ -2,13 +2,13 @@ import { Field, Form, Formik } from 'formik'
 import { parsePhoneNumberWithError } from 'libphonenumber-js'
 import * as R from 'ramda'
 import React from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
-import Modal from 'src/components/Modal'
-import { H1 } from 'src/components/typography'
+import ErrorMessage from '../../../components/ErrorMessage'
+import Modal from '../../../components/Modal'
+import { H1 } from '../../../components/typography'
 import * as Yup from 'yup'
 
-import { Button } from 'src/components/buttons'
-import { TextInput } from 'src/components/inputs/formik'
+import { Button } from '../../../components/buttons'
+import { TextInput } from '../../../components/inputs/formik'
 
 const getValidationSchema = countryCodes =>
   Yup.object().shape({

@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import React, { memo, useState } from 'react'
-import { H4 } from 'src/components/typography'
-import CancelIconInverse from 'src/styling/icons/button/cancel/white.svg?react'
+import { H4 } from '../typography'
+import CancelIconInverse from '../../styling/icons/button/cancel/white.svg?react'
 
 import classes from './SubpageButton.module.css'
 

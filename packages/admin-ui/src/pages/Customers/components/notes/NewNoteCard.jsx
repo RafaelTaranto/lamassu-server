@@ -1,7 +1,7 @@
 import Paper from '@mui/material/Paper'
 import { React } from 'react'
-import { P } from 'src/components/typography'
-import AddIcon from 'src/styling/icons/button/add/zodiac.svg?react'
+import { P } from '../../../../components/typography'
+import AddIcon from '../../../../styling/icons/button/add/zodiac.svg?react'
 
 const NewNoteCard = ({ setOpenModal }) => {
   return (

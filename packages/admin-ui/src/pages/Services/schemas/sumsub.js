@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 
-import { SecretInput, TextInput } from 'src/components/inputs/formik'
+import { SecretInput, TextInput } from '../../../components/inputs/formik'
 
 import { secretTest } from './helper'
 

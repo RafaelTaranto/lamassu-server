@@ -1,7 +1,7 @@
 import * as R from 'ramda'
 import React from 'react'
 
-import { fromNamespace, toNamespace } from 'src/utils/config'
+import { fromNamespace, toNamespace } from '../../utils/config'
 
 import EditableTable from './Table'
 

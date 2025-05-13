@@ -4,8 +4,8 @@ import { getTimezoneOffset } from 'date-fns-tz'
 import { add, format, startOfWeek, startOfYear } from 'date-fns/fp'
 import React, { useCallback, useEffect, useMemo, useRef } from 'react'
 
-import { numberToFiatAmount } from 'src/utils/number'
-import { MINUTE, DAY, WEEK, MONTH } from 'src/utils/time'
+import { numberToFiatAmount } from '../../../../utils/number'
+import { MINUTE, DAY, WEEK, MONTH } from '../../../../utils/time'
 
 const Graph = ({ data, timeFrame, timezone }) => {
   const ref = useRef(null)

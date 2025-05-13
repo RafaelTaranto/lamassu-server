@@ -1,9 +1,9 @@
 import React from 'react'
-import { H1, P, Info2 } from 'src/components/typography'
-import WarningIcon from 'src/styling/icons/warning-icon/comet.svg?react'
+import { H1, P, Info2 } from '../../../components/typography'
+import WarningIcon from '../../../styling/icons/warning-icon/comet.svg?react'
 
-import { Button } from 'src/components/buttons'
-import filledCassettes from 'src/styling/icons/cassettes/both-filled.svg'
+import { Button } from '../../../components/buttons'
+import filledCassettes from '../../../styling/icons/cassettes/both-filled.svg'
 
 const WizardSplash = ({ name, onContinue }) => {
   return (

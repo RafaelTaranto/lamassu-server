@@ -1,5 +1,3 @@
-import { fileURLToPath } from 'url'
-
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import svgr from 'vite-plugin-svgr'
@@ -9,7 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   base: '/',
   build: {
-    outDir: 'build'
+    outDir: 'build',
   },
   server: {
     port: 3001,
@@ -17,19 +15,14 @@ export default defineConfig({
       '^/(graphql|operator-data|front-camera-photo|id-card-photo)': {
         target: 'https://localhost:8070/',
         changeOrigin: true,
-        secure: false
-      }
-    }
+        secure: false,
+      },
+    },
   },
   optimizeDeps: {
     esbuildOptions: {
-      plugins: [fixReactVirtualized]
-    }
+      plugins: [fixReactVirtualized],
+    },
   },
   plugins: [react(), svgr(), tailwindcss()],
-  resolve: {
-    alias: {
-      src: fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
 })

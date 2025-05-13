@@ -1,10 +1,10 @@
 import { useMutation, gql } from '@apollo/client'
 import React, { useState } from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
-import Modal from 'src/components/Modal'
-import { Info2, P } from 'src/components/typography'
+import ErrorMessage from '../../../components/ErrorMessage'
+import Modal from '../../../components/Modal'
+import { Info2, P } from '../../../components/typography'
 
-import { Button } from 'src/components/buttons'
+import { Button } from '../../../components/buttons'
 
 import Input2FAModal from './Input2FAModal'
 import classes from '../UserManagement.module.css'

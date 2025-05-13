@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper'
 import React, { useReducer } from 'react'
-import Logo from 'src/styling/icons/menu/logo.svg?react'
+import Logo from '../../styling/icons/menu/logo.svg?react'
 
 import Input2FAState from './Input2FAState'
 import InputFIDOState from './InputFIDOState'

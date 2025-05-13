@@ -1,10 +1,10 @@
 import Grid from '@mui/material/Grid'
 import React, { useState } from 'react'
-import Sidebar from 'src/components/layout/Sidebar'
-import TitleSection from 'src/components/layout/TitleSection'
-import Notifications from 'src/pages/Notifications/Notifications'
+import Sidebar from '../../../components/layout/Sidebar'
+import TitleSection from '../../../components/layout/TitleSection'
+import Notifications from '../../Notifications/Notifications'
 
-import { namespaces } from 'src/utils/config'
+import { namespaces } from '../../../utils/config'
 
 import Mailgun from './Mailgun'
 

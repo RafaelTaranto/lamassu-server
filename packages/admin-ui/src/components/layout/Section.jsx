@@ -1,6 +1,6 @@
 import React from 'react'
-import ErrorMessage from 'src/components/ErrorMessage'
-import Subtitle from 'src/components/Subtitle'
+import ErrorMessage from '../ErrorMessage'
+import Subtitle from '../Subtitle'
 
 const Section = ({ error, children, title }) => {
   return (

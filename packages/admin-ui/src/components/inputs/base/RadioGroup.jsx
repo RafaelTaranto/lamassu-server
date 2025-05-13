@@ -3,7 +3,7 @@ import MRadioGroup from '@mui/material/RadioGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import classnames from 'classnames'
 import React from 'react'
-import { Label1 } from 'src/components/typography'
+import { Label1 } from '../../typography'
 
 const RadioGroup = ({
   name,

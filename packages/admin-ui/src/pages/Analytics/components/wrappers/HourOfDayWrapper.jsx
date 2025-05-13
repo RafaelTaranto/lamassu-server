@@ -1,10 +1,10 @@
 import { getTimezoneOffset } from 'date-fns-tz'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { H2 } from 'src/components/typography'
+import { H2 } from '../../../../components/typography'
 
-import { Select } from 'src/components/inputs'
-import { MINUTE } from 'src/utils/time'
+import { Select } from '../../../../components/inputs'
+import { MINUTE } from '../../../../utils/time'
 
 import Graph from '../../graphs/Graph'
 import LegendEntry from '../LegendEntry'

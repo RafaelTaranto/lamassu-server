@@ -1,13 +1,13 @@
 import { Form, Formik } from 'formik'
 import * as R from 'ramda'
 import React, { useState, useEffect } from 'react'
-import PromptWhenDirty from 'src/components/PromptWhenDirty'
-import Link from 'src/components/buttons/Link'
-import { TBody, Table } from 'src/components/fake-table/Table'
-import { Info2, TL1 } from 'src/components/typography'
+import PromptWhenDirty from '../PromptWhenDirty'
+import Link from '../buttons/Link'
+import { TBody, Table } from '../fake-table/Table'
+import { Info2, TL1 } from '../typography'
 import { v4 as uuidv4 } from 'uuid'
 
-import { AddButton } from 'src/components/buttons/index'
+import { AddButton } from '../buttons/index'
 
 import TableCtx from './Context'
 import Header from './Header'

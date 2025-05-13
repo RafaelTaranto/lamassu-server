@@ -1,12 +1,12 @@
 import { useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import DataTable from 'src/components/tables/DataTable'
-import CashUnitDetails from 'src/pages/Maintenance/CashUnitDetails'
-import Wizard from 'src/pages/Maintenance/Wizard/Wizard'
-import helper from 'src/pages/Maintenance/helper'
+import DataTable from '../../../../components/tables/DataTable'
+import CashUnitDetails from '../../../Maintenance/CashUnitDetails'
+import Wizard from '../../../Maintenance/Wizard/Wizard'
+import helper from '../../../Maintenance/helper'
 
-import { fromNamespace } from 'src/utils/config'
+import { fromNamespace } from '../../../../utils/config'
 
 const SET_CASSETTE_BILLS = gql`
   mutation MachineAction(

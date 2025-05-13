@@ -1,8 +1,8 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import React, { memo } from 'react'
 
-import { BooleanPropertiesTable } from 'src/components/booleanPropertiesTable'
-import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
+import { BooleanPropertiesTable } from '../../components/booleanPropertiesTable'
+import { fromNamespace, toNamespace, namespaces } from '../../utils/config'
 
 import SwitchRow from './components/SwitchRow.jsx'
 import Header from './components/Header.jsx'

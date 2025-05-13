@@ -1,14 +1,9 @@
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
-import {
-  Td,
-  THead,
-  TDoubleLevelHead,
-  ThDoubleLevel,
-} from 'src/components/fake-table/Table'
+import { Td, THead, TDoubleLevelHead, ThDoubleLevel } from '../fake-table/Table'
 
-import { sentenceCase } from 'src/utils/string'
+import { sentenceCase } from '../../utils/string'
 
 import TableCtx from './Context'
 

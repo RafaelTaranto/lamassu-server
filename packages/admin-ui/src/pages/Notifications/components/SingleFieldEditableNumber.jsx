@@ -1,9 +1,9 @@
 import { Form, Formik } from 'formik'
 import React, { useContext, useState } from 'react'
-import PromptWhenDirty from 'src/components/PromptWhenDirty'
+import PromptWhenDirty from '../../../components/PromptWhenDirty'
 import * as Yup from 'yup'
 
-import { transformNumber } from 'src/utils/number'
+import { transformNumber } from '../../../utils/number'
 
 import NotificationsCtx from '../NotificationsContext'
 

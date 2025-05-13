@@ -1,12 +1,12 @@
 import { useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React from 'react'
-import DataTable from 'src/components/tables/DataTable'
-import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import DataTable from '../../components/tables/DataTable'
+import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
+import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
 
-import { NumberInput } from 'src/components/inputs/formik'
-import { formatDate } from 'src/utils/timezones'
+import { NumberInput } from '../../components/inputs/formik'
+import { formatDate } from '../../utils/timezones'
 
 const GET_BATCHES = gql`
   query cashboxBatches {

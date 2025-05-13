@@ -5,10 +5,10 @@ import {
   getCommissions,
   getListCommissionsSchema,
   commissionsList,
-} from 'src/pages/Commissions/helper'
+} from '../helper'
 
-import { Table as EditableTable } from 'src/components/editableTable'
-import { Select } from 'src/components/inputs'
+import { Table as EditableTable } from '../../../components/editableTable'
+import { Select } from '../../../components/inputs'
 
 const SHOW_ALL = {
   code: 'SHOW_ALL',

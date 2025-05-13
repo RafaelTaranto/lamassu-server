@@ -1,10 +1,10 @@
 import * as R from 'ramda'
 import React from 'react'
-import { getSchema as CommissionsSchema } from 'src/pages/Commissions/helper'
-import { WalletSchema } from 'src/pages/Wallet/helper'
+import { getSchema as CommissionsSchema } from '../Commissions/helper'
+import { WalletSchema } from '../Wallet/helper'
 
-import { LocaleSchema } from 'src/pages/Locales/helper'
-import { fromNamespace, namespaces } from 'src/utils/config'
+import { LocaleSchema } from '../Locales/helper'
+import { fromNamespace, namespaces } from '../../utils/config'
 
 import Commissions from './components/Commissions'
 import Locale from './components/Locales'

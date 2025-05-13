@@ -1,9 +1,9 @@
 import classnames from 'classnames'
 import React from 'react'
-import { P } from 'src/components/typography'
-import CompleteStageIconZodiac from 'src/styling/icons/stage/zodiac/complete.svg?react'
-import CurrentStageIconZodiac from 'src/styling/icons/stage/zodiac/current.svg?react'
-import EmptyStageIconZodiac from 'src/styling/icons/stage/zodiac/empty.svg?react'
+import { P } from '../typography'
+import CompleteStageIconZodiac from '../../styling/icons/stage/zodiac/complete.svg?react'
+import CurrentStageIconZodiac from '../../styling/icons/stage/zodiac/current.svg?react'
+import EmptyStageIconZodiac from '../../styling/icons/stage/zodiac/empty.svg?react'
 
 import styles from './Sidebar.module.css'
 

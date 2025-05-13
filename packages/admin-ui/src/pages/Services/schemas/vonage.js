@@ -1,5 +1,5 @@
-import SecretInputFormik from 'src/components/inputs/formik/SecretInput'
-import TextInputFormik from 'src/components/inputs/formik/TextInput'
+import SecretInputFormik from '../../../components/inputs/formik/SecretInput'
+import TextInputFormik from '../../../components/inputs/formik/TextInput'
 import * as Yup from 'yup'
 
 import { secretTest } from './helper'

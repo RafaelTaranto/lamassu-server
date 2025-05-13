@@ -1,12 +1,12 @@
 import Chip from '@mui/material/Chip'
 import React from 'react'
-import { P, Label3 } from 'src/components/typography'
-import CloseIcon from 'src/styling/icons/action/close/zodiac.svg?react'
-import FilterIcon from 'src/styling/icons/button/filter/white.svg?react'
-import ReverseFilterIcon from 'src/styling/icons/button/filter/zodiac.svg?react'
+import { P, Label3 } from './typography'
+import CloseIcon from '../styling/icons/action/close/zodiac.svg?react'
+import FilterIcon from '../styling/icons/button/filter/white.svg?react'
+import ReverseFilterIcon from '../styling/icons/button/filter/zodiac.svg?react'
 
-import { ActionButton } from 'src/components/buttons'
-import { onlyFirstToUpper, singularOrPlural } from 'src/utils/string'
+import { ActionButton } from './buttons'
+import { onlyFirstToUpper, singularOrPlural } from '../utils/string'
 
 const SearchFilter = ({
   filters,

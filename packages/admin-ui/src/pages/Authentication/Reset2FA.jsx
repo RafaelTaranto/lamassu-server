@@ -5,12 +5,12 @@ import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import React, { useReducer, useState } from 'react'
 import { useLocation, useHistory } from 'react-router-dom'
-import { H2, Label2, Label3, P } from 'src/components/typography'
-import Logo from 'src/styling/icons/menu/logo.svg?react'
+import { H2, Label2, Label3, P } from '../../components/typography'
+import Logo from '../../styling/icons/menu/logo.svg?react'
 
-import { ActionButton, Button } from 'src/components/buttons'
-import { CodeInput } from 'src/components/inputs/base'
-import { primaryColor } from 'src/styling/variables'
+import { ActionButton, Button } from '../../components/buttons'
+import { CodeInput } from '../../components/inputs/base'
+import { primaryColor } from '../../styling/variables'
 
 import classes from './Authentication.module.css'
 

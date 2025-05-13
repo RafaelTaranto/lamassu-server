@@ -1,6 +1,6 @@
 import React from 'react'
-import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import TxInIcon from '../../../../styling/icons/direction/cash-in.svg?react'
+import TxOutIcon from '../../../../styling/icons/direction/cash-out.svg?react'
 
 const cashInAndOutHeaderStyle = { marginLeft: 6 }
 

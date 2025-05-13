@@ -4,8 +4,8 @@ import Grid from '@mui/material/Grid'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
-import { cardState } from 'src/components/CollapsibleCard'
-import { Label1, H4 } from 'src/components/typography'
+import { cardState } from '../../../components/CollapsibleCard'
+import { Label1, H4 } from '../../../components/typography'
 
 import AlertsTable from './AlertsTable'
 

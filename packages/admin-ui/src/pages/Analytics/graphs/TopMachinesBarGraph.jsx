@@ -9,7 +9,7 @@ import {
   subheaderDarkColor,
   fontColor,
   fontSecondary,
-} from 'src/styling/variables'
+} from '../../../styling/variables'
 
 const Graph = ({ data, machines, currency }) => {
   const ref = useRef(null)

@@ -1,10 +1,10 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import Section from 'src/components/layout/Section'
+import Section from '../../components/layout/Section'
 
-import { Table as EditableTable } from 'src/components/editableTable'
-import { fromNamespace, toNamespace, namespaces } from 'src/utils/config'
+import { Table as EditableTable } from '../../components/editableTable'
+import { fromNamespace, toNamespace, namespaces } from '../../utils/config'
 
 import {
   AdvancedWalletSchema,

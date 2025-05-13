@@ -1,5 +1,5 @@
-import baseButtonStyles from 'src/components/buttons/BaseButton.styles'
-import { offColor, white } from 'src/styling/variables'
+import baseButtonStyles from './BaseButton.styles'
+import { offColor, white } from '../../styling/variables'
 
 const { baseButton } = baseButtonStyles
 

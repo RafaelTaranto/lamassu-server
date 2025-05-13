@@ -1,6 +1,6 @@
 import classnames from 'classnames'
 import React from 'react'
-import { Label1 } from 'src/components/typography/index'
+import { Label1 } from '../../../../components/typography/index'
 
 const PercentageChart = ({ cashIn, cashOut }) => {
   const value = cashIn || cashOut !== 0 ? cashIn : 50

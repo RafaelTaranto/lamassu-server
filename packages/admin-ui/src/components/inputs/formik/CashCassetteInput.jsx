@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import React, { memo, useState } from 'react'
-import { CashOut } from 'src/components/inputs/cashbox/Cashbox'
+import { CashOut } from '../cashbox/Cashbox'
 
 import { NumberInput } from '../base'
 

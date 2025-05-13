@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Label2, P } from 'src/components/typography/index.jsx'
+import { Label2, P } from '../../../components/typography/index.jsx'
 import Switch from '@mui/material/Switch'
 
 const SwitchRow = memo(({ title, disabled = false, checked, save }) => {

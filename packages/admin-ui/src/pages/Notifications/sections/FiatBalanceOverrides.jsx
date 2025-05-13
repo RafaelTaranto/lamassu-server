@@ -1,12 +1,12 @@
 import * as R from 'ramda'
 import React, { useContext } from 'react'
-import Autocomplete from 'src/components/inputs/formik/Autocomplete'
+import Autocomplete from '../../../components/inputs/formik/Autocomplete'
 import * as Yup from 'yup'
 
-import { Table as EditableTable } from 'src/components/editableTable'
-import { NumberInput } from 'src/components/inputs/formik/'
-import { fromNamespace } from 'src/utils/config'
-import { transformNumber } from 'src/utils/number'
+import { Table as EditableTable } from '../../../components/editableTable'
+import { NumberInput } from '../../../components/inputs/formik'
+import { fromNamespace } from '../../../utils/config'
+import { transformNumber } from '../../../utils/number'
 
 import NotificationsCtx from '../NotificationsContext'
 

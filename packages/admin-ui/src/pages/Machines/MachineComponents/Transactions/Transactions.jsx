@@ -3,15 +3,15 @@ import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
 import React, { useEffect, useState } from 'react'
-import DetailsRow from 'src/pages/Transactions/DetailsCard'
-import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import DetailsRow from '../../../Transactions/DetailsCard'
+import TxInIcon from '../../../../styling/icons/direction/cash-in.svg?react'
+import TxOutIcon from '../../../../styling/icons/direction/cash-out.svg?react'
 
-import { getStatus } from 'src/pages/Transactions/helper'
-import * as Customer from 'src/utils/customer'
-import { formatDate } from 'src/utils/timezones'
+import { getStatus } from '../../../Transactions/helper'
+import * as Customer from '../../../../utils/customer'
+import { formatDate } from '../../../../utils/timezones'
 
-import DataTable from 'src/components/tables/DataTable'
+import DataTable from '../../../../components/tables/DataTable'
 
 const NUM_LOG_RESULTS = 5
 

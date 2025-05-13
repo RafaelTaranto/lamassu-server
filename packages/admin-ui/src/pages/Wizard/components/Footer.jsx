@@ -1,11 +1,11 @@
 import Drawer from '@mui/material/Drawer'
 import Grid from '@mui/material/Grid'
 import React, { useState } from 'react'
-import Modal from 'src/components/Modal'
-import Stepper from 'src/components/Stepper'
-import { P, H2, Info2 } from 'src/components/typography'
+import Modal from '../../../components/Modal'
+import Stepper from '../../../components/Stepper'
+import { P, H2, Info2 } from '../../../components/typography'
 
-import { Button, Link } from 'src/components/buttons'
+import { Button, Link } from '../../../components/buttons'
 
 function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
   const [fullExample, setFullExample] = useState(false)

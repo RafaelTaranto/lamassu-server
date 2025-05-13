@@ -9,7 +9,7 @@ import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'
 import React, { useContext } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
-import AppContext from 'src/AppContext'
+import AppContext from '../AppContext'
 
 const uploadLink = createUploadLink({
   credentials: 'include',

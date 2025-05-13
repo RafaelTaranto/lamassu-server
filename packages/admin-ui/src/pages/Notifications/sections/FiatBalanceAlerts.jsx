@@ -1,11 +1,11 @@
 import { Form, Formik } from 'formik'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
-import PromptWhenDirty from 'src/components/PromptWhenDirty'
-import { TL2 } from 'src/components/typography'
+import PromptWhenDirty from '../../../components/PromptWhenDirty'
+import { TL2 } from '../../../components/typography'
 import * as Yup from 'yup'
 
-import { transformNumber } from 'src/utils/number'
+import { transformNumber } from '../../../utils/number'
 
 import { Cashbox } from '../../../components/inputs/cashbox/Cashbox'
 import NotificationsCtx from '../NotificationsContext'

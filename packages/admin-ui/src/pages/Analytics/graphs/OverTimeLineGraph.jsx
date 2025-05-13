@@ -22,9 +22,9 @@ import {
   primaryColor,
   fontSecondary,
   subheaderColor,
-} from 'src/styling/variables'
-import { numberToFiatAmount } from 'src/utils/number'
-import { MINUTE, DAY, WEEK, MONTH } from 'src/utils/time'
+} from '../../../styling/variables'
+import { numberToFiatAmount } from '../../../utils/number'
+import { MINUTE, DAY, WEEK, MONTH } from '../../../utils/time'
 
 const Graph = ({
   data,

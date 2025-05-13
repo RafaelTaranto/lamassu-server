@@ -1,8 +1,8 @@
 import React from 'react'
-import { Label1, P } from 'src/components/typography'
+import { Label1, P } from '../../../components/typography'
 
-import { modelPrettifier } from 'src/utils/machine'
-import { formatDate } from 'src/utils/timezones'
+import { modelPrettifier } from '../../../utils/machine'
+import { formatDate } from '../../../utils/timezones'
 
 const Details = ({ data, timezone }) => {
   return (

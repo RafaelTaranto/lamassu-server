@@ -1,12 +1,12 @@
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
 import React from 'react'
-import { Info1, Info2, Info3 } from 'src/components/typography/index'
-import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import { Info1, Info2, Info3 } from '../../components/typography/index'
+import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
+import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
 
-import { fromNamespace } from 'src/utils/config'
-import { numberToFiatAmount } from 'src/utils/number'
+import { fromNamespace } from '../../utils/config'
+import { numberToFiatAmount } from '../../utils/number'
 
 const CashCassettesFooter = ({ machines, config, currencyCode, bills }) => {
   const cashout = config && fromNamespace('cashOut')(config)

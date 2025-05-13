@@ -2,11 +2,11 @@ import IconButton from '@mui/material/IconButton'
 import SvgIcon from '@mui/material/SvgIcon'
 import React from 'react'
 import * as R from 'ramda'
-import { CashIn, CashOutLite } from 'src/components/inputs/cashbox/Cashbox'
-import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
+import { CashIn, CashOutLite } from '../../components/inputs/cashbox/Cashbox'
+import EditIcon from '../../styling/icons/action/edit/enabled.svg?react'
 
-import { fromNamespace } from 'src/utils/config'
-import { getCashUnitCapacity } from 'src/utils/machine'
+import { fromNamespace } from '../../utils/config'
+import { getCashUnitCapacity } from '../../utils/machine'
 
 const getElements = (config, bills, setWizard, widths, setMachineId) => {
   const fillingPercentageSettings = fromNamespace('notifications', config)

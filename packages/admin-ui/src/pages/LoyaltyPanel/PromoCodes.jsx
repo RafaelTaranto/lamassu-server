@@ -3,12 +3,12 @@ import SvgIcon from '@mui/material/SvgIcon'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { DeleteDialog } from 'src/components/DeleteDialog'
-import DataTable from 'src/components/tables/DataTable'
-import { Label3, TL1 } from 'src/components/typography'
-import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
+import { DeleteDialog } from '../../components/DeleteDialog'
+import DataTable from '../../components/tables/DataTable'
+import { Label3, TL1 } from '../../components/typography'
+import DeleteIcon from '../../styling/icons/action/delete/enabled.svg?react'
 
-import { Link, Button } from 'src/components/buttons'
+import { Link, Button } from '../../components/buttons'
 
 import PromoCodesModal from './PromoCodesModal'
 

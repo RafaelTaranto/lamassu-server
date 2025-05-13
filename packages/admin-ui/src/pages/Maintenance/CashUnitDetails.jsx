@@ -1,11 +1,11 @@
 import Chip from '@mui/material/Chip'
 import * as R from 'ramda'
 import React from 'react'
-import { Label1, TL2 } from 'src/components/typography'
+import { Label1, TL2 } from '../../components/typography'
 
-import { CashOut } from 'src/components/inputs'
-import { fromNamespace } from 'src/utils/config'
-import { getCashUnitCapacity, modelPrettifier } from 'src/utils/machine'
+import { CashOut } from '../../components/inputs'
+import { fromNamespace } from '../../utils/config'
+import { getCashUnitCapacity, modelPrettifier } from '../../utils/machine'
 
 const CashUnitDetails = ({
   machine,

@@ -3,7 +3,7 @@ import { parse, isValid, format } from 'date-fns/fp'
 import { Field, useFormikContext } from 'formik'
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import * as R from 'ramda'
-import { H4 } from 'src/components/typography'
+import { H4 } from '../../components/typography'
 import { validate as uuidValidate } from 'uuid'
 import * as Yup from 'yup'
 
@@ -11,8 +11,8 @@ import {
   RadioGroup,
   TextInput,
   Autocomplete,
-} from 'src/components/inputs/formik'
-import { MANUAL } from 'src/utils/constants'
+} from '../../components/inputs/formik'
+import { MANUAL } from '../../utils/constants'
 
 import { Upload } from './components'
 

@@ -1,8 +1,8 @@
 import React from 'react'
-import InverseLinkIcon from 'src/styling/icons/action/external link/white.svg?react'
-import LinkIcon from 'src/styling/icons/action/external link/zodiac.svg?react'
+import InverseLinkIcon from '../../styling/icons/action/external link/white.svg?react'
+import LinkIcon from '../../styling/icons/action/external link/zodiac.svg?react'
 
-import { ActionButton } from 'src/components/buttons'
+import { ActionButton } from './'
 
 const SupportLinkButton = ({ link, label }) => {
   return (

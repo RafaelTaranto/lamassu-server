@@ -3,12 +3,16 @@ import { startAssertion } from '@simplewebauthn/browser'
 import { Field, Form, Formik } from 'formik'
 import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Label3, P } from 'src/components/typography'
+import { Label3, P } from '../../components/typography'
 import * as Yup from 'yup'
 
-import AppContext from 'src/AppContext'
-import { Button } from 'src/components/buttons'
-import { Checkbox, SecretInput, TextInput } from 'src/components/inputs/formik'
+import AppContext from '../../AppContext'
+import { Button } from '../../components/buttons'
+import {
+  Checkbox,
+  SecretInput,
+  TextInput,
+} from '../../components/inputs/formik'
 
 const LOGIN = gql`
   mutation login($username: String!, $password: String!) {

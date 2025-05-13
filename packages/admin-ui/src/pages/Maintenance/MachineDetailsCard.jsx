@@ -1,11 +1,11 @@
 import BigNumber from 'bignumber.js'
 import React from 'react'
 
-import MachineActions from 'src/components/machineActions/MachineActions'
-import { Label1 } from 'src/components/typography/index.jsx'
+import MachineActions from '../../components/machineActions/MachineActions'
+import { Label1 } from '../../components/typography/index.jsx'
 
-import { modelPrettifier } from 'src/utils/machine'
-import { formatDate } from 'src/utils/timezones'
+import { modelPrettifier } from '../../utils/machine'
+import { formatDate } from '../../utils/timezones'
 
 const Label = ({ children }) => {
   return <Label1 className="text-comet mb-1">{children}</Label1>

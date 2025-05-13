@@ -1,7 +1,7 @@
 import React, { memo } from 'react'
 
-import { Link } from 'src/components/buttons'
-import { TableCell as Td } from 'src/components/table'
+import { Link } from '../buttons'
+import { TableCell as Td } from './'
 
 const EditCell = memo(({ save, cancel }) => (
   <Td>

@@ -2,12 +2,16 @@ import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
 import React, { memo } from 'react'
-import { H4, Label2, Label1, Info1, Info2 } from 'src/components/typography'
+import { H4, Label2, Label1, Info1, Info2 } from '../../components/typography'
 import * as Yup from 'yup'
 
-import { NumberInput, RadioGroup, Dropdown } from 'src/components/inputs/formik'
-import { transformNumber } from 'src/utils/number'
-import { onlyFirstToUpper } from 'src/utils/string'
+import {
+  NumberInput,
+  RadioGroup,
+  Dropdown,
+} from '../../components/inputs/formik'
+import { transformNumber } from '../../utils/number'
+import { onlyFirstToUpper } from '../../utils/string'
 
 const triggerType = Yup.string().required()
 const threshold = Yup.object().shape({

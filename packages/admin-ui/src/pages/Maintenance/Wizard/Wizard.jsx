@@ -1,15 +1,15 @@
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import Modal from 'src/components/Modal'
+import Modal from '../../../components/Modal'
 import * as Yup from 'yup'
 
-import { MAX_NUMBER_OF_CASSETTES } from 'src/utils/constants'
+import { MAX_NUMBER_OF_CASSETTES } from '../../../utils/constants'
 import {
   cashUnitCapacity,
   getCashUnitCapacity,
   modelPrettifier,
-} from 'src/utils/machine'
-import { defaultToZero } from 'src/utils/number'
+} from '../../../utils/machine'
+import { defaultToZero } from '../../../utils/number'
 
 import WizardSplash from './WizardSplash'
 import WizardStep from './WizardStep'

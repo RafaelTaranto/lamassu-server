@@ -2,9 +2,9 @@ import ButtonBase from '@mui/material/ButtonBase'
 import Paper from '@mui/material/Card'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
-import { InformativeDialog } from 'src/components/InformativeDialog'
-import { Info2 } from 'src/components/typography'
-import CrossedCameraIcon from 'src/styling/icons/ID/photo/crossed-camera.svg?react'
+import { InformativeDialog } from '../../../components/InformativeDialog'
+import { Info2 } from '../../../components/typography'
+import CrossedCameraIcon from '../../../styling/icons/ID/photo/crossed-camera.svg?react'
 
 import PhotosCarousel from './PhotosCarousel'
 

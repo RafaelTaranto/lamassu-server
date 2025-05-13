@@ -1,9 +1,9 @@
 import Switch from '@mui/material/Switch'
 import React, { useState } from 'react'
-import { H2, Label1 } from 'src/components/typography'
+import { H2, Label1 } from '../../../../components/typography'
 
-import { Select } from 'src/components/inputs'
-import { primaryColor } from 'src/styling/variables'
+import { Select } from '../../../../components/inputs'
+import { primaryColor } from '../../../../styling/variables'
 
 import Graph from '../../graphs/Graph'
 import LegendEntry from '../LegendEntry'

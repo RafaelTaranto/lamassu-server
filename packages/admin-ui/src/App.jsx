@@ -2,10 +2,10 @@ import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import React, { useState } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
-import ApolloProvider from 'src/utils/apollo'
+import ApolloProvider from './utils/apollo'
 
-import AppContext from 'src/AppContext'
-import theme from 'src/styling/theme'
+import AppContext from './AppContext'
+import theme from './styling/theme'
 
 import Main from './Main'
 import './styling/global/global.css'

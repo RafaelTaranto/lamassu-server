@@ -1,10 +1,10 @@
 import IconButton from '@mui/material/IconButton'
 import React from 'react'
-import { H4 } from 'src/components/typography'
-import DisabledEditIcon from 'src/styling/icons/action/edit/disabled.svg?react'
-import EditIcon from 'src/styling/icons/action/edit/enabled.svg?react'
+import { H4 } from '../../../components/typography'
+import DisabledEditIcon from '../../../styling/icons/action/edit/disabled.svg?react'
+import EditIcon from '../../../styling/icons/action/edit/enabled.svg?react'
 
-import { Link } from 'src/components/buttons'
+import { Link } from '../../../components/buttons'
 import SvgIcon from '@mui/material/SvgIcon'
 
 const Header = ({ title, editing, disabled, setEditing }) => {

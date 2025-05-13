@@ -2,10 +2,10 @@ import IconButton from '@mui/material/IconButton'
 import SvgIcon from '@mui/material/SvgIcon'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { DeleteDialog } from 'src/components/DeleteDialog'
-import DataTable from 'src/components/tables/DataTable'
-import CopyToClipboard from 'src/components/CopyToClipboard.jsx'
-import DeleteIcon from 'src/styling/icons/action/delete/enabled.svg?react'
+import { DeleteDialog } from '../../components/DeleteDialog'
+import DataTable from '../../components/tables/DataTable'
+import CopyToClipboard from '../../components/CopyToClipboard.jsx'
+import DeleteIcon from '../../styling/icons/action/delete/enabled.svg?react'
 
 const BlacklistTable = ({
   data,

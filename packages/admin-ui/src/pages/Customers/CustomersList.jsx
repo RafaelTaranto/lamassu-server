@@ -1,10 +1,10 @@
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
 import React from 'react'
-import { MainStatus } from 'src/components/Status'
-import DataTable from 'src/components/tables/DataTable'
-import TxInIcon from 'src/styling/icons/direction/cash-in.svg?react'
-import TxOutIcon from 'src/styling/icons/direction/cash-out.svg?react'
+import { MainStatus } from '../../components/Status'
+import DataTable from '../../components/tables/DataTable'
+import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
+import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
 
 import { getFormattedPhone, getName } from './helper'
 

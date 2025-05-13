@@ -4,7 +4,7 @@ import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 
-import { white } from 'src/styling/variables'
+import { white } from '../styling/variables'
 import classes from './Popper.module.css'
 
 const Popover = ({ children, bgColor = white, className, ...props }) => {

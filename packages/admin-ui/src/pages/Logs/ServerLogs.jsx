@@ -1,12 +1,12 @@
 import { useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState, useRef } from 'react'
-import LogsDowloaderPopover from 'src/components/LogsDownloaderPopper.jsx'
-import Title from 'src/components/Title.jsx'
-import Uptime from 'src/pages/Logs/Uptime.jsx'
-import { Info3, H4 } from 'src/components/typography/index.jsx'
+import LogsDowloaderPopover from '../../components/LogsDownloaderPopper.jsx'
+import Title from '../../components/Title.jsx'
+import Uptime from './Uptime.jsx'
+import { Info3, H4 } from '../../components/typography/index.jsx'
 
-import { Select } from 'src/components/inputs/index.js'
+import { Select } from '../../components/inputs/index.js'
 import {
   Table,
   TableHead,
@@ -14,9 +14,9 @@ import {
   TableHeader,
   TableBody,
   TableCell,
-} from 'src/components/table/index.js'
-import { startCase } from 'src/utils/string.js'
-import { formatDate } from 'src/utils/timezones.js'
+} from '../../components/table/index.js'
+import { startCase } from '../../utils/string.js'
+import { formatDate } from '../../utils/timezones.js'
 
 import logsClasses from './Logs.module.css'
 import classes from './ServerLogs.module.css'

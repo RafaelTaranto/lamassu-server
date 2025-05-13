@@ -3,12 +3,12 @@ import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Label3, P } from 'src/components/typography'
+import { Label3, P } from '../../components/typography'
 
-import AppContext from 'src/AppContext'
-import { ActionButton, Button } from 'src/components/buttons'
-import { CodeInput } from 'src/components/inputs/base'
-import { primaryColor } from 'src/styling/variables'
+import AppContext from '../../AppContext'
+import { ActionButton, Button } from '../../components/buttons'
+import { CodeInput } from '../../components/inputs/base'
+import { primaryColor } from '../../styling/variables'
 
 import classes from './Authentication.module.css'
 

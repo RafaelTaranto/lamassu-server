@@ -3,11 +3,11 @@ import ListItem from '@mui/material/ListItem'
 import * as R from 'ramda'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { P } from 'src/components/typography/index'
-import Wrench from 'src/styling/icons/action/wrench/zodiac.svg?react'
-import CashBoxEmpty from 'src/styling/icons/cassettes/cashbox-empty.svg?react'
-import AlertLinkIcon from 'src/styling/icons/month arrows/right.svg?react'
-import WarningIcon from 'src/styling/icons/warning-icon/tomato.svg?react'
+import { P } from '../../../components/typography/index'
+import Wrench from '../../../styling/icons/action/wrench/zodiac.svg?react'
+import CashBoxEmpty from '../../../styling/icons/cassettes/cashbox-empty.svg?react'
+import AlertLinkIcon from '../../../styling/icons/month arrows/right.svg?react'
+import WarningIcon from '../../../styling/icons/warning-icon/tomato.svg?react'
 
 const icons = {
   error: <WarningIcon style={{ height: 20, width: 20, marginRight: 12 }} />,

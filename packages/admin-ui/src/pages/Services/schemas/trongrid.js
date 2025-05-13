@@ -1,4 +1,4 @@
-import TextInputFormik from 'src/components/inputs/formik/TextInput'
+import TextInputFormik from '../../../components/inputs/formik/TextInput'
 import * as Yup from 'yup'
 
 export default {

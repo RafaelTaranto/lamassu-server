@@ -1,18 +1,15 @@
 import * as R from 'ramda'
 import { useState, React } from 'react'
-import ImagePopper from 'src/components/ImagePopper'
-import { H3, Info3 } from 'src/components/typography'
-import CardIcon from 'src/styling/icons/ID/card/comet.svg?react'
-import PhoneIcon from 'src/styling/icons/ID/phone/comet.svg?react'
-import EditIcon from 'src/styling/icons/action/edit/comet.svg?react'
+import ImagePopper from '../../components/ImagePopper'
+import { H3, Info3 } from '../../components/typography'
+import CardIcon from '../../styling/icons/ID/card/comet.svg?react'
+import PhoneIcon from '../../styling/icons/ID/phone/comet.svg?react'
+import EditIcon from '../../styling/icons/action/edit/comet.svg?react'
 import * as Yup from 'yup'
 
-import { TextInput } from 'src/components/inputs/formik'
-import {
-  OVERRIDE_AUTHORIZED,
-  OVERRIDE_REJECTED,
-} from 'src/pages/Customers/components/consts'
-import { onlyFirstToUpper } from 'src/utils/string'
+import { TextInput } from '../../components/inputs/formik'
+import { OVERRIDE_AUTHORIZED, OVERRIDE_REJECTED } from './components/consts'
+import { onlyFirstToUpper } from '../../utils/string'
 
 import { EditableCard } from './components'
 import {

@@ -2,10 +2,10 @@ import { useQuery, gql } from '@apollo/client'
 import { getEquivalentCode } from '@lamassu/coins/lightUtils'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { H4 } from 'src/components/typography'
+import { H4 } from '../../../../components/typography'
 
-import { Button } from 'src/components/buttons'
-import { RadioGroup } from 'src/components/inputs'
+import { Button } from '../../../../components/buttons'
+import { RadioGroup } from '../../../../components/inputs'
 
 import classes from './Shared.module.css'
 import { getItems } from './getItems'

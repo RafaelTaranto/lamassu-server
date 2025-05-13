@@ -2,10 +2,10 @@ import { useLazyQuery, useQuery, gql } from '@apollo/client'
 import { subMinutes } from 'date-fns'
 import FileSaver from 'file-saver'
 import React, { useState, useEffect } from 'react'
-import Modal from 'src/components/Modal'
-import { H3, P } from 'src/components/typography'
+import Modal from '../Modal'
+import { H3, P } from '../typography'
 
-import { Button } from 'src/components/buttons'
+import { Button } from '../buttons'
 
 const STATES = {
   INITIAL: 'INITIAL',

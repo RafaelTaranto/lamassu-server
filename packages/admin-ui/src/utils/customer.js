@@ -1,6 +1,6 @@
 import * as R from 'ramda'
 
-import { onlyFirstToUpper } from 'src/utils/string'
+import { onlyFirstToUpper } from './string'
 
 /* Expects a customer ID card data object */
 const formatFullName = R.pipe(

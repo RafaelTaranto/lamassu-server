@@ -12,9 +12,9 @@ import {
   fontColor,
   fontSecondary,
   subheaderColor,
-} from 'src/styling/variables'
-import { MINUTE } from 'src/utils/time'
-import { toUtc } from 'src/utils/timezones'
+} from '../../../styling/variables'
+import { MINUTE } from '../../../utils/time'
+import { toUtc } from '../../../utils/timezones'
 
 const Graph = ({
   data,
