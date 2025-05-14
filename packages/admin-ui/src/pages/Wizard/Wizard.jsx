@@ -37,12 +37,9 @@ const Wizard = () => {
 
   const wizardStep = getWizardStep(data?.config, data?.cryptoCurrencies)
 
-  const shouldGoBack =
-    history.length && !history.location.state?.fromAuthRegister
-
   if (wizardStep === 0) {
     setWizardTested(true)
-    shouldGoBack ? history.goBack() : history.push('/')
+    return <></>
   }
 
   const isWelcome = step === 0
@@ -54,7 +51,9 @@ const Wizard = () => {
   const doContinue = () => {
     if (step >= STEPS.length - 1) {
       setOpen(false)
+      setWizardTested(true)
       history.push('/')
+      return
     }
 
     const nextStep = step === 0 && wizardStep ? wizardStep : step + 1
