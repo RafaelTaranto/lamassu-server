@@ -1,4 +1,24 @@
 import * as R from 'ramda'
+import { formatCryptoAddress } from '@lamassu/coins/lightUtils'
+
+const shortenByEllipses = (str, contextLength, ellipsesLength) =>
+  str.length <= contextLength * 2
+    ? str
+    : [
+        str.slice(0, contextLength),
+        '.'.repeat(ellipsesLength),
+        str.slice(str.length - contextLength),
+      ].join('')
+
+const formatAddress = (cryptoCode, address) => {
+  address = formatCryptoAddress(cryptoCode, address)
+  let addressDisplay =
+    address.length > 84 /* 2*BTC */
+      ? shortenByEllipses(address, 10, 5)
+      : address
+  addressDisplay = addressDisplay.replace(/(.{5})/g, '$1 ')
+  return { address, addressDisplay }
+}
 
 const formatLong = value => {
   if (!value || value.length <= 20) return value
@@ -30,6 +50,7 @@ const singularOrPlural = (amount, singularStr, pluralStr) =>
 export {
   startCase,
   onlyFirstToUpper,
+  formatAddress,
   formatLong,
   singularOrPlural,
   sentenceCase,

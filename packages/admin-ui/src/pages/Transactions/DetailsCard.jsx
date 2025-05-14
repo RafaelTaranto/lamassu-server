@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation, gql } from '@apollo/client'
-import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
+import { toUnit } from '@lamassu/coins/lightUtils'
 import BigNumber from 'bignumber.js'
 import classNames from 'classnames'
 import { add, differenceInYears, format, sub, parse } from 'date-fns/fp'
@@ -32,6 +32,7 @@ import {
 } from '../../styling/variables'
 import { SWEEPABLE_CRYPTOS } from '../../utils/constants'
 import * as Customer from '../../utils/customer'
+import { formatAddress } from '../../utils/string'
 
 import CopyToClipboard from '../../components/CopyToClipboard.jsx'
 import { getStatus, getStatusDetails } from './helper'
@@ -92,9 +93,6 @@ const getCryptoFeeAmount = tx => {
     .toNumber()
     .toFixed(2, 1)
 }
-
-const formatAddress = (cryptoCode = '', address = '') =>
-  formatCryptoAddress(cryptoCode, address).replace(/(.{5})/g, '$1 ')
 
 const Label = ({ children }) => {
   return (
@@ -234,6 +232,8 @@ const DetailsRow = ({ it: tx, timezone }) => {
     return isCashIn ? cashInMessage : cashOutMessage
   }
 
+  const { address, addressDisplay } = formatAddress(tx.cryptoCode, tx.toAddress)
+
   return (
     <div data-cy="details" className="flex flex-col mt-6">
       <div className="flex flex-row mb-9">
@@ -358,9 +358,7 @@ const DetailsRow = ({ it: tx, timezone }) => {
             )}
           </div>
           <div>
-            <CopyToClipboard>
-              {formatAddress(tx.cryptoCode, tx.toAddress)}
-            </CopyToClipboard>
+            <CopyToClipboard value={address}>{addressDisplay}</CopyToClipboard>
           </div>
         </div>
         <div data-cy="transactionId" className="w-70">
