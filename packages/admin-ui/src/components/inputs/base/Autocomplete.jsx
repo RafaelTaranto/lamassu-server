@@ -81,20 +81,18 @@ const Autocomplete = ({
       clearOnEscape
       isOptionEqualToValue={R.eqProps(valueProp)}
       {...props}
-      renderInput={params => {
-        return (
-          <TextInput
-            {...params}
-            autoFocus={autoFocus}
-            label={label}
-            value={outsideValue}
-            error={error}
-            size={size}
-            fullWidth={fullWidth}
-            textAlign={textAlign}
-          />
-        )
-      }}
+      renderInput={params => (
+        <TextInput
+          {...params}
+          autoFocus={autoFocus}
+          label={label}
+          value={outsideValue}
+          error={error}
+          size={size}
+          fullWidth={fullWidth}
+          textAlign={textAlign}
+        />
+      )}
       renderOption={(iprops, props) => {
         if (!props.warning && !props.warningMessage)
           return <li {...iprops}>{R.path([labelProp])(props)}</li>

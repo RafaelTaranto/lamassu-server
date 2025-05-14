@@ -20,6 +20,7 @@ const TextInput = memo(
     size,
     bold,
     className,
+    inputProps,
     InputProps,
     ...props
   }) => {
@@ -63,8 +64,7 @@ const TextInput = memo(
             },
             ...InputProps,
           },
-
-          htmlInput: { style: { textAlign } },
+          htmlInput: { style: { textAlign }, ...inputProps },
         }}
       />
     )
