@@ -1,4 +1,4 @@
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import React, { useContext, useState } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import Slide from '@mui/material/Slide'
@@ -27,8 +27,7 @@ const GET_USER_DATA = gql`
 `
 
 const Main = () => {
-  const location = useLocation()
-  const history = useHistory()
+  const [location, navigate] = useLocation()
   const { wizardTested, userData, setUserData } = useContext(AppContext)
   const [loading, setLoading] = useState(true)
 
@@ -41,16 +40,14 @@ const Main = () => {
     },
   })
 
-  const route = location.pathname
+  const sidebar = hasSidebar(location)
+  const parent = sidebar ? getParent(location) : {}
 
-  const sidebar = hasSidebar(route)
-  const parent = sidebar ? getParent(route) : {}
+  const is404 = location === '/404'
 
-  const is404 = location.pathname === '/404'
+  const isSelected = it => location === it.route
 
-  const isSelected = it => location.pathname === it.route
-
-  const onClick = it => history.push(it.route)
+  const onClick = it => navigate(it.route)
 
   const contentClassName = sidebar ? 'flex-1 ml-12 pt-4' : 'w-[1200px]'
 

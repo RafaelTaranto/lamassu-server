@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import classnames from 'classnames'
 import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { getWizardStep, STEPS } from './helper'
 
 import AppContext from '../../AppContext'
@@ -23,7 +23,7 @@ const GET_DATA = gql`
 
 const Wizard = () => {
   const { data, loading } = useQuery(GET_DATA)
-  const history = useHistory()
+  const [, navigate] = useLocation()
   const { setWizardTested } = useContext(AppContext)
 
   const [step, setStep] = useState(0)
@@ -52,7 +52,7 @@ const Wizard = () => {
     if (step >= STEPS.length - 1) {
       setOpen(false)
       setWizardTested(true)
-      history.push('/')
+      navigate('/')
       return
     }
 

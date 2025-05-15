@@ -2,7 +2,7 @@ import { useMutation, useQuery, useLazyQuery, gql } from '@apollo/client'
 import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import React, { useContext, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { Label3, P } from '../../components/typography'
 
 import AppContext from '../../AppContext'
@@ -48,7 +48,7 @@ const GET_USER_DATA = gql`
 `
 
 const Setup2FAState = ({ state }) => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
   const { setUserData } = useContext(AppContext)
 
   const [secret, setSecret] = useState(null)
@@ -85,7 +85,7 @@ const Setup2FAState = ({ state }) => {
   const [getUserData] = useLazyQuery(GET_USER_DATA, {
     onCompleted: ({ userData }) => {
       setUserData(userData)
-      history.push('/')
+      navigate('/')
     },
   })
 

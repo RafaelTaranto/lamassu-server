@@ -8,7 +8,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import * as R from 'ramda'
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { Status } from '../../../components/Status'
 import { Label2, TL2 } from '../../../components/typography'
 import TxOutIcon from '../../../styling/icons/direction/cash-out.svg?react'
@@ -39,7 +39,7 @@ const HeaderCell = styled(TableCell)({
 })
 
 const MachinesTable = ({ machines = [], numToRender }) => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
 
   const { data } = useQuery(GET_CONFIG)
   const fillingPercentageSettings = fromNamespace(
@@ -65,8 +65,10 @@ const MachinesTable = ({ machines = [], numToRender }) => {
   }
 
   const redirect = ({ name, deviceId }) => {
-    return history.push(`/machines/${deviceId}`, {
-      selectedMachine: name,
+    return navigate(`/machines/${deviceId}`, {
+      state: {
+        selectedMachine: name,
+      },
     })
   }
 

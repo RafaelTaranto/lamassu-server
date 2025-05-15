@@ -2,7 +2,7 @@ import Fade from '@mui/material/Fade'
 import Slide from '@mui/material/Slide'
 import * as R from 'ramda'
 import React, { useContext } from 'react'
-import { matchPath, Redirect, Switch, useLocation } from 'react-router-dom'
+import { Redirect, Switch, useLocation } from 'wouter'
 import Login from '../pages/Authentication/Login'
 import Register from '../pages/Authentication/Register'
 import Reset2FA from '../pages/Authentication/Reset2FA'
@@ -50,7 +50,7 @@ const getParent = route =>
   )(flattened)
 
 const Routes = () => {
-  const location = useLocation()
+  const [location] = useLocation()
   const { userData } = useContext(AppContext)
 
   const getFilteredRoutes = () => {
@@ -63,14 +63,14 @@ const Routes = () => {
     })
   }
 
-  const Transition = location.state ? Slide : Fade
+  const Transition = history.state ? Slide : Fade
 
   const transitionProps =
     Transition === Slide
       ? {
           direction:
-            R.findIndex(R.propEq('route', location.state.prev))(leafRoutes) >
-            R.findIndex(R.propEq('route', location.pathname))(leafRoutes)
+            R.findIndex(R.propEq('route', history.state.prev))(leafRoutes) >
+            R.findIndex(R.propEq('route', location))(leafRoutes)
               ? 'right'
               : 'left',
         }
@@ -79,9 +79,9 @@ const Routes = () => {
   return (
     <Switch>
       <PrivateRoute exact path="/">
-        <Redirect to={{ pathname: '/dashboard' }} />
+        <Redirect to="/dashboard" />
       </PrivateRoute>
-      <PrivateRoute path={'/dashboard'}>
+      <PrivateRoute path="/dashboard">
         <Transition
           className={wrapperClasses}
           {...transitionProps}
@@ -93,7 +93,9 @@ const Routes = () => {
           </div>
         </Transition>
       </PrivateRoute>
-      <PrivateRoute path="/machines" component={Machines} />
+      <PrivateRoute path="/machines">
+        <Machines />
+      </PrivateRoute>
       <PublicRoute path="/register" component={Register} />
       <PublicRoute path="/resetpassword" component={ResetPassword} />
       <PublicRoute path="/reset2fa" component={Reset2FA} />
@@ -103,20 +105,18 @@ const Routes = () => {
           <Transition
             className={wrapperClasses}
             {...transitionProps}
-            in={!!matchPath(location.pathname, { path: route })}
+            in={location === route}
             mountOnEnter
             unmountOnExit>
             <div className={wrapperClasses}>
-              <PrivateRoute path={route} key={key}>
-                <Page name={key} />
-              </PrivateRoute>
+              <Page name={key} />
             </div>
           </Transition>
         </PrivateRoute>
       ))}
       <PublicRoute path="/404" />
       <PublicRoute path="*">
-        <Redirect to={{ pathname: '/404' }} />
+        <Redirect to="/404" />
       </PublicRoute>
     </Switch>
   )

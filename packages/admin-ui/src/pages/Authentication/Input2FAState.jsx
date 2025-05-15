@@ -1,7 +1,7 @@
 import { useMutation, useLazyQuery, gql } from '@apollo/client'
 import { Form, Formik } from 'formik'
 import React, { useContext, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { TL1, P } from '../../components/typography'
 
 import AppContext from '../../AppContext'
@@ -37,7 +37,7 @@ const GET_USER_DATA = gql`
 `
 
 const Input2FAState = ({ state, dispatch }) => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
   const { setUserData } = useContext(AppContext)
 
   const [invalidToken, setInvalidToken] = useState(false)
@@ -45,7 +45,7 @@ const Input2FAState = ({ state, dispatch }) => {
   const [getUserData, { error: queryError }] = useLazyQuery(GET_USER_DATA, {
     onCompleted: ({ userData }) => {
       setUserData(userData)
-      history.push('/')
+      navigate('/')
     },
   })
 

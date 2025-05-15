@@ -2,7 +2,7 @@ import { useMutation, useLazyQuery, gql } from '@apollo/client'
 import { startAssertion } from '@simplewebauthn/browser'
 import { Field, Form, Formik } from 'formik'
 import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { H2, Label2, P } from '../../components/typography'
 import * as Yup from 'yup'
 
@@ -61,7 +61,7 @@ const InputFIDOState = ({ state, strategy }) => {
     }
   `
 
-  const history = useHistory()
+  const [, navigate] = useLocation()
   const { setUserData } = useContext(AppContext)
 
   const [localClientField, setLocalClientField] = useState('')
@@ -125,7 +125,7 @@ const InputFIDOState = ({ state, strategy }) => {
   const [getUserData, { error: queryError }] = useLazyQuery(GET_USER_DATA, {
     onCompleted: ({ userData }) => {
       setUserData(userData)
-      history.push('/')
+      navigate('/')
     },
   })
 

@@ -3,7 +3,7 @@ import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
 import React, { useEffect, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import LogsDowloaderPopover from '../../components/LogsDownloaderPopper'
 import SearchBox from '../../components/SearchBox'
 import SearchFilter from '../../components/SearchFilter'
@@ -134,7 +134,7 @@ const getFiltersObj = filters =>
   R.reduce((s, f) => ({ ...s, [f.type]: f.value }), {}, filters)
 
 const Transactions = () => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
 
   const [filters, setFilters] = useState([])
   const { data: filtersResponse, loading: filtersLoading } = useQuery(
@@ -160,7 +160,7 @@ const Transactions = () => {
   const timezone = R.path(['config', 'locale_timezone'], configResponse)
 
   const redirect = customerId => {
-    return history.push(`/compliance/customer/${customerId}`)
+    return navigate(`/compliance/customer/${customerId}`)
   }
 
   const elements = [

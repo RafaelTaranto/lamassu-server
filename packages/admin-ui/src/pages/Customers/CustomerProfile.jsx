@@ -4,7 +4,7 @@ import Switch from '@mui/material/Switch'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
 import React, { memo, useState } from 'react'
-import { useHistory, useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'wouter'
 import { Label1, Label2 } from '../../components/typography'
 import AuthorizeReversedIcon from '../../styling/icons/button/authorize/white.svg?react'
 import AuthorizeIcon from '../../styling/icons/button/authorize/zodiac.svg?react'
@@ -284,7 +284,7 @@ const CHECK_AGAINST_SANCTIONS = gql`
 `
 
 const CustomerProfile = memo(() => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
 
   const [showCompliance, setShowCompliance] = useState(false)
   const [wizard, setWizard] = useState(false)
@@ -515,7 +515,7 @@ const CustomerProfile = memo(() => {
         <Label1
           noMargin
           className="cursor-pointer text-comet"
-          onClick={() => history.push('/compliance/customers')}>
+          onClick={() => navigate('/compliance/customers')}>
           Customers
         </Label1>
         <Label2 noMargin className="cursor-pointer text-comet">

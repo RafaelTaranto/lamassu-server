@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import { Field, Form, Formik } from 'formik'
 import React, { useReducer } from 'react'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'wouter'
 import { H2, Label3, P } from '../../components/typography'
 import Logo from '../../styling/icons/menu/logo.svg?react'
 import * as Yup from 'yup'
@@ -11,8 +11,6 @@ import * as Yup from 'yup'
 import { Button } from '../../components/buttons'
 import { SecretInput } from '../../components/inputs/formik'
 import classes from './Authentication.module.css'
-
-const QueryParams = () => new URLSearchParams(useLocation().search)
 
 const VALIDATE_REGISTER_LINK = gql`
   query validateRegisterLink($token: String!) {
@@ -84,8 +82,9 @@ const getErrorMsg = (
 }
 
 const Register = () => {
-  const history = useHistory()
-  const token = QueryParams().get('t')
+  const [, navigate] = useLocation()
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get('t')
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -118,7 +117,7 @@ const Register = () => {
 
   const [register, { error: mutationError }] = useMutation(REGISTER, {
     onCompleted: ({ register: success }) => {
-      if (success) history.push('/wizard', { fromAuthRegister: true })
+      if (success) navigate('/')
     },
   })
 

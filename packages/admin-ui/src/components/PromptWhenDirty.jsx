@@ -1,28 +1,19 @@
 import { useFormikContext } from 'formik'
 import React, { useEffect } from 'react'
-import { Prompt } from 'react-router-dom'
 
-const PROMPT_DEFAULT_MESSAGE =
-  'You have unsaved changes on this page. Are you sure you want to leave?'
+import useDirtyHandler from '../routing/dirtyHandler.js'
 
-const PromptWhenDirty = ({ message = PROMPT_DEFAULT_MESSAGE }) => {
+const PromptWhenDirty = () => {
+  const setIsDirty = useDirtyHandler(state => state.setIsDirty)
   const formik = useFormikContext()
 
   const hasChanges = formik.dirty && formik.submitCount === 0
 
   useEffect(() => {
-    if (hasChanges) {
-      window.onbeforeunload = confirmExit
-    } else {
-      window.onbeforeunload = undefined
-    }
+    setIsDirty(hasChanges)
   }, [hasChanges])
 
-  const confirmExit = () => {
-    return PROMPT_DEFAULT_MESSAGE
-  }
-
-  return <Prompt when={hasChanges} message={message} />
+  return <></>
 }
 
 export default PromptWhenDirty

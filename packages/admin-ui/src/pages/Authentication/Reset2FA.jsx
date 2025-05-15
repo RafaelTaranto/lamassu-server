@@ -4,7 +4,7 @@ import Paper from '@mui/material/Paper'
 import { Form, Formik } from 'formik'
 import { QRCodeSVG as QRCode } from 'qrcode.react'
 import React, { useReducer, useState } from 'react'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'wouter'
 import { H2, Label2, Label3, P } from '../../components/typography'
 import Logo from '../../styling/icons/menu/logo.svg?react'
 
@@ -43,9 +43,9 @@ const reducer = (state, action) => {
 }
 
 const Reset2FA = () => {
-  const history = useHistory()
-  const QueryParams = () => new URLSearchParams(useLocation().search)
-  const token = QueryParams().get('t')
+  const [, navigate] = useLocation()
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get('t')
 
   const [isShowing, setShowing] = useState(false)
   const [invalidToken, setInvalidToken] = useState(false)
@@ -85,7 +85,7 @@ const Reset2FA = () => {
 
   const [reset2FA, { error: mutationError }] = useMutation(RESET_2FA, {
     onCompleted: ({ reset2FA: success }) => {
-      success ? history.push('/') : setInvalidToken(true)
+      success ? navigate('/') : setInvalidToken(true)
     },
   })
 
