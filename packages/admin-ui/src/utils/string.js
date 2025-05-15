@@ -11,6 +11,8 @@ const shortenByEllipses = (str, contextLength, ellipsesLength) =>
       ].join('')
 
 const formatAddress = (cryptoCode, address) => {
+  if (!cryptoCode || !address) return { address: null, addressDisplay: null }
+
   address = formatCryptoAddress(cryptoCode, address)
   let addressDisplay =
     address.length > 84 /* 2*BTC */

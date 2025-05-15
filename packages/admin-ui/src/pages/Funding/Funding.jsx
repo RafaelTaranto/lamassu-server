@@ -1,5 +1,4 @@
 import { useQuery, gql } from '@apollo/client'
-import { formatCryptoAddress } from '@lamassu/coins/lightUtils'
 import BigNumber from 'bignumber.js'
 import classnames from 'classnames'
 import { format } from 'date-fns/fp'
@@ -25,6 +24,7 @@ import {
   Label3,
 } from '../../components/typography/index.jsx'
 import CopyToClipboard from '../../components/CopyToClipboard.jsx'
+import { formatAddress } from '../../utils/string'
 
 import { primaryColor } from '../../styling/variables.js'
 
@@ -57,8 +57,6 @@ const GET_FUNDING = gql`
   }
 `
 
-const formatAddress = (cryptoCode = '', address = '') =>
-  formatCryptoAddress(cryptoCode, address).replace(/(.{4})/g, '$1 ')
 const sumReducer = (acc, value) => acc.plus(value)
 const formatNumber = it => new BigNumber(it).toFormat(2)
 
@@ -149,6 +147,10 @@ const Funding = () => {
   const pendingTotal = getPendingTotal(funding)
   const signIfPositive = num => (num >= 0 ? '+' : '')
 
+  const { address, addressDisplay } = formatAddress(
+    selected?.cryptoCode,
+    selected?.fundingAddress,
+  )
   return (
     <>
       <div>
@@ -223,11 +225,9 @@ const Funding = () => {
                   <strong>
                     <CopyToClipboard
                       buttonClassname={classes.copyToClipboard}
-                      key={selected.cryptoCode}>
-                      {formatAddress(
-                        selected.cryptoCode,
-                        selected.fundingAddress,
-                      )}
+                      key={selected.cryptoCode}
+                      value={address}>
+                      {addressDisplay}
                     </CopyToClipboard>
                   </strong>
                 </div>
