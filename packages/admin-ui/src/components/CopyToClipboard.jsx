@@ -13,6 +13,7 @@ const CopyToClipboard = ({
   className,
   buttonClassname,
   children,
+  value,
   wrapperClassname,
   removeSpace = true,
 }) => {
@@ -33,6 +34,12 @@ const CopyToClipboard = ({
   const open = Boolean(anchorEl)
   const id = open ? 'simple-popper' : undefined
 
+  const text = value
+    ? value
+    : removeSpace
+      ? R.replace(/\s/g, '')(children)
+      : children
+
   return (
     <div className={classnames('flex items-center', wrapperClassname)}>
       {children && (
@@ -43,8 +50,7 @@ const CopyToClipboard = ({
             {children}
           </Mono>
           <div className={buttonClassname}>
-            <ReactCopyToClipboard
-              text={removeSpace ? R.replace(/\s/g, '')(children) : children}>
+            <ReactCopyToClipboard text={text}>
               <button
                 className="border-0 bg-transparent cursor-pointer"
                 aria-describedby={id}
