@@ -93,7 +93,7 @@ const Routes = () => {
           </div>
         </Transition>
       </PrivateRoute>
-      <PrivateRoute path="/machines">
+      <PrivateRoute path="/machines/:id">
         <Machines />
       </PrivateRoute>
       <PublicRoute path="/register" component={Register} />
