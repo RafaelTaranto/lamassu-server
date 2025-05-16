@@ -2,7 +2,7 @@ import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import * as R from 'ramda'
 import React from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { P } from '../../../components/typography/index'
 import Wrench from '../../../styling/icons/action/wrench/zodiac.svg?react'
 import CashBoxEmpty from '../../../styling/icons/cassettes/cashbox-empty.svg?react'
@@ -23,7 +23,7 @@ const links = {
 }
 
 const AlertsTable = ({ numToRender, alerts, machines }) => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
   const alertsToRender = R.slice(0, numToRender, alerts)
 
   const alertMessage = alert => {
@@ -45,7 +45,7 @@ const AlertsTable = ({ numToRender, alerts, machines }) => {
             <P className="my-2">{alertMessage(alert)}</P>
             <AlertLinkIcon
               className="ml-auto cursor-pointer"
-              onClick={() => history.push(links[alert.type] || '/dashboard')}
+              onClick={() => navigate(links[alert.type] || '/dashboard')}
             />
           </ListItem>
         )

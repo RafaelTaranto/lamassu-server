@@ -2,7 +2,7 @@ import { useQuery, gql } from '@apollo/client'
 import { formatDistance } from 'date-fns'
 import * as R from 'ramda'
 import React from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { MainStatus } from '../../components/Status'
 import Title from '../../components/Title'
 import DataTable from '../../components/tables/DataTable'
@@ -55,9 +55,8 @@ const GET_DATA = gql`
 `
 
 const MachineStatus = () => {
-  const history = useHistory()
-  const { state } = useLocation()
-  const addedMachineId = state?.id
+  const [, navigate] = useLocation()
+  const addedMachineId = history.state?.id
   const {
     data: machinesResponse,
     refetch,
@@ -77,7 +76,7 @@ const MachineStatus = () => {
           {m.name}
           <div
             onClick={() => {
-              history.push(`/machines/${m.deviceId}`)
+              navigate(`/machines/${m.deviceId}`)
             }}>
             <MachineRedirectIcon />
           </div>

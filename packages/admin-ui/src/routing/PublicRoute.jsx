@@ -1,24 +1,17 @@
 import React, { useContext } from 'react'
-import { Route, Redirect } from 'react-router-dom'
+import { Route, Redirect } from 'wouter'
 
 import AppContext from '../AppContext'
 
 import { isLoggedIn } from './utils'
 
-const PublicRoute = ({ component: Component, restricted, ...rest }) => {
+const PublicRoute = ({ restricted, ...rest }) => {
   const { userData } = useContext(AppContext)
 
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        isLoggedIn(userData) && restricted ? (
-          <Redirect to="/" />
-        ) : (
-          <Component {...props} />
-        )
-      }
-    />
+  return isLoggedIn(userData) && restricted ? (
+    <Redirect to="/" />
+  ) : (
+    <Route {...rest} />
   )
 }
 

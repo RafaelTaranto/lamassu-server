@@ -3,7 +3,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { Link, useLocation, useHistory } from 'react-router-dom'
+import { Link, useLocation } from 'wouter'
 import { TL1, TL2, Label3 } from '../../components/typography'
 
 import Cassettes from './MachineComponents/Cassettes'
@@ -61,17 +61,13 @@ const GET_INFO = gql`
 const getMachineID = path => path.slice(path.lastIndexOf('/') + 1)
 
 const MachineRoute = () => {
-  const location = useLocation()
-  const history = useHistory()
-
-  const id = getMachineID(location.pathname)
-
+  const [location, navigate] = useLocation()
   const [loading, setLoading] = useState(true)
 
+  const id = getMachineID(location)
   const { data, refetch } = useQuery(GET_INFO, {
     onCompleted: data => {
-      if (data.machine === null)
-        return history.push('/maintenance/machine-status')
+      if (data.machine === null) return navigate('/maintenance/machine-status')
 
       setLoading(false)
     },
@@ -85,7 +81,7 @@ const MachineRoute = () => {
   })
 
   const reload = () => {
-    return history.push(location.pathname)
+    return navigate(location)
   }
 
   return (

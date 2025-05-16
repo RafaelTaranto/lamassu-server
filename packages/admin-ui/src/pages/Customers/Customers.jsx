@@ -1,7 +1,7 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import SearchBox from '../../components/SearchBox'
 import SearchFilter from '../../components/SearchFilter'
 import TitleSection from '../../components/layout/TitleSection'
@@ -95,10 +95,10 @@ const getFiltersObj = filters =>
   R.reduce((s, f) => ({ ...s, [f.type]: f.value }), {}, filters)
 
 const Customers = () => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
 
   const handleCustomerClicked = customer =>
-    history.push(`/compliance/customer/${customer.id}`)
+    navigate(`/compliance/customer/${customer.id}`)
 
   const [filteredCustomers, setFilteredCustomers] = useState([])
   const [variables, setVariables] = useState({})

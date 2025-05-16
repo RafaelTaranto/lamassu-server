@@ -7,7 +7,7 @@ import {
 import { onError } from '@apollo/client/link/error'
 import createUploadLink from 'apollo-upload-client/createUploadLink.mjs'
 import React, { useContext } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useLocation } from 'wouter'
 
 import AppContext from '../AppContext'
 
@@ -16,7 +16,7 @@ const uploadLink = createUploadLink({
   uri: `/graphql`,
 })
 
-const getClient = (history, location, getUserData, setUserData, setRole) =>
+const getClient = (navigate, location, getUserData, setUserData, setRole) =>
   new ApolloClient({
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
@@ -24,7 +24,7 @@ const getClient = (history, location, getUserData, setUserData, setRole) =>
           graphQLErrors.forEach(({ message, locations, path, extensions }) => {
             if (extensions?.code === 'UNAUTHENTICATED') {
               setUserData(null)
-              if (location.pathname !== '/login') history.push('/login')
+              if (location !== '/login') navigate('/login')
             }
             console.log(
               `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
@@ -66,11 +66,10 @@ const getClient = (history, location, getUserData, setUserData, setRole) =>
   })
 
 const Provider = ({ children }) => {
-  const history = useHistory()
-  const location = useLocation()
+  const [location, navigate] = useLocation()
   const { userData, setUserData, setRole } = useContext(AppContext)
   const client = getClient(
-    history,
+    navigate,
     location,
     () => userData,
     setUserData,

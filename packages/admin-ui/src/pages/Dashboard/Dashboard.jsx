@@ -1,7 +1,7 @@
 import { useQuery, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import TitleSection from '../../components/layout/TitleSection'
 import { H1, Info2, TL2, Label1 } from '../../components/typography'
 import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
@@ -26,14 +26,14 @@ const GET_DATA = gql`
 `
 
 const Dashboard = () => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
   const [open, setOpen] = useState(false)
 
   const { data, loading } = useQuery(GET_DATA)
 
   const onPaired = machine => {
     setOpen(false)
-    history.push('/maintenance/machine-status', { id: machine.deviceId })
+    navigate('/maintenance/machine-status', { state: { id: machine.deviceId } })
   }
 
   return !loading ? (

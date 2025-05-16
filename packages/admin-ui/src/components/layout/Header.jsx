@@ -4,7 +4,7 @@ import Popper from '@mui/material/Popper'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React, { memo, useState, useEffect, useRef } from 'react'
-import { NavLink, useHistory } from 'react-router-dom'
+import { Link as WLink, useRoute, useLocation } from 'wouter'
 import ActionButton from '../buttons/ActionButton'
 import { H4 } from '../typography'
 import AddIconReverse from '../../styling/icons/button/add/white.svg?react'
@@ -23,6 +23,32 @@ const HAS_UNREAD = gql`
   }
 `
 
+const Link = ({
+  setActive,
+  isParent,
+  className,
+  activeClassName,
+  item,
+  ...props
+}) => {
+  const [location] = useLocation()
+  const [isActive] = useRoute(props.to)
+  if (isActive) setActive(item)
+
+  const isParentActive = isParent && location.startsWith(props.to)
+
+  const classNames = classnames({
+    [className]: true,
+    [activeClassName]: isActive || isParentActive,
+  })
+
+  return (
+    <WLink {...props} asChild>
+      <a className={classNames}>{props.children}</a>
+    </WLink>
+  )
+}
+
 const Subheader = ({ item, user }) => {
   const [prev, setPrev] = useState(null)
 
@@ -35,17 +61,15 @@ const Subheader = ({ item, user }) => {
               if (!R.includes(user.role, it.allowedRoles)) return <></>
               return (
                 <li key={idx} className={styles.subheaderLi}>
-                  <NavLink
-                    to={{ pathname: it.route, state: { prev } }}
+                  <Link
+                    to={it.route}
+                    state={{ prev }}
                     className={styles.subheaderLink}
                     activeClassName={styles.activeSubheaderLink}
-                    isActive={match => {
-                      if (!match) return false
-                      setPrev(it.route)
-                      return true
-                    }}>
+                    item={it.route}
+                    setActive={setPrev}>
                     {it.label}
-                  </NavLink>
+                  </Link>
                 </li>
               )
             })}
@@ -68,7 +92,7 @@ const Header = memo(({ tree, user }) => {
   const { data, refetch, startPolling, stopPolling } = useQuery(HAS_UNREAD)
   const notifCenterButtonRef = useRef()
   const popperRef = useRef()
-  const history = useHistory()
+  const [, navigate] = useLocation()
 
   useEffect(() => {
     if (data?.hasUnreadNotifications) return setHasUnread(true)
@@ -83,7 +107,7 @@ const Header = memo(({ tree, user }) => {
 
   const onPaired = machine => {
     setOpen(false)
-    history.push('/maintenance/machine-status', { id: machine.deviceId })
+    navigate('/maintenance/machine-status', { state: { id: machine.deviceId } })
   }
 
   // these inline styles prevent scroll bubbling: when the user reaches the bottom of the notifications list and keeps scrolling,
@@ -114,7 +138,7 @@ const Header = memo(({ tree, user }) => {
           <div
             onClick={() => {
               setActive(false)
-              history.push('/dashboard')
+              navigate('/dashboard')
             }}
             className={classnames(styles.logo, styles.logoLink)}>
             <Logo />
@@ -125,15 +149,13 @@ const Header = memo(({ tree, user }) => {
               {tree.map((it, idx) => {
                 if (!R.includes(user.role, it.allowedRoles)) return <></>
                 return (
-                  <NavLink
+                  <Link
+                    isParent
                     key={idx}
                     to={it.route || it.children[0].route}
-                    isActive={match => {
-                      if (!match) return false
-                      setActive(it)
-                      return true
-                    }}
-                    className={classnames(styles.link)}
+                    setActive={setActive}
+                    item={it}
+                    className={styles.link}
                     activeClassName={styles.activeLink}>
                     <li className={styles.li}>
                       <span
@@ -142,7 +164,7 @@ const Header = memo(({ tree, user }) => {
                         {it.label}
                       </span>
                     </li>
-                  </NavLink>
+                  </Link>
                 )
               })}
             </ul>

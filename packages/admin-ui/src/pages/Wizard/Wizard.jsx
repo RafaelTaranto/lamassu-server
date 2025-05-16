@@ -3,7 +3,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import classnames from 'classnames'
 import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { getWizardStep, STEPS } from './helper'
 
 import AppContext from '../../AppContext'
@@ -23,7 +23,7 @@ const GET_DATA = gql`
 
 const Wizard = () => {
   const { data, loading } = useQuery(GET_DATA)
-  const history = useHistory()
+  const [, navigate] = useLocation()
   const { setWizardTested } = useContext(AppContext)
 
   const [step, setStep] = useState(0)
@@ -37,12 +37,9 @@ const Wizard = () => {
 
   const wizardStep = getWizardStep(data?.config, data?.cryptoCurrencies)
 
-  const shouldGoBack =
-    history.length && !history.location.state?.fromAuthRegister
-
   if (wizardStep === 0) {
     setWizardTested(true)
-    shouldGoBack ? history.goBack() : history.push('/')
+    return <></>
   }
 
   const isWelcome = step === 0
@@ -54,7 +51,9 @@ const Wizard = () => {
   const doContinue = () => {
     if (step >= STEPS.length - 1) {
       setOpen(false)
-      history.push('/')
+      setWizardTested(true)
+      navigate('/')
+      return
     }
 
     const nextStep = step === 0 && wizardStep ? wizardStep : step + 1

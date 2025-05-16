@@ -2,7 +2,7 @@ import { useMutation, useLazyQuery, gql } from '@apollo/client'
 import { startAssertion } from '@simplewebauthn/browser'
 import { Field, Form, Formik } from 'formik'
 import React, { useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useLocation } from 'wouter'
 import { Label3, P } from '../../components/typography'
 import * as Yup from 'yup'
 
@@ -67,7 +67,7 @@ const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
 }
 
 const LoginState = ({ dispatch, strategy }) => {
-  const history = useHistory()
+  const [, navigate] = useLocation()
   const { setUserData } = useContext(AppContext)
 
   const [login, { error: loginMutationError }] = useMutation(LOGIN)
@@ -125,7 +125,7 @@ const LoginState = ({ dispatch, strategy }) => {
     {
       onCompleted: ({ userData }) => {
         setUserData(userData)
-        history.push('/')
+        navigate('/')
       },
     },
   )

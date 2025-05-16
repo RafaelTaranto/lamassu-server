@@ -1,5 +1,5 @@
-import { useHistory, useLocation } from 'react-router-dom'
-import React, { useContext } from 'react'
+import { useLocation } from 'wouter'
+import React, { useContext, useState } from 'react'
 import { gql, useQuery } from '@apollo/client'
 import Slide from '@mui/material/Slide'
 import Grid from '@mui/material/Grid'
@@ -8,6 +8,7 @@ import Header from './components/layout/Header.jsx'
 import Sidebar from './components/layout/Sidebar.jsx'
 import TitleSection from './components/layout/TitleSection.jsx'
 import { getParent, hasSidebar, Routes, tree } from './routing/routes.jsx'
+import Wizard from './pages/Wizard/Wizard.jsx'
 
 import AppContext from './AppContext.js'
 
@@ -26,35 +27,42 @@ const GET_USER_DATA = gql`
 `
 
 const Main = () => {
-  const location = useLocation()
-  const history = useHistory()
+  const [location, navigate] = useLocation()
   const { wizardTested, userData, setUserData } = useContext(AppContext)
+  const [loading, setLoading] = useState(true)
 
-  const { loading } = useQuery(GET_USER_DATA, {
+  useQuery(GET_USER_DATA, {
     onCompleted: userResponse => {
-      if (!userData && userResponse?.userData)
+      if (!userData && userResponse?.userData) {
         setUserData(userResponse.userData)
+      }
+      setLoading(false)
     },
   })
 
-  const route = location.pathname
+  const sidebar = hasSidebar(location)
+  const parent = sidebar ? getParent(location) : {}
 
-  const sidebar = hasSidebar(route)
-  const parent = sidebar ? getParent(route) : {}
+  const is404 = location === '/404'
 
-  const is404 = location.pathname === '/404'
+  const isSelected = it => location === it.route
 
-  const isSelected = it => location.pathname === it.route
-
-  const onClick = it => history.push(it.route)
+  const onClick = it => navigate(it.route)
 
   const contentClassName = sidebar ? 'flex-1 ml-12 pt-4' : 'w-[1200px]'
 
+  // Show loading state until userData is fetched
+  if (loading) {
+    return <></>
+  }
+
+  if (!wizardTested && !is404 && userData) {
+    return <Wizard />
+  }
+
   return (
     <div className="flex flex-col w-full min-h-full">
-      {!is404 && wizardTested && userData && (
-        <Header tree={tree} user={userData} />
-      )}
+      {!is404 && wizardTested && <Header tree={tree} user={userData} />}
       <main className="flex flex-1 flex-col my-0 mx-auto h-full w-[1200px]">
         {sidebar && !is404 && wizardTested && (
           <Slide direction="left" in={true} mountOnEnter unmountOnExit>
@@ -73,7 +81,9 @@ const Main = () => {
               onClick={onClick}
             />
           )}
-          <div className={contentClassName}>{!loading && <Routes />}</div>
+          <div className={contentClassName}>
+            <Routes />
+          </div>
         </Grid>
       </main>
     </div>

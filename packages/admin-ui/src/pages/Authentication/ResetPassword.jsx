@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import { Field, Form, Formik } from 'formik'
 import React, { useState } from 'react'
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'wouter'
 import { H2, Label3, P } from '../../components/typography'
 import Logo from '../../styling/icons/menu/logo.svg?react'
 import * as Yup from 'yup'
@@ -57,9 +57,9 @@ const getErrorMsg = (formikErrors, formikTouched, mutationError) => {
 }
 
 const ResetPassword = () => {
-  const history = useHistory()
-  const QueryParams = () => new URLSearchParams(useLocation().search)
-  const token = QueryParams().get('t')
+  const [, navigate] = useLocation()
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get('t')
   const [userID, setUserID] = useState(null)
   const [isLoading, setLoading] = useState(true)
   const [wasSuccessful, setSuccess] = useState(false)
@@ -83,7 +83,7 @@ const ResetPassword = () => {
 
   const [resetPassword, { error }] = useMutation(RESET_PASSWORD, {
     onCompleted: ({ resetPassword: success }) => {
-      if (success) history.push('/')
+      if (success) navigate('/')
     },
   })
 
