@@ -105,7 +105,10 @@ const Routes = () => {
           <Transition
             className={wrapperClasses}
             {...transitionProps}
-            in={location === route}
+            in={
+              location === route ||
+              (route.includes(':') && location.startsWith(route.split(':')[0]))
+            }
             mountOnEnter
             unmountOnExit>
             <div className={wrapperClasses}>

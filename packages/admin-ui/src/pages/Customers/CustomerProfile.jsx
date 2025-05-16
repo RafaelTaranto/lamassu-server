@@ -285,7 +285,6 @@ const CHECK_AGAINST_SANCTIONS = gql`
 
 const CustomerProfile = memo(() => {
   const [, navigate] = useLocation()
-
   const [showCompliance, setShowCompliance] = useState(false)
   const [wizard, setWizard] = useState(false)
   const [error, setError] = useState(null)
@@ -298,6 +297,7 @@ const CustomerProfile = memo(() => {
     loading: customerLoading,
   } = useQuery(GET_CUSTOMER, {
     variables: { customerId },
+    skip: !customerId,
   })
 
   const { data: configResponse, loading: configLoading } = useQuery(GET_DATA)
