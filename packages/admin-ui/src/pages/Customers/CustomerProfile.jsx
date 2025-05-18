@@ -290,6 +290,7 @@ const CustomerProfile = memo(() => {
   const [error, setError] = useState(null)
   const [clickedItem, setClickedItem] = useState('overview')
   const { id: customerId } = useParams()
+  console.log(customerId)
 
   const {
     data: customerResponse,

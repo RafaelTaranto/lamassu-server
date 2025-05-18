@@ -1,78 +1,119 @@
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
-import React from 'react'
+import React, { useMemo } from 'react'
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
 import { MainStatus } from '../../components/Status'
-import DataTable from '../../components/tables/DataTable'
 import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
+import {
+  defaultMaterialTableOpts,
+  alignRight,
+} from '../../utils/materialReactTableOpts'
 
 import { getFormattedPhone, getName } from './helper'
 
 const CustomersList = ({ data, locale, onClick, loading }) => {
-  const elements = [
-    {
-      header: 'Phone/email',
-      width: 199,
-      view: it => `${getFormattedPhone(it.phone, locale.country) || ''} 
-      ${it.email || ''}`,
-    },
-    {
-      header: 'Name',
-      width: 241,
-      view: getName,
-    },
-    {
-      header: 'Total Txs',
-      width: 126,
-      textAlign: 'right',
-      view: it => `${Number.parseInt(it.totalTxs)}`,
-    },
-    {
-      header: 'Total spent',
-      width: 152,
-      textAlign: 'right',
-      view: it =>
-        `${Number.parseFloat(it.totalSpent)} ${it.lastTxFiatCode ?? ''}`,
-    },
-    {
-      header: 'Last active',
-      width: 133,
-      view: it =>
-        (it.lastActive && format('yyyy-MM-dd', new Date(it.lastActive))) ?? '',
-    },
-    {
-      header: 'Last transaction',
-      width: 161,
-      textAlign: 'right',
-      view: it => {
-        const hasLastTx = !R.isNil(it.lastTxFiatCode)
-        const LastTxIcon = it.lastTxClass === 'cashOut' ? TxOutIcon : TxInIcon
-        const lastIcon = <LastTxIcon className="ml-3" />
-        return (
-          <>
-            {hasLastTx &&
-              `${parseFloat(it.lastTxFiat)} ${it.lastTxFiatCode ?? ''}`}
-            {hasLastTx && lastIcon}
-          </>
-        )
+  const columns = useMemo(
+    () => [
+      {
+        accessorKey: 'id',
+        header: 'ID',
+        size: 315,
+        enableColumnFilter: true,
+      },
+      {
+        id: 'phone-email',
+        accessorFn: it =>
+          `${getFormattedPhone(it.phone, locale.country) || ''} ${it.email || ''}`,
+        size: 180,
+        header: 'Phone/email',
+      },
+      {
+        id: 'name',
+        header: 'Name',
+        accessorFn: getName,
+      },
+      {
+        accessorKey: 'totalTxs',
+        header: 'Total txs',
+        size: 126,
+        enableColumnFilter: false,
+        ...alignRight,
+      },
+      {
+        id: 'totalSpent',
+        accessorKey: 'totalSpent',
+        size: 152,
+        enableColumnFilter: false,
+        Cell: ({ cell, row }) =>
+          `${Number.parseFloat(cell.getValue())} ${row.original.lastTxFiatCode ?? ''}`,
+        header: 'Total spent',
+        ...alignRight,
+      },
+      {
+        header: 'Last active',
+        // accessorKey: 'lastActive',
+        accessorFn: it => new Date(it.lastActive),
+        size: 133,
+        enableColumnFilter: false,
+        Cell: ({ cell }) =>
+          (cell.getValue() &&
+            format('yyyy-MM-dd', new Date(cell.getValue()))) ??
+          '',
+      },
+      {
+        header: 'Last transaction',
+        ...alignRight,
+        size: 170,
+        enableColumnFilter: false,
+        accessorKey: 'lastTxFiat',
+        Cell: ({ cell, row }) => {
+          const hasLastTx = !R.isNil(row.original.lastTxFiatCode)
+          const LastTxIcon =
+            row.original.lastTxClass === 'cashOut' ? TxOutIcon : TxInIcon
+          const lastIcon = <LastTxIcon className="ml-3" />
+          return (
+            <>
+              {hasLastTx &&
+                `${parseFloat(cell.getValue())} ${row.original.lastTxFiatCode ?? ''}`}
+              {hasLastTx && lastIcon}
+            </>
+          )
+        },
+      },
+      {
+        header: 'Status',
+        id: 'status',
+        size: 100,
+        enableColumnFilter: false,
+        accessorKey: 'authorizedStatus',
+        Cell: ({ cell }) => <MainStatus statuses={[cell.getValue()]} />,
+      },
+    ],
+    [],
+  )
+
+  const table = useMaterialReactTable({
+    ...defaultMaterialTableOpts,
+    columns: columns,
+    data,
+    initialState: {
+      ...defaultMaterialTableOpts.initialState,
+      columnVisibility: {
+        id: false,
       },
     },
-    {
-      header: 'Status',
-      width: 191,
-      view: it => <MainStatus statuses={[it.authorizedStatus]} />,
-    },
-  ]
+    state: { isLoading: loading },
+    getRowId: it => it.id,
+    muiTableBodyRowProps: ({ row }) => ({
+      onClick: () => onClick(row),
+      sx: { cursor: 'pointer' },
+    }),
+  })
 
   return (
     <>
-      <DataTable
-        loading={loading}
-        emptyText="No customers so far"
-        elements={elements}
-        data={data}
-        onClick={onClick}
-      />
+      <MaterialReactTable table={table} />
     </>
   )
 }
