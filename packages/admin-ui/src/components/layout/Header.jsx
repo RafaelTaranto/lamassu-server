@@ -35,7 +35,6 @@ const Link = ({
   const [isActive] = useRoute(props.to)
   const isParentActive = isParent && location.startsWith(props.to)
   if (isActive || isParentActive) setActive(item)
-  console.log(location, isParentActive, isParent, location.startsWith(props.to))
 
   const classNames = classnames({
     [className]: true,
