@@ -152,10 +152,8 @@ const getLamassuRoutes = () => [
         get component() {
           return () => (
             <Redirect
-              to={{
-                pathname: this.children[0].route,
-                state: { prev: this.state?.prev },
-              }}
+              to={this.children[0].route}
+              state={{ prev: this.state?.prev }}
             />
           )
         },
@@ -245,10 +243,8 @@ const getLamassuRoutes = () => [
         get component() {
           return () => (
             <Redirect
-              to={{
-                pathname: this.children[0].route,
-                state: { prev: this.state?.prev },
-              }}
+              to={this.children[0].route}
+              state={{ prev: this.state?.prev }}
             />
           )
         },
