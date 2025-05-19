@@ -8,6 +8,7 @@ const T = require('./time')
 // FP operations on Postgres result in very big errors.
 // E.g.: 1853.013808 * 1000 = 1866149.494
 const REDEEMABLE_AGE = T.day / 1000
+const MAX_THRESHOLD_DAYS = 365 * 50 // 50 years maximum
 
 function process(tx, pi) {
   const mtx = massage(tx)
@@ -92,7 +93,9 @@ function customerHistory(customerId, thresholdDays) {
       AND fiat > 0
   ) ch WHERE NOT ch.expired ORDER BY ch.created`
 
-  const days = _.isNil(thresholdDays) ? 0 : thresholdDays
+  const days = _.isNil(thresholdDays)
+    ? 0
+    : Math.min(thresholdDays, MAX_THRESHOLD_DAYS)
   return db.any(sql, [customerId, `${days} days`, '60 minutes', REDEEMABLE_AGE])
 }
 
