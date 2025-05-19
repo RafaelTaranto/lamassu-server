@@ -14,6 +14,7 @@ const ToggleButtonGroup = ({
 }) => {
   return (
     <MUIToggleButtonGroup
+      className="flex flex-col gap-4"
       size={size}
       name={name}
       orientation={orientation}
