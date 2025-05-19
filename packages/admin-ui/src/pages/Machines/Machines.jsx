@@ -100,7 +100,7 @@ const Machines = ({ data, refetch, reload }) => {
   const machineID = R.path(['deviceId'])(machine) ?? null
 
   return (
-    <div className="flex flex-1 h-full gap-12">
+    <div className="flex flex-1 h-full gap-12 mb-12">
       <div className="basis-1/4 min-w-1/4 pt-8">
         <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />}>
           <Link to="/dashboard" className="no-underline">
