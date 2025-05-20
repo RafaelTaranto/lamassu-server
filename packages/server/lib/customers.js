@@ -13,7 +13,6 @@ const complianceOverrides = require('./compliance_overrides')
 const writeFile = util.promisify(fs.writeFile)
 const notifierQueries = require('./notifier/queries')
 const notifierUtils = require('./notifier/utils')
-const NUM_RESULTS = 1000
 const sms = require('./sms')
 const settingsLoader = require('./new-settings-loader')
 const logger = require('./logger')
@@ -483,28 +482,6 @@ function addComplianceOverrides(id, customer, userToken) {
   )
 }
 
-/**
- * Query all customers
- *
- * Add status as computed column,
- * which will indicate the name of the latest
- * compliance verfication completed by user.
- *
- * @returns {array} Array of customers populated with status field
- */
-function batch() {
-  const sql = `select * from customers
-  where id != $1
-  order by created desc limit $2`
-  return db.any(sql, [anonymous.uuid, NUM_RESULTS]).then(customers =>
-    Promise.all(
-      _.map(customer => {
-        return getCustomInfoRequestsData(customer).then(camelize)
-      }, customers),
-    ),
-  )
-}
-
 function getSlimCustomerByIdBatch(ids) {
   const sql = `SELECT id, phone, id_card_data 
     FROM customers 
@@ -579,7 +556,7 @@ function getCustomersList(
     .any(sql, [
       passableErrorCodes,
       anonymous.uuid,
-      NUM_RESULTS,
+      null,
       phone,
       name,
       address,
@@ -1081,12 +1058,10 @@ function notifyApprovedExternalCompliance(settings, customerId) {
 
 function checkExternalCompliance(settings) {
   return getOpenExternalCompliance().then(externals => {
-    console.log(externals)
     const promises = _.map(external => {
       return externalCompliance
         .getStatus(settings, external.service, external.customer_id)
         .then(status => {
-          console.log('status', status, external.customer_id, external.service)
           if (status.status.answer === RETRY)
             notifyRetryExternalCompliance(
               settings,
@@ -1117,7 +1092,6 @@ module.exports = {
   addWithEmail,
   get,
   getWithEmail,
-  batch,
   getSlimCustomerByIdBatch,
   getCustomersList,
   getCustomerById,
