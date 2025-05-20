@@ -33,19 +33,19 @@ const BINARIES = {
     defaultUrlHash:
       '376194f06596ecfa40331167c39bc70c355f960280bd2a645fdbf18f66527397',
     defaultDir: 'bitcoin-0.20.1/bin',
-    url: 'https://bitcoincore.org/bin/bitcoin-core-28.0/bitcoin-28.0-x86_64-linux-gnu.tar.gz',
-    dir: 'bitcoin-28.0/bin',
-    urlHash: '7fe294b02b25b51acb8e8e0a0eb5af6bbafa7cd0c5b0e5fcbb61263104a82fbc',
+    url: 'https://bitcoincore.org/bin/bitcoin-core-29.0/bitcoin-29.0-x86_64-linux-gnu.tar.gz',
+    dir: 'bitcoin-29.0/bin',
+    urlHash: 'a681e4f6ce524c338a105f214613605bac6c33d58c31dc5135bbc02bc458bb6c',
   },
   ETH: {
-    url: 'https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.14.12-293a300d.tar.gz',
-    dir: 'geth-linux-amd64-1.14.12-293a300d',
-    urlHash: 'e56216b9d179a66a8f71d3dee13ad554da5544d3d29dba33f64c9c0eda5a2237',
+    url: 'https://gethstore.blob.core.windows.net/builds/geth-linux-amd64-1.15.11-36b2371c.tar.gz',
+    dir: 'geth-linux-amd64-1.15.11-36b2371c',
+    urlHash: 'a14a4285daedf75ea04a7a298e6caa48d566a2786c93fc5e86ec2c5998c92455',
   },
   ZEC: {
-    url: 'https://download.z.cash/downloads/zcash-6.0.0-linux64-debian-bullseye.tar.gz',
-    dir: 'zcash-6.0.0/bin',
-    urlHash: '3cb82f490e9c8e88007a0216b5261b33ef0fda962b9258441b2def59cb272a4d',
+    url: 'https://download.z.cash/downloads/zcash-6.2.0-linux64-debian-bullseye.tar.gz',
+    dir: 'zcash-6.2.0/bin',
+    urlHash: '71cf378c27582a4b9f9d57cafc2b5a57a46e9e52a5eda33be112dc9790c64c6f',
   },
   DASH: {
     defaultUrl:
@@ -53,9 +53,9 @@ const BINARIES = {
     defaultUrlHash:
       'd89c2afd78183f3ee815adcccdff02098be0c982633889e7b1e9c9656fbef219',
     defaultDir: 'dashcore-18.1.0/bin',
-    url: 'https://github.com/dashpay/dash/releases/download/v21.1.1/dashcore-21.1.1-x86_64-linux-gnu.tar.gz',
-    dir: 'dashcore-21.1.1/bin',
-    urlHash: 'c3157d4a82a3cb7c904a68e827bd1e629854fefcc0dcaf1de4343a810a190bf5',
+    url: 'https://github.com/dashpay/dash/releases/download/v22.1.2/dashcore-22.1.2-x86_64-linux-gnu.tar.gz',
+    dir: 'dashcore-22.1.2/bin',
+    urlHash: '230e871ef55c64c1550f358089a324a1e47e52a9a9c032366162cd82a19fa1af',
   },
   LTC: {
     defaultUrl:
@@ -68,22 +68,22 @@ const BINARIES = {
     urlHash: '857fc41091f2bae65c3bf0fd4d388fca915fc93a03f16dd2578ac3cc92898390',
   },
   BCH: {
-    url: 'https://github.com/bitcoin-cash-node/bitcoin-cash-node/releases/download/v28.0.0/bitcoin-cash-node-28.0.0-x86_64-linux-gnu.tar.gz',
-    dir: 'bitcoin-cash-node-28.0.0/bin',
+    url: 'https://github.com/bitcoin-cash-node/bitcoin-cash-node/releases/download/v28.0.1/bitcoin-cash-node-28.0.1-x86_64-linux-gnu.tar.gz',
+    dir: 'bitcoin-cash-node-28.0.1/bin',
     files: [
       ['bitcoind', 'bitcoincashd'],
       ['bitcoin-cli', 'bitcoincash-cli'],
     ],
-    urlHash: 'ba735cd3b70fab35ac1496e38596cec1f8d34989924376de001d4a86198f7158',
+    urlHash: 'd69ee632147f886ca540cecdff5b1b85512612b4c005e86b09083a63c35b64fa',
   },
   XMR: {
-    url: 'https://downloads.getmonero.org/cli/monero-linux-x64-v0.18.3.4.tar.bz2',
-    dir: 'monero-x86_64-linux-gnu-v0.18.3.4',
+    url: 'https://downloads.getmonero.org/cli/monero-linux-x64-v0.18.4.0.tar.bz2',
+    dir: 'monero-x86_64-linux-gnu-v0.18.4.0',
     files: [
       ['monerod', 'monerod'],
       ['monero-wallet-rpc', 'monero-wallet-rpc'],
     ],
-    urlHash: '51ba03928d189c1c11b5379cab17dd9ae8d2230056dc05c872d0f8dba4a87f1d',
+    urlHash: '16cb74c899922887827845a41d37c7f3121462792a540843f2fcabcc1603993f',
   },
 }
 
