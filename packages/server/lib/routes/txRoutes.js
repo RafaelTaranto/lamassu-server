@@ -53,7 +53,12 @@ function getTx(req, res, next) {
     return helpers
       .fetchStatusTx(req.params.id, req.query.status)
       .then(r => res.json(r))
-      .catch(next)
+      .catch(err => {
+        if (err.name === 'HTTPError') {
+          return res.status(err.code).send(err.message)
+        }
+        next(err)
+      })
   }
 
   return next(httpError('Not Found', 404))
