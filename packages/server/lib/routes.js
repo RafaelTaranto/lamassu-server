@@ -55,7 +55,7 @@ const loadRoutes = async () => {
   app.use(compression({ threshold: 500 }))
   app.use(helmet())
   app.use(nocache())
-  app.use(express.json({ limit: '2mb' }))
+  app.use(express.json({ limit: '25mb' }))
 
   morgan.token('bytesRead', (_req, res) => res.bytesRead)
   morgan.token('bytesWritten', (_req, res) => res.bytesWritten)
