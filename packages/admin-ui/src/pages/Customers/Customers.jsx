@@ -86,13 +86,13 @@ const Customers = () => {
   const handleCustomerClicked = customer =>
     navigate(`/compliance/customer/${customer.id}`)
 
-  const [filteredCustomers, setFilteredCustomers] = useState([])
+  const [customers, setCustomers] = useState([])
   const [showCreationModal, setShowCreationModal] = useState(false)
 
   const { data: customersResponse, loading: customerLoading } = useQuery(
     GET_CUSTOMERS,
     {
-      onCompleted: data => setFilteredCustomers(R.path(['customers'])(data)),
+      onCompleted: data => setCustomers(R.path(['customers'])(data)),
     },
   )
 
@@ -123,7 +123,7 @@ const Customers = () => {
   const customersData = R.pipe(
     R.map(setAuthorizedStatus),
     R.sortWith([R.ascend(byAuthorized), R.descend(byLastActive)]),
-  )(filteredCustomers ?? [])
+  )(customers ?? [])
 
   return (
     <>
@@ -143,7 +143,7 @@ const Customers = () => {
       />
       <CustomersList
         data={customersData}
-        locale={locale}
+        country={locale?.country}
         onClick={handleCustomerClicked}
         loading={customerLoading}
       />

@@ -12,19 +12,18 @@ import {
 
 import { getFormattedPhone, getName } from './helper'
 
-const CustomersList = ({ data, locale, onClick, loading }) => {
+const CustomersList = ({ data, country, onClick, loading }) => {
   const columns = useMemo(
     () => [
       {
         accessorKey: 'id',
         header: 'ID',
         size: 315,
-        enableColumnFilter: true,
       },
       {
         id: 'phone-email',
         accessorFn: it =>
-          `${getFormattedPhone(it.phone, locale.country) || ''} ${it.email || ''}`,
+          `${getFormattedPhone(it.phone, country) || ''} ${it.email || ''}`,
         size: 180,
         header: 'Phone/email',
       },
