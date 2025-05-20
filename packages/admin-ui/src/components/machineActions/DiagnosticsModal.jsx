@@ -1,7 +1,7 @@
 import { useLazyQuery, useQuery, gql } from '@apollo/client'
 import { subMinutes } from 'date-fns'
 import FileSaver from 'file-saver'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Modal from '../Modal'
 import { H3, P } from '../typography'
 
@@ -56,7 +56,7 @@ const createCsv = async ({ machineLogsCsv }) => {
 const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
   const [state, setState] = useState(STATES.INITIAL)
   const [timestamp, setTimestamp] = useState(null)
-  let timeout = null
+  const timeoutRef = useRef(null)
 
   const [fetchSummary, { loading }] = useLazyQuery(MACHINE_LOGS, {
     onCompleted: data => createCsv(data),
@@ -76,24 +76,41 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
       data.machine.diagnostics.timestamp &&
       data.machine.diagnostics.timestamp !== timestamp
     ) {
-      clearTimeout(timeout)
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
       setTimestamp(data.machine.diagnostics.timestamp)
       setState(STATES.FILLED)
       stopPolling()
     }
-  }, [data, stopPolling, timeout, timestamp])
+  }, [data, stopPolling, timestamp])
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+        timeoutRef.current = null
+      }
+    }
+  }, [])
 
   const path = `/operator-data/diagnostics/${deviceId}/`
 
-  function runDiagnostics() {
+  const runDiagnostics = () => {
+    setState(STATES.RUNNING)
     startPolling(2000)
 
-    timeout = setTimeout(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    timeoutRef.current = setTimeout(() => {
       setState(STATES.FAILURE)
       stopPolling()
+      timeoutRef.current = null
     }, 60 * 1000)
 
-    setState(STATES.RUNNING)
     sendAction()
   }
 
@@ -140,7 +157,7 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
               <H3>Scan</H3>
               <img
                 className="w-88"
-                src={path + 'scan.jpg'}
+                src={`${path}scan.jpg?${Date.now()}`}
                 alt="Failure getting photo"
               />
             </div>
@@ -148,7 +165,7 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
               <H3>Front</H3>
               <img
                 className="w-88"
-                src={path + 'front.jpg'}
+                src={`${path}front.jpg?${Date.now()}`}
                 alt="Failure getting photo"
               />
               <P></P>
