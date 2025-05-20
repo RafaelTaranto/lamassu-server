@@ -1,7 +1,5 @@
-const { createHash } = require('node:crypto')
 const { createWriteStream } = require('node:fs')
 const { EOL } = require('node:os')
-const { join } = require('node:path')
 
 require('../../lib/environment-helper')
 const db = require('../../lib/db')
@@ -14,7 +12,6 @@ const help_message = 'Create and insert fake machines into the DB.'
 const cli = CLI({
   grammar: [
     [['--help'], 'Show this help message'],
-    [['--machine', 'PATH'], "Path to the machine's source code root"],
     [['--device_ids_path', 'PATH'], 'Where to save the list of device IDs'],
     [['-n', 'NUMBER'], 'Number of fake machines to create'],
     [['--replace_existing'], 'Remove machines of previous runs'],
@@ -33,27 +30,51 @@ const close_stream = stream =>
     stream.close(err => (err ? reject(err) : resolve())),
   )
 
-const compute_machine_id = cert => {
-  cert = cert.split('\r\n')
-  const raw = Buffer.from(cert.slice(1, cert.length - 2).join(''), 'base64')
-  return createHash('sha256').update(raw).digest('hex')
+const leftpad = (s, w, c) => c.repeat(Math.max(w - s.length, 0)) + s
+
+function* chunk(arr, n) {
+  for (let i = 0; i < arr.length; i += n) {
+    yield arr.slice(i, i + n)
+  }
 }
 
-const create_fake_machine = async (device_ids_file, self_sign, i) => {
-  console.log('creating machine', i)
-  const { cert } = await self_sign.generateCertificate()
-  const device_id = compute_machine_id(cert)
-  await db.none(
-    `INSERT INTO devices (device_id, cassette1, cassette2, paired, display, created, name, last_online, location)
-     VALUES ($1, 0, 0, 't', 't', now(), $2, now(), '{}'::json)`,
-    [device_id, `machine_${i}`],
+const fake_machine_id = i => 'machine_' + i
+
+const save_machines_to_db = async (machines, replace_existing) => {
+  if (replace_existing) await db.none('DELETE FROM devices')
+
+  console.log('inserting machines into DB')
+  db.tx(tx =>
+    tx.batch(
+      machines.map(device_id =>
+        tx.none(
+          `INSERT INTO devices (device_id, cassette1, cassette2, paired, display, created, name, last_online, location)
+         VALUES ($1, 0, 0, 't', 't', now(), $2, now(), '{}'::json)`,
+          [device_id, device_id],
+        ),
+      ),
+    ),
   )
-  device_ids_file.write(device_id + EOL)
-  console.log('created machine', i, 'with device ID', device_id)
+}
+
+const save_device_ids_to_file = async (
+  machines,
+  { device_ids_path, replace_existing },
+) => {
+  const device_ids_file = createWriteStream(device_ids_path, {
+    flags: replace_existing ? 'w' : 'a',
+    mode: 0o640,
+    flush: true,
+  })
+
+  console.log('saving machine IDs to file')
+  for (const ids of chunk(machines, 20))
+    await device_ids_file.write(ids.join(EOL) + EOL)
+
+  await close_stream(device_ids_file)
 }
 
 const create_fake_machines = async ({
-  machine,
   device_ids_path,
   n,
   replace_existing,
@@ -63,19 +84,13 @@ const create_fake_machines = async ({
     console.error('Expected n to be a positive number, got', n)
     return help(EXIT.BADARGS)
   }
+  const width = Math.log10(n)
 
-  const device_ids_file = createWriteStream(device_ids_path, {
-    flags: replace_existing ? 'w' : 'a',
-    mode: 0o640,
-    flush: true,
-  })
-  if (replace_existing) await db.none('DELETE FROM devices')
-
-  const self_sign = require(join(process.cwd(), machine, 'lib', 'self_sign'))
-  for (let i = 0; i < n; i++)
-    await create_fake_machine(device_ids_file, self_sign, i)
-
-  await close_stream(device_ids_file)
+  const machines = Array(n)
+    .fill(0)
+    .map((x, i) => fake_machine_id(leftpad(i.toString(), width, '0')))
+  await save_machines_to_db(machines, replace_existing)
+  await save_device_ids_to_file(machines, { device_ids_path, replace_existing })
 
   return EXIT.OK
 }
@@ -89,9 +104,7 @@ const run = async args => {
 
   if (options.help) return help(EXIT.OK)
 
-  const missing_options = ['n', 'machine', 'device_ids_path'].filter(
-    opt => !options[opt],
-  )
+  const missing_options = ['n', 'device_ids_path'].filter(opt => !options[opt])
   if (missing_options.length > 0) {
     console.error(
       'The following options are required:',
