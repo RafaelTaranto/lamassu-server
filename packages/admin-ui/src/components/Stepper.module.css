@@ -1,0 +1,12 @@
+.stage {
+  display: flex;
+  height: 28px;
+  width: 28px;
+  z-index: 2;
+}
+
+.stage > svg {
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+}

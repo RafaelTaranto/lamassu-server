@@ -1,0 +1,43 @@
+.radioGroup {
+  flex-direction: row;
+  width: 600px;
+}
+
+.radioLabel {
+  width: 150px;
+  height: 48px;
+}
+
+.mailgunRadioGroup {
+  flex-direction: row;
+  width: 768px;
+}
+
+.mailgunRadioLabel {
+  width: 300px;
+  height: 48px;
+}
+
+.mdForm {
+  width: 385px;
+}
+
+.infoMessage {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.infoMessage > p {
+  width: 330px;
+  margin-top: 4px;
+  margin-left: 16px;
+}
+
+.actionButton {
+  margin-bottom: 32px;
+}
+
+.actionButtonLink {
+  text-decoration: none;
+  color: var(--zodiac);
+}

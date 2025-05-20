@@ -1,0 +1,204 @@
+import { useQuery, useMutation, gql } from '@apollo/client'
+import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
+import { Form, Formik } from 'formik'
+import { QRCodeSVG as QRCode } from 'qrcode.react'
+import React, { useReducer, useState } from 'react'
+import { useLocation, useSearchParams } from 'wouter'
+import { H2, Label2, Label3, P } from '../../components/typography'
+import Logo from '../../styling/icons/menu/logo.svg?react'
+
+import { ActionButton, Button } from '../../components/buttons'
+import { CodeInput } from '../../components/inputs/base'
+import { primaryColor } from '../../styling/variables'
+
+import classes from './Authentication.module.css'
+
+const VALIDATE_RESET_2FA_LINK = gql`
+  query validateReset2FALink($token: String!) {
+    validateReset2FALink(token: $token) {
+      user_id
+      secret
+      otpauth
+    }
+  }
+`
+
+const RESET_2FA = gql`
+  mutation reset2FA($token: String!, $userID: ID!, $code: String!) {
+    reset2FA(token: $token, userID: $userID, code: $code)
+  }
+`
+
+const initialState = {
+  userID: null,
+  secret: null,
+  otpauth: null,
+  result: null,
+}
+
+const reducer = (state, action) => {
+  const { type, payload } = action
+  return { ...state, ...payload, result: type }
+}
+
+const Reset2FA = () => {
+  const [, navigate] = useLocation()
+  const [searchParams] = useSearchParams()
+  const token = searchParams.get('t')
+
+  const [isShowing, setShowing] = useState(false)
+  const [invalidToken, setInvalidToken] = useState(false)
+  const [twoFAConfirmation, setTwoFAConfirmation] = useState('')
+
+  const [state, dispatch] = useReducer(reducer, initialState)
+
+  const handle2FAChange = value => {
+    setTwoFAConfirmation(value)
+    setInvalidToken(false)
+  }
+
+  const { error: queryError, loading } = useQuery(VALIDATE_RESET_2FA_LINK, {
+    variables: { token: token },
+    onCompleted: ({ validateReset2FALink: info }) => {
+      if (!info) {
+        dispatch({
+          type: 'failure',
+        })
+      } else {
+        dispatch({
+          type: 'success',
+          payload: {
+            userID: info.user_id,
+            secret: info.secret,
+            otpauth: info.otpauth,
+          },
+        })
+      }
+    },
+    onError: () => {
+      dispatch({
+        type: 'failure',
+      })
+    },
+  })
+
+  const [reset2FA, { error: mutationError }] = useMutation(RESET_2FA, {
+    onCompleted: ({ reset2FA: success }) => {
+      success ? navigate('/') : setInvalidToken(true)
+    },
+  })
+
+  const getErrorMsg = () => {
+    if (queryError) return 'Internal server error'
+    if (twoFAConfirmation.length !== 6 && invalidToken)
+      return 'The code should have 6 characters!'
+    if (mutationError || invalidToken)
+      return 'Code is invalid. Please try again.'
+    return null
+  }
+
+  const handleSubmit = () => {
+    if (twoFAConfirmation.length !== 6) {
+      setInvalidToken(true)
+      return
+    }
+    reset2FA({
+      variables: {
+        token: token,
+        userID: state.userID,
+        code: twoFAConfirmation,
+      },
+    })
+  }
+
+  return (
+    <Grid
+      container
+      spacing={0}
+      direction="column"
+      alignItems="center"
+      justifyContent="center"
+      className={classes.welcomeBackground}>
+      <Grid>
+        <div>
+          <Paper elevation={1}>
+            <div className={classes.wrapper}>
+              <div className={classes.titleWrapper}>
+                <Logo className={classes.icon} />
+                <H2 className={classes.title}>Lamassu Admin</H2>
+              </div>
+              {!loading && state.result === 'success' && (
+                <>
+                  <div className={classes.infoWrapper}>
+                    <Label2 className={classes.info2}>
+                      To finish this process, please scan the following QR code
+                      or insert the secret further below on an authentication
+                      app of your choice, such Google Authenticator or Authy.
+                    </Label2>
+                  </div>
+                  <div className={classes.qrCodeWrapper}>
+                    <QRCode
+                      size={240}
+                      fgColor={primaryColor}
+                      value={state.otpauth}
+                    />
+                  </div>
+                  <div className={classes.secretWrapper}>
+                    <Label2 className={classes.secretLabel}>
+                      Your secret:
+                    </Label2>
+                    <Label2
+                      className={
+                        isShowing ? classes.secret : classes.hiddenSecret
+                      }>
+                      {state.secret}
+                    </Label2>
+                    <ActionButton
+                      color="primary"
+                      onClick={() => {
+                        setShowing(!isShowing)
+                      }}>
+                      {isShowing ? 'Hide' : 'Show'}
+                    </ActionButton>
+                  </div>
+                  <div className={classes.confirm2FAInput}>
+                    {/* TODO: refactor the 2FA CodeInput to properly use Formik */}
+                    <Formik onSubmit={() => {}} initialValues={{}}>
+                      <Form>
+                        <CodeInput
+                          name="2fa"
+                          value={twoFAConfirmation}
+                          onChange={handle2FAChange}
+                          numInputs={6}
+                          error={invalidToken}
+                        />
+                        <div className="mt-9">
+                          {getErrorMsg() && (
+                            <P className="text-tomato">{getErrorMsg()}</P>
+                          )}
+                          <Button
+                            onClick={handleSubmit}
+                            buttonClassName="w-full">
+                            Done
+                          </Button>
+                        </div>
+                      </Form>
+                    </Formik>
+                  </div>
+                </>
+              )}
+              {!loading && state.result === 'failure' && (
+                <>
+                  <Label3>Link has expired</Label3>
+                </>
+              )}
+            </div>
+          </Paper>
+        </div>
+      </Grid>
+    </Grid>
+  )
+}
+
+export default Reset2FA

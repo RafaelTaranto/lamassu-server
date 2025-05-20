@@ -1,0 +1,130 @@
+const express = require('express')
+const compression = require('compression')
+const helmet = require('helmet')
+const morgan = require('morgan')
+const nocache = require('nocache')
+
+const logger = require('./logger')
+
+const addRWBytes = require('./middlewares/addRWBytes')
+const authorize = require('./middlewares/authorize')
+const errorHandler = require('./middlewares/errorHandler')
+const filterOldRequests = require('./middlewares/filterOldRequests')
+const findOperatorId = require('./middlewares/operatorId')
+const populateDeviceId = require('./middlewares/populateDeviceId')
+const populateSettings = require('./middlewares/populateSettings')
+const recordPing = require('./middlewares/recordPing')
+
+const unitsRoutes = require('./routes/unitsRoutes')
+const cashboxRoutes = require('./routes/cashboxRoutes')
+const customerRoutes = require('./routes/customerRoutes')
+const logsRoutes = require('./routes/logsRoutes')
+const pairingRoutes = require('./routes/pairingRoutes')
+const diagnosticsRoutes = require('./routes/diagnosticsRoutes')
+const performanceRoutes = require('./routes/performanceRoutes')
+const rejectIncompatibleMachines = require('./middlewares/rejectIncompatbleMachines')
+const stateRoutes = require('./routes/stateRoutes')
+const termsAndConditionsRoutes = require('./routes/termsAndConditionsRoutes')
+const { router: txRoutes } = require('./routes/txRoutes')
+const verifyUserRoutes = require('./routes/verifyUserRoutes')
+const verifyTxRoutes = require('./routes/verifyTxRoutes')
+const verifyPromoCodeRoutes = require('./routes/verifyPromoCodeRoutes')
+const probeRoutes = require('./routes/probeLnRoutes')
+const failedQRScansRoutes = require('./routes/failedQRScans')
+
+const { graphQLServer, context } = require('./graphql/server')
+
+const { expressMiddleware } = require('@apollo/server/express4')
+
+const loadRoutes = async () => {
+  const app = express()
+
+  const configRequiredRoutes = [
+    '/poll',
+    '/terms_conditions',
+    '/event',
+    '/phone_code',
+    '/customer',
+    '/tx',
+    '/verify_promo_code',
+    '/graphql',
+  ]
+
+  // middleware setup
+  app.use(addRWBytes())
+  app.use(compression({ threshold: 500 }))
+  app.use(helmet())
+  app.use(nocache())
+  app.use(express.json({ limit: '2mb' }))
+
+  morgan.token('bytesRead', (_req, res) => res.bytesRead)
+  morgan.token('bytesWritten', (_req, res) => res.bytesWritten)
+  app.use(
+    morgan(
+      ':method :url :status :response-time ms -- :bytesRead/:bytesWritten B',
+      { stream: logger.stream },
+    ),
+  )
+
+  app.use('/robots.txt', (req, res) => {
+    res.type('text/plain')
+    res.send('User-agent: *\nDisallow: /')
+  })
+
+  app.get('/', (req, res) => {
+    res.sendStatus(404)
+  })
+
+  // app /pair and /ca routes
+  app.use('/', pairingRoutes)
+
+  app.use(findOperatorId)
+  app.use(populateDeviceId)
+  app.use(authorize)
+  app.use(configRequiredRoutes, populateSettings)
+  app.use(filterOldRequests)
+
+  // other app routes
+  app.use('/graphql', recordPing)
+  app.use('/terms_conditions', termsAndConditionsRoutes)
+  app.use('/state', stateRoutes)
+  app.use('/cashbox', cashboxRoutes)
+
+  app.use('/network', performanceRoutes)
+  app.use('/diagnostics', diagnosticsRoutes)
+  app.use('/failedqrscans', failedQRScansRoutes)
+
+  app.use('/verify_user', verifyUserRoutes)
+  app.use('/verify_transaction', verifyTxRoutes)
+  app.use('/verify_promo_code', verifyPromoCodeRoutes)
+
+  app.use('/customer', customerRoutes)
+
+  app.use('/tx', txRoutes)
+
+  app.use('/logs', logsRoutes)
+  app.use('/units', unitsRoutes)
+
+  app.use('/probe', probeRoutes)
+
+  // Not all requests have the machine version on the url
+  // rejecting poll is enough to render the machine "stuck"
+  app.use(rejectIncompatibleMachines)
+  await graphQLServer.start()
+  app.use(
+    '/graphql',
+    express.json(),
+    expressMiddleware(graphQLServer, {
+      context,
+    }),
+  )
+
+  app.use(errorHandler)
+  app.use((req, res) => {
+    res.status(404).json({ error: 'No such route' })
+  })
+
+  return app
+}
+
+module.exports = { loadRoutes }

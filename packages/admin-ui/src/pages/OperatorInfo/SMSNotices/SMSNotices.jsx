@@ -1,0 +1,278 @@
+import { useQuery, useMutation, gql } from '@apollo/client'
+import Paper from '@mui/material/Paper'
+import Switch from '@mui/material/Switch'
+import IconButton from '@mui/material/IconButton'
+import * as R from 'ramda'
+import React, { useState } from 'react'
+import { HelpTooltip } from '../../../components/Tooltip'
+import DataTable from '../../../components/tables/DataTable'
+import { H4, P, Label3 } from '../../../components/typography'
+import EditIcon from '../../../styling/icons/action/edit/enabled.svg?react'
+import ExpandIconClosed from '../../../styling/icons/action/expand/closed.svg?react'
+import ExpandIconOpen from '../../../styling/icons/action/expand/open.svg?react'
+import WhiteLogo from '../../../styling/icons/menu/logo-white.svg?react'
+
+import { SupportLinkButton } from '../../../components/buttons'
+import { formatDate } from '../../../utils/timezones'
+
+import CustomSMSModal from './SMSNoticesModal'
+import SvgIcon from '@mui/material/SvgIcon'
+
+const GET_SMS_NOTICES = gql`
+  query SMSNotices {
+    SMSNotices {
+      id
+      event
+      message
+      messageName
+      enabled
+      allowToggle
+    }
+    config
+  }
+`
+
+const EDIT_SMS_NOTICE = gql`
+  mutation editSMSNotice($id: ID!, $event: SMSNoticeEvent!, $message: String!) {
+    editSMSNotice(id: $id, event: $event, message: $message) {
+      id
+    }
+  }
+`
+
+const ENABLE_SMS_NOTICE = gql`
+  mutation enableSMSNotice($id: ID!) {
+    enableSMSNotice(id: $id) {
+      id
+    }
+  }
+`
+
+const DISABLE_SMS_NOTICE = gql`
+  mutation disableSMSNotice($id: ID!) {
+    disableSMSNotice(id: $id) {
+      id
+    }
+  }
+`
+
+const multiReplace = (str, obj) => {
+  var re = new RegExp(Object.keys(obj).join('|'), 'gi')
+
+  return str.replace(re, function (matched) {
+    return obj[matched.toLowerCase()]
+  })
+}
+
+const formatContent = content => {
+  const fragments = R.split(/\n/)(content)
+  return R.map((it, idx) => {
+    if (idx === fragments.length) return <>{it}</>
+    return (
+      <>
+        {it}
+        <br />
+      </>
+    )
+  }, fragments)
+}
+
+const TOOLTIPS = {
+  smsCode: ``,
+  cashOutDispenseReady: ``,
+  smsReceipt:
+    formatContent(`The contents of this notice will be appended to the end of the SMS receipt sent, and not replace it.\n
+  To edit the contents of the SMS receipt, please go to the 'Receipt' tab`),
+}
+
+const SMSPreview = ({ sms, coords, timezone }) => {
+  const matches = {
+    '#code': 123,
+    '#timestamp': formatDate(new Date(), timezone, 'HH:mm'),
+  }
+
+  return (
+    <div
+      className="absolute w-88 overflow-visible"
+      style={{ left: coords.x, bottom: coords.y }}>
+      <div className="flex flex-row items-end gap-2">
+        <div className="flex w-9 h-9 rounded-full bg-[#16D6D3] items-center justify-center">
+          <WhiteLogo width={22} height={22} />
+        </div>
+        <Paper className="w-56 p-4 rounded-2xl">
+          <P noMargin>
+            {R.isEmpty(sms?.message) ? (
+              <i>No content available</i>
+            ) : (
+              formatContent(multiReplace(sms?.message, matches))
+            )}
+          </P>
+        </Paper>
+        <Label3>{formatDate(new Date(), timezone, 'HH:mm')}</Label3>
+      </div>
+    </div>
+  )
+}
+
+const SMSNotices = () => {
+  const [showModal, setShowModal] = useState(false)
+  const [selectedSMS, setSelectedSMS] = useState(null)
+  const [previewOpen, setPreviewOpen] = useState(false)
+  const [previewCoords, setPreviewCoords] = useState({ x: 0, y: 0 })
+  const [errorMsg, setErrorMsg] = useState('')
+
+  const { data: messagesData, loading: messagesLoading } =
+    useQuery(GET_SMS_NOTICES)
+
+  const timezone = R.path(['config', 'locale_timezone'])(messagesData)
+
+  const [editMessage] = useMutation(EDIT_SMS_NOTICE, {
+    onError: ({ msg }) => setErrorMsg(msg),
+    refetchQueries: () => ['SMSNotices'],
+  })
+
+  const [enableMessage] = useMutation(ENABLE_SMS_NOTICE, {
+    onError: ({ msg }) => setErrorMsg(msg),
+    refetchQueries: () => ['SMSNotices'],
+  })
+
+  const [disableMessage] = useMutation(DISABLE_SMS_NOTICE, {
+    onError: ({ msg }) => setErrorMsg(msg),
+    refetchQueries: () => ['SMSNotices'],
+  })
+
+  const loading = messagesLoading
+
+  const handleClose = () => {
+    setShowModal(false)
+    setSelectedSMS(null)
+  }
+
+  const elements = [
+    {
+      header: 'Message name',
+      width: 500,
+      size: 'sm',
+      textAlign: 'left',
+      view: it =>
+        !R.isEmpty(TOOLTIPS[it.event]) ? (
+          <div className="flex flex-row items-center">
+            {R.prop('messageName', it)}
+            <HelpTooltip width={250}>
+              <P>{TOOLTIPS[it.event]}</P>
+            </HelpTooltip>
+          </div>
+        ) : (
+          R.prop('messageName', it)
+        ),
+    },
+    {
+      header: 'Edit',
+      width: 100,
+      size: 'sm',
+      textAlign: 'center',
+      view: it => (
+        <IconButton
+          onClick={() => {
+            setPreviewOpen(false)
+            setSelectedSMS(it)
+            setShowModal(true)
+          }}>
+          <SvgIcon>
+            <EditIcon />
+          </SvgIcon>
+        </IconButton>
+      ),
+    },
+    {
+      header: 'Enable',
+      width: 100,
+      size: 'sm',
+      textAlign: 'center',
+      view: it => (
+        <Switch
+          disabled={!it.allowToggle}
+          onClick={() => {
+            it.enabled
+              ? disableMessage({ variables: { id: it.id } })
+              : enableMessage({ variables: { id: it.id } })
+          }}
+          checked={it.enabled}
+        />
+      ),
+    },
+    {
+      header: '',
+      width: 100,
+      size: 'sm',
+      textAlign: 'center',
+      view: it => (
+        <IconButton
+          onClick={e => {
+            setSelectedSMS(it)
+            setPreviewCoords({
+              x: e.currentTarget.getBoundingClientRect().right + 50,
+              y:
+                window.innerHeight -
+                5 -
+                e.currentTarget.getBoundingClientRect().bottom,
+            })
+            R.equals(selectedSMS, it)
+              ? setPreviewOpen(!previewOpen)
+              : setPreviewOpen(true)
+          }}>
+          <SvgIcon>
+            {R.equals(selectedSMS, it) && previewOpen ? (
+              <ExpandIconOpen />
+            ) : (
+              <ExpandIconClosed />
+            )}
+          </SvgIcon>
+        </IconButton>
+      ),
+    },
+  ]
+
+  return (
+    <>
+      <div className="flex relative items-center justify-between w-200">
+        <H4>SMS notices</H4>
+        <HelpTooltip width={320}>
+          <P>
+            For details on configuring this panel, please read the relevant
+            knowledgebase article:
+          </P>
+          <SupportLinkButton
+            link="https://support.lamassu.is/hc/en-us/articles/115001205591-SMS-Phone-Verification"
+            label="Lamassu Support Article"
+            bottomSpace="1"
+          />
+        </HelpTooltip>
+      </div>
+      {showModal && (
+        <CustomSMSModal
+          showModal={showModal}
+          onClose={handleClose}
+          sms={selectedSMS}
+          creationError={errorMsg}
+          submit={editMessage}
+        />
+      )}
+      {previewOpen && (
+        <SMSPreview
+          sms={selectedSMS}
+          coords={previewCoords}
+          timezone={timezone}
+        />
+      )}
+      <DataTable
+        emptyText="No SMS notices so far"
+        elements={elements}
+        loading={loading}
+        data={R.path(['SMSNotices'])(messagesData)}
+      />
+    </>
+  )
+}
+
+export default SMSNotices

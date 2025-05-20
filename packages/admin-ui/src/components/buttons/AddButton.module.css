@@ -1,0 +1,30 @@
+.button {
+  composes: p from '../typography/typography.module.css';
+  border: none;
+  background-color: var(--zircon);
+  cursor: pointer;
+  outline: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 167px;
+  height: 48px;
+  color: var(--zodiac);
+}
+
+.button:hover {
+  background-color: var(--zircon2);
+}
+
+.button:active {
+  background-color: var(--comet);
+  color: white;
+}
+
+.button:active svg g * {
+  stroke: white;
+}
+
+.button svg {
+  margin-right: 8px;
+}

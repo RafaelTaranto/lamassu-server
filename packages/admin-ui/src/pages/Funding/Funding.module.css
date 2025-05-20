@@ -1,0 +1,107 @@
+.wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  height: 100%;
+}
+
+.main {
+  display: flex;
+  flex: 1;
+}
+
+.firstSide {
+  margin: 0 64px 0 48px;
+}
+
+.secondSide {
+  margin-top: -29px;
+}
+
+.error {
+  color: var(--tomato);
+}
+
+.coinTotal {
+  margin: 12px 0;
+}
+
+.topSpacer {
+  margin-top: 40px;
+}
+
+.addressWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background-color: var(--zircon);
+}
+
+.address {
+  width: 375px;
+  margin: 12px 24px;
+}
+
+.itemWrapper {
+  text-align: end;
+}
+
+.item {
+  font-family: var(--museo);
+  font-size: 14px;
+  font-weight: 500;
+  margin: 2px;
+}
+
+.inactiveItem {
+  color: var(--comet);
+}
+
+.firstItem {
+  font-weight: 700;
+  margin: 2px;
+}
+
+.total {
+  margin-top: auto;
+  text-align: right;
+  margin-right: 24px;
+}
+
+.totalPending {
+  margin-top: 2px;
+}
+
+.totalTitle {
+  color: var(--comet);
+  margin-bottom: 2px;
+}
+
+.table {
+  margin-top: 8px;
+  margin-left: 48px;
+}
+
+.tableLabel {
+  justify-content: end;
+  margin-top: -38px;
+}
+
+.pending {
+  background-color: var(--zircon);
+}
+
+.copyToClipboard {
+  margin-left: auto;
+  padding-top: 6px;
+  padding-left: 15px;
+  margin-right: -11px;
+}
+
+.mono {
+  font-family: var(--bpmono);
+  font-size: 14px;
+  font-weight: 400;
+  width: 375px;
+  margin: 12px 24px;
+}

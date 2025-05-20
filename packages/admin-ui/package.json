@@ -1,0 +1,75 @@
+{
+  "name": "lamassu-admin",
+  "version": "11.0.0-beta.0",
+  "license": "../LICENSE",
+  "type": "module",
+  "dependencies": {
+    "@apollo/client": "^3.13.7",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@lamassu/coins": "v1.6.1",
+    "@mui/icons-material": "^7.1.0",
+    "@mui/material": "^7.1.0",
+    "@simplewebauthn/browser": "^3.0.0",
+    "apollo-upload-client": "^18.0.0",
+    "bignumber.js": "9.0.0",
+    "classnames": "2.2.6",
+    "countries-and-timezones": "^2.4.0",
+    "d3": "^6.2.0",
+    "date-fns": "^2.26.0",
+    "date-fns-tz": "^1.1.6",
+    "downshift": "9.0.9",
+    "file-saver": "2.0.2",
+    "formik": "2.2.0",
+    "jss-plugin-extend": "^10.0.0",
+    "jszip": "^3.6.0",
+    "libphonenumber-js": "^1.11.15",
+    "match-sorter": "^4.2.0",
+    "pretty-ms": "^2.1.0",
+    "qrcode.react": "4.2.0",
+    "ramda": "^0.26.1",
+    "react": "18.3.1",
+    "react-copy-to-clipboard": "^5.0.2",
+    "react-dom": "18.3.1",
+    "react-dropzone": "^11.4.2",
+    "react-number-format": "^4.4.1",
+    "react-otp-input": "3.1.1",
+    "react-virtualized": "^9.21.2",
+    "ua-parser-js": "1.0.40",
+    "uuid": "11.1.0",
+    "wouter": "^3.7.0",
+    "yup": "1.6.1",
+    "zustand": "^4.5.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "@vitejs/plugin-react-swc": "^3.7.2",
+    "esbuild-plugin-react-virtualized": "^1.0.4",
+    "globals": "^15.13.0",
+    "prettier": "3.4.1",
+    "tailwindcss": "^4.1.4",
+    "vite": "^6.0.1",
+    "vite-plugin-svgr": "^4.3.0"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "lint-staged": {
+    "*.{js,jsx,md,json}": "eslint --cache --fix",
+    "*.{js,jsx,css,md,json}": "prettier --write"
+  }
+}

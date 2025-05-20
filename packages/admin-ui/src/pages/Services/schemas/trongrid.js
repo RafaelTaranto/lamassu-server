@@ -1,0 +1,24 @@
+import TextInputFormik from '../../../components/inputs/formik/TextInput'
+import * as Yup from 'yup'
+
+export default {
+  code: 'trongrid',
+  name: 'Trongrid',
+  title: 'Trongrid (Wallet)',
+  elements: [
+    {
+      code: 'apiKey',
+      display: 'API Key',
+      component: TextInputFormik,
+      face: true,
+      long: true,
+    },
+  ],
+  getValidationSchema: () => {
+    return Yup.object().shape({
+      apiKey: Yup.string('The project ID must be a string')
+        .max(100, 'The project ID is too long')
+        .required('The project ID is required'),
+    })
+  },
+}

@@ -1,0 +1,20 @@
+const { migrationSaveConfig } = require('../lib/new-settings-loader')
+
+exports.up = function (next) {
+  const newConfig = {
+    cashIn_cashboxReset: 'Manual',
+  }
+  return migrationSaveConfig(newConfig)
+    .then(() => next())
+    .catch(err => {
+      if (err.message === 'lamassu-server is not configured') {
+        return next()
+      }
+      console.log(err.message)
+      return next(err)
+    })
+}
+
+module.exports.down = function (next) {
+  next()
+}

@@ -1,0 +1,62 @@
+import * as R from 'ramda'
+import React, { useState } from 'react'
+import { H2 } from '../../../../components/typography'
+
+import Graph from '../../graphs/Graph'
+import LegendEntry from '../LegendEntry'
+import classes from './wrappers.module.css'
+
+const options = [
+  { code: 'topMachinesTransactions', display: 'Transactions' },
+  { code: 'topMachinesVolume', display: 'Volume' },
+]
+
+const TopMachinesBarGraphHeader = ({
+  title,
+  period,
+  data,
+  machines,
+  selectedMachine,
+  timezone,
+  currency,
+}) => {
+  const [graphType /*, setGraphType */] = useState(options[0].code)
+
+  const legend = {
+    cashIn: <div className={classes.cashInIcon}></div>,
+    cashOut: <div className={classes.cashOutIcon}></div>,
+  }
+
+  return (
+    <>
+      <div className={classes.graphHeaderWrapper}>
+        <div className={classes.graphHeaderLeft}>
+          <H2 noMargin>{title}</H2>
+          <div className={classes.graphLegend}>
+            <LegendEntry IconElement={legend.cashIn} label={'Cash-in'} />
+            <LegendEntry IconElement={legend.cashOut} label={'Cash-out'} />
+          </div>
+        </div>
+        <div className={classes.graphHeaderRight}>
+          {/* <RadioGroup
+            options={options}
+            className={classes.topMachinesRadio}
+            value={graphType}
+            onChange={e => setGraphType(e.target.value)}
+          /> */}
+        </div>
+      </div>
+      <Graph
+        representing={R.find(R.propEq('code', graphType), options)}
+        period={period}
+        data={data}
+        timezone={timezone}
+        currency={currency}
+        selectedMachine={selectedMachine}
+        machines={machines}
+      />
+    </>
+  )
+}
+
+export default TopMachinesBarGraphHeader

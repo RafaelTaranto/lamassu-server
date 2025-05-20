@@ -1,0 +1,153 @@
+import { Formik, Form, Field } from 'formik'
+import React from 'react'
+import ErrorMessage from '../../components/ErrorMessage'
+import Stepper from '../../components/Stepper'
+import { Info2, H4, P, Info1, Label1 } from '../../components/typography'
+import WarningIcon from '../../styling/icons/warning-icon/comet.svg?react'
+
+import { Button } from '../../components/buttons'
+import { NumberInput } from '../../components/inputs/formik'
+import cassetteOne from '../../styling/icons/cassettes/cashout-cassette-1.svg'
+import cassetteTwo from '../../styling/icons/cassettes/cashout-cassette-2.svg'
+import tejo3CassetteOne from '../../styling/icons/cassettes/tejo/3-cassettes/3-cassettes-open-1-left.svg'
+import tejo3CassetteTwo from '../../styling/icons/cassettes/tejo/3-cassettes/3-cassettes-open-2-left.svg'
+import tejo3CassetteThree from '../../styling/icons/cassettes/tejo/3-cassettes/3-cassettes-open-3-left.svg'
+import tejo4CassetteOne from '../../styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-1-left.svg'
+import tejo4CassetteTwo from '../../styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-2-left.svg'
+import tejo4CassetteThree from '../../styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-3-left.svg'
+import tejo4CassetteFour from '../../styling/icons/cassettes/tejo/4-cassettes/4-cassettes-open-4-left.svg'
+
+const getCassetesArtworks = () => ({
+  1: {
+    1: cassetteOne,
+  },
+  2: {
+    1: cassetteOne,
+    2: cassetteTwo,
+  },
+  3: {
+    1: tejo3CassetteOne,
+    2: tejo3CassetteTwo,
+    3: tejo3CassetteThree,
+  },
+  4: {
+    1: tejo4CassetteOne,
+    2: tejo4CassetteTwo,
+    3: tejo4CassetteThree,
+    4: tejo4CassetteFour,
+  },
+})
+
+const WizardStep = ({
+  name,
+  step,
+  schema,
+  error,
+  isLastStep,
+  onContinue,
+  steps,
+  fiatCurrency,
+  options,
+  numberOfCassettes,
+}) => {
+  const label = isLastStep ? 'Finish' : 'Next'
+  const cassetteIcon = getCassetesArtworks()[numberOfCassettes]
+  return (
+    <>
+      <div className="pb-8">
+        <Info2 className="m-0 mb-3">{name}</Info2>
+        <Stepper steps={steps.length + 1} currentStep={step} />
+      </div>
+
+      {!isLastStep && (
+        <Formik
+          validateOnBlur={false}
+          validateOnChange={false}
+          onSubmit={onContinue}
+          initialValues={{
+            cassette1: '',
+            cassette2: '',
+            cassette3: '',
+            cassette4: '',
+          }}
+          enableReinitialize
+          validationSchema={schema}>
+          <Form className="flex flex-col justify-between grow-2 pb-8">
+            <div className="flex">
+              {steps.map(
+                ({ type, display, component }, idx) =>
+                  1 + idx === step && (
+                    <div key={idx} className="flex-1">
+                      <H4 noMargin>Edit {display}</H4>
+
+                      <Label1>Choose bill denomination</Label1>
+                      <div className="flex items-center justify-end w-33">
+                        <Field
+                          className="w-full"
+                          type="text"
+                          size="lg"
+                          autoFocus={1 + idx === step}
+                          component={
+                            options?.length > 0 ? component : NumberInput
+                          }
+                          fullWidth
+                          decimalPlaces={0}
+                          name={type}
+                          options={options}
+                          valueProp={'code'}
+                          labelProp={'display'}></Field>
+                        <Info1 noMargin className="pl-4">
+                          {fiatCurrency}
+                        </Info1>
+                      </div>
+                    </div>
+                  ),
+              )}
+              <img
+                className="relative -top-5 right-4"
+                alt="cassette"
+                width="148"
+                height="205"
+                src={cassetteIcon ? cassetteIcon[step] : null}></img>
+            </div>
+
+            <Button className="self-end" type="submit">
+              {label}
+            </Button>
+          </Form>
+        </Formik>
+      )}
+
+      {isLastStep && (
+        <div className="flex flex-col justify-between grow-2 pb-8">
+          <div>
+            <Info2 className="m-0 mb-3">Cash Cassette Bill Count</Info2>
+            <P>
+              <WarningIcon className="float-left mr-4 mb-12" />
+              When enabling cash-out, your bill count will be automatically set
+              to zero. Make sure you physically put cash inside the cash
+              cassettes to allow the machine to dispense it to your users. If
+              you already did, make sure you set the correct cash cassette bill
+              count for this machine on your Cash boxes & cassettes tab under
+              Maintenance.
+            </P>
+            <Info2 className="m-0 mb-3">Default Commissions</Info2>
+            <P>
+              <WarningIcon className="float-left mr-4 mb-12" />
+              When enabling cash-out, default commissions will be set. To change
+              commissions for this machine, please go to the Commissions tab
+              under Settings where you can set exceptions for each of the
+              available cryptocurrencies.
+            </P>
+          </div>
+          {error && <ErrorMessage>Failed to save</ErrorMessage>}
+          <Button className="self-end" onClick={() => onContinue()}>
+            {label}
+          </Button>
+        </div>
+      )}
+    </>
+  )
+}
+
+export default WizardStep

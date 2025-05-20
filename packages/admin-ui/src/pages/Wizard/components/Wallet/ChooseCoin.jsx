@@ -1,0 +1,74 @@
+import { useQuery, gql } from '@apollo/client'
+import { Formik, Form, Field } from 'formik'
+import React, { useState } from 'react'
+import PromptWhenDirty from '../../../../components/PromptWhenDirty'
+import { H4 } from '../../../../components/typography'
+import * as Yup from 'yup'
+
+import { Button } from '../../../../components/buttons'
+import { RadioGroup } from '../../../../components/inputs/formik'
+
+import classes from './Shared.module.css'
+
+const GET_CONFIG = gql`
+  {
+    cryptoCurrencies {
+      code
+      display
+    }
+  }
+`
+
+const schema = Yup.object().shape({
+  coin: Yup.string().required(),
+})
+
+const ChooseCoin = ({ addData }) => {
+  const [error, setError] = useState(false)
+
+  const { data } = useQuery(GET_CONFIG)
+  const cryptoCurrencies = data?.cryptoCurrencies ?? []
+
+  const onSubmit = it => {
+    if (!schema.isValidSync(it)) return setError(true)
+
+    if (it.coin !== 'BTC') {
+      return addData({ coin: it.coin, zeroConf: 'none', zeroConfLimit: 0 })
+    }
+
+    addData(it)
+  }
+
+  return (
+    <>
+      <H4 className={error && classes.error}>
+        Choose your first cryptocurrency
+      </H4>
+
+      <Formik
+        validateOnBlur={false}
+        validateOnChange={false}
+        enableReinitialize
+        initialValues={{ coin: '' }}
+        onSubmit={onSubmit}>
+        <Form onChange={() => setError(false)}>
+          <PromptWhenDirty />
+          <Field
+            component={RadioGroup}
+            name="coin"
+            labelClassName={classes.radioLabel}
+            className={classes.radioGroup}
+            options={cryptoCurrencies}
+          />
+          {
+            <Button size="lg" type="submit" className={classes.button}>
+              Continue
+            </Button>
+          }
+        </Form>
+      </Formik>
+    </>
+  )
+}
+
+export default ChooseCoin

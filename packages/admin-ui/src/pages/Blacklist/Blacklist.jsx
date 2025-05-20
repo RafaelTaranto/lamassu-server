@@ -1,0 +1,314 @@
+import { useQuery, useMutation, gql } from '@apollo/client'
+import Dialog from '@mui/material/Dialog'
+import DialogTitle from '@mui/material/DialogTitle'
+import DialogContent from '@mui/material/DialogContent'
+import Switch from '@mui/material/Switch'
+import SvgIcon from '@mui/material/SvgIcon'
+import IconButton from '@mui/material/IconButton'
+import * as R from 'ramda'
+import React, { useState } from 'react'
+import { HelpTooltip } from '../../components/Tooltip'
+import TitleSection from '../../components/layout/TitleSection'
+import { H2, Label2, P, Info3, Info2 } from '../../components/typography'
+import CloseIcon from '../../styling/icons/action/close/zodiac.svg?react'
+import ReverseSettingsIcon from '../../styling/icons/circle buttons/settings/white.svg?react'
+import SettingsIcon from '../../styling/icons/circle buttons/settings/zodiac.svg?react'
+
+import { Link, Button, SupportLinkButton } from '../../components/buttons'
+import { fromNamespace, toNamespace } from '../../utils/config'
+
+import BlackListAdvanced from './BlacklistAdvanced'
+import BlackListModal from './BlacklistModal'
+import BlacklistTable from './BlacklistTable'
+
+const DELETE_ROW = gql`
+  mutation DeleteBlacklistRow($address: String!) {
+    deleteBlacklistRow(address: $address) {
+      address
+    }
+  }
+`
+
+const GET_BLACKLIST = gql`
+  query getBlacklistData {
+    blacklist {
+      address
+    }
+    cryptoCurrencies {
+      display
+      code
+    }
+  }
+`
+
+const SAVE_CONFIG = gql`
+  mutation Save($config: JSONObject) {
+    saveConfig(config: $config)
+  }
+`
+
+const GET_INFO = gql`
+  query getData {
+    config
+  }
+`
+
+const ADD_ROW = gql`
+  mutation InsertBlacklistRow($address: String!) {
+    insertBlacklistRow(address: $address) {
+      address
+    }
+  }
+`
+
+const GET_BLACKLIST_MESSAGES = gql`
+  query getBlacklistMessages {
+    blacklistMessages {
+      id
+      label
+      content
+      allowToggle
+    }
+  }
+`
+
+const EDIT_BLACKLIST_MESSAGE = gql`
+  mutation editBlacklistMessage($id: ID, $content: String) {
+    editBlacklistMessage(id: $id, content: $content) {
+      id
+    }
+  }
+`
+
+const PaperWalletDialog = ({ onConfirmed, onDissmised, open, props }) => {
+  return (
+    <Dialog
+      open={open}
+      aria-labelledby="form-dialog-title"
+      PaperProps={{
+        style: {
+          borderRadius: 8,
+          minWidth: 656,
+          bottom: 125,
+          right: 7,
+        },
+      }}
+      {...props}>
+      <div className="p-2">
+        <DialogTitle className="flex flex-col">
+          <IconButton
+            aria-label="close"
+            onClick={onDissmised}
+            className="-mt-2 -mr-4 ml-auto">
+            <SvgIcon>
+              <CloseIcon />
+            </SvgIcon>
+          </IconButton>
+          <H2 noMargin>{'Are you sure you want to enable this?'}</H2>
+        </DialogTitle>
+        <DialogContent>
+          <Info3>{`This mode means that only paper wallets will be printed for users, and they won't be permitted to scan an address from their own wallet.`}</Info3>
+          <Info3>{`This mode is only useful for countries like Switzerland which mandates such a feature.\n`}</Info3>
+          <Info2>{`Don't enable this if you want users to be able to scan an address of their choosing.`}</Info2>
+          <div className="flex justify-end mt-8">
+            <Button onClick={() => onConfirmed(true)}>Confirm</Button>
+          </div>
+        </DialogContent>
+      </div>
+    </Dialog>
+  )
+}
+
+const Blacklist = () => {
+  const { data: blacklistResponse } = useQuery(GET_BLACKLIST)
+  const { data: configData } = useQuery(GET_INFO)
+  const { data: messagesResponse, refetch } = useQuery(GET_BLACKLIST_MESSAGES)
+  const [showModal, setShowModal] = useState(false)
+  const [errorMsg, setErrorMsg] = useState(null)
+  const [editMessageError, setEditMessageError] = useState(null)
+  const [deleteDialog, setDeleteDialog] = useState(false)
+  const [confirmDialog, setConfirmDialog] = useState(false)
+  const [advancedSettings, setAdvancedSettings] = useState(false)
+
+  const [deleteEntry] = useMutation(DELETE_ROW, {
+    onError: ({ message }) => {
+      const errorMessage = message ?? 'Error while deleting row'
+      setErrorMsg(errorMessage)
+    },
+    onCompleted: () => setDeleteDialog(false),
+    refetchQueries: () => ['getBlacklistData'],
+  })
+
+  const [addEntry] = useMutation(ADD_ROW, {
+    refetchQueries: () => ['getBlacklistData'],
+  })
+
+  const [saveConfig] = useMutation(SAVE_CONFIG, {
+    refetchQueries: () => ['getData'],
+  })
+
+  const [editMessage] = useMutation(EDIT_BLACKLIST_MESSAGE, {
+    onError: e => setEditMessageError(e),
+    refetchQueries: () => ['getBlacklistData'],
+  })
+
+  const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
+
+  const complianceConfig =
+    configData?.config && fromNamespace('compliance')(configData.config)
+
+  const rejectAddressReuse = !!complianceConfig?.rejectAddressReuse
+
+  const enablePaperWalletOnly = !!complianceConfig?.enablePaperWalletOnly
+
+  const addressReuseSave = rawConfig => {
+    const config = toNamespace('compliance')(rawConfig)
+    return saveConfig({ variables: { config } })
+  }
+
+  const handleDeleteEntry = address => {
+    deleteEntry({ variables: { address } })
+  }
+
+  const handleConfirmDialog = confirm => {
+    addressReuseSave({
+      enablePaperWalletOnly: confirm,
+    })
+    setConfirmDialog(false)
+  }
+
+  const addToBlacklist = async address => {
+    setErrorMsg(null)
+    try {
+      const res = await addEntry({ variables: { address } })
+      if (!res?.errors) {
+        return setShowModal(false)
+      }
+      const duplicateKeyError = res?.errors?.some(e => {
+        return e.message.includes('duplicate')
+      })
+      if (duplicateKeyError) {
+        setErrorMsg('This address is already being blocked')
+      } else {
+        setErrorMsg(`Server error${': ' + res?.errors[0]?.message}`)
+      }
+    } catch (e) {
+      console.error(e)
+      setErrorMsg('Server error')
+    }
+  }
+
+  const editBlacklistMessage = r => {
+    editMessage({
+      variables: {
+        id: r.id,
+        content: r.content,
+      },
+    })
+  }
+
+  return (
+    <>
+      <PaperWalletDialog
+        open={confirmDialog}
+        onConfirmed={handleConfirmDialog}
+        onDissmised={() => {
+          setConfirmDialog(false)
+        }}
+      />
+      <TitleSection
+        title="Blacklisted addresses"
+        buttons={[
+          {
+            text: 'Advanced settings',
+            icon: SettingsIcon,
+            inverseIcon: ReverseSettingsIcon,
+            toggle: setAdvancedSettings,
+          },
+        ]}>
+        {!advancedSettings && (
+          <div className="flex items-center justify-end">
+            <div className="flex items-center justify-end mr-4">
+              <P>Enable paper wallet (only)</P>
+              <Switch
+                checked={enablePaperWalletOnly}
+                onChange={e =>
+                  enablePaperWalletOnly
+                    ? addressReuseSave({
+                        enablePaperWalletOnly: e.target.checked,
+                      })
+                    : setConfirmDialog(true)
+                }
+                value={enablePaperWalletOnly}
+              />
+              <Label2>{enablePaperWalletOnly ? 'On' : 'Off'}</Label2>
+              <HelpTooltip width={304}>
+                <P>
+                  The "Enable paper wallet (only)" option means that only paper
+                  wallets will be printed for users, and they won't be permitted
+                  to scan an address from their own wallet.
+                </P>
+              </HelpTooltip>
+            </div>
+            <div className="flex items-center justify-end mr-4">
+              <P>Reject reused addresses</P>
+              <Switch
+                checked={rejectAddressReuse}
+                onChange={event => {
+                  addressReuseSave({ rejectAddressReuse: event.target.checked })
+                }}
+                value={rejectAddressReuse}
+              />
+              <Label2>{rejectAddressReuse ? 'On' : 'Off'}</Label2>
+              <HelpTooltip width={304}>
+                <P>
+                  For details about rejecting address reuse, please read the
+                  relevant knowledgebase article:
+                </P>
+                <SupportLinkButton
+                  link="https://support.lamassu.is/hc/en-us/articles/360033622211-Reject-Address-Reuse"
+                  label="Reject Address Reuse"
+                />
+              </HelpTooltip>
+            </div>
+            <Link color="primary" onClick={() => setShowModal(true)}>
+              Blacklist new addresses
+            </Link>
+          </div>
+        )}
+      </TitleSection>
+      {!advancedSettings && (
+        <div className="flex flex-col flex-1">
+          <BlacklistTable
+            data={blacklistData}
+            handleDeleteEntry={handleDeleteEntry}
+            errorMessage={errorMsg}
+            setErrorMessage={setErrorMsg}
+            deleteDialog={deleteDialog}
+            setDeleteDialog={setDeleteDialog}
+          />
+        </div>
+      )}
+      {advancedSettings && (
+        <BlackListAdvanced
+          data={messagesResponse}
+          editBlacklistMessage={editBlacklistMessage}
+          mutationError={editMessageError}
+          onClose={() => refetch()}
+        />
+      )}
+      {showModal && (
+        <BlackListModal
+          onClose={() => {
+            setErrorMsg(null)
+            setShowModal(false)
+          }}
+          errorMsg={errorMsg}
+          addToBlacklist={addToBlacklist}
+        />
+      )}
+    </>
+  )
+}
+
+export default Blacklist

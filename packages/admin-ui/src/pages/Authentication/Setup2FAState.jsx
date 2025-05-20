@@ -1,0 +1,174 @@
+import { useMutation, useQuery, useLazyQuery, gql } from '@apollo/client'
+import { Form, Formik } from 'formik'
+import { QRCodeSVG as QRCode } from 'qrcode.react'
+import React, { useContext, useState } from 'react'
+import { useLocation } from 'wouter'
+import { Label3, P } from '../../components/typography'
+
+import AppContext from '../../AppContext'
+import { ActionButton, Button } from '../../components/buttons'
+import { CodeInput } from '../../components/inputs/base'
+import { primaryColor } from '../../styling/variables'
+
+import classes from './Authentication.module.css'
+
+const SETUP_2FA = gql`
+  mutation setup2FA(
+    $username: String!
+    $password: String!
+    $rememberMe: Boolean!
+    $codeConfirmation: String!
+  ) {
+    setup2FA(
+      username: $username
+      password: $password
+      rememberMe: $rememberMe
+      codeConfirmation: $codeConfirmation
+    )
+  }
+`
+
+const GET_2FA_SECRET = gql`
+  query get2FASecret($username: String!, $password: String!) {
+    get2FASecret(username: $username, password: $password) {
+      secret
+      otpauth
+    }
+  }
+`
+
+const GET_USER_DATA = gql`
+  {
+    userData {
+      id
+      username
+      role
+    }
+  }
+`
+
+const Setup2FAState = ({ state }) => {
+  const [, navigate] = useLocation()
+  const { setUserData } = useContext(AppContext)
+
+  const [secret, setSecret] = useState(null)
+  const [otpauth, setOtpauth] = useState(null)
+  const [isShowing, setShowing] = useState(false)
+
+  const [invalidToken, setInvalidToken] = useState(false)
+  const [twoFAConfirmation, setTwoFAConfirmation] = useState('')
+
+  const handle2FAChange = value => {
+    setTwoFAConfirmation(value)
+    setInvalidToken(false)
+  }
+
+  const queryOptions = {
+    variables: { username: state.clientField, password: state.passwordField },
+    onCompleted: ({ get2FASecret }) => {
+      setSecret(get2FASecret.secret)
+      setOtpauth(get2FASecret.otpauth)
+    },
+  }
+
+  const mutationOptions = {
+    variables: {
+      username: state.clientField,
+      password: state.passwordField,
+      rememberMe: state.rememberMeField,
+      codeConfirmation: twoFAConfirmation,
+    },
+  }
+
+  const { error: queryError } = useQuery(GET_2FA_SECRET, queryOptions)
+
+  const [getUserData] = useLazyQuery(GET_USER_DATA, {
+    onCompleted: ({ userData }) => {
+      setUserData(userData)
+      navigate('/')
+    },
+  })
+
+  const [setup2FA, { error: mutationError }] = useMutation(SETUP_2FA, {
+    onCompleted: ({ setup2FA: success }) => {
+      success ? getUserData() : setInvalidToken(true)
+    },
+  })
+
+  const getErrorMsg = () => {
+    if (mutationError || queryError) return 'Internal server error.'
+    if (twoFAConfirmation.length !== 6 && invalidToken)
+      return 'The code should have 6 characters!'
+    if (invalidToken) return 'Code is invalid. Please try again.'
+    return null
+  }
+
+  const handleSubmit = () => {
+    if (twoFAConfirmation.length !== 6) {
+      setInvalidToken(true)
+      return
+    }
+    setup2FA(mutationOptions)
+  }
+
+  return (
+    secret &&
+    otpauth && (
+      <>
+        <div className={classes.infoWrapper}>
+          <Label3 className={classes.info2}>
+            This account does not yet have two-factor authentication enabled. To
+            secure the admin, two-factor authentication is required.
+          </Label3>
+          <Label3 className={classes.info2}>
+            To complete the registration process, scan the following QR code or
+            insert the secret below on a 2FA app, such as Google Authenticator
+            or AndOTP.
+          </Label3>
+        </div>
+        <div className={classes.qrCodeWrapper}>
+          <QRCode size={240} fgColor={primaryColor} value={otpauth} />
+        </div>
+        <div className={classes.secretWrapper}>
+          <Label3 className={classes.secretLabel}>Your secret:</Label3>
+          <Label3 className={isShowing ? classes.secret : classes.hiddenSecret}>
+            {secret}
+          </Label3>
+          <ActionButton
+            disabled={!secret && !otpauth}
+            color="primary"
+            onClick={() => {
+              setShowing(!isShowing)
+            }}>
+            {isShowing ? 'Hide' : 'Show'}
+          </ActionButton>
+        </div>
+        <div className={classes.confirm2FAInput}>
+          {/* TODO: refactor the 2FA CodeInput to properly use Formik */}
+          <Formik onSubmit={() => {}} initialValues={{}}>
+            <Form>
+              <CodeInput
+                name="2fa"
+                value={twoFAConfirmation}
+                onChange={handle2FAChange}
+                numInputs={6}
+                error={invalidToken}
+                shouldAutoFocus
+              />
+              <div className="mt-9">
+                {getErrorMsg() && (
+                  <P className="text-tomato">{getErrorMsg()}</P>
+                )}
+                <Button onClick={handleSubmit} buttonClassName="w-full">
+                  Done
+                </Button>
+              </div>
+            </Form>
+          </Formik>
+        </div>
+      </>
+    )
+  )
+}
+
+export default Setup2FAState

@@ -1,0 +1,83 @@
+import * as R from 'ramda'
+import React, { memo } from 'react'
+import { H2, Label1, P } from '../../../components/typography'
+import IdIcon from '../../../styling/icons/ID/card/zodiac.svg?react'
+
+import { getFormattedPhone, getName } from '../helper'
+
+import PhotosCard from './PhotosCard'
+
+const CustomerDetails = memo(({ customer, photosData, locale, timezone }) => {
+  const idNumber = R.path(['idCardData', 'documentNumber'])(customer)
+  const usSsn = R.path(['usSsn'])(customer)
+  const name = getName(customer)
+  const email = R.path(['email'])(customer)
+  const phone = R.path(['phone'])(customer)
+
+  const elements = [
+    {
+      header: 'Phone number',
+      size: 172,
+      value: getFormattedPhone(customer.phone, locale.country),
+    },
+  ]
+
+  if (idNumber)
+    elements.push({
+      header: 'ID number',
+      size: 172,
+      value: idNumber,
+    })
+
+  if (usSsn)
+    elements.push({
+      header: 'US SSN',
+      size: 127,
+      value: usSsn,
+    })
+
+  if (email)
+    elements.push({
+      header: 'Email',
+      size: 190,
+      value: email,
+    })
+
+  return (
+    <div className="flex gap-7">
+      <PhotosCard photosData={photosData} timezone={timezone} />
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2">
+          <IdIcon />
+          <H2 noMargin>
+            {name.length
+              ? name
+              : email?.length
+                ? email
+                : getFormattedPhone(phone, locale.country)}
+          </H2>
+        </div>
+        <div className="flex mt-auto">
+          {elements.map(({ size, header }, idx) => (
+            <Label1
+              noMargin
+              key={idx}
+              className="mb-1 text-comet"
+              style={{ width: size }}>
+              {header}
+            </Label1>
+          ))}
+        </div>
+        <div className="flex">
+          {elements.map(({ size, value }, idx) => (
+            <P noMargin key={idx} style={{ width: size }}>
+              {value}
+            </P>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+})
+
+export default CustomerDetails

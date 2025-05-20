@@ -1,0 +1,100 @@
+.selectedItem {
+  width: 111px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.select {
+  width: 152px;
+  z-index: 1;
+}
+
+.select label {
+  font-size: 13px;
+  font-family: var(--museo);
+  font-weight: 500;
+  color: var(--comet);
+  padding-left: 10px;
+}
+
+.select button {
+  font-size: 14px;
+  font-family: var(--museo);
+  font-weight: 500;
+  position: relative;
+  border: 0;
+  background-color: var(--zircon);
+  width: 152px;
+  padding: 6px 0 6px 12px;
+  border-radius: 20px;
+  line-height: 1.14;
+  text-align: left;
+  color: var(--comet);
+  cursor: pointer;
+  outline: 0 none;
+}
+
+.select ul {
+  max-height: 200px;
+  width: 152px;
+  overflow-y: auto;
+  position: absolute;
+  margin: 0;
+  border-top: 0;
+  padding: 0;
+  border-radius: 0 0 8px 8px;
+  background-color: var(--zircon);
+  outline: 0 none;
+}
+
+.select ul li {
+  font-size: 14px;
+  font-family: var(--museo);
+  font-weight: 500;
+  list-style-type: none;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.select ul li span {
+  width: 100%;
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.select ul li:hover {
+  background-color: var(--comet);
+  color: white;
+}
+
+.select svg {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  fill: var(--comet);
+}
+
+.selectFiltered button {
+  background-color: var(--comet);
+  color: white;
+}
+
+.selectFiltered ul li {
+  background-color: var(--comet);
+  color: white;
+}
+
+.selectFiltered ul li:hover {
+  background-color: var(--zircon);
+  color: var(--comet);
+}
+
+.selectFiltered svg {
+  fill: white !important;
+}
+
+.open button {
+  border-radius: 8px 8px 0 0;
+}

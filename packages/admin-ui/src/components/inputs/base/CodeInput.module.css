@@ -1,0 +1,14 @@
+.input {
+  width: 3.5rem !important;
+  height: 5rem;
+  border: 2px solid;
+  border-color: var(--zircon);
+  border-radius: 4px;
+}
+
+.input:focus {
+  border: 2px solid;
+  border-color: var(--zodiac);
+  border-radius: 4px;
+  outline: none;
+}

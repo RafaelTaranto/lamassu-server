@@ -1,5 +1,4 @@
-./node_modules
-./new-lamassu-admin/node_modules
+**/node_modules
 .git
 .direnv
 .envrc

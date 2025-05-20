@@ -1,0 +1,73 @@
+.welcomeBackground {
+  background: var(--ghost) url(/wizard-background.svg) no-repeat fixed center
+    center;
+  background-size: cover;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  min-height: 100vh;
+}
+
+.wrapper {
+  padding: 2.5em 4em;
+  width: 575px;
+  display: flex;
+  flex-direction: column;
+}
+
+.titleWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.icon {
+  transform: scale(1.5);
+  margin-right: 25px;
+}
+
+.title {
+  padding-top: 8px;
+}
+
+.infoWrapper {
+  margin-bottom: 3vh;
+}
+
+.info2 {
+  text-align: justify;
+}
+
+.qrCodeWrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3vh;
+}
+
+.secretWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.secretLabel {
+  margin-right: 15px;
+}
+
+.secret {
+  margin-right: 35px;
+}
+
+.hiddenSecret {
+  margin-right: 35px;
+  filter: blur(8px);
+}
+
+.confirm2FAInput {
+  margin-top: 25px;
+}

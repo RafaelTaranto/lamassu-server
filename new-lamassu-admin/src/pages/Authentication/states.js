@@ -1,8 +1,0 @@
-const STATES = {
-  LOGIN: 'LOGIN',
-  SETUP_2FA: 'SETUP2FA',
-  INPUT_2FA: 'INPUT2FA',
-  FIDO: 'FIDO'
-}
-
-export { STATES }
