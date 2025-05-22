@@ -42,7 +42,7 @@ const getView = (data, code, compare) => it => {
   if (!data) return ''
 
   // The following boolean should come undefined if it is rendering an unpaired machine
-  const attribute = R.find(R.propEq(compare ?? 'code', it))(data)
+  const attribute = R.find(R.propEq(it, compare ?? 'code'))(data)
 
   return attribute ? R.prop(code, attribute) : 'Unpaired machine'
 }
@@ -294,8 +294,8 @@ const getAlreadyUsed = (id, machine, values) => {
   const getCrypto = R.prop('cryptoCurrencies')
   const getMachineId = R.prop('machine')
 
-  const filteredOverrides = R.filter(R.propEq('machine', machine))(values)
-  const originalValue = R.find(R.propEq('id', id))(values)
+  const filteredOverrides = R.filter(R.propEq(machine, 'machine'))(values)
+  const originalValue = R.find(R.propEq(id, 'id'))(values)
 
   const originalCryptos = getCrypto(originalValue)
   const originalMachineId = getMachineId(originalValue)
@@ -407,7 +407,7 @@ const overridesDefaults = {
 
 const getOrder = ({ machine, cryptoCurrencies }) => {
   const isAllMachines = machine === ALL_MACHINES.deviceId
-  const isAllCoins = R.contains(ALL_COINS.code, cryptoCurrencies)
+  const isAllCoins = R.includes(ALL_COINS.code, cryptoCurrencies)
 
   if (isAllMachines && isAllCoins) return 0
   if (isAllMachines) return 1

@@ -163,7 +163,7 @@ const Analytics = () => {
 
   const convertFiatToLocale = item => {
     if (item.fiatCode === fiatLocale) return item
-    const itemRate = R.find(R.propEq('code', item.fiatCode))(rates)
+    const itemRate = R.find(R.propEq(item.fiatCode, 'code'))(rates)
     const localeRate = R.find(R.propEq('code', fiatLocale))(rates)
     const multiplier = localeRate?.rate / itemRate?.rate
     return { ...item, fiat: parseFloat(item.fiat) * multiplier }

@@ -78,7 +78,7 @@ const CashboxHistory = ({ machines, currency, timezone }) => {
       textAlign: 'left',
       view: R.pipe(
         R.prop('deviceId'),
-        id => R.find(R.propEq('id', id), machines),
+        id => R.find(R.propEq(id, 'id'), machines),
         R.defaultTo({ name: <i>Unpaired device</i> }),
         R.prop('name'),
       ),

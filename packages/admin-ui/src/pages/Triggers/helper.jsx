@@ -161,7 +161,7 @@ const Type = ({ ...props }) => {
     'text-tomato': errors.triggerType && touched.triggerType,
   }
 
-  const containsType = R.contains(values?.triggerType)
+  const containsType = R.includes(values?.triggerType)
   const isThresholdCurrencyEnabled = containsType(['txAmount', 'txVolume'])
   const isTransactionAmountEnabled = containsType(['txVelocity'])
   const isThresholdDaysEnabled = containsType(['txVolume', 'txVelocity'])
@@ -542,7 +542,7 @@ const requirements = (
 const getView = (data, code, compare) => it => {
   if (!data) return ''
 
-  return R.compose(R.prop(code), R.find(R.propEq(compare ?? 'code', it)))(data)
+  return R.compose(R.prop(code), R.find(R.propEq(it, compare ?? 'code')))(data)
 }
 
 const customReqIdMatches = customReqId => it => {

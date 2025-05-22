@@ -235,7 +235,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
     : requirementOptions
 
   const requirementName = displayRequirements
-    ? R.find(R.propEq('code', requirementSelected))(updatedRequirementOptions)
+    ? R.find(R.propEq(requirementSelected, 'code'))(updatedRequirementOptions)
         .display
     : ''
 

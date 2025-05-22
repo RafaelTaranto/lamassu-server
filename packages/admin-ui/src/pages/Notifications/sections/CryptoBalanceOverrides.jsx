@@ -37,12 +37,12 @@ const CryptoBalanceOverrides = ({ section }) => {
 
   const overriddenCryptos = R.map(R.prop(CRYPTOCURRENCY_KEY))(setupValues)
   const suggestionFilter = R.filter(
-    it => !R.contains(it.code, overriddenCryptos),
+    it => !R.includes(it.code, overriddenCryptos),
   )
   const suggestions = suggestionFilter(cryptoCurrencies)
 
   const findSuggestion = it => {
-    const coin = R.compose(R.find(R.propEq('code', it?.cryptoCurrency)))(
+    const coin = R.compose(R.find(R.propEq(it?.cryptoCurrency, 'code')))(
       cryptoCurrencies,
     )
     return coin ? [coin] : []
@@ -90,7 +90,7 @@ const CryptoBalanceOverrides = ({ section }) => {
   const viewCrypto = it =>
     R.compose(
       R.path(['display']),
-      R.find(R.propEq('code', it)),
+      R.find(R.propEq(it, 'code')),
     )(cryptoCurrencies)
 
   const elements = [

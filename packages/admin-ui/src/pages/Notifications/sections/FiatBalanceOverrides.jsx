@@ -54,7 +54,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
   )
 
   const findSuggestion = it => {
-    const coin = R.find(R.propEq('deviceId', it?.machine), machines)
+    const coin = R.find(R.propEq(it?.machine, 'deviceId'), machines)
     return coin ? [coin] : []
   }
 
@@ -127,7 +127,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
     )
 
   const viewMachine = it =>
-    R.compose(R.path(['name']), R.find(R.propEq('deviceId', it)))(machines)
+    R.compose(R.path(['name']), R.find(R.propEq(it, 'deviceId')))(machines)
 
   const elements = R.concat(
     [

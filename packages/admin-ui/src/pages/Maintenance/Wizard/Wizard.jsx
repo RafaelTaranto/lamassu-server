@@ -56,7 +56,7 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
     R.pipe(R.pickAll(fields), R.map(defaultToZero))(cassetteInput)
 
   const onContinue = it => {
-    const newConfig = R.merge(config, it)
+    const newConfig = R.mergeRight(config, it)
     if (isLastStep) {
       const wasCashboxEmptied = [
         config?.wasCashboxEmptied,
@@ -158,7 +158,7 @@ const Wizard = ({ machine, cashoutSettings, locale, onClose, save, error }) => {
       : {}
 
   const makeInitialValues = () =>
-    R.merge(makeCassettesInitialValues(), makeRecyclersInitialValues())
+    R.mergeRight(makeCassettesInitialValues(), makeRecyclersInitialValues())
 
   const steps = R.pipe(
     R.concat(

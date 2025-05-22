@@ -296,7 +296,7 @@ const CashCassettes = () => {
         />
         {wizard && (
           <Wizard
-            machine={R.find(R.propEq('id', machineId), machines)}
+            machine={R.find(R.propEq(machineId, 'id'), machines)}
             cashoutSettings={getCashoutSettings(machineId)}
             onClose={() => {
               setWizard(false)

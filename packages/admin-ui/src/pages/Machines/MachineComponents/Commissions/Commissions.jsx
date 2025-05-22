@@ -52,8 +52,8 @@ const Commissions = ({ name: SCREEN_KEY, id: deviceId }) => {
 
     const overrides = config.overrides
       ? R.concat(
-          R.filter(R.propEq('machine', 'ALL_MACHINES'), config.overrides),
-          R.filter(R.propEq('machine', deviceId), config.overrides),
+          R.filter(R.propEq('ALL_MACHINES', 'machine'), config.overrides),
+          R.filter(R.propEq(deviceId, 'machine'), config.overrides),
         )
       : []
 
