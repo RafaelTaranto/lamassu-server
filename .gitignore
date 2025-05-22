@@ -7,3 +7,4 @@
 packages/server/certs/
 packages/server/tests/stress/machines
 packages/server/tests/stress/config.json
+packages/typesafe-db/lib/

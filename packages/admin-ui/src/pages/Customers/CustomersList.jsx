@@ -1,3 +1,6 @@
+import IconButton from '@mui/material/IconButton'
+import Tooltip from '@mui/material/Tooltip'
+import Visibility from '@mui/icons-material/Visibility'
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { useMemo } from 'react'
@@ -40,7 +43,6 @@ const CustomersList = ({ data, country, onClick, loading }) => {
         ...alignRight,
       },
       {
-        id: 'totalSpent',
         accessorKey: 'totalSpent',
         size: 152,
         enableColumnFilter: false,
@@ -48,17 +50,6 @@ const CustomersList = ({ data, country, onClick, loading }) => {
           `${Number.parseFloat(cell.getValue())} ${row.original.lastTxFiatCode ?? ''}`,
         header: 'Total spent',
         ...alignRight,
-      },
-      {
-        header: 'Last active',
-        // accessorKey: 'lastActive',
-        accessorFn: it => new Date(it.lastActive),
-        size: 133,
-        enableColumnFilter: false,
-        Cell: ({ cell }) =>
-          (cell.getValue() &&
-            format('yyyy-MM-dd', new Date(cell.getValue()))) ??
-          '',
       },
       {
         header: 'Last transaction',
@@ -81,11 +72,33 @@ const CustomersList = ({ data, country, onClick, loading }) => {
         },
       },
       {
+        accessorKey: 'lastActive',
+        header: 'Last active',
+        size: 133,
+        enableColumnFilter: false,
+        Cell: ({ cell }) =>
+          (cell.getValue() &&
+            format('yyyy-MM-dd', new Date(cell.getValue()))) ??
+          '',
+      },
+      {
         header: 'Status',
-        id: 'status',
-        size: 100,
+        size: 150,
         enableColumnFilter: false,
         accessorKey: 'authorizedStatus',
+        sortingFn: (rowA, rowB) => {
+          const statusOrder = { success: 0, warning: 1, error: 2 }
+          const statusA = rowA.original.authorizedStatus.type
+          const statusB = rowB.original.authorizedStatus.type
+
+          if (statusA === statusB) {
+            return rowA.original.authorizedStatus.label.localeCompare(
+              rowB.original.authorizedStatus.label,
+            )
+          }
+
+          return statusOrder[statusA] - statusOrder[statusB]
+        },
         Cell: ({ cell }) => <MainStatus statuses={[cell.getValue()]} />,
       },
     ],
@@ -101,13 +114,22 @@ const CustomersList = ({ data, country, onClick, loading }) => {
       columnVisibility: {
         id: false,
       },
+      sorting: [{ id: 'lastActive', desc: true }],
+      columnPinning: { right: ['mrt-row-actions'] },
     },
     state: { isLoading: loading },
     getRowId: it => it.id,
-    muiTableBodyRowProps: ({ row }) => ({
-      onClick: () => onClick(row),
-      sx: { cursor: 'pointer' },
-    }),
+    enableRowActions: true,
+    positionActionsColumn: 'last',
+    renderRowActions: ({ row }) => (
+      <div>
+        <Tooltip title="Customer page">
+          <IconButton aria-label="Go to customer" onClick={() => onClick(row)}>
+            <Visibility />
+          </IconButton>
+        </Tooltip>
+      </div>
+    ),
   })
 
   return (

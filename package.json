@@ -10,7 +10,8 @@
   },
   "workspaces": [
     "packages/server",
-    "packages/admin-ui"
+    "packages/admin-ui",
+    "packages/typesafe-db"
   ],
   "devDependencies": {
     "@eslint/css": "^0.7.0",

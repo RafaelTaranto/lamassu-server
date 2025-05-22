@@ -17,8 +17,7 @@ const resolvers = {
     isAnonymous: parent => parent.customerId === anonymous.uuid,
   },
   Query: {
-    customers: (...[, { phone, email, name, address, id }]) =>
-      customers.getCustomersList(phone, name, address, id, email),
+    customers: () => customers.getCustomersList(),
     customer: (...[, { customerId }]) =>
       customers.getCustomerById(customerId).then(addLastUsedMachineName),
   },

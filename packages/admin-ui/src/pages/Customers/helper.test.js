@@ -293,4 +293,31 @@ describe('getAuthorizedStatus', () => {
       type: 'error',
     })
   })
+
+  it('should return rejected status for blocked custom info request', () => {
+    const customer = {
+      authorizedOverride: null,
+      isSuspended: false,
+      customInfoRequests: [
+        {
+          infoRequestId: '550e8400-e29b-41d4-a716-446655440000',
+          override: 'blocked',
+        },
+      ],
+    }
+
+    const triggers = {
+      automation: 'manual',
+      overrides: [],
+    }
+
+    const customRequests = [{ id: '550e8400-e29b-41d4-a716-446655440000' }]
+
+    const result = getAuthorizedStatus(customer, triggers, customRequests)
+
+    expect(result).toEqual({
+      label: 'Rejected',
+      type: 'error',
+    })
+  })
 })
