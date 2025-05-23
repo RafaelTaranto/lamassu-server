@@ -34,7 +34,7 @@ function ticker(fiatCode, cryptoCode, tickerName) {
     return getCurrencyRates(ticker, fiatCode, cryptoCode)
   }
 
-  return getRate(RETRIES, tickerName, defaultFiatMarket(tickerName)).then(
+  return getRate(RETRIES, fiatCode, defaultFiatMarket(tickerName)).then(
     ({ fxRate }) => {
       try {
         return getCurrencyRates(
