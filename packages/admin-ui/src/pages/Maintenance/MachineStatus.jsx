@@ -112,7 +112,7 @@ const MachineStatus = () => {
   ]
 
   const machines = R.path(['machines'])(machinesResponse) ?? []
-  const expandedIndex = R.findIndex(R.propEq('deviceId', addedMachineId))(
+  const expandedIndex = R.findIndex(R.propEq(addedMachineId, 'deviceId'))(
     machines,
   )
 

@@ -136,7 +136,7 @@ const TermsConditions = () => {
     },
   ]
 
-  const findField = name => R.find(R.propEq('name', name))(fields)
+  const findField = name => R.find(R.propEq(name, 'name'))(fields)
   const findValue = name => findField(name).value
 
   const initialValues = {

@@ -207,7 +207,7 @@ const Wizard = ({
   )
 
   const onContinue = async it => {
-    const newConfig = R.merge(config, stepOptions.schema.cast(it))
+    const newConfig = R.mergeRight(config, stepOptions.schema.cast(it))
 
     if (isLastStep) {
       return save(newConfig)
@@ -221,7 +221,7 @@ const Wizard = ({
 
   const createErrorMessage = (errors, touched, values) => {
     const triggerType = values?.triggerType
-    const containsType = R.contains(triggerType)
+    const containsType = R.includes(triggerType)
     const isSuspend = values?.requirement?.requirement === 'suspend'
     const isCustom = values?.requirement?.requirement === 'custom'
 

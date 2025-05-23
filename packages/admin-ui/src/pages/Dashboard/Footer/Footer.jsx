@@ -40,9 +40,9 @@ const Footer = () => {
   const localeFiatCurrency = R.path(['locale_fiatCurrency'])(config) ?? ''
 
   const renderFooterItem = key => {
-    const idx = R.findIndex(R.propEq('code', key))(cryptoCurrencies)
+    const idx = R.findIndex(R.propEq(key, 'code'))(cryptoCurrencies)
     const tickerCode = wallets[`${key}_ticker`]
-    const tickerIdx = R.findIndex(R.propEq('code', tickerCode))(accountsConfig)
+    const tickerIdx = R.findIndex(R.propEq(tickerCode, 'code'))(accountsConfig)
 
     const tickerName = tickerIdx > -1 ? accountsConfig[tickerIdx].display : ''
 

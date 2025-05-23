@@ -24,7 +24,7 @@ const Autocomplete = ({
   autoFocus,
   ...props
 }) => {
-  const mapFromValue = options => it => R.find(R.propEq(valueProp, it))(options)
+  const mapFromValue = options => it => R.find(R.propEq(it, valueProp))(options)
   const mapToValue = R.prop(valueProp)
 
   const getValue = () => {

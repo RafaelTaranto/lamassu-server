@@ -4,42 +4,48 @@ on: [ workflow_dispatch ]
 
 jobs:
   everything:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Cache Docker layers
+      - name: Setup Turbo cache
         uses: actions/cache@v4
         with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-updatetar
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-buildx-updatetar
-      - name: Build Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: build/ci.Dockerfile
-          load: true
-          tags: ci_image:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
+            ${{ runner.os }}-turbo-
 
-      - name: Extract artifact from Docker image
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.11.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build packages with Turbo
+        run: pnpm run build
+
+      - name: Package production build
         run: |
-          docker create --name extract_artifact ci_image:latest
-          docker cp extract_artifact:/lamassu-server.tar.gz ./lamassu-server.tar.gz
-          docker rm extract_artifact
+          # Create production-ready server package using pnpm deploy
+          pnpm deploy --filter=./packages/server --prod lamassu-server --legacy
+          
+          # Copy built admin UI to public directory
+          cp -r packages/admin-ui/build lamassu-server/public
+          
+          # Create tarball
+          tar -zcf lamassu-server.tar.gz lamassu-server/
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: lamassu-server.tar.gz
           path: lamassu-server.tar.gz
-
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache 
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache

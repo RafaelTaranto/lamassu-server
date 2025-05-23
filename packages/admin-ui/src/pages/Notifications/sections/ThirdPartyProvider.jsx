@@ -25,7 +25,7 @@ const ThirdPartyProvider = () => {
   const getDisplayName = type => it =>
     R.compose(
       R.prop('display'),
-      R.find(R.propEq('code', it)),
+      R.find(R.propEq(it, 'code')),
     )(filterOptions(type))
 
   const innerSave = async value => {
@@ -73,7 +73,7 @@ const ThirdPartyProvider = () => {
     <EditableTable
       name="thirdParty"
       initialValues={values}
-      data={R.of(values)}
+      data={R.of(Array, values)}
       error={error?.message}
       enableEdit
       editWidth={174}

@@ -1,49 +1,20 @@
-FROM node:22-alpine AS build
-RUN apk add --no-cache npm git curl build-base net-tools python3 postgresql-dev
+FROM node:22-alpine AS base
+RUN apk add --no-cache bash libpq openssl ca-certificates
 
 WORKDIR /lamassu-server
 
-COPY ["packages/server/package.json", "package-lock.json", "./"]
-RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
-RUN npm install --production
+# Copy the pre-built production package from CI (with node_modules)
+COPY lamassu-server/ ./
 
-COPY packages/server/ ./
+# Install production dependencies in the container
+RUN npm install --omit=dev --ignore-scripts
 
-
-FROM node:22-alpine AS l-s-base
-RUN apk add --no-cache npm git curl bash libpq openssl ca-certificates
-
-COPY --from=build /lamassu-server /lamassu-server
-
-
-FROM l-s-base AS l-s
-
+FROM base AS l-s
 RUN chmod +x /lamassu-server/bin/lamassu-server-entrypoint.sh
-
 EXPOSE 3000
-
 ENTRYPOINT [ "/lamassu-server/bin/lamassu-server-entrypoint.sh" ]
 
-
-FROM node:22-alpine AS build-ui
-RUN apk add --no-cache npm git curl build-base python3
-
-WORKDIR /app
-
-COPY ["packages/admin-ui/package.json", "package-lock.json", "./"]
-
-RUN npm version --allow-same-version --git-tag-version false --commit-hooks false 1.0.0
-RUN npm install
-
-COPY packages/admin-ui/ ./
-RUN npm run build
-
-
-FROM l-s-base AS l-a-s
-COPY --from=build-ui /app/build /lamassu-server/public
-
+FROM base AS l-a-s  
 RUN chmod +x /lamassu-server/bin/lamassu-admin-server-entrypoint.sh
-
 EXPOSE 443
-
 ENTRYPOINT [ "/lamassu-server/bin/lamassu-admin-server-entrypoint.sh" ]

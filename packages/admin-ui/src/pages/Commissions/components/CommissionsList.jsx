@@ -50,7 +50,7 @@ const getElement = (code, display) => ({
 const sortCommissionsBy = prop => {
   switch (prop) {
     case ORDER_OPTIONS[0]:
-      return R.sortBy(R.find(R.propEq('code', R.prop('machine'))))
+      return R.sortBy(R.find(R.propEq(R.prop('machine'), 'code')))
     case ORDER_OPTIONS[1]:
       return R.sortBy(R.path(['cryptoCurrencies', 0]))
     default:
@@ -80,7 +80,7 @@ const CommissionsList = memo(
 
     const getMachineCoins = deviceId => {
       const override = R.prop('overrides', localeConfig)?.find(
-        R.propEq('machine', deviceId),
+        R.propEq(deviceId, 'machine'),
       )
 
       const machineCoins = override

@@ -83,7 +83,7 @@ const Services = () => {
 
   const getAccounts = ({ elements, code }) => {
     const account = accounts[code]
-    const filterBySecretComponent = R.filter(R.propEq('component', SecretInput))
+    const filterBySecretComponent = R.filter(R.propEq(SecretInput, 'component'))
     const mapToCode = R.map(R.prop(['code']))
     const passwordFields = R.compose(
       mapToCode,

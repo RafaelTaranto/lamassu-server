@@ -3,6 +3,8 @@ import { ThemeProvider, StyledEngineProvider } from '@mui/material/styles'
 import React, { useState } from 'react'
 import { Router } from 'wouter'
 import ApolloProvider from './utils/apollo'
+import { LocalizationProvider } from '@mui/x-date-pickers'
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV2'
 
 import AppContext from './AppContext'
 import theme from './styling/theme'
@@ -33,16 +35,18 @@ const App = () => {
         isDirtyForm,
         setDirtyForm,
       }}>
-      <Router hook={useLocationWithConfirmation}>
-        <ApolloProvider>
-          <StyledEngineProvider enableCssLayer>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              <Main />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </ApolloProvider>
-      </Router>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Router hook={useLocationWithConfirmation}>
+          <ApolloProvider>
+            <StyledEngineProvider enableCssLayer>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Main />
+              </ThemeProvider>
+            </StyledEngineProvider>
+          </ApolloProvider>
+        </Router>
+      </LocalizationProvider>
     </AppContext.Provider>
   )
 }

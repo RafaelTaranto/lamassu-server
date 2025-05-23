@@ -39,7 +39,7 @@ const Wizard = ({ machine, locale, onClose, save, error }) => {
       )
     }
 
-    const newConfig = R.merge(config, it)
+    const newConfig = R.mergeRight(config, it)
 
     setState({
       step: step + 1,

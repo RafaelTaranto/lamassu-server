@@ -2,20 +2,16 @@ version: "3.8"
 
 services:
   lamassu-server:
-    build:
-      context: .
-      dockerfile: build/server.Dockerfile
-      target: l-s
+    image: lamassu/lamassu-server:latest
     restart: on-failure
-    ports:
-      - 3000:3000
+    network_mode: host
     volumes:
       - ./lamassu-data:/lamassu-data
     environment:
       - NODE_ENV=production
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres123
-      - POSTGRES_HOST=host.docker.internal
+      - POSTGRES_HOST=localhost
       - POSTGRES_PORT=5432
       - POSTGRES_DB=lamassu
       - CA_PATH=/lamassu-data/certs/Lamassu_OP_Root_CA.pem
@@ -31,20 +27,16 @@ services:
       - LOG_LEVEL=info
 
   lamassu-admin-server:
-    build:
-      context: .
-      dockerfile: build/server.Dockerfile
-      target: l-a-s
+    image: lamassu/lamassu-admin-server:latest
     restart: on-failure
-    ports:
-      - 443:443
+    network_mode: host
     volumes:
       - ./lamassu-data:/lamassu-data
     environment:
       - NODE_ENV=production
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres123
-      - POSTGRES_HOST=host.docker.internal
+      - POSTGRES_HOST=localhost
       - POSTGRES_PORT=5432
       - POSTGRES_DB=lamassu
       - CA_PATH=/lamassu-data/certs/Lamassu_OP_Root_CA.pem

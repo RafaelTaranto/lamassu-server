@@ -45,43 +45,28 @@ const getAuthorizedStatus = (it, triggers, customRequests) => {
     )
   }
 
-  const pendingFieldStatus = R.map(ite => {
-    if (isManualField(ite)) {
-      if (uuidValidate(ite)) {
-        const request = R.find(
-          iter => iter.infoRequestId === ite,
-          it.customInfoRequests,
-        )
-        return !R.isNil(request) && R.equals(request.override, 'automatic')
+  const getFieldsByStatus = status =>
+    R.map(ite => {
+      if (isManualField(ite)) {
+        if (uuidValidate(ite)) {
+          const request = R.find(
+            iter => iter.infoRequestId === ite,
+            it.customInfoRequests,
+          )
+          return !R.isNil(request) && R.equals(request.override, status)
+        }
+
+        const regularFieldValue = R.includes(ite, fieldsWithPathSuffix)
+          ? it[`${ite}Path`]
+          : it[`${ite}`]
+        if (R.isNil(regularFieldValue)) return false
+        return R.equals(it[`${ite}Override`], status)
       }
+      return false
+    }, fields)
 
-      const regularFieldValue = R.includes(ite, fieldsWithPathSuffix)
-        ? it[`${ite}Path`]
-        : it[`${ite}`]
-      if (R.isNil(regularFieldValue)) return false
-      return R.equals(it[`${ite}Override`], 'automatic')
-    }
-    return false
-  }, fields)
-
-  const rejectedFieldStatus = R.map(ite => {
-    if (isManualField(ite)) {
-      if (uuidValidate(ite)) {
-        const request = R.find(
-          iter => iter.infoRequestId === ite,
-          it.customInfoRequests,
-        )
-        return !R.isNil(request) && R.equals(request.override, 'blocked')
-      }
-
-      const regularFieldValue = R.includes(ite, fieldsWithPathSuffix)
-        ? it[`${ite}Path`]
-        : it[`${ite}`]
-      if (R.isNil(regularFieldValue)) return false
-      return R.equals(it[`${ite}Override`], 'blocked')
-    }
-    return false
-  }, fields)
+  const pendingFieldStatus = getFieldsByStatus('automatic')
+  const rejectedFieldStatus = getFieldsByStatus('blocked')
 
   if (it.authorizedOverride === CUSTOMER_BLOCKED)
     return { label: 'Blocked', type: 'error' }
@@ -235,7 +220,7 @@ const ManualDataEntry = ({ selectedValues, customInfoRequirementOptions }) => {
     : requirementOptions
 
   const requirementName = displayRequirements
-    ? R.find(R.propEq('code', requirementSelected))(updatedRequirementOptions)
+    ? R.find(R.propEq(requirementSelected, 'code'))(updatedRequirementOptions)
         .display
     : ''
 

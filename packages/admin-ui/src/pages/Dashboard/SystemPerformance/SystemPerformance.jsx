@@ -97,8 +97,8 @@ const SystemPerformance = () => {
 
   const convertFiatToLocale = item => {
     if (item.fiatCode === fiatLocale) return item
-    const itemRate = R.find(R.propEq('code', item.fiatCode))(data.fiatRates)
-    const localeRate = R.find(R.propEq('code', fiatLocale))(data.fiatRates)
+    const itemRate = R.find(R.propEq(item.fiatCode, 'code'))(data.fiatRates)
+    const localeRate = R.find(R.propEq(fiatLocale, 'code'))(data.fiatRates)
     const multiplier = localeRate.rate / itemRate.rate
     return { ...item, fiat: parseFloat(item.fiat) * multiplier }
   }
@@ -140,7 +140,7 @@ const SystemPerformance = () => {
   }
 
   const getDirectionPercent = () => {
-    const [cashIn, cashOut] = R.partition(R.propEq('txClass', 'cashIn'))(
+    const [cashIn, cashOut] = R.partition(R.propEq('cashIn', 'txClass'))(
       transactionsToShow,
     )
     const totalLength = cashIn.length + cashOut.length

@@ -27,18 +27,5 @@ function transaction() {
 
   return db.any(sql)
 }
-function customer() {
-  const sql = `SELECT DISTINCT * FROM (
-    SELECT 'phone' AS type, phone AS value FROM customers WHERE phone IS NOT NULL UNION
-    SELECT 'email' AS type, email AS value FROM customers WHERE email IS NOT NULL UNION
-    SELECT 'name' AS type, id_card_data::json->>'firstName' AS value FROM customers WHERE id_card_data::json->>'firstName' IS NOT NULL AND id_card_data::json->>'lastName' IS NULL UNION
-    SELECT 'name' AS type, id_card_data::json->>'lastName' AS value FROM customers WHERE id_card_data::json->>'firstName' IS NULL AND id_card_data::json->>'lastName' IS NOT NULL UNION
-    SELECT 'name' AS type, concat(id_card_data::json->>'firstName', ' ', id_card_data::json->>'lastName') AS value FROM customers WHERE id_card_data::json->>'firstName' IS NOT NULL AND id_card_data::json->>'lastName' IS NOT NULL UNION
-    SELECT 'address' as type, id_card_data::json->>'address' AS value FROM customers WHERE id_card_data::json->>'address' IS NOT NULL UNION
-    SELECT 'id' AS type, id_card_data::json->>'documentNumber' AS value FROM customers WHERE id_card_data::json->>'documentNumber' IS NOT NULL
-  ) f`
 
-  return db.any(sql)
-}
-
-module.exports = { transaction, customer }
+module.exports = { transaction }

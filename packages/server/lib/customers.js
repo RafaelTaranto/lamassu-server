@@ -8,16 +8,17 @@ const fs = require('fs')
 const util = require('util')
 
 const db = require('./db')
-const anonymous = require('../lib/constants').anonymousCustomer
 const complianceOverrides = require('./compliance_overrides')
 const writeFile = util.promisify(fs.writeFile)
 const notifierQueries = require('./notifier/queries')
 const notifierUtils = require('./notifier/utils')
-const NUM_RESULTS = 1000
 const sms = require('./sms')
 const settingsLoader = require('./new-settings-loader')
 const logger = require('./logger')
 const externalCompliance = require('./compliance-external')
+const {
+  customers: { getCustomerList },
+} = require('typesafe-db')
 
 const { APPROVED, RETRY } = require('./plugins/compliance/consts')
 
@@ -483,28 +484,6 @@ function addComplianceOverrides(id, customer, userToken) {
   )
 }
 
-/**
- * Query all customers
- *
- * Add status as computed column,
- * which will indicate the name of the latest
- * compliance verfication completed by user.
- *
- * @returns {array} Array of customers populated with status field
- */
-function batch() {
-  const sql = `select * from customers
-  where id != $1
-  order by created desc limit $2`
-  return db.any(sql, [anonymous.uuid, NUM_RESULTS]).then(customers =>
-    Promise.all(
-      _.map(customer => {
-        return getCustomInfoRequestsData(customer).then(camelize)
-      }, customers),
-    ),
-  )
-}
-
 function getSlimCustomerByIdBatch(ids) {
   const sql = `SELECT id, phone, id_card_data 
     FROM customers 
@@ -512,88 +491,8 @@ function getSlimCustomerByIdBatch(ids) {
   return db.any(sql, [ids]).then(customers => _.map(camelize, customers))
 }
 
-// TODO: getCustomersList and getCustomerById are very similar, so this should be refactored
-
-/**
- * Query all customers, ordered by last activity
- * and with aggregate columns based on their
- * transactions
- *
- * @returns {array} Array of customers with it's transactions aggregations
- */
-
-function getCustomersList(
-  phone = null,
-  name = null,
-  address = null,
-  id = null,
-  email = null,
-) {
-  const passableErrorCodes = _.map(
-    Pgp.as.text,
-    TX_PASSTHROUGH_ERROR_CODES,
-  ).join(',')
-
-  const sql = `SELECT id, authorized_override, days_suspended, is_suspended, front_camera_path, front_camera_override,
-  phone, email, sms_override, id_card_data, id_card_data_override, id_card_data_expiration,
-  id_card_photo_path, id_card_photo_override, us_ssn, us_ssn_override, sanctions, sanctions_at,
-  sanctions_override, total_txs, total_spent, GREATEST(created, last_transaction, last_data_provided, last_auth_attempt) AS last_active, fiat AS last_tx_fiat,
-  fiat_code AS last_tx_fiat_code, tx_class AS last_tx_class, custom_fields, notes, is_test_customer
-  FROM (
-    SELECT c.id, c.authorized_override,
-    greatest(0, date_part('day', c.suspended_until - NOW())) AS days_suspended,
-    c.suspended_until > NOW() AS is_suspended,
-    c.front_camera_path, c.front_camera_override,
-    c.phone, c.email, c.sms_override, c.id_card_data, c.id_card_data_override, c.id_card_data_expiration,
-    c.id_card_photo_path, c.id_card_photo_override, c.us_ssn, c.us_ssn_override, c.sanctions, c.last_auth_attempt,
-    GREATEST(c.phone_at, c.email_at, c.id_card_data_at, c.front_camera_at, c.id_card_photo_at, c.us_ssn_at) AS last_data_provided,
-    c.sanctions_at, c.sanctions_override, c.is_test_customer, c.created, t.tx_class, t.fiat, t.fiat_code, t.created as last_transaction, cn.notes,
-    row_number() OVER (partition by c.id order by t.created desc) AS rn,
-    sum(CASE WHEN t.id IS NOT NULL THEN 1 ELSE 0 END) OVER (partition by c.id) AS total_txs,
-    coalesce(sum(CASE WHEN error_code IS NULL OR error_code NOT IN ($1^) THEN t.fiat ELSE 0 END) OVER (partition by c.id), 0) AS total_spent, ccf.custom_fields
-    FROM customers c LEFT OUTER JOIN (
-      SELECT 'cashIn' AS tx_class, id, fiat, fiat_code, created, customer_id, error_code
-      FROM cash_in_txs WHERE send_confirmed = true OR batched = true UNION
-      SELECT 'cashOut' AS tx_class, id, fiat, fiat_code, created, customer_id, error_code
-      FROM cash_out_txs WHERE confirmed_at IS NOT NULL) AS t ON c.id = t.customer_id
-      LEFT OUTER JOIN (
-        SELECT cf.customer_id, json_agg(json_build_object('id', cf.custom_field_id, 'label', cf.label, 'value', cf.value)) AS custom_fields FROM (
-          SELECT ccfp.custom_field_id, ccfp.customer_id, cfd.label, ccfp.value FROM custom_field_definitions cfd
-          LEFT OUTER JOIN customer_custom_field_pairs ccfp ON cfd.id = ccfp.custom_field_id
-        ) cf GROUP BY cf.customer_id
-      ) ccf ON c.id = ccf.customer_id
-      LEFT OUTER JOIN (
-        SELECT customer_id, coalesce(json_agg(customer_notes.*), '[]'::json) AS notes FROM customer_notes
-        GROUP BY customer_notes.customer_id
-      ) cn ON c.id = cn.customer_id
-    WHERE c.id != $2
-  ) AS cl WHERE rn = 1
-  AND ($4 IS NULL OR phone = $4)
-  AND ($5 IS NULL OR  CONCAT(id_card_data::json->>'firstName', ' ', id_card_data::json->>'lastName') = $5 OR id_card_data::json->>'firstName' = $5 OR id_card_data::json->>'lastName' = $5)
-  AND ($6 IS NULL OR  id_card_data::json->>'address' = $6)
-  AND ($7 IS NULL OR  id_card_data::json->>'documentNumber' = $7)
-  AND ($8 IS NULL OR email = $8)
-  ORDER BY last_active DESC
-  limit $3`
-  return db
-    .any(sql, [
-      passableErrorCodes,
-      anonymous.uuid,
-      NUM_RESULTS,
-      phone,
-      name,
-      address,
-      id,
-      email,
-    ])
-    .then(customers =>
-      Promise.all(
-        _.map(
-          customer => getCustomInfoRequestsData(customer).then(camelizeDeep),
-          customers,
-        ),
-      ),
-    )
+function getCustomersList() {
+  return getCustomerList({ withCustomInfoRequest: true })
 }
 
 /**
@@ -1081,12 +980,10 @@ function notifyApprovedExternalCompliance(settings, customerId) {
 
 function checkExternalCompliance(settings) {
   return getOpenExternalCompliance().then(externals => {
-    console.log(externals)
     const promises = _.map(external => {
       return externalCompliance
         .getStatus(settings, external.service, external.customer_id)
         .then(status => {
-          console.log('status', status, external.customer_id, external.service)
           if (status.status.answer === RETRY)
             notifyRetryExternalCompliance(
               settings,
@@ -1117,7 +1014,6 @@ module.exports = {
   addWithEmail,
   get,
   getWithEmail,
-  batch,
   getSlimCustomerByIdBatch,
   getCustomersList,
   getCustomerById,

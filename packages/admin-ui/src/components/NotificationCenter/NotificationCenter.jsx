@@ -88,7 +88,7 @@ const NotificationCenter = ({
     const notificationsToShow =
       !showingUnread || !hasUnread
         ? notifications
-        : R.filter(R.propEq('read', false))(notifications)
+        : R.filter(R.propEq(false, 'read'))(notifications)
     return notificationsToShow.map(n => {
       return (
         <NotificationRow

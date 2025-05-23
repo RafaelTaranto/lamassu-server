@@ -36,7 +36,7 @@ const SAVE_ACCOUNTS = gql`
 `
 
 const isConfigurable = it =>
-  !R.isNil(it) && !R.contains(it)(['mock-exchange', 'no-exchange'])
+  !R.isNil(it) && !R.includes(it)(['mock-exchange', 'no-exchange'])
 
 const ChooseExchange = ({ data: currentData, addData }) => {
   const { data } = useQuery(GET_CONFIG)
