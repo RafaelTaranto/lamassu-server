@@ -13,11 +13,32 @@ const createMigration = `CREATE TABLE IF NOT EXISTS migrations (
 // no need to log the migration process
 process.env.SKIP_SERVER_LOGS = true
 
-db.none(createMigration)
-  .then(() => migrate.run())
-  .then(() => {
-    console.log('DB Migration succeeded.')
-    process.exit(0)
+function checkPostgresVersion () {
+  return db.one('SHOW server_version;')
+    .then(result => {
+      console.log(result)
+      const versionString = result.server_version
+      const match = versionString.match(/(\d+)\.(\d+)/i)
+      if (!match) {
+        throw new Error(`Could not parse PostgreSQL version: ${versionString}`)
+      }
+      return parseInt(match[1], 10)
+    })
+}
+
+checkPostgresVersion()
+  .then(majorVersion => {
+    if (majorVersion < 12) {
+      console.error('PostgreSQL version must be 12 or higher. Current version:', majorVersion)
+      process.exit(1)
+    }
+
+    return db.none(createMigration)
+      .then(() => migrate.run())
+      .then(() => {
+        console.log('DB Migration succeeded.')
+        process.exit(0)
+      })
   })
   .catch(err => {
     console.error('DB Migration failed: %s', err)
