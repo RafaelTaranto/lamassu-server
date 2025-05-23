@@ -6,9 +6,6 @@ WORKDIR /lamassu-server
 # Copy the pre-built production package from CI (with node_modules)
 COPY lamassu-server/ ./
 
-# Install production dependencies in the container
-RUN npm install --omit=dev --ignore-scripts
-
 FROM base AS l-s
 RUN chmod +x /lamassu-server/bin/lamassu-server-entrypoint.sh
 EXPOSE 3000
