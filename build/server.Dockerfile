@@ -4,7 +4,7 @@ RUN apk add --no-cache bash libpq openssl ca-certificates
 WORKDIR /lamassu-server
 
 # Copy the pre-built production package from CI (with node_modules)
-COPY lamassu-server/ ./
+COPY . ./
 
 FROM base AS l-s
 RUN chmod +x /lamassu-server/bin/lamassu-server-entrypoint.sh
