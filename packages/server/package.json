@@ -129,7 +129,6 @@
     "build": "echo 'Server requires no build step'",
     "start": "node bin/lamassu-server",
     "dev": "concurrently \"npm:server\" \"npm:admin-server\"",
-    "test": "mocha --recursive tests",
     "jtest": "jest --detectOpenHandles",
     "build-admin": "npm run build-admin:css && npm run build-admin:main && npm run build-admin:lamassu",
     "server": "nodemon bin/lamassu-server --mockScoring --logLevel silly",
