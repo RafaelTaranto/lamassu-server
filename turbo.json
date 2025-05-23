@@ -22,22 +22,16 @@
       "cache": false,
       "persistent": true
     },
-    "watch": {
+    "lamassu-server#dev": {
       "dependsOn": ["^build"],
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "interruptible": true
     },
     "test": {
       "dependsOn": ["^build"],
       "inputs": ["src/**", "tests/**", "lib/**", "package.json"],
       "outputs": []
-    },
-    "clean": {
-      "cache": false
-    },
-    "generate-types": {
-      "inputs": ["src/**", "package.json"],
-      "outputs": ["src/types/**"]
     }
   }
 }

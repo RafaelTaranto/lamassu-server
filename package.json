@@ -31,12 +31,7 @@
     "prepare": "husky install",
     "build": "turbo build",
     "dev": "turbo watch dev",
-    "test": "turbo test",
-    "clean": "turbo clean",
-    "server:dev": "turbo dev --filter=lamassu-server",
-    "admin:dev": "turbo dev --filter=lamassu-admin",
-    "typesafe-db:build": "turbo build --filter=typesafe-db",
-    "typesafe-db:dev": "turbo dev --filter=typesafe-db"
+    "test": "turbo test"
   },
   "husky": {
     "hooks": {
