@@ -59,4 +59,4 @@ To get the pairing token from the QRCode open the browser console before picking
 It's also possible to inspect the qrCode, the token is on the data-cy="" attr.
 Lastly, you can always scan it with a phone and copy the contents over.
 
-Now continue with lamassu-machine instructions from the `INSTALL.md` file in [lamassu-machine repository](https://github.com/lamassu/lamassu-machine).
+Now continue with lamassu-machine instructions from the `INSTALL.md` file in [lamassu-machine repository](https://github.com/lamassu/lamassu-machine)
