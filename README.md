@@ -16,7 +16,7 @@ We do not generally accept outside pull requests for new features. Please consul
 - Python 3 (to be deprecated, required by a single dependency installation)
 - OpenSSL (for cert-gen.sh, it will set up the server self-signed certificates)
 
-There's a shell.nix file that you can use to set up your env in case you're a nix user.
+There's a shell.nix file that you can use to set up your env in case you're a nix user. (most reliable way of installing native deps)
 There's also a .tool-versions for asdf and mise users.
 
 This project uses Turbo for monorepo management. Install dependencies:

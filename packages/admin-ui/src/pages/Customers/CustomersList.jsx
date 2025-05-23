@@ -1,10 +1,12 @@
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
 import Visibility from '@mui/icons-material/Visibility'
 import { format } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { useMemo } from 'react'
-import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
+import {
+  MaterialReactTable,
+  MRT_ActionMenuItem,
+  useMaterialReactTable,
+} from 'material-react-table'
 import { MainStatus } from '../../components/Status'
 import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
@@ -120,16 +122,15 @@ const CustomersList = ({ data, country, onClick, loading }) => {
     state: { isLoading: loading },
     getRowId: it => it.id,
     enableRowActions: true,
-    positionActionsColumn: 'last',
-    renderRowActions: ({ row }) => (
-      <div>
-        <Tooltip title="Customer page">
-          <IconButton aria-label="Go to customer" onClick={() => onClick(row)}>
-            <Visibility />
-          </IconButton>
-        </Tooltip>
-      </div>
-    ),
+    renderRowActionMenuItems: ({ row }) => [
+      <MRT_ActionMenuItem //or just use a normal MUI MenuItem component
+        icon={<Visibility />}
+        key="view"
+        label="View"
+        onClick={() => onClick(row)}
+        table={table}
+      />,
+    ],
   })
 
   return (

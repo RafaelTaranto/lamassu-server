@@ -5,7 +5,7 @@ import json from '@eslint/json'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
-import pluginJest from 'eslint-plugin-jest'
+import vitest from 'eslint-plugin-vitest'
 
 export default defineConfig([
   globalIgnores([
@@ -60,16 +60,12 @@ export default defineConfig([
   {
     // update this to match your test files
     files: ['**/*.spec.js', '**/*.test.js'],
-    plugins: { jest: pluginJest },
-    languageOptions: {
-      globals: pluginJest.environments.globals.globals,
+    plugins: {
+      vitest,
     },
     rules: {
-      'jest/no-disabled-tests': 'warn',
-      'jest/no-focused-tests': 'error',
-      'jest/no-identical-title': 'error',
-      'jest/prefer-to-have-length': 'warn',
-      'jest/valid-expect': 'error',
+      ...vitest.configs.recommended.rules, // you can also use vitest.configs.all.rules to enable all rules
+      'vitest/max-nested-describe': ['error', { max: 3 }], // you can also modify rules' behavior using option like this
     },
   },
 ])

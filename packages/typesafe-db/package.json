@@ -17,7 +17,6 @@
   },
   "scripts": {
     "build": "tsc --build",
-    "start": "tsc --watch",
     "dev": "tsc --watch",
     "generate-types": "kysely-codegen --camel-case --out-file ./src/types/types.d.ts",
     "postinstall": "npm run build"
