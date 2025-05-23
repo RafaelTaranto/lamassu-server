@@ -124,7 +124,7 @@ function getCustomerList(
       ref('lastTx.txClass').as('lastTxClass'),
       fn<Date>('GREATEST', [
         'c.created',
-        // 'lastTx.created',
+        'lastTx.created',
         'c.phoneAt',
         'c.emailAt',
         'c.idCardDataAt',
