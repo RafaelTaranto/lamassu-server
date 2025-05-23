@@ -27,8 +27,9 @@
   margin-top: 8px;
 }
 
+/*TODO important because of tailwind integration with MUI*/
 .fullPartP {
-  color: white;
+  color: white !important;
   display: inline;
 }
 
