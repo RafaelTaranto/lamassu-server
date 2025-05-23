@@ -76,7 +76,6 @@
     "p-each-series": "^1.0.0",
     "p-queue": "^6.6.2",
     "p-retry": "^4.4.0",
-    "pg-native": "^3.0.0",
     "pg-promise": "^10.10.2",
     "pify": "^3.0.0",
     "pretty-ms": "^2.1.0",
@@ -87,6 +86,7 @@
     "serve-static": "^1.12.4",
     "talisman": "^0.20.0",
     "telnyx": "^1.25.5",
+    "typesafe-db": "workspace:*",
     "tronweb": "^5.3.0",
     "twilio": "^3.6.1",
     "uuid": "8.3.2",
@@ -126,7 +126,9 @@
     "lamassu-clean-parsed-id": "./bin/lamassu-clean-parsed-id"
   },
   "scripts": {
+    "build": "echo 'Server requires no build step'",
     "start": "node bin/lamassu-server",
+    "dev": "concurrently \"npm:server\" \"npm:admin-server\"",
     "test": "mocha --recursive tests",
     "jtest": "jest --detectOpenHandles",
     "build-admin": "npm run build-admin:css && npm run build-admin:main && npm run build-admin:lamassu",

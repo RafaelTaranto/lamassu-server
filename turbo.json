@@ -1,0 +1,48 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "remoteCache": {
+    "enabled": true
+  },
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "src/**",
+        "lib/**",
+        "public/**",
+        "index.html",
+        "vite.config.js",
+        "tsconfig.json",
+        "package.json"
+      ],
+      "outputs": ["lib/**", "dist/**", "build/**"]
+    },
+    "start": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "dev": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "watch": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["src/**", "tests/**", "lib/**", "package.json"],
+      "outputs": []
+    },
+    "clean": {
+      "cache": false
+    },
+    "generate-types": {
+      "inputs": ["src/**", "package.json"],
+      "outputs": ["src/types/**"]
+    }
+  }
+}

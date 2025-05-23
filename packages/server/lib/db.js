@@ -9,7 +9,6 @@ const eventBus = require('./event-bus')
 const DATABASE_NOT_REACHABLE = 'Database not reachable.'
 
 const pgp = Pgp({
-  pgNative: true,
   schema: 'public',
   error: (err, e) => {
     if (e.cn) logger.error(DATABASE_NOT_REACHABLE)

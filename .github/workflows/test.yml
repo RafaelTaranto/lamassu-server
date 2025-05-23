@@ -3,24 +3,38 @@ name: Tests
 on:
   pull_request:
     branches: [ dev ]
+  push:
+    branches: [ dev ]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Turbo cache
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.11.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install
 
-      - name: Run admin-ui tests
-        working-directory: packages/admin-ui
-        run: npm run test:run
+      - name: Run tests
+        run: pnpm run test

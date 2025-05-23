@@ -5,11 +5,13 @@ set -e
 DOMAIN=localhost
 [ ! -z "$1" ] && DOMAIN=$1
 
-CONFIG_DIR=$HOME/.lamassu
+SERVER_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+
+CONFIG_DIR=$SERVER_DIR/.lamassu
 LOG_FILE=/tmp/cert-gen.log
-CERT_DIR=$PWD/certs
-KEY_DIR=$PWD/certs
-LAMASSU_CA_PATH=$PWD/Lamassu_CA.pem
+CERT_DIR=$SERVER_DIR/certs
+KEY_DIR=$SERVER_DIR/certs
+LAMASSU_CA_PATH=$SERVER_DIR/Lamassu_CA.pem
 POSTGRES_PASS=postgres123
 OFAC_DATA_DIR=$CONFIG_DIR/ofac
 IDPHOTOCARD_DIR=$CONFIG_DIR/idphotocard
@@ -24,7 +26,7 @@ MNEMONIC_DIR=$CONFIG_DIR/mnemonics
 MNEMONIC_FILE=$MNEMONIC_DIR/mnemonic.txt
 mkdir -p $MNEMONIC_DIR >> $LOG_FILE 2>&1
 SEED=$(openssl rand -hex 32)
-MNEMONIC=$($PWD/bin/bip39 $SEED)
+MNEMONIC=$($SERVER_DIR/bin/bip39 $SEED)
 echo "$MNEMONIC" > $MNEMONIC_FILE
 
 echo "Generating SSL certificates..."
@@ -90,6 +92,6 @@ rm /tmp/Lamassu_OP.csr.pem
 mkdir -p $OFAC_DATA_DIR/sources
 touch $OFAC_DATA_DIR/etags.json
 
-node tools/build-dev-env.js
+(cd $SERVER_DIR && node tools/build-dev-env.js)
 
 echo "Done."

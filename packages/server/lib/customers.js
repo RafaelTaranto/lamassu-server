@@ -16,7 +16,9 @@ const sms = require('./sms')
 const settingsLoader = require('./new-settings-loader')
 const logger = require('./logger')
 const externalCompliance = require('./compliance-external')
-const { getCustomerList } = require('typesafe-db/lib/customers')
+const {
+  customers: { getCustomerList },
+} = require('typesafe-db')
 
 const { APPROVED, RETRY } = require('./plugins/compliance/consts')
 

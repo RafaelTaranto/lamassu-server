@@ -1,7 +1,14 @@
 import { DB } from './types/types.js'
 import { Pool } from 'pg'
 import { Kysely, PostgresDialect, CamelCasePlugin } from 'kysely'
-import { PSQL_URL } from 'lamassu-server/lib/constants.js'
+
+const POSTGRES_USER = process.env.POSTGRES_USER
+const POSTGRES_PASSWORD = process.env.POSTGRES_PASSWORD
+const POSTGRES_HOST = process.env.POSTGRES_HOST
+const POSTGRES_PORT = process.env.POSTGRES_PORT
+const POSTGRES_DB = process.env.POSTGRES_DB
+
+const PSQL_URL = `postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}`
 
 const dialect = new PostgresDialect({
   pool: new Pool({
@@ -13,12 +20,4 @@ const dialect = new PostgresDialect({
 export default new Kysely<DB>({
   dialect,
   plugins: [new CamelCasePlugin()],
-  log(event) {
-    if (event.level === 'query') {
-      console.log('Query:', event.query.sql)
-      console.log('Parameters:', event.query.parameters)
-      console.log('Duration:', event.queryDurationMillis + 'ms')
-      console.log('---')
-    }
-  },
 })

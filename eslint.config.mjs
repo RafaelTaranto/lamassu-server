@@ -9,6 +9,7 @@ import pluginJest from 'eslint-plugin-jest'
 
 export default defineConfig([
   globalIgnores([
+    '**/.lamassu',
     '**/build',
     '**/package.json',
     '**/package-lock.json',
