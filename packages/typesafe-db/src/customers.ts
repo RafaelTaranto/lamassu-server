@@ -1,9 +1,13 @@
 import db from './db.js'
-import { ExpressionBuilder, sql } from 'kysely'
-import { Customers, DB } from './types/types.js'
-import { jsonObjectFrom } from 'kysely/helpers/postgres'
+import { ExpressionBuilder } from 'kysely'
+import { Customers, DB, EditedCustomerData } from './types/types.js'
+import { jsonArrayFrom } from 'kysely/helpers/postgres'
 
 type CustomerEB = ExpressionBuilder<DB & { c: Customers }, 'c'>
+type CustomerWithEditedEB = ExpressionBuilder<
+  DB & { c: Customers } & { e: EditedCustomerData | null },
+  'c' | 'e'
+>
 
 const TX_PASSTHROUGH_ERROR_CODES = [
   'operatorCancel',
@@ -87,6 +91,23 @@ function joinTxsTotals(eb: CustomerEB) {
     .as('txStats')
 }
 
+function selectNewestIdCardData(eb: CustomerWithEditedEB, ref: any) {
+  return eb
+    .case()
+    .when(
+      eb.and([
+        eb(ref('e.idCardDataAt'), 'is not', null),
+        eb.or([
+          eb(ref('c.idCardDataAt'), 'is', null),
+          eb(ref('e.idCardDataAt'), '>', ref('c.idCardDataAt')),
+        ]),
+      ]),
+    )
+    .then(ref('e.idCardData'))
+    .else(ref('c.idCardData'))
+    .end()
+}
+
 interface GetCustomerListOptions {
   withCustomInfoRequest: boolean
 }
@@ -101,22 +122,23 @@ function getCustomerList(
 ): Promise<any[]> {
   return db
     .selectFrom('customers as c')
+    .leftJoin('editedCustomerData as e', 'e.customerId', 'c.id')
     .leftJoinLateral(joinTxsTotals, join => join.onTrue())
     .leftJoinLateral(joinLatestTx, join => join.onTrue())
     .select(({ eb, fn, val, ref }) => [
-      'id',
-      'authorizedOverride',
-      'frontCameraPath',
-      'frontCameraOverride',
-      'idCardPhotoPath',
-      'idCardPhotoOverride',
-      'idCardData',
-      'idCardDataOverride',
-      'email',
-      'usSsn',
-      'usSsnOverride',
-      'sanctions',
-      'sanctionsOverride',
+      'c.id',
+      'c.authorizedOverride',
+      'c.frontCameraPath',
+      'c.frontCameraOverride',
+      'c.idCardPhotoPath',
+      'c.idCardPhotoOverride',
+      selectNewestIdCardData(eb, ref).as('idCardData'),
+      'c.idCardDataOverride',
+      'c.email',
+      'c.usSsn',
+      'c.usSsnOverride',
+      'c.sanctions',
+      'c.sanctionsOverride',
       'txStats.totalSpent',
       'txStats.totalTxs',
       ref('lastTx.fiatCode').as('lastTxFiatCode'),
@@ -144,7 +166,7 @@ function getCustomerList(
     ])
     .$if(options.withCustomInfoRequest, qb =>
       qb.select(({ eb, ref }) =>
-        jsonObjectFrom(
+        jsonArrayFrom(
           eb
             .selectFrom('customersCustomInfoRequests')
             .selectAll()
