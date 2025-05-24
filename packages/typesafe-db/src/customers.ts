@@ -1,7 +1,7 @@
 import db from './db.js'
 import { ExpressionBuilder } from 'kysely'
 import { Customers, DB, EditedCustomerData } from './types/types.js'
-import { jsonObjectFrom } from 'kysely/helpers/postgres'
+import { jsonArrayFrom } from 'kysely/helpers/postgres'
 
 type CustomerEB = ExpressionBuilder<DB & { c: Customers }, 'c'>
 type CustomerWithEditedEB = ExpressionBuilder<
@@ -166,7 +166,7 @@ function getCustomerList(
     ])
     .$if(options.withCustomInfoRequest, qb =>
       qb.select(({ eb, ref }) =>
-        jsonObjectFrom(
+        jsonArrayFrom(
           eb
             .selectFrom('customersCustomInfoRequests')
             .selectAll()
