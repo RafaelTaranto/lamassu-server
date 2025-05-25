@@ -523,6 +523,43 @@ function diagnostics(rec) {
     )
 }
 
+function batchDiagnostics(deviceIds, operatorId) {
+  const diagnosticsDir = `${OPERATOR_DATA_DIR}/diagnostics/`
+
+  const removeDir = fsPromises
+    .rm(diagnosticsDir, { recursive: true })
+    .catch(err => {
+      if (err.code !== 'ENOENT') {
+        throw err
+      }
+    })
+
+  const sql = `UPDATE devices
+            SET diagnostics_timestamp = NULL,
+                diagnostics_scan_updated_at = NULL,
+                diagnostics_front_updated_at = NULL
+            WHERE device_id = ANY($1)`
+
+  // Send individual notifications for each machine
+  const sendNotifications = deviceIds.map(deviceId =>
+    db.none('NOTIFY $1:name, $2', [
+      'machineAction',
+      JSON.stringify({
+        action: 'diagnostics',
+        value: {
+          deviceId,
+          operatorId,
+          action: 'diagnostics',
+        },
+      }),
+    ]),
+  )
+
+  return removeDir
+    .then(() => db.none(sql, [deviceIds]))
+    .then(() => Promise.all(sendNotifications))
+}
+
 function setMachine(rec, operatorId) {
   rec.operatorId = operatorId
   switch (rec.action) {
@@ -681,4 +718,5 @@ module.exports = {
   refillMachineUnits,
   updateDiagnostics,
   updateFailedQRScans,
+  batchDiagnostics,
 }
