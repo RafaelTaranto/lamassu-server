@@ -9,6 +9,7 @@ const logger = require('../logger')
 const settingsLoader = require('../new-settings-loader')
 const configManager = require('../new-config-manager')
 const notifier = require('../notifier')
+const constants = require('../constants')
 
 const cashInAtomic = require('./cash-in-atomic')
 const cashInLow = require('./cash-in-low')
@@ -197,11 +198,21 @@ function postProcess(r, pi, isBlacklisted, addressReuse, walletScore) {
 function doesTxReuseAddress(tx) {
   const sql = `
     SELECT EXISTS (
-      SELECT DISTINCT to_address FROM (
-        SELECT to_address FROM cash_in_txs WHERE id != $1
-      ) AS x WHERE to_address = $2
-    )`
-  return db.one(sql, [tx.id, tx.toAddress]).then(({ exists }) => exists)
+      SELECT 1
+      FROM cash_in_txs
+      WHERE id != $1
+        AND to_address = $2
+        AND customer_id != $3
+        AND customer_id != $4
+    );`
+  return db
+    .one(sql, [
+      tx.id,
+      tx.toAddress,
+      tx.customerId,
+      constants.anonymousCustomer.uuid,
+    ])
+    .then(({ exists }) => exists)
 }
 
 function getWalletScore(tx, pi) {
