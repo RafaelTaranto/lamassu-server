@@ -9,6 +9,7 @@ type CustomerWithEditedEB = ExpressionBuilder<
   'c' | 'e'
 >
 
+const ANON_ID = '47ac1184-8102-11e7-9079-8f13a7117867'
 const TX_PASSTHROUGH_ERROR_CODES = [
   'operatorCancel',
   'scoreThresholdReached',
@@ -127,6 +128,7 @@ function getCustomerList(
     .leftJoinLateral(joinLatestTx, join => join.onTrue())
     .select(({ eb, fn, val, ref }) => [
       'c.id',
+      'c.phone',
       'c.authorizedOverride',
       'c.frontCameraPath',
       'c.frontCameraOverride',
@@ -164,6 +166,7 @@ function getCustomerList(
         ]),
       ]).as('daysSuspended'),
     ])
+    .where('c.id', '!=', ANON_ID)
     .$if(options.withCustomInfoRequest, qb =>
       qb.select(({ eb, ref }) =>
         jsonArrayFrom(
