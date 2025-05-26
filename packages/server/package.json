@@ -123,7 +123,8 @@
     "lamassu-eth-recovery": "./bin/lamassu-eth-recovery",
     "lamassu-trx-recovery": "./bin/lamassu-trx-recovery",
     "lamassu-update-cassettes": "./bin/lamassu-update-cassettes",
-    "lamassu-clean-parsed-id": "./bin/lamassu-clean-parsed-id"
+    "lamassu-clean-parsed-id": "./bin/lamassu-clean-parsed-id",
+    "lamassu-batch-diagnostics": "./bin/lamassu-batch-diagnostics"
   },
   "scripts": {
     "dev": "concurrently \"npm:server\" \"npm:admin-server\"",
