@@ -127,8 +127,8 @@
   },
   "scripts": {
     "dev": "concurrently \"npm:server\" \"npm:admin-server\"",
-    "server": "node bin/lamassu-server --mockScoring --logLevel silly --watch",
-    "admin-server": "node bin/lamassu-admin-server --dev --logLevel silly --watch",
+    "server": "node --watch bin/lamassu-server --mockScoring --logLevel silly",
+    "admin-server": "node --watch bin/lamassu-admin-server --dev --logLevel silly",
     "stress-test": "cd tests/stress/ && node index.js 50 -v"
   },
   "devDependencies": {
