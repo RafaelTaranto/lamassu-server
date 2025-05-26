@@ -11,13 +11,11 @@ import {
 } from '../../styling/variables'
 
 const base = {
-  lineHeight: '120%',
   color: fontColor,
 }
 
 export default {
   base: {
-    lineHeight: '120%',
     color: fontColor,
   },
   h1: {
