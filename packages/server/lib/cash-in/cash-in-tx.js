@@ -195,8 +195,11 @@ function postProcess(r, pi, isBlacklisted, addressReuse, walletScore) {
     })
 }
 
+// This feels like it can be simplified,
+// but it's the most concise query to express the requirement and its edge cases.
 // At most only one authenticated customer can use an address.
-// We count distinct customers plus the current customer if they are not anonymous
+// If the current customer is anon, we can still allow one other customer to use the address,
+// So we count distinct customers plus the current customer if they are not anonymous.
 // To prevent malicious blocking of address, we only check for txs with actual fiat
 function doesTxReuseAddress(tx) {
   const sql = `
