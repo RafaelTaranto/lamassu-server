@@ -195,23 +195,23 @@ function postProcess(r, pi, isBlacklisted, addressReuse, walletScore) {
     })
 }
 
+// At most only one authenticated customer can use an address.
+// We count distinct customers plus the current customer if they are not anonymous
+// To prevent malicious blocking of address, we only check for txs with actual fiat
 function doesTxReuseAddress(tx) {
   const sql = `
-    SELECT EXISTS (
-      SELECT 1
-      FROM cash_in_txs
-      WHERE id != $1
-        AND to_address = $2
-        AND customer_id != $3
-        AND customer_id != $4
-    );`
+    SELECT COUNT(*) > 1 as exists
+    FROM (SELECT DISTINCT customer_id
+          FROM cash_in_txs
+          WHERE to_address = $1
+            AND customer_id != $3
+            AND fiat > 0
+          UNION
+          SELECT $2
+          WHERE $2 != $3) t;
+  `
   return db
-    .one(sql, [
-      tx.id,
-      tx.toAddress,
-      tx.customerId,
-      constants.anonymousCustomer.uuid,
-    ])
+    .one(sql, [tx.toAddress, tx.customerId, constants.anonymousCustomer.uuid])
     .then(({ exists }) => exists)
 }
 
