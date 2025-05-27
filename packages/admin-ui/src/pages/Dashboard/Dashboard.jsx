@@ -59,7 +59,7 @@ const Dashboard = () => {
         </TitleSection>
         <div className="flex mb-30 gap-4">
           <div className="flex flex-col flex-1">
-            <Paper className="p-6">
+            <Paper className="p-6 flex-1">
               <SystemPerformance />
             </Paper>
           </div>

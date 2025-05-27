@@ -1,7 +1,6 @@
 import { useQuery, gql } from '@apollo/client'
 import BigNumber from 'bignumber.js'
 import classnames from 'classnames'
-import { isAfter } from 'date-fns/fp'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { Info2, Label1, Label2, P } from '../../../components/typography/index'
@@ -14,7 +13,6 @@ import { java, neon } from '../../../styling/variables'
 import { fromNamespace } from '../../../utils/config'
 import { DAY, WEEK, MONTH } from '../../../utils/time'
 import { timezones } from '../../../utils/timezone-list'
-import { toTimezone } from '../../../utils/timezones'
 
 import PercentageChart from './Graphs/PercentageChart'
 import LineChart from './Graphs/RefLineChart'
@@ -27,8 +25,11 @@ BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_HALF_UP })
 const getFiats = R.map(R.prop('fiat'))
 
 const GET_DATA = gql`
-  query getData($excludeTestingCustomers: Boolean) {
-    transactions(excludeTestingCustomers: $excludeTestingCustomers) {
+  query getData($excludeTestingCustomers: Boolean, $from: DateTimeISO) {
+    transactions(
+      excludeTestingCustomers: $excludeTestingCustomers
+      from: $from
+    ) {
       fiatCode
       fiat
       fixedFee
@@ -49,10 +50,17 @@ const GET_DATA = gql`
   }
 `
 
+const twoMonthsAgo = new Date()
+twoMonthsAgo.setMonth(twoMonthsAgo.getMonth() - 2)
+
 const SystemPerformance = () => {
   const [selectedRange, setSelectedRange] = useState('Day')
+
   const { data, loading } = useQuery(GET_DATA, {
-    variables: { excludeTestingCustomers: true },
+    variables: {
+      excludeTestingCustomers: true,
+      from: twoMonthsAgo.toISOString(),
+    },
   })
   const fiatLocale = fromNamespace('locale')(data?.config).fiatCurrency
   const timezone = fromNamespace('locale')(data?.config).timezone
@@ -69,38 +77,41 @@ const SystemPerformance = () => {
     if (t.error !== null) return false
     if (t.txClass === 'cashOut' && !t.dispense) return false
     if (t.txClass === 'cashIn' && !t.sendConfirmed) return false
-    if (!getLastTimePeriod) {
+
+    const createdTimestamp = new Date(t.created).getTime()
+    const [rangeStart, rangeEnd] = periodDomains[selectedRange]
+
+    if (getLastTimePeriod) {
+      const duration = rangeEnd - rangeStart
       return (
         t.error === null &&
-        isAfter(
-          toTimezone(t.created, timezone),
-          toTimezone(periodDomains[selectedRange][1], timezone),
-        ) &&
-        isAfter(
-          toTimezone(periodDomains[selectedRange][0], timezone),
-          toTimezone(t.created, timezone),
-        )
+        createdTimestamp >= rangeStart - duration &&
+        createdTimestamp < rangeStart
       )
     }
+
     return (
       t.error === null &&
-      isAfter(
-        toTimezone(periodDomains[selectedRange][1], timezone),
-        toTimezone(t.created, timezone),
-      ) &&
-      isAfter(
-        toTimezone(t.created, timezone),
-        toTimezone(periodDomains[selectedRange][0], timezone),
-      )
+      createdTimestamp >= rangeStart &&
+      createdTimestamp <= rangeEnd
     )
   }
 
   const convertFiatToLocale = item => {
-    if (item.fiatCode === fiatLocale) return item
+    if (item.fiatCode === fiatLocale)
+      return {
+        ...item,
+        fiat: parseFloat(item.fiat),
+        profit: parseFloat(item.profit),
+      }
     const itemRate = R.find(R.propEq(item.fiatCode, 'code'))(data.fiatRates)
     const localeRate = R.find(R.propEq(fiatLocale, 'code'))(data.fiatRates)
     const multiplier = localeRate.rate / itemRate.rate
-    return { ...item, fiat: parseFloat(item.fiat) * multiplier }
+    return {
+      ...item,
+      fiat: parseFloat(item.fiat) * multiplier,
+      profit: parseFloat(item.profit) * multiplier,
+    }
   }
 
   const transactionsToShow = R.map(convertFiatToLocale)(
@@ -177,7 +188,10 @@ const SystemPerformance = () => {
         handleSetRange={setSelectedRange}
       />
       {!loading && R.isEmpty(data.transactions) && (
-        <EmptyTable className="pt-10" message="No transactions so far" />
+        <EmptyTable
+          className="pt-10"
+          message="No transactions during the last month"
+        />
       )}
       {!loading && !R.isEmpty(data.transactions) && (
         <div className="flex flex-col gap-12">
