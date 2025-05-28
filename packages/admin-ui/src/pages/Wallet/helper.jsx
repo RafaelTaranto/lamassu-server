@@ -130,7 +130,7 @@ const getAdvancedWalletElements = () => {
     },
     {
       name: 'enableLastUsedAddress',
-      header: `Allow last used address prompt `,
+      header: `Allow last used address prompt`,
       size: 'sm',
       stripe: true,
       width: 260,
