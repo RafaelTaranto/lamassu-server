@@ -13,7 +13,8 @@ const prepare_denominations = denominations =>
     .reduce(
       ([csum, denoms], [denom, count]) => {
         csum += denom * count
-        return [csum, [{ denom, count, csum }].concat(denoms)]
+        denoms.push({ denom, count, csum })
+        return [csum, denoms]
       },
       [0, []],
     )[1] /* ([csum, denoms]) => denoms */
