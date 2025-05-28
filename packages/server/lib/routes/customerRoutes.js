@@ -353,7 +353,11 @@ function addOrUpdateCustomer(
         .then(discount => ({ ...customer, discount }))
     })
     .then(customer => {
-      if (!cryptoCode) return customer
+      const enableLastUsedAddress = !!configManager.getWalletSettings(
+        cryptoCode,
+        config,
+      ).enableLastUsedAddress
+      if (!cryptoCode || !enableLastUsedAddress) return customer
       return customers
         .getLastUsedAddress(customer.id, cryptoCode)
         .then(lastUsedAddress => {
