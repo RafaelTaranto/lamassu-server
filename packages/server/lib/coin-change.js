@@ -9,7 +9,7 @@
  */
 const prepare_denominations = denominations =>
   JSON.parse(JSON.stringify(denominations))
-    .sort(([d1], [d2]) => d1 < d2)
+    .sort(([d1], [d2]) => d2 - d1)
     .reduce(
       ([csum, denoms], [denom, count]) => {
         csum += denom * count
