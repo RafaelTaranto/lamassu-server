@@ -36,6 +36,7 @@ const AdvancedWalletSchema = Yup.object().shape({
   cryptoUnits: Yup.string().required(),
   feeMultiplier: Yup.string().required(),
   allowTransactionBatching: Yup.boolean(),
+  enableLastUsedAddress: Yup.boolean(),
 })
 
 const OverridesSchema = Yup.object().shape({
@@ -126,6 +127,17 @@ const getAdvancedWalletElements = () => {
         valueProp: 'code',
         labelProp: 'display',
       },
+    },
+    {
+      name: 'enableLastUsedAddress',
+      header: `Allow last used address prompt`,
+      size: 'sm',
+      stripe: true,
+      width: 260,
+      view: (_, ite) => {
+        return ite.enableLastUsedAddress ? 'Yes' : `No`
+      },
+      input: Checkbox,
     },
   ]
 }

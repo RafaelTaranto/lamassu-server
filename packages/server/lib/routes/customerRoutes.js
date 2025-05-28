@@ -311,7 +311,13 @@ function getExternalComplianceLink(req, res, next) {
     .then(url => respond(req, res, { url }))
 }
 
-function addOrUpdateCustomer(customerData, deviceId, config, isEmailAuth) {
+function addOrUpdateCustomer(
+  customerData,
+  deviceId,
+  config,
+  isEmailAuth,
+  cryptoCode,
+) {
   const triggers = configManager.getTriggers(config)
   const maxDaysThreshold = complianceTriggers.maxDaysThreshold(triggers)
 
@@ -346,6 +352,18 @@ function addOrUpdateCustomer(customerData, deviceId, config, isEmailAuth) {
         .getCustomerActiveIndividualDiscount(customer.id)
         .then(discount => ({ ...customer, discount }))
     })
+    .then(customer => {
+      const enableLastUsedAddress = !!configManager.getWalletSettings(
+        cryptoCode,
+        config,
+      ).enableLastUsedAddress
+      if (!cryptoCode || !enableLastUsedAddress) return customer
+      return customers
+        .getLastUsedAddress(customer.id, cryptoCode)
+        .then(lastUsedAddress => {
+          return { ...customer, lastUsedAddress }
+        })
+    })
 }
 
 function getOrAddCustomerPhone(req, res, next) {
@@ -354,6 +372,7 @@ function getOrAddCustomerPhone(req, res, next) {
 
   const pi = plugins(req.settings, deviceId)
   const phone = req.body.phone
+  const cryptoCode = req.query.cryptoCode
 
   return pi
     .getPhoneCode(phone)
@@ -363,6 +382,7 @@ function getOrAddCustomerPhone(req, res, next) {
         deviceId,
         req.settings.config,
         false,
+        cryptoCode,
       ).then(customer => respond(req, res, { code, customer }))
     })
     .catch(err => {
@@ -375,6 +395,7 @@ function getOrAddCustomerPhone(req, res, next) {
 function getOrAddCustomerEmail(req, res, next) {
   const deviceId = req.deviceId
   const customerData = req.body
+  const cryptoCode = req.query.cryptoCode
 
   const pi = plugins(req.settings, req.deviceId)
   const email = req.body.email
@@ -387,6 +408,7 @@ function getOrAddCustomerEmail(req, res, next) {
         deviceId,
         req.settings.config,
         true,
+        cryptoCode,
       ).then(customer => respond(req, res, { code, customer }))
     })
     .catch(err => {

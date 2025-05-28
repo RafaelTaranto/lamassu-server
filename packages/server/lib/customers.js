@@ -1009,6 +1009,11 @@ function addExternalCompliance(customerId, service, id) {
   return db.none(sql, [customerId, id, service])
 }
 
+function getLastUsedAddress(id, cryptoCode) {
+  const sql = `SELECT to_address FROM cash_in_txs WHERE customer_id=$1 AND crypto_code=$2 AND fiat > 0 ORDER BY created DESC LIMIT 1`
+  return db.oneOrNone(sql, [id, cryptoCode]).then(it => it?.to_address)
+}
+
 module.exports = {
   add,
   addWithEmail,
@@ -1035,4 +1040,5 @@ module.exports = {
   updateLastAuthAttempt,
   addExternalCompliance,
   checkExternalCompliance,
+  getLastUsedAddress,
 }
