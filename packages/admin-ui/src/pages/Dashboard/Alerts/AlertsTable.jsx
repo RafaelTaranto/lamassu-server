@@ -18,7 +18,7 @@ const icons = {
 
 const links = {
   error: '/maintenance/machine-status',
-  fiatBalance: '/maintenance/cash-cassettes',
+  fiatBalance: '/maintenance/cash-units',
   cryptoBalance: '/maintenance/funding',
 }
 
