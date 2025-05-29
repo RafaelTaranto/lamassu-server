@@ -9,6 +9,7 @@ const logger = require('../logger')
 const settingsLoader = require('../new-settings-loader')
 const configManager = require('../new-config-manager')
 const notifier = require('../notifier')
+const constants = require('../constants')
 
 const cashInAtomic = require('./cash-in-atomic')
 const cashInLow = require('./cash-in-low')
@@ -194,14 +195,27 @@ function postProcess(r, pi, isBlacklisted, addressReuse, walletScore) {
     })
 }
 
+// This feels like it can be simplified,
+// but it's the most concise query to express the requirement and its edge cases.
+// At most only one authenticated customer can use an address.
+// If the current customer is anon, we can still allow one other customer to use the address,
+// So we count distinct customers plus the current customer if they are not anonymous.
+// To prevent malicious blocking of address, we only check for txs with actual fiat
 function doesTxReuseAddress(tx) {
   const sql = `
-    SELECT EXISTS (
-      SELECT DISTINCT to_address FROM (
-        SELECT to_address FROM cash_in_txs WHERE id != $1
-      ) AS x WHERE to_address = $2
-    )`
-  return db.one(sql, [tx.id, tx.toAddress]).then(({ exists }) => exists)
+    SELECT COUNT(*) > 1 as exists
+    FROM (SELECT DISTINCT customer_id
+          FROM cash_in_txs
+          WHERE to_address = $1
+            AND customer_id != $3
+            AND fiat > 0
+          UNION
+          SELECT $2
+          WHERE $2 != $3) t;
+  `
+  return db
+    .one(sql, [tx.toAddress, tx.customerId, constants.anonymousCustomer.uuid])
+    .then(({ exists }) => exists)
 }
 
 function getWalletScore(tx, pi) {
