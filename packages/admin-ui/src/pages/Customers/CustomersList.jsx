@@ -109,7 +109,7 @@ const CustomersList = ({ data, country, onClick, loading }) => {
 
   const table = useMaterialReactTable({
     ...defaultMaterialTableOpts,
-    columns: columns,
+    columns,
     data,
     initialState: {
       ...defaultMaterialTableOpts.initialState,

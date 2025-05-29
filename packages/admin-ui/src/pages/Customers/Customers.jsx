@@ -86,23 +86,14 @@ const Customers = () => {
   const handleCustomerClicked = customer =>
     navigate(`/compliance/customer/${customer.id}`)
 
-  const [customers, setCustomers] = useState([])
   const [showCreationModal, setShowCreationModal] = useState(false)
 
-  const { data: customersResponse, loading: customerLoading } = useQuery(
-    GET_CUSTOMERS,
-    {
-      onCompleted: data => setCustomers(R.path(['customers'])(data)),
-    },
-  )
+  const { data: customersResponse, loading: customerLoading } =
+    useQuery(GET_CUSTOMERS)
 
   const [createNewCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: () => setShowCreationModal(false),
-    refetchQueries: () => [
-      {
-        query: GET_CUSTOMERS,
-      },
-    ],
+    refetchQueries: () => [GET_CUSTOMERS],
   })
 
   const configData = R.path(['config'])(customersResponse) ?? []
@@ -120,6 +111,8 @@ const Customers = () => {
 
   const byAuthorized = c => (c.authorizedStatus.label === 'Pending' ? 0 : 1)
   const byLastActive = c => new Date(R.prop('lastActive', c) ?? '0')
+
+  const customers = R.path(['customers'])(customersResponse) ?? []
   const customersData = R.pipe(
     R.map(setAuthorizedStatus),
     R.sortWith([R.ascend(byAuthorized), R.descend(byLastActive)]),
