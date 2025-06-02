@@ -44,17 +44,18 @@ const save_machines_to_db = async (machines, replace_existing) => {
   if (replace_existing) await db.none('DELETE FROM devices')
 
   console.log('inserting machines into DB')
-  db.tx(tx =>
-    tx.batch(
-      machines.map(device_id =>
-        tx.none(
-          `INSERT INTO devices (device_id, cassette1, cassette2, paired, display, created, name, last_online, location)
-         VALUES ($1, 0, 0, 't', 't', now(), $2, now(), '{}'::json)`,
-          [device_id, device_id],
+  for (const ids of chunk(machines, 20))
+    await db.tx(tx =>
+      tx.batch(
+        ids.map(device_id =>
+          tx.none(
+            `INSERT INTO devices (device_id, cassette1, cassette2, paired, display, created, name, last_online, location)
+           VALUES ($1, 0, 0, 't', 't', now(), $1, now(), '{}'::json)`,
+            [device_id],
+          ),
         ),
       ),
-    ),
-  )
+    )
 }
 
 const save_device_ids_to_file = async (
