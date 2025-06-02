@@ -139,7 +139,7 @@ const CashOut = ({ name: SCREEN_KEY }) => {
         {R.isEmpty(machines) && <EmptyTable message="No machines so far" />}
         {wizard && (
           <Wizard
-            machine={R.find(R.propEq('deviceId', wizard))(machines)}
+            machine={R.find(R.propEq(wizard, 'deviceId'))(machines)}
             onClose={() => setWizard(false)}
             save={save}
             error={error?.message}

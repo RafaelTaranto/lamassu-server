@@ -46,7 +46,7 @@ const Wallet = ({ doContinue }) => {
   const Component = mySteps[step].component
 
   const addData = it => {
-    setData(R.merge(data, it))
+    setData(R.mergeRight(data, it))
     setStep(step + 1)
   }
 

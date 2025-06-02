@@ -207,7 +207,7 @@ const Locales = ({ name: SCREEN_KEY }) => {
           initialValues={locale}
           save={handleSave}
           validationSchema={LocaleSchema}
-          data={R.of(locale)}
+          data={R.of(Array, locale)}
           elements={mainFields(data, onChangeCoin)}
           setEditing={onEditingDefault}
           forceDisable={isEditingOverrides}
@@ -238,7 +238,7 @@ const Locales = ({ name: SCREEN_KEY }) => {
       {wizard && (
         <Wizard
           schemas={schemas}
-          coin={R.find(R.propEq('code', wizard))(cryptoCurrencies)}
+          coin={R.find(R.propEq(wizard, 'code'))(cryptoCurrencies)}
           onClose={() => setWizard(false)}
           save={wizardSave}
           error={error?.message}

@@ -1,0 +1,28 @@
+{
+  "name": "typesafe-db",
+  "version": "11.0.0-beta.0",
+  "license": "../LICENSE",
+  "type": "module",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.10",
+    "kysely-codegen": "^0.18.5",
+    "typescript": "^5.8.3"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./lib/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "dev": "tsc --watch",
+    "generate-types": "kysely-codegen --camel-case --out-file ./src/types/types.d.ts",
+    "postinstall": "npm run build"
+  },
+  "dependencies": {
+    "kysely": "^0.28.2",
+    "pg": "^8.16.0"
+  }
+}

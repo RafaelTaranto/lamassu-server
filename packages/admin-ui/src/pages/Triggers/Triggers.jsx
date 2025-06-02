@@ -70,13 +70,13 @@ const Triggers = () => {
   const enabledCustomInfoRequests = R.pipe(
     R.path(['customInfoRequests']),
     R.defaultTo([]),
-    R.filter(R.propEq('enabled', true)),
+    R.filter(R.propEq(true, 'enabled')),
   )(customInfoReqData)
 
   const emailAuth =
     data?.config?.triggersConfig_customerAuthentication === 'EMAIL'
 
-  const complianceServices = R.filter(R.propEq('class', 'compliance'))(
+  const complianceServices = R.filter(R.propEq('compliance', 'class'))(
     data?.accountsConfig || [],
   )
   const triggers = fromServer(data?.config?.triggers ?? [])

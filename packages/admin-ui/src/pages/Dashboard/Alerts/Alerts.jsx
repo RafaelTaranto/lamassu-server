@@ -1,6 +1,5 @@
 import { useQuery, gql } from '@apollo/client'
 import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
 import classnames from 'classnames'
 import * as R from 'ramda'
 import React from 'react'
@@ -56,11 +55,9 @@ const Alerts = ({ onReset, onExpand, size }) => {
           </Label1>
         )}
       </div>
-      <Grid
-        className={classnames({ 'm-0': true, 'max-h-115': showAllItems })}
-        container
-        spacing={1}>
-        <Grid item xs={12}>
+      <div
+        className={classnames({ 'm-0 mt-2': true, 'max-h-115': showAllItems })}>
+        <div className="w-full flex-1">
           {!alerts.length && (
             <Label1 className="text-comet -ml-1 h-30">
               No new alerts. Your system is running smoothly.
@@ -71,10 +68,10 @@ const Alerts = ({ onReset, onExpand, size }) => {
             alerts={alerts}
             machines={machines}
           />
-        </Grid>
-      </Grid>
+        </div>
+      </div>
       {!showAllItems && alertsLength > NUM_TO_RENDER && (
-        <Grid item xs={12}>
+        <div>
           <Label1 className="text-center mb-0">
             <Button
               onClick={() => onExpand('alerts')}
@@ -85,7 +82,7 @@ const Alerts = ({ onReset, onExpand, size }) => {
               {`Show all (${alerts.length})`}
             </Button>
           </Label1>
-        </Grid>
+        </div>
       )}
     </>
   )

@@ -1,0 +1,23 @@
+packages:
+  - packages/server
+  - packages/admin-ui
+  - packages/typesafe-db
+onlyBuiltDependencies:
+  - '@apollo/protobufjs'
+  - '@swc/core'
+  - '@tailwindcss/oxide'
+  - argon2
+  - bufferutil
+  - cbor-extract
+  - ccxt
+  - es5-ext
+  - esbuild
+  - iconv
+  - keccak
+  - node-expat
+  - secp256k1
+  - tiny-secp256k1
+  - utf-8-validate
+  - web3
+  - web3-bzz
+  - web3-shh

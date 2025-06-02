@@ -10,31 +10,27 @@ To take advantage of that make sure to run `git commit` from within this folder.
 
 ## Available Scripts
 
-In the project directory, you can run:
+From the root directory (recommended with Turbo):
 
-### `npm start`
+- `pnpm run dev` - Start development environment
+- `pnpm run build` - Build for production
+- `pnpm run admin:dev` - Start only admin UI development
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+In the admin-ui package directory, you can run:
 
-The page will reload if you make edits.<br>
+### `pnpm start` or `pnpm run dev`
+
+Runs the app in development mode with Vite.
+Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
+
+The page will reload if you make edits.
 You will also see any lint errors in the console.
 
-### `npm fix`
+### `pnpm test`
 
-Runs eslint --fix on the src folder
+Launches the test runner with vitest.
 
-### `npm test`
+### `pnpm run build`
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.<br>
+Builds the app for production to the `build` folder.
 It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.

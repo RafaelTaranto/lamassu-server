@@ -13,8 +13,8 @@ import { has0Conf } from './helper'
 const MAX_STEPS = 5
 const MODAL_WIDTH = 554
 
-const contains = crypto => R.compose(R.contains(crypto), R.prop('cryptos'))
-const sameClass = type => R.propEq('class', type)
+const contains = crypto => R.compose(R.includes(crypto), R.prop('cryptos'))
+const sameClass = type => R.propEq(type, 'class')
 const filterConfig = (crypto, type) =>
   R.filter(it => sameClass(type)(it) && contains(crypto)(it))
 const removeDeprecated = R.filter(({ deprecated }) => !deprecated)
@@ -59,7 +59,7 @@ const Wizard = ({
   const exchanges = getItems(accountsConfig, accounts, 'exchange', coin.code)
   const zeroConfs = getItems(accountsConfig, accounts, 'zeroConf', coin.code)
 
-  const getValue = code => R.find(R.propEq('code', code))(accounts)
+  const getValue = code => R.find(R.propEq(code, 'code'))(accounts)
 
   const commonWizardSteps = [
     { type: 'ticker', ...tickers },
@@ -99,9 +99,9 @@ const Wizard = ({
   const stepData = step > 0 ? wizardSteps[step - 1] : null
 
   const onContinue = async (stepConfig, stepAccount) => {
-    const newConfig = R.merge(config, stepConfig)
+    const newConfig = R.mergeRight(config, stepConfig)
     const newAccounts = stepAccount
-      ? R.merge(accountsToSave, stepAccount)
+      ? R.mergeRight(accountsToSave, stepAccount)
       : accountsToSave
 
     if (isLastStep) {

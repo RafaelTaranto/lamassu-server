@@ -144,7 +144,7 @@ const CustomerData = ({
       deleteEditedData: () => deleteEditedData({ idCardData: null }),
       save: values =>
         editCustomer({
-          idCardData: R.merge(idData, formatDates(values)),
+          idCardData: R.mergeRight(idData, formatDates(values)),
         }),
       validationSchema: customerDataSchemas.idCardData,
       checkAgainstSanctions: () =>
@@ -167,7 +167,7 @@ const CustomerData = ({
       save: values => {
         editCustomer({
           subscriberInfo: {
-            result: R.merge(smsData, R.omit(['phoneNumber'])(values)),
+            result: R.mergeRight(smsData, R.omit(['phoneNumber'])(values)),
           },
         })
       },

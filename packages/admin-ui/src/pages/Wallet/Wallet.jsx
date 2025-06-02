@@ -167,7 +167,7 @@ const Wallet = ({ name: SCREEN_KEY }) => {
           />
           {wizard && (
             <Wizard
-              coin={R.find(R.propEq('code', wizard))(cryptoCurrencies)}
+              coin={R.find(R.propEq(wizard, 'code'))(cryptoCurrencies)}
               onClose={() => setWizard(false)}
               save={save}
               schemas={schemas}

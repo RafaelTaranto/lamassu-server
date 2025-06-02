@@ -38,7 +38,7 @@ const reducer = (state, action) => {
         iError: false,
       }
     case 'error':
-      return R.merge(state, { innerError: true })
+      return R.mergeRight(state, { innerError: true })
     case 'reset':
       return initialState
     default:

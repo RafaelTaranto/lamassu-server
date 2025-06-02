@@ -49,7 +49,7 @@ const AdvancedTriggersSettings = memo(() => {
 
   const customInfoRequests =
     R.path(['customInfoRequests'])(customInfoReqData) ?? []
-  const enabledCustomInfoRequests = R.filter(R.propEq('enabled', true))(
+  const enabledCustomInfoRequests = R.filter(R.propEq(true, 'enabled'))(
     customInfoRequests,
   )
 
@@ -98,7 +98,7 @@ const AdvancedTriggersSettings = memo(() => {
             initialValues={requirementsDefaults}
             save={saveDefaults}
             validationSchema={defaultSchema}
-            data={R.of(requirementsDefaults)}
+            data={R.of(Array, requirementsDefaults)}
             elements={getDefaultSettings()}
             setEditing={onEditingDefault}
             forceDisable={isEditingOverrides}

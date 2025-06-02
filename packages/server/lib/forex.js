@@ -30,7 +30,7 @@ function getBitPayFxRate(
   fiatCodeProperty,
   rateProperty,
 ) {
-  return getFiatRates().then(({ data: fxRates }) => {
+  return getFiatRates().then(fxRates => {
     const defaultFiatRate = findCurrencyRates(
       fxRates,
       defaultFiatMarket,
@@ -69,14 +69,15 @@ const getRate = (retries = 1, fiatCode, defaultFiatMarket) => {
     defaultFiatMarket,
     fiatCodeProperty,
     rateProperty,
-  ).catch(() => {
-    // Switch service
+  ).catch(err => {
     const erroredService = API_QUEUE.shift()
     API_QUEUE.push(erroredService)
     if (retries >= MAX_ROTATIONS)
-      throw new Error(`FOREX API error from ${erroredService.name}`)
+      throw new Error(
+        `FOREX API error from ${erroredService.name} ${err?.message}`,
+      )
 
-    return getRate(++retries, fiatCode)
+    return getRate(++retries, fiatCode, defaultFiatMarket)
   })
 }
 

@@ -17,7 +17,7 @@ const allFields = (getData, onChange, auxElements = []) => {
 
     return R.compose(
       it => `${R.prop(code)(it)} ${it?.isBeta ? '(Beta)' : ''}`,
-      R.find(R.propEq(compare ?? 'code', it)),
+      R.find(R.propEq(it, compare ?? 'code')),
     )(data)
   }
 
@@ -45,7 +45,7 @@ const allFields = (getData, onChange, auxElements = []) => {
   const timezonesData = timezoneList
 
   const findSuggestion = it => {
-    const machine = R.find(R.propEq('deviceId', it.machine))(machineData)
+    const machine = R.find(R.propEq(it.machine, 'deviceId'))(machineData)
     return machine ? [machine] : []
   }
 

@@ -213,7 +213,7 @@ const ECol = ({ editing, focus, config, extraPaddingRight, extraPadding }) => {
 }
 
 const groupStriped = elements => {
-  const [toStripe, noStripe] = R.partition(R.propEq('stripe', true))(elements)
+  const [toStripe, noStripe] = R.partition(R.propEq(true, 'stripe'))(elements)
 
   if (!toStripe.length) {
     return elements

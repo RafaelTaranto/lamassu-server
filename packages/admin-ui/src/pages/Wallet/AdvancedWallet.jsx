@@ -69,12 +69,12 @@ const AdvancedWallet = () => {
     AdvancedWalletSettingsOverrides,
   )
   const suggestionFilter = R.filter(
-    it => !R.contains(it.code, overriddenCryptos),
+    it => !R.includes(it.code, overriddenCryptos),
   )
   const coinSuggestions = suggestionFilter(cryptoCurrencies)
 
   const findSuggestion = it => {
-    const coin = R.compose(R.find(R.propEq('code', it?.cryptoCurrency)))(
+    const coin = R.compose(R.find(R.propEq(it?.cryptoCurrency, 'code')))(
       cryptoCurrencies,
     )
     return coin ? [coin] : []
@@ -85,13 +85,13 @@ const AdvancedWallet = () => {
       <Section>
         <EditableTable
           name="wallets"
-          data={R.of(AdvancedWalletSettings)}
+          data={R.of(Array, AdvancedWalletSettings)}
           error={error?.message}
           enableEdit
           editWidth={174}
           save={save}
           stripeWhen={it => !AdvancedWalletSchema.isValidSync(it)}
-          inialValues={R.of(AdvancedWalletSettings)}
+          inialValues={R.of(Array, AdvancedWalletSettings)}
           validationSchema={AdvancedWalletSchema}
           elements={getAdvancedWalletElements()}
           setEditing={onEditingDefault}

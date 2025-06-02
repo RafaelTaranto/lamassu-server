@@ -20,7 +20,7 @@ const FormRenderer = ({
     R.map(({ code }) => ({ [code]: (value && value[code]) ?? '' })),
   )(elements)
 
-  const values = R.merge(initialValues, value)
+  const values = R.mergeRight(initialValues, value)
 
   const [saveError, setSaveError] = useState([])
 

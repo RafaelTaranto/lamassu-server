@@ -1,7 +1,6 @@
 const authentication = require('../modules/userManagement')
 const anonymous = require('../../../constants').anonymousCustomer
 const customers = require('../../../customers')
-const filters = require('../../filters')
 const customerNotes = require('../../../customer-notes')
 const machineLoader = require('../../../machine-loader')
 
@@ -18,11 +17,9 @@ const resolvers = {
     isAnonymous: parent => parent.customerId === anonymous.uuid,
   },
   Query: {
-    customers: (...[, { phone, email, name, address, id }]) =>
-      customers.getCustomersList(phone, name, address, id, email),
+    customers: () => customers.getCustomersList(),
     customer: (...[, { customerId }]) =>
       customers.getCustomerById(customerId).then(addLastUsedMachineName),
-    customerFilters: () => filters.customer(),
   },
   Mutation: {
     setCustomer: (root, { customerId, customerInput }, context) => {

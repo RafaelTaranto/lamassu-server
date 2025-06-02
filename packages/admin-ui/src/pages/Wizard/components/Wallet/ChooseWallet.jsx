@@ -36,10 +36,10 @@ const SAVE_ACCOUNTS = gql`
 `
 
 const isConfigurable = it =>
-  R.contains(it)(['infura', 'bitgo', 'trongrid', 'galoy'])
+  R.includes(it)(['infura', 'bitgo', 'trongrid', 'galoy'])
 
 const isLocalHosted = it =>
-  R.contains(it)([
+  R.includes(it)([
     'bitcoind',
     'geth',
     'litecoind',

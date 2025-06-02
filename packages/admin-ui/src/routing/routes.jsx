@@ -41,11 +41,11 @@ const hasSidebar = route =>
 const getParent = route =>
   R.find(
     R.propEq(
-      'route',
       R.dropLast(
         1,
         R.dropLastWhile(x => x !== '/', route),
       ),
+      'route',
     ),
   )(flattened)
 
@@ -69,8 +69,8 @@ const Routes = () => {
     Transition === Slide
       ? {
           direction:
-            R.findIndex(R.propEq('route', history.state.prev))(leafRoutes) >
-            R.findIndex(R.propEq('route', location))(leafRoutes)
+            R.findIndex(R.propEq(history.state.prev, 'route'))(leafRoutes) >
+            R.findIndex(R.propEq(location, 'route'))(leafRoutes)
               ? 'right'
               : 'left',
         }

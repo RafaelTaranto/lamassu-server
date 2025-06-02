@@ -30,6 +30,8 @@ const { p } = typographyStyles
 let theme = createTheme({
   typography: {
     fontFamily: inputFontFamily,
+    root: { ...p },
+    body1: { ...p },
   },
   palette: {
     primary: {
@@ -54,6 +56,18 @@ theme = createTheme(theme, {
       styleOverrides: {
         root: { ...p },
         body1: { ...p },
+      },
+    },
+    MuiCircularProgress: {
+      styleOverrides: {
+        root: {
+          color: primaryColor,
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: { ...p },
       },
     },
     MuiIconButtonBase: {

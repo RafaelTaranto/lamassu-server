@@ -1,18 +1,18 @@
 with import (fetchTarball {
-  name = "nixpkgs-194846768975b7ad2c4988bdb82572c00222c0d7";
-  url = https://github.com/NixOS/nixpkgs/archive/194846768975b7ad2c4988bdb82572c00222c0d7.tar.gz;
-  sha256 = "0snj72i9dm99jlnnmk8id8ffjnfg1k81lr7aw8d01kz3hdiraqil";
+  name = "nixpkgs-21808d22b1cda1898b71cf1a1beb524a97add2c4";
+  url = "https://github.com/NixOS/nixpkgs/archive/21808d22b1cda1898b71cf1a1beb524a97add2c4.tar.gz";
+  sha256 = "0v2z6jphhbk1ik7fqhlfnihcyff5np9wb3pv19j9qb9mpildx0cg";
 }) {};
 
 stdenv.mkDerivation {
-    name = "node";
-    buildInputs = [
-        nodejs_22
-        python3
-        openssl
-        postgresql
-    ];
-    shellHook = ''
-        export PATH="$PWD/node_modules/.bin/:$PATH"
-    '';
+  name = "node";
+  buildInputs = [
+    nodejs_22
+    python3
+    openssl
+    pnpm_10
+  ];
+  shellHook = ''
+    export PATH="$PWD/node_modules/.bin/:$PATH"
+  '';
 }

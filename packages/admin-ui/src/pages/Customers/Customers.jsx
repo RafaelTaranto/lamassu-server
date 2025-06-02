@@ -2,8 +2,6 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { useLocation } from 'wouter'
-import SearchBox from '../../components/SearchBox'
-import SearchFilter from '../../components/SearchFilter'
 import TitleSection from '../../components/layout/TitleSection'
 import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
@@ -14,15 +12,6 @@ import { fromNamespace, namespaces } from '../../utils/config'
 import CustomersList from './CustomersList'
 import CreateCustomerModal from './components/CreateCustomerModal'
 import { getAuthorizedStatus } from './helper'
-
-const GET_CUSTOMER_FILTERS = gql`
-  query filters {
-    customerFilters {
-      type
-      value
-    }
-  }
-`
 
 const GET_CUSTOMERS = gql`
   query configAndCustomers(
@@ -91,38 +80,27 @@ const CREATE_CUSTOMER = gql`
   }
 `
 
-const getFiltersObj = filters =>
-  R.reduce((s, f) => ({ ...s, [f.type]: f.value }), {}, filters)
-
 const Customers = () => {
   const [, navigate] = useLocation()
 
   const handleCustomerClicked = customer =>
     navigate(`/compliance/customer/${customer.id}`)
 
-  const [filteredCustomers, setFilteredCustomers] = useState([])
-  const [variables, setVariables] = useState({})
-  const [filters, setFilters] = useState([])
+  const [customers, setCustomers] = useState([])
   const [showCreationModal, setShowCreationModal] = useState(false)
 
-  const {
-    data: customersResponse,
-    loading: customerLoading,
-    refetch,
-  } = useQuery(GET_CUSTOMERS, {
-    variables,
-    onCompleted: data => setFilteredCustomers(R.path(['customers'])(data)),
-  })
-
-  const { data: filtersResponse, loading: loadingFilters } =
-    useQuery(GET_CUSTOMER_FILTERS)
+  const { data: customersResponse, loading: customerLoading } = useQuery(
+    GET_CUSTOMERS,
+    {
+      onCompleted: data => setCustomers(R.path(['customers'])(data)),
+    },
+  )
 
   const [createNewCustomer] = useMutation(CREATE_CUSTOMER, {
     onCompleted: () => setShowCreationModal(false),
     refetchQueries: () => [
       {
         query: GET_CUSTOMERS,
-        variables,
       },
     ],
   })
@@ -145,76 +123,12 @@ const Customers = () => {
   const customersData = R.pipe(
     R.map(setAuthorizedStatus),
     R.sortWith([R.ascend(byAuthorized), R.descend(byLastActive)]),
-  )(filteredCustomers ?? [])
-
-  const onFilterChange = filters => {
-    const filtersObject = getFiltersObj(filters)
-
-    setFilters(filters)
-
-    setVariables({
-      phone: filtersObject.phone,
-      name: filtersObject.name,
-      email: filtersObject.email,
-      address: filtersObject.address,
-      id: filtersObject.id,
-    })
-
-    refetch && refetch()
-  }
-
-  const onFilterDelete = filter => {
-    const newFilters = R.filter(
-      f => !R.whereEq(R.pick(['type', 'value'], f), filter),
-    )(filters)
-
-    setFilters(newFilters)
-
-    const filtersObject = getFiltersObj(newFilters)
-
-    setVariables({
-      phone: filtersObject.phone,
-      name: filtersObject.name,
-      email: filtersObject.email,
-      address: filtersObject.address,
-      id: filtersObject.id,
-    })
-
-    refetch && refetch()
-  }
-
-  const deleteAllFilters = () => {
-    setFilters([])
-    const filtersObject = getFiltersObj([])
-
-    setVariables({
-      phone: filtersObject.phone,
-      name: filtersObject.name,
-      email: filtersObject.email,
-      address: filtersObject.address,
-      id: filtersObject.id,
-    })
-
-    refetch && refetch()
-  }
-
-  const filterOptions = R.path(['customerFilters'])(filtersResponse)
+  )(customers ?? [])
 
   return (
     <>
       <TitleSection
         title="Customers"
-        appendix={
-          <div className="flex ml-4">
-            <SearchBox
-              loading={loadingFilters}
-              filters={filters}
-              options={filterOptions}
-              inputPlaceholder={'Search customers'}
-              onChange={onFilterChange}
-            />
-          </div>
-        }
         appendixRight={
           <div className="flex">
             <Link color="primary" onClick={() => setShowCreationModal(true)}>
@@ -227,21 +141,11 @@ const Customers = () => {
           { label: 'Cash-out', icon: <TxOutIcon /> },
         ]}
       />
-      {filters.length > 0 && (
-        <SearchFilter
-          entries={customersData.length}
-          filters={filters}
-          onFilterDelete={onFilterDelete}
-          deleteAllFilters={deleteAllFilters}
-        />
-      )}
       <CustomersList
         data={customersData}
-        locale={locale}
+        country={locale?.country}
         onClick={handleCustomerClicked}
         loading={customerLoading}
-        triggers={triggers}
-        customRequests={customRequirementsData}
       />
       <CreateCustomerModal
         showModal={showCreationModal}

@@ -12,7 +12,7 @@ import { CURRENCY_MAX } from '../../utils/constants'
 import { defaultToZero } from '../../utils/number'
 
 const filterClass = type => R.filter(it => it.class === type)
-const filterCoins = ({ id }) => R.filter(it => R.contains(id)(it.cryptos))
+const filterCoins = ({ id }) => R.filter(it => R.includes(id)(it.cryptos))
 
 const WalletSchema = Yup.object().shape({
   ticker: Yup.string('The ticker must be a string').required(
@@ -36,6 +36,7 @@ const AdvancedWalletSchema = Yup.object().shape({
   cryptoUnits: Yup.string().required(),
   feeMultiplier: Yup.string().required(),
   allowTransactionBatching: Yup.boolean(),
+  enableLastUsedAddress: Yup.boolean(),
 })
 
 const OverridesSchema = Yup.object().shape({
@@ -57,7 +58,7 @@ const OverridesDefaults = {
 }
 
 const viewFeeMultiplier = it =>
-  R.compose(R.prop(['display']), R.find(R.propEq('code', it)))(feeOptions)
+  R.compose(R.prop(['display']), R.find(R.propEq(it, 'code')))(feeOptions)
 
 const feeOptions = [
   { display: '+60%', code: '1.6' },
@@ -126,6 +127,17 @@ const getAdvancedWalletElements = () => {
         valueProp: 'code',
         labelProp: 'display',
       },
+    },
+    {
+      name: 'enableLastUsedAddress',
+      header: `Allow last used address prompt`,
+      size: 'sm',
+      stripe: true,
+      width: 260,
+      view: (_, ite) => {
+        return ite.enableLastUsedAddress ? 'Yes' : `No`
+      },
+      input: Checkbox,
     },
   ]
 }
@@ -204,7 +216,7 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
   const viewCryptoCurrency = it => {
     const currencyDisplay = R.compose(
       it => `${R.prop(['display'])(it)} ${it?.isBeta ? '(Beta)' : ''}`,
-      R.find(R.propEq('code', it)),
+      R.find(R.propEq(it, 'code')),
     )(cryptoCurrencies)
     return currencyDisplay
   }
@@ -213,7 +225,7 @@ const getElements = (cryptoCurrencies, accounts, onChange, wizard = false) => {
   const getDisplayName = type => it =>
     R.compose(
       R.prop('display'),
-      R.find(R.propEq('code', it)),
+      R.find(R.propEq(it, 'code')),
     )(filterOptions(type))
 
   const getOptions = R.curry((option, it) =>
