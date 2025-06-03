@@ -78,9 +78,6 @@ const populateSettings = function (req, res, next) {
   const { needsSettingsReload, settingsCache } = state
   const operatorId = res.locals.operatorId
   const versionId = req.headers['config-version']
-  if (versionId !== state.oldVersionId) {
-    state.oldVersionId = versionId
-  }
 
   try {
     // Priority of configs to retrieve
