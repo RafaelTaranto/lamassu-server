@@ -168,16 +168,19 @@ function migrationSaveConfig(config) {
   })
 }
 
-function loadLatest(schemaVersion) {
-  return Promise.all([
-    loadLatestConfigOrNoneReturningVersion(schemaVersion),
-    loadAccounts(schemaVersion),
-  ]).then(([configObj, accounts]) => ({
-    config: configObj.config,
-    accounts,
-    version: configObj.version,
-  }))
-}
+const loadLatest = schemaVersion =>
+  db
+    .task(t =>
+      t.batch([
+        loadLatestConfigOrNoneReturningVersion(t, schemaVersion),
+        _loadAccounts(t, schemaVersion),
+      ]),
+    )
+    .then(([configObj, accounts]) => ({
+      config: configObj.config,
+      accounts,
+      version: configObj.version,
+    }))
 
 function loadLatestConfig() {
   const sql = `SELECT data
@@ -196,7 +199,7 @@ function loadLatestConfig() {
     })
 }
 
-function loadLatestConfigOrNoneReturningVersion(schemaVersion) {
+function loadLatestConfigOrNoneReturningVersion(db, schemaVersion) {
   const sql = `SELECT data, id
     FROM user_config
     WHERE type = 'config'
