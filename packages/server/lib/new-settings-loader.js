@@ -91,7 +91,7 @@ function saveAccounts(accounts) {
   )
 }
 
-function loadAccounts(schemaVersion) {
+function _loadAccounts(db, schemaVersion) {
   const sql = `SELECT data
     FROM user_config
     WHERE type = $1
@@ -100,13 +100,14 @@ function loadAccounts(schemaVersion) {
     ORDER BY id DESC
     LIMIT 1`
 
-  return db
-    .oneOrNone(sql, [
-      'accounts',
-      schemaVersion || NEW_SETTINGS_LOADER_SCHEMA_VERSION,
-    ])
-    .then(_.compose(_.defaultTo({}), _.get('data.accounts')))
+  return db.oneOrNone(
+    sql,
+    ['accounts', schemaVersion || NEW_SETTINGS_LOADER_SCHEMA_VERSION],
+    row => row?.data?.accounts ?? {},
+  )
 }
+
+const loadAccounts = schemaVersion => _loadAccounts(db, schemaVersion)
 
 function hideSecretFields(accounts) {
   return _.flow(
@@ -222,7 +223,7 @@ function loadLatestConfigOrNone(schemaVersion) {
     .then(row => (row ? row.data.config : {}))
 }
 
-function loadConfig(versionId) {
+function loadConfig(db, versionId) {
   const sql = `SELECT data
     FROM user_config
     WHERE id = $1
@@ -231,8 +232,11 @@ function loadConfig(versionId) {
       AND valid`
 
   return db
-    .one(sql, [versionId, NEW_SETTINGS_LOADER_SCHEMA_VERSION])
-    .then(row => row.data.config)
+    .one(
+      sql,
+      [versionId, NEW_SETTINGS_LOADER_SCHEMA_VERSION],
+      ({ data: { config } }) => config,
+    )
     .catch(err => {
       if (err.name === 'QueryResultError') {
         throw new Error('No such config version: ' + versionId)
@@ -245,12 +249,14 @@ function loadConfig(versionId) {
 function load(versionId) {
   if (!versionId) Promise.reject('versionId is required')
 
-  return Promise.all([loadConfig(versionId), loadAccounts()]).then(
-    ([config, accounts]) => ({
-      config,
-      accounts,
-    }),
-  )
+  return db.task(t => {
+    t.batch([loadConfig(t, versionId), _loadAccounts(t)]).then(
+      ([config, accounts]) => ({
+        config,
+        accounts,
+      }),
+    )
+  })
 }
 
 const fetchCurrentConfigVersion = () => {
