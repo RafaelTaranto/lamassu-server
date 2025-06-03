@@ -81,13 +81,4 @@ function authorizeCaDownload(caToken) {
   })
 }
 
-function isPaired(deviceId) {
-  const sql =
-    'select device_id, name from devices where device_id=$1 and paired=TRUE'
-
-  return db
-    .oneOrNone(sql, [deviceId])
-    .then(row => (row && row.device_id === deviceId ? row.name : false))
-}
-
-module.exports = { pair, unpair, authorizeCaDownload, isPaired }
+module.exports = { pair, unpair, authorizeCaDownload }

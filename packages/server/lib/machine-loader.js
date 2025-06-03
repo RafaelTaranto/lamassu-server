@@ -173,6 +173,13 @@ function getMachineName(machineId) {
   return db.oneOrNone(sql, [machineId]).then(it => it?.name)
 }
 
+const getPairedMachineName = deviceId =>
+  db.oneOrNone(
+    'SELECT name FROM devices WHERE device_id = $1 AND paired = TRUE',
+    [deviceId],
+    machine => machine?.name,
+  )
+
 function getMachine(machineId, config) {
   const sql = `${MACHINE_WITH_CALCULATED_FIELD_SQL} WHERE d.device_id = $1`
 
@@ -750,6 +757,7 @@ const batchRecordPendingPings = () => {
 
 module.exports = {
   getMachineName,
+  getPairedMachineName,
   getMachines,
   getUnpairedMachines,
   getMachine,
