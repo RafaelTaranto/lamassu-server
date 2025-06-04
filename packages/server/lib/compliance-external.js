@@ -7,6 +7,12 @@ const ph = require('./plugin-helper')
 const getPlugin = (settings, pluginCode) => {
   const account = settings.accounts[pluginCode]
   const plugin = ph.load(ph.COMPLIANCE, pluginCode)
+  if (pluginCode === 'mock-compliance') {
+    return {
+      plugin,
+      account: { applicantLevel: 'basic' },
+    }
+  }
 
   return { plugin, account }
 }
@@ -58,15 +64,13 @@ const getStatusMap = (settings, customerExternalCompliance) => {
 }
 
 const createApplicant = (settings, externalService, customerId) => {
-  const account = settings.accounts[externalService]
-  const { plugin } = getPlugin(settings, externalService)
+  const { plugin, account } = getPlugin(settings, externalService)
 
   return plugin.createApplicant(account, customerId, account.applicantLevel)
 }
 
 const createLink = (settings, externalService, customerId) => {
-  const account = settings.accounts[externalService]
-  const { plugin } = getPlugin(settings, externalService)
+  const { plugin, account } = getPlugin(settings, externalService)
 
   return plugin.createLink(account, customerId, account.applicantLevel)
 }
