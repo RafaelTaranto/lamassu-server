@@ -5,9 +5,9 @@ const { APPROVED } = require('../consts')
 const CODE = 'mock-compliance'
 
 const createLink = (settings, userId, level) => {
-  return Promise.resolve({
-    url: `this is a mock external link, ${userId}, ${level}`,
-  })
+  return Promise.resolve(
+    `https://mock-external-compliance.link/?user=${userId}&level=${level}`,
+  )
 }
 
 const getApplicantStatus = account => {
