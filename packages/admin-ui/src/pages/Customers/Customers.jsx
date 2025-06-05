@@ -88,7 +88,7 @@ const Customers = () => {
 
   const [showCreationModal, setShowCreationModal] = useState(false)
 
-  const { data: customersResponse, loading: customerLoading } =
+  const { data: customersResponse, loading: customersLoading } =
     useQuery(GET_CUSTOMERS)
 
   const [createNewCustomer] = useMutation(CREATE_CUSTOMER, {
@@ -112,7 +112,7 @@ const Customers = () => {
   const byAuthorized = c => (c.authorizedStatus.label === 'Pending' ? 0 : 1)
   const byLastActive = c => new Date(R.prop('lastActive', c) ?? '0')
 
-  const customers = R.path(['customers'])(customersResponse) ?? []
+  const customers = R.path(['customers'])(customersResponse)
   const customersData = R.pipe(
     R.map(setAuthorizedStatus),
     R.sortWith([R.ascend(byAuthorized), R.descend(byLastActive)]),
@@ -138,7 +138,7 @@ const Customers = () => {
         data={customersData}
         country={locale?.country}
         onClick={handleCustomerClicked}
-        loading={customerLoading}
+        loading={customersLoading}
       />
       <CreateCustomerModal
         showModal={showCreationModal}
