@@ -1,6 +1,6 @@
 const crypto = require('crypto')
 
-const IS_STRESS_TESTING = process.env.LAMASSU_STRESS_TESTING === 'YES'
+//const IS_STRESS_TESTING = process.env.LAMASSU_STRESS_TESTING === 'YES'
 
 function sha256(buf) {
   if (!buf) return null
@@ -16,7 +16,7 @@ const populateDeviceId = function (req, res, next) {
     : null
   let deviceId = peerCert?.raw ? sha256(peerCert.raw) : null
 
-  if (!deviceId && IS_STRESS_TESTING) deviceId = req.headers.device_id
+  //if (!deviceId && IS_STRESS_TESTING) deviceId = req.headers.device_id
 
   if (!deviceId)
     return res.status(500).json({ error: 'Unable to find certificate' })
