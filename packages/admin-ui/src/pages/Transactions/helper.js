@@ -26,7 +26,8 @@ const getStatus = it => {
 
 const getStatusDetails = it => {
   if (!R.isNil(it.hasError)) return it.hasError
-  if (!R.isNil(it.batchError)) return `Batch error: ${it.batchError}`
+  if (!R.isNil(it.batchError) && it.txClass === 'cashIn')
+    return `Batch error: ${it.batchError}`
   return null
 }
 

@@ -4,7 +4,7 @@
   "license": "../LICENSE",
   "type": "module",
   "dependencies": {
-    "@apollo/client": "^3.13.7",
+    "@apollo/client": "^3.13.8",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@lamassu/coins": "v1.6.1",
@@ -22,6 +22,7 @@
     "downshift": "9.0.9",
     "file-saver": "2.0.2",
     "formik": "2.2.0",
+    "immer": "^10.1.1",
     "jss-plugin-extend": "^10.0.0",
     "jszip": "^3.6.0",
     "libphonenumber-js": "^1.11.15",

@@ -1,13 +1,10 @@
+import { sql } from 'kysely'
 import db from './db.js'
-import { ExpressionBuilder } from 'kysely'
-import { Customers, DB, EditedCustomerData } from './types/types.js'
 import { jsonArrayFrom } from 'kysely/helpers/postgres'
-
-type CustomerEB = ExpressionBuilder<DB & { c: Customers }, 'c'>
-type CustomerWithEditedEB = ExpressionBuilder<
-  DB & { c: Customers } & { e: EditedCustomerData | null },
-  'c' | 'e'
->
+import type {
+  CustomerEB,
+  CustomerWithEditedDataEB,
+} from './types/manual.types.js'
 
 const ANON_ID = '47ac1184-8102-11e7-9079-8f13a7117867'
 const TX_PASSTHROUGH_ERROR_CODES = [
@@ -28,7 +25,7 @@ function transactionUnion(eb: CustomerEB) {
     ])
     .where(({ eb, and, or, ref }) =>
       and([
-        eb('customerId', '=', ref('c.id')),
+        eb('customerId', '=', ref('cst.id')),
         or([eb('sendConfirmed', '=', true), eb('batched', '=', true)]),
       ]),
     )
@@ -44,7 +41,7 @@ function transactionUnion(eb: CustomerEB) {
         ])
         .where(({ eb, and, ref }) =>
           and([
-            eb('customerId', '=', ref('c.id')),
+            eb('customerId', '=', ref('cst.id')),
             eb('confirmedAt', 'is not', null),
           ]),
         ),
@@ -92,20 +89,20 @@ function joinTxsTotals(eb: CustomerEB) {
     .as('txStats')
 }
 
-function selectNewestIdCardData(eb: CustomerWithEditedEB, ref: any) {
+function selectNewestIdCardData({ eb, ref }: CustomerWithEditedDataEB) {
   return eb
     .case()
     .when(
       eb.and([
-        eb(ref('e.idCardDataAt'), 'is not', null),
+        eb(ref('cstED.idCardDataAt'), 'is not', null),
         eb.or([
-          eb(ref('c.idCardDataAt'), 'is', null),
-          eb(ref('e.idCardDataAt'), '>', ref('c.idCardDataAt')),
+          eb(ref('cst.idCardDataAt'), 'is', null),
+          eb(ref('cstED.idCardDataAt'), '>', ref('cst.idCardDataAt')),
         ]),
       ]),
     )
-    .then(ref('e.idCardData'))
-    .else(ref('c.idCardData'))
+    .then(ref('cstED.idCardData'))
+    .else(ref('cst.idCardData'))
     .end()
 }
 
@@ -122,58 +119,58 @@ function getCustomerList(
   options: GetCustomerListOptions = defaultOptions,
 ): Promise<any[]> {
   return db
-    .selectFrom('customers as c')
-    .leftJoin('editedCustomerData as e', 'e.customerId', 'c.id')
+    .selectFrom('customers as cst')
+    .leftJoin('editedCustomerData as cstED', 'cstED.customerId', 'cst.id')
     .leftJoinLateral(joinTxsTotals, join => join.onTrue())
     .leftJoinLateral(joinLatestTx, join => join.onTrue())
-    .select(({ eb, fn, val, ref }) => [
-      'c.id',
-      'c.phone',
-      'c.authorizedOverride',
-      'c.frontCameraPath',
-      'c.frontCameraOverride',
-      'c.idCardPhotoPath',
-      'c.idCardPhotoOverride',
-      selectNewestIdCardData(eb, ref).as('idCardData'),
-      'c.idCardDataOverride',
-      'c.email',
-      'c.usSsn',
-      'c.usSsnOverride',
-      'c.sanctions',
-      'c.sanctionsOverride',
+    .select(({ eb, fn, val }) => [
+      'cst.id',
+      'cst.phone',
+      'cst.authorizedOverride',
+      'cst.frontCameraPath',
+      'cst.frontCameraOverride',
+      'cst.idCardPhotoPath',
+      'cst.idCardPhotoOverride',
+      selectNewestIdCardData(eb).as('idCardData'),
+      'cst.idCardDataOverride',
+      'cst.email',
+      'cst.usSsn',
+      'cst.usSsnOverride',
+      'cst.sanctions',
+      'cst.sanctionsOverride',
       'txStats.totalSpent',
       'txStats.totalTxs',
-      ref('lastTx.fiatCode').as('lastTxFiatCode'),
-      ref('lastTx.fiat').as('lastTxFiat'),
-      ref('lastTx.txClass').as('lastTxClass'),
+      'lastTx.fiatCode as lastTxFiatCode',
+      'lastTx.fiat as lastTxFiat',
+      'lastTx.txClass as lastTxClass',
       fn<Date>('GREATEST', [
-        'c.created',
+        'cst.created',
         'lastTx.created',
-        'c.phoneAt',
-        'c.emailAt',
-        'c.idCardDataAt',
-        'c.frontCameraAt',
-        'c.idCardPhotoAt',
-        'c.usSsnAt',
-        'c.lastAuthAttempt',
+        'cst.phoneAt',
+        'cst.emailAt',
+        'cst.idCardDataAt',
+        'cst.frontCameraAt',
+        'cst.idCardPhotoAt',
+        'cst.usSsnAt',
+        'cst.lastAuthAttempt',
       ]).as('lastActive'),
-      eb('c.suspendedUntil', '>', fn<Date>('NOW', [])).as('isSuspended'),
+      eb('cst.suspendedUntil', '>', fn<Date>('NOW', [])).as('isSuspended'),
       fn<number>('GREATEST', [
         val(0),
         fn<number>('date_part', [
           val('day'),
-          eb('c.suspendedUntil', '-', fn<Date>('NOW', [])),
+          eb('cst.suspendedUntil', '-', fn<Date>('NOW', [])),
         ]),
       ]).as('daysSuspended'),
     ])
-    .where('c.id', '!=', ANON_ID)
+    .where('cst.id', '!=', ANON_ID)
     .$if(options.withCustomInfoRequest, qb =>
       qb.select(({ eb, ref }) =>
         jsonArrayFrom(
           eb
             .selectFrom('customersCustomInfoRequests')
             .selectAll()
-            .where('customerId', '=', ref('c.id')),
+            .where('customerId', '=', ref('cst.id')),
         ).as('customInfoRequestData'),
       ),
     )
@@ -181,4 +178,39 @@ function getCustomerList(
     .execute()
 }
 
-export { getCustomerList }
+function searchCustomers(searchTerm: string, limit: number = 20): Promise<any> {
+  const searchPattern = `%${searchTerm}%`
+
+  return db
+    .selectFrom(
+      db
+        .selectFrom('customers as cst')
+        .leftJoin('editedCustomerData as cstED', 'cstED.customerId', 'cst.id')
+        .select(({ eb, fn }) => [
+          'cst.id',
+          'cst.phone',
+          'cst.email',
+          sql`CONCAT(
+            COALESCE(${selectNewestIdCardData(eb)}->>'firstName', ''),
+            ' ',
+            COALESCE(${selectNewestIdCardData(eb)}->>'lastName', '')
+          )`.as('customerName'),
+        ])
+        .where('cst.id', '!=', ANON_ID)
+        .as('customers_with_names'),
+    )
+    .selectAll()
+    .select('customerName as name')
+    .where(({ eb, or }) =>
+      or([
+        eb('phone', 'ilike', searchPattern),
+        eb('email', 'ilike', searchPattern),
+        eb('customerName', 'ilike', searchPattern),
+      ]),
+    )
+    .orderBy('id')
+    .limit(limit)
+    .execute()
+}
+
+export { getCustomerList, selectNewestIdCardData, searchCustomers }

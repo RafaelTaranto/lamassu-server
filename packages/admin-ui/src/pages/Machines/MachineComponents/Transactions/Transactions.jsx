@@ -16,18 +16,8 @@ import DataTable from '../../../../components/tables/DataTable'
 const NUM_LOG_RESULTS = 5
 
 const GET_TRANSACTIONS = gql`
-  query transactions(
-    $limit: Int
-    $from: DateTimeISO
-    $until: DateTimeISO
-    $deviceId: String
-  ) {
-    transactions(
-      limit: $limit
-      from: $from
-      until: $until
-      deviceId: $deviceId
-    ) {
+  query transactions($limit: Int, $deviceId: String) {
+    transactions(limit: $limit, deviceId: $deviceId) {
       id
       txClass
       txHash
@@ -47,7 +37,6 @@ const GET_TRANSACTIONS = gql`
       cryptoCode
       toAddress
       created
-      customerName
       customerIdCardData
       customerIdCardPhotoPath
       customerFrontCameraPath

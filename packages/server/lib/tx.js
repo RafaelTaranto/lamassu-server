@@ -59,22 +59,6 @@ function massage(tx) {
   return mapper(tx)
 }
 
-function cancel(txId) {
-  const promises = [
-    CashInTx.cancel(txId)
-      .then(() => true)
-      .catch(() => false),
-    CashOutTx.cancel(txId)
-      .then(() => true)
-      .catch(() => false),
-  ]
-
-  return Promise.all(promises).then(r => {
-    if (_.some(r)) return
-    throw new Error('No such transaction')
-  })
-}
-
 function customerHistory(customerId, thresholdDays) {
   const sql = `SELECT ch.id, ch.created, ch.fiat, ch.direction FROM (
     SELECT txIn.id, txIn.created, txIn.fiat, 'cashIn' AS direction,
@@ -99,4 +83,4 @@ function customerHistory(customerId, thresholdDays) {
   return db.any(sql, [customerId, `${days} days`, '60 minutes', REDEEMABLE_AGE])
 }
 
-module.exports = { post, cancel, customerHistory }
+module.exports = { post, customerHistory }

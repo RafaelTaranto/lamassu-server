@@ -26,15 +26,12 @@ const formatName = idCardData => {
 /* Expects a transaction object */
 const displayName = ({
   isAnonymous,
-  customerName,
   customerIdCardData,
   customerPhone,
   customerEmail,
 }) =>
   isAnonymous
     ? 'Anonymous'
-    : customerName ||
-      customerEmail ||
-      R.defaultTo(customerPhone, formatName(customerIdCardData))
+    : formatName(customerIdCardData) || customerEmail || customerPhone
 
 export { displayName, formatFullName, formatName }

@@ -94,6 +94,13 @@ const typeDef = gql`
     value: String
   }
 
+  type CustomerSearchResult {
+    id: ID!
+    name: String
+    phone: String
+    email: String
+  }
+
   type Query {
     customers(
       phone: String
@@ -104,6 +111,8 @@ const typeDef = gql`
     ): [Customer] @auth
     customer(customerId: ID!): Customer @auth
     customerFilters: [Filter] @auth
+    searchCustomers(searchTerm: String!, limit: Int): [CustomerSearchResult]
+      @auth
   }
 
   type Mutation {

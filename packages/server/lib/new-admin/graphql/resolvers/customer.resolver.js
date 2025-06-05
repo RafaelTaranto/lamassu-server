@@ -3,6 +3,9 @@ const anonymous = require('../../../constants').anonymousCustomer
 const customers = require('../../../customers')
 const customerNotes = require('../../../customer-notes')
 const machineLoader = require('../../../machine-loader')
+const {
+  customers: { searchCustomers },
+} = require('typesafe-db')
 
 const addLastUsedMachineName = customer =>
   (customer.lastUsedMachine
@@ -20,6 +23,8 @@ const resolvers = {
     customers: () => customers.getCustomersList(),
     customer: (...[, { customerId }]) =>
       customers.getCustomerById(customerId).then(addLastUsedMachineName),
+    searchCustomers: (...[, { searchTerm, limit = 20 }]) =>
+      searchCustomers(searchTerm, limit),
   },
   Mutation: {
     setCustomer: (root, { customerId, customerInput }, context) => {

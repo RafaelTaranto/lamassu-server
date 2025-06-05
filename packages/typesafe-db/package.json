@@ -3,6 +3,10 @@
   "version": "11.0.0-beta.0",
   "license": "../LICENSE",
   "type": "module",
+  "dependencies": {
+    "kysely": "^0.28.2",
+    "pg": "^8.16.0"
+  },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "@types/pg": "^8.11.10",
@@ -18,11 +22,17 @@
   "scripts": {
     "build": "tsc --build",
     "dev": "tsc --watch",
-    "generate-types": "kysely-codegen --camel-case --out-file ./src/types/types.d.ts",
+    "generate-types": "kysely-codegen",
     "postinstall": "npm run build"
   },
-  "dependencies": {
-    "kysely": "^0.28.2",
-    "pg": "^8.16.0"
+  "kysely-codegen": {
+    "camelCase": true,
+    "outFile": "./src/types/types.d.ts",
+    "overrides": {
+      "columns": {
+        "customers.id_card_data": "{firstName:string, lastName:string}",
+        "edited_customer_data.id_card_data": "{firstName:string, lastName:string}"
+      }
+    }
   }
 }
