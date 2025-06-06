@@ -15,7 +15,7 @@ exports.up = function (next) {
         average_response_time numeric NOT NULL,
         average_packet_loss numeric NOT NULL,
         created timestamptz NOT NULL default now()
-      )`
+      )`,
   ]
 
   db.multi(sql, next)

@@ -106,7 +106,7 @@ exports.up = function (next) {
       created TIMESTAMPTZ NOT NULL DEFAULT now(),
       device_id TEXT REFERENCES devices (device_id),
       cashbox_batch_id UUID REFERENCES cash_unit_operation (id)
-    )`
+    )`,
   ]
 
   db.multi(sql, next)

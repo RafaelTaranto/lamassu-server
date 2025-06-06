@@ -8,7 +8,7 @@ exports.up = function (next) {
     'alter table trades alter column crypto_atoms type numeric(30)',
     'alter table bills alter column crypto_atoms type numeric(30)',
     'alter table bills alter column cash_in_fee_crypto type numeric(30)',
-    'alter table bills alter column crypto_atoms_after_fee type numeric(30)'
+    'alter table bills alter column crypto_atoms_after_fee type numeric(30)',
   ]
   db.multi(sql, next)
 }

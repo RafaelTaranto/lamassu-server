@@ -10,7 +10,7 @@ exports.up = function (next) {
       last_edited_by UUID REFERENCES users(id),
       title TEXT NOT NULL DEFAULT '',
       content TEXT NOT NULL DEFAULT ''
-    )`
+    )`,
   ]
 
   db.multi(sql, next)

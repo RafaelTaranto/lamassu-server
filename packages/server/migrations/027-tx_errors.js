@@ -10,7 +10,7 @@ exports.up = function (next) {
       error_code text,
       tx_hash text,
       created timestamptz not null default now()
-    )`
+    )`,
   ]
   db.multi(sql, next)
 }

@@ -10,7 +10,7 @@ exports.up = function (next) {
       last_known_status EXTERNAL_COMPLIANCE_STATUS,
       last_updated TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       UNIQUE (customer_id, service) 
-    )`
+    )`,
   ]
 
   db.multi(sql, next)

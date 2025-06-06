@@ -3,7 +3,7 @@ const { migrationSaveConfig } = require('../lib/new-settings-loader')
 exports.up = function (next) {
   const triggersDefault = {
     triggersConfig_expirationTime: 'Forever',
-    triggersConfig_automation: 'Automatic'
+    triggersConfig_automation: 'Automatic',
   }
 
   return migrationSaveConfig(triggersDefault)

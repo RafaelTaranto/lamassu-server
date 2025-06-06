@@ -2,9 +2,7 @@ const db = require('./db')
 const { migrationSaveConfig } = require('../lib/new-settings-loader')
 
 exports.up = function (next) {
-  const sql = [
-    `ALTER TYPE notification_type ADD VALUE 'security'`
-  ]
+  const sql = [`ALTER TYPE notification_type ADD VALUE 'security'`]
 
   const newConfig = {}
   newConfig.notifications_email_security = true

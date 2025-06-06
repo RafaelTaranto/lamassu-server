@@ -1,9 +1,7 @@
 const db = require('./db')
 
 exports.up = function (next) {
-  var sql = [
-    'ALTER TABLE user_tokens ADD COLUMN last_accessed timestamptz',
-  ]
+  var sql = ['ALTER TABLE user_tokens ADD COLUMN last_accessed timestamptz']
 
   db.multi(sql, next)
 }

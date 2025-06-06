@@ -31,7 +31,7 @@ exports.up = function (next) {
     `create type compliance_type as enum 
     ('authorized', 'sms', 'id_card_data', 'id_card_photo', 'sanctions', 'front_camera', 'hard_limit')`,
     'alter table compliance_overrides alter column compliance_type set data type compliance_type using compliance_type::text::compliance_type',
-    'drop type old_compliance_type'
+    'drop type old_compliance_type',
   ]
 
   db.multi(sql, next)

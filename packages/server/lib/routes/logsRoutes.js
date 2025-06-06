@@ -27,7 +27,7 @@ function getLastSeen(req, res, next) {
 function updateLogs(req, res, next) {
   return logs
     .update(req.deviceId, req.body.logs)
-    .then(status => res.json({ success: status }))
+    .then(success => res.json({ success }))
     .catch(next)
 }
 

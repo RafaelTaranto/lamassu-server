@@ -1,5 +1,8 @@
 const _ = require('lodash/fp')
-const { migrationSaveConfig, loadLatestConfig } = require('../lib/new-settings-loader')
+const {
+  migrationSaveConfig,
+  loadLatestConfig,
+} = require('../lib/new-settings-loader')
 const CASSETTE_MAX_CAPACITY = 500
 
 exports.up = function (next) {
@@ -12,19 +15,31 @@ exports.up = function (next) {
       const overrides = config.notifications_fiatBalanceOverrides
       const newConfig = {}
       if (fiatBalance1) {
-        newConfig.notifications_fillingPercentageCassette1 = (100 * (fiatBalance1 / CASSETTE_MAX_CAPACITY)).toFixed(0)
+        newConfig.notifications_fillingPercentageCassette1 = (
+          100 *
+          (fiatBalance1 / CASSETTE_MAX_CAPACITY)
+        ).toFixed(0)
         newConfig.notifications_fiatBalanceCassette1 = null
       }
       if (fiatBalance2) {
-        newConfig.notifications_fillingPercentageCassette2 = (100 * (fiatBalance2 / CASSETTE_MAX_CAPACITY)).toFixed(0)
+        newConfig.notifications_fillingPercentageCassette2 = (
+          100 *
+          (fiatBalance2 / CASSETTE_MAX_CAPACITY)
+        ).toFixed(0)
         newConfig.notifications_fiatBalanceCassette2 = null
       }
       if (fiatBalance3) {
-        newConfig.notifications_fillingPercentageCassette3 = (100 * (fiatBalance3 / CASSETTE_MAX_CAPACITY)).toFixed(0)
+        newConfig.notifications_fillingPercentageCassette3 = (
+          100 *
+          (fiatBalance3 / CASSETTE_MAX_CAPACITY)
+        ).toFixed(0)
         newConfig.notifications_fiatBalanceCassette3 = null
       }
       if (fiatBalance4) {
-        newConfig.notifications_fillingPercentageCassette4 = (100 * (fiatBalance4 / CASSETTE_MAX_CAPACITY)).toFixed(0)
+        newConfig.notifications_fillingPercentageCassette4 = (
+          100 *
+          (fiatBalance4 / CASSETTE_MAX_CAPACITY)
+        ).toFixed(0)
         newConfig.notifications_fiatBalanceCassette4 = null
       }
 
@@ -32,16 +47,28 @@ exports.up = function (next) {
         newConfig.notifications_fiatBalanceOverrides = _.map(override => {
           const newOverride = {}
           if (override.fiatBalanceCassette1) {
-            newOverride.fillingPercentageCassette1 = (100 * (override.fiatBalanceCassette1 / CASSETTE_MAX_CAPACITY)).toFixed(0)
+            newOverride.fillingPercentageCassette1 = (
+              100 *
+              (override.fiatBalanceCassette1 / CASSETTE_MAX_CAPACITY)
+            ).toFixed(0)
           }
           if (override.fiatBalanceCassette2) {
-            newOverride.fillingPercentageCassette2 = (100 * (override.fiatBalanceCassette2 / CASSETTE_MAX_CAPACITY)).toFixed(0)
+            newOverride.fillingPercentageCassette2 = (
+              100 *
+              (override.fiatBalanceCassette2 / CASSETTE_MAX_CAPACITY)
+            ).toFixed(0)
           }
           if (override.fiatBalanceCassette3) {
-            newOverride.fillingPercentageCassette3 = (100 * (override.fiatBalanceCassette3 / CASSETTE_MAX_CAPACITY)).toFixed(0)
+            newOverride.fillingPercentageCassette3 = (
+              100 *
+              (override.fiatBalanceCassette3 / CASSETTE_MAX_CAPACITY)
+            ).toFixed(0)
           }
           if (override.fiatBalanceCassette4) {
-            newOverride.fillingPercentageCassette4 = (100 * (override.fiatBalanceCassette4 / CASSETTE_MAX_CAPACITY)).toFixed(0)
+            newOverride.fillingPercentageCassette4 = (
+              100 *
+              (override.fiatBalanceCassette4 / CASSETTE_MAX_CAPACITY)
+            ).toFixed(0)
           }
           newOverride.machine = override.machine
           newOverride.id = override.id
@@ -49,8 +76,7 @@ exports.up = function (next) {
           return newOverride
         }, config.notifications_fiatBalanceOverrides)
       }
-      return migrationSaveConfig(newConfig)
-        .then(() => next())
+      return migrationSaveConfig(newConfig).then(() => next())
     })
     .catch(err => {
       console.log(err.message)

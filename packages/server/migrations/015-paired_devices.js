@@ -7,7 +7,7 @@ exports.up = function (next) {
     `create table paired_devices (
       device_id text PRIMARY KEY,
       created timestamptz NOT NULL default now()
-    )`
+    )`,
   ]
   db.multi(sql, next)
 }

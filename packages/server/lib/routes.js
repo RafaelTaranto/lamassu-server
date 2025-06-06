@@ -78,11 +78,11 @@ const loadRoutes = async () => {
   // app /pair and /ca routes
   app.use('/', pairingRoutes)
 
-  app.use(findOperatorId)
   app.use(populateDeviceId)
   app.use(authorize)
-  app.use(configRequiredRoutes, populateSettings)
   app.use(filterOldRequests)
+  app.use(findOperatorId)
+  app.use(configRequiredRoutes, populateSettings)
 
   // other app routes
   app.use('/graphql', recordPing)

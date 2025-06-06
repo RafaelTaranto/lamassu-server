@@ -8,11 +8,16 @@ const setEnvVariable = require('./set-env-var')
 const requiredParams = ['db-password', 'hostname']
 
 if (!_.isEqual(_.intersection(_.keys(argv), requiredParams), requiredParams)) {
-  console.error('Usage: node tools/build-prod-env.js --db-password <DB_PASSWORD> --hostname <IP>')
+  console.error(
+    'Usage: node tools/build-prod-env.js --db-password <DB_PASSWORD> --hostname <IP>',
+  )
   process.exit(2)
 }
 
-fs.copyFileSync(path.resolve(__dirname, '../.sample.env'), path.resolve('/etc', 'lamassu', '.env'))
+fs.copyFileSync(
+  path.resolve(__dirname, '../.sample.env'),
+  path.resolve('/etc', 'lamassu', '.env'),
+)
 
 setEnvVariable('NODE_ENV', 'production')
 

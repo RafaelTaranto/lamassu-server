@@ -9,7 +9,7 @@ exports.up = function (next) {
       swept boolean NOT NULL default false,
       created timestamptz NOT NULL default now(),
       unique (crypto_code, hd_serial)
-    )`
+    )`,
   ]
   db.multi(sql, next)
 }

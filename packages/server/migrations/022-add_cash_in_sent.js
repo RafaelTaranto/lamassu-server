@@ -8,7 +8,7 @@ exports.up = function (next) {
     'alter table bills rename denomination to fiat',
     'alter table bills drop column to_address',
     'alter table bills drop column device_id',
-    'alter table cash_out_txs rename currency_code to fiat_code'
+    'alter table cash_out_txs rename currency_code to fiat_code',
   ]
   db.multi(sql, next)
 }

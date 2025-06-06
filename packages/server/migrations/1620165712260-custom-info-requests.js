@@ -13,7 +13,7 @@ exports.up = function (next) {
       approved BOOLEAN,
       customer_data JSONB NOT NULL,
       PRIMARY KEY(customer_id, info_request_id)
-    );`
+    );`,
   ]
 
   db.multi(sql, next)

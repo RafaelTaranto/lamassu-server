@@ -22,7 +22,7 @@ exports.up = function (next) {
         us_ssn TEXT,
         us_ssn_at TIMESTAMPTZ,
         us_ssn_by UUID REFERENCES users(id),
-        created TIMESTAMPTZ NOT NULL DEFAULT now() )`
+        created TIMESTAMPTZ NOT NULL DEFAULT now() )`,
   ]
 
   db.multi(sql, next)

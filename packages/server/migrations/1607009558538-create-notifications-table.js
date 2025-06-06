@@ -1,6 +1,6 @@
 var db = require('./db')
 
-const singleQuotify = (item) => `'${item}'`
+const singleQuotify = item => `'${item}'`
 
 var types = [
   'highValueTransaction',
@@ -8,7 +8,7 @@ var types = [
   'fiatBalance',
   'cryptoBalance',
   'compliance',
-  'error'
+  'error',
 ]
   .map(singleQuotify)
   .join(',')
@@ -27,7 +27,7 @@ exports.up = function (next) {
         "valid" BOOLEAN NOT NULL DEFAULT 'true'
     );
     CREATE INDEX ON notifications (valid);
-    CREATE INDEX ON notifications (read);`
+    CREATE INDEX ON notifications (read);`,
   ]
 
   db.multi(sql, next)

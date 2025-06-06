@@ -78,9 +78,6 @@ const populateSettings = function (req, res, next) {
   const { needsSettingsReload, settingsCache } = state
   const operatorId = res.locals.operatorId
   const versionId = req.headers['config-version']
-  if (versionId !== state.oldVersionId) {
-    state.oldVersionId = versionId
-  }
 
   try {
     // Priority of configs to retrieve
@@ -113,7 +110,7 @@ const populateSettings = function (req, res, next) {
 
     const operatorSettings = settingsCache.get(`${operatorId}-latest`)
 
-    if (!!needsSettingsReload[operatorId] || !operatorSettings) {
+    if (needsSettingsReload[operatorId] || !operatorSettings) {
       needsSettingsReload[operatorId]
         ? logger.debug(
             'Fetching and caching a new latest config value, as a reload was requested',
@@ -128,8 +125,7 @@ const populateSettings = function (req, res, next) {
           const versionId = settings.version
           settingsCache.set(`${operatorId}-latest`, settings)
           settingsCache.set(`${operatorId}-v${versionId}`, settings)
-          if (needsSettingsReload[operatorId])
-            delete needsSettingsReload[operatorId]
+          delete needsSettingsReload[operatorId]
           req.settings = settings
         })
         .then(() => next())

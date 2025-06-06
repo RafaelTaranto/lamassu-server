@@ -47,9 +47,13 @@ function updateCore(coinRec, isCurrentlyRunning) {
       `grep "i-am-aware-zcashd-will-be-replaced-by-zebrad-and-zallet-in-2025=" /mnt/blockchains/zcash/zcash.conf || true`,
     )
   ) {
-    common.logger.info(`i-am-aware-zcashd-will-be-replaced-by-zebrad-and-zallet-in-2025 already defined, skipping...`)
+    common.logger.info(
+      `i-am-aware-zcashd-will-be-replaced-by-zebrad-and-zallet-in-2025 already defined, skipping...`,
+    )
   } else {
-    common.logger.info(`Setting 'i-am-aware-zcashd-will-be-replaced-by-zebrad-and-zallet-in-2025=1' in config file...`)
+    common.logger.info(
+      `Setting 'i-am-aware-zcashd-will-be-replaced-by-zebrad-and-zallet-in-2025=1' in config file...`,
+    )
     common.es(
       `echo "\ni-am-aware-zcashd-will-be-replaced-by-zebrad-and-zallet-in-2025=1" >> /mnt/blockchains/zcash/zcash.conf`,
     )

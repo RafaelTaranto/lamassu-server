@@ -26,7 +26,7 @@ exports.up = function (next) {
 
     'alter table machine_configs rename device_fingerprint to device_id',
 
-    'alter table machine_events rename device_fingerprint to device_id'
+    'alter table machine_events rename device_fingerprint to device_id',
   ]
   db.multi(sql, next)
 }

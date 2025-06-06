@@ -44,7 +44,7 @@ exports.up = function (next) {
     'alter table compliance_authorizations rename to compliance_overrides',
     'alter table compliance_overrides add column verification verification_type not null',
     'alter table compliance_overrides rename column authorized_at to override_at',
-    'alter table compliance_overrides rename column authorized_by to override_by'
+    'alter table compliance_overrides rename column authorized_by to override_by',
   ]
 
   db.multi(sql, next)

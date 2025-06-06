@@ -6,7 +6,7 @@ exports.up = function (next) {
     'alter table user_config add column created timestamptz NOT NULL default now()',
     `ALTER TABLE devices ADD CONSTRAINT user_config_id
     FOREIGN KEY (user_config_id)
-    REFERENCES user_config (id)`
+    REFERENCES user_config (id)`,
   ]
   db.multi(sql, next)
 }

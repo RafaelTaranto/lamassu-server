@@ -13,7 +13,7 @@ exports.up = function (next) {
     'drop table transactions',
     'drop table idempotents',
     'drop table machine_configs',
-    'drop table pending_transactions'
+    'drop table pending_transactions',
   ]
   db.multi(sql, next)
 }

@@ -11,7 +11,7 @@ exports.up = function (next) {
       tx_id uuid REFERENCES cash_in_txs(id),
       trade_id serial REFERENCES trades(id),
       CONSTRAINT cashin_trade_pkey PRIMARY KEY (tx_id,trade_id)
-    )`
+    )`,
   ]
 
   db.multi(sql, next)

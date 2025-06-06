@@ -10,7 +10,7 @@ exports.up = function (next) {
       crypto_atoms bigint not null,
       fiat_code text not null,
       created timestamptz NOT NULL default now()
-    )`
+    )`,
   ]
   db.multi(sql, next)
 }

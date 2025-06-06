@@ -173,6 +173,13 @@ function getMachineName(machineId) {
   return db.oneOrNone(sql, [machineId]).then(it => it?.name)
 }
 
+const getPairedMachineName = deviceId =>
+  db.oneOrNone(
+    'SELECT name FROM devices WHERE device_id = $1 AND paired = TRUE',
+    [deviceId],
+    machine => machine?.name,
+  )
+
 function getMachine(machineId, config) {
   const sql = `${MACHINE_WITH_CALCULATED_FIELD_SQL} WHERE d.device_id = $1`
 
@@ -702,8 +709,55 @@ function updatePhotos(dir, photoPairs) {
   )
 }
 
+let pendingRecordPings = new Map()
+const enqueueRecordPing = ping => {
+  pendingRecordPings.set(ping.deviceId, ping)
+}
+
+// from @sindresorhus/is-empty-iterable
+const isEmptyIterable = iter => {
+  for (const _ of iter) return false
+  return true
+}
+
+const batchRecordPendingPings = () => {
+  let pings = pendingRecordPings.values()
+  pendingRecordPings = new Map()
+  if (isEmptyIterable(pings)) return Promise.resolve()
+
+  const prepareChunk = (t, chunk) =>
+    chunk
+      .flatMap(({ deviceId, last_online, version, model }) => [
+        t.none(
+          `INSERT INTO machine_pings (device_id, device_time)
+           VALUES ($1, $2)
+           ON CONFLICT (device_id) DO
+           UPDATE SET device_time = $2,
+                      updated = now()`,
+          [deviceId, last_online],
+        ),
+        t.none(
+          pgp.helpers.update({ last_online, version, model }, null, 'devices') +
+            'WHERE device_id = ${deviceId}',
+          { deviceId },
+        ),
+      ])
+      .toArray()
+
+  const MaxBatchSize = 500
+  return db
+    .task(async t => {
+      while (!isEmptyIterable(pings)) {
+        const chunk = pings.take(MaxBatchSize)
+        await t.batch(prepareChunk(t, chunk)).catch(err => logger.error(err))
+      }
+    })
+    .catch(err => logger.error(err))
+}
+
 module.exports = {
   getMachineName,
+  getPairedMachineName,
   getMachines,
   getUnpairedMachines,
   getMachine,
@@ -719,4 +773,6 @@ module.exports = {
   updateDiagnostics,
   updateFailedQRScans,
   batchDiagnostics,
+  enqueueRecordPing,
+  batchRecordPendingPings,
 }

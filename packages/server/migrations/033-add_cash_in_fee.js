@@ -7,7 +7,7 @@ exports.up = function (next) {
     'alter table cash_in_txs add column minimum_tx integer not null',
     'alter table bills add column cash_in_fee numeric(14, 5) not null',
     'alter table bills add column cash_in_fee_crypto bigint not null',
-    'alter table bills add column crypto_atoms_after_fee bigint not null'
+    'alter table bills add column crypto_atoms_after_fee bigint not null',
   ]
   db.multi(sql, next)
 }

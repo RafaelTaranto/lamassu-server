@@ -6,17 +6,23 @@ const { ALL } = require('../lib/plugins/common/ccxt')
 exports.up = function (next) {
   return loadLatest()
     .then(({ accounts }) => {
-      const allExchanges = _.map(it => it.code)(_.filter(it => it.class === 'exchange', ACCOUNT_LIST))
+      const allExchanges = _.map(it => it.code)(
+        _.filter(it => it.class === 'exchange', ACCOUNT_LIST),
+      )
       const configuredExchanges = _.intersection(allExchanges, _.keys(accounts))
 
       const newAccounts = _.reduce(
         (acc, value) => {
           if (!_.isNil(accounts[value].currencyMarket)) return acc
-          if (_.includes('EUR', ALL[value].FIAT)) return { ...acc, [value]: { currencyMarket: 'EUR' } }
-          return { ...acc, [value]: { currencyMarket: ALL[value].DEFAULT_FIAT_CURRENCY } }
+          if (_.includes('EUR', ALL[value].FIAT))
+            return { ...acc, [value]: { currencyMarket: 'EUR' } }
+          return {
+            ...acc,
+            [value]: { currencyMarket: ALL[value].DEFAULT_FIAT_CURRENCY },
+          }
         },
         {},
-        configuredExchanges
+        configuredExchanges,
       )
 
       return saveAccounts(newAccounts)

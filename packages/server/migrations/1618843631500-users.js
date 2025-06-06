@@ -86,7 +86,7 @@ exports.up = function (next) {
     `ALTER TABLE compliance_overrides DROP COLUMN override_by`,
     `ALTER TABLE compliance_overrides ADD COLUMN override_by UUID REFERENCES users(id)`,
     `DROP TABLE IF EXISTS one_time_passes`,
-    `DROP TABLE IF EXISTS user_tokens`
+    `DROP TABLE IF EXISTS user_tokens`,
   ]
 
   db.multi(sql, next)

@@ -14,7 +14,7 @@ exports.up = function (next) {
       display boolean NOT NULL default TRUE,
       created timestamptz NOT NULL default now()
     )`,
-    'alter table pairing_tokens add column name text NOT NULL'
+    'alter table pairing_tokens add column name text NOT NULL',
   ]
   db.multi(sql, next)
 }

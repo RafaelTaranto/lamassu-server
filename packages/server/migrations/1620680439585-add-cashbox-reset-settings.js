@@ -1,20 +1,17 @@
-const { migrationSaveConfig, loadLatest } = require('../lib/new-settings-loader')
+const { migrationSaveConfig } = require('../lib/new-settings-loader')
 
 exports.up = function (next) {
   const newConfig = {
-    cashIn_cashboxReset: 'Manual'
+    cashIn_cashboxReset: 'Manual',
   }
-  return loadLatest()
-    .then(config => {
-      return migrationSaveConfig(newConfig)
-        .then(() => next())
-        .catch(err => {
-          if (err.message === 'lamassu-server is not configured') {
-            return next()
-          }
-          console.log(err.message)
-          return next(err)
-        })
+  return migrationSaveConfig(newConfig)
+    .then(() => next())
+    .catch(err => {
+      if (err.message === 'lamassu-server is not configured') {
+        return next()
+      }
+      console.log(err.message)
+      return next(err)
     })
 }
 

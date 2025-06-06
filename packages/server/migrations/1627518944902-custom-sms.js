@@ -8,7 +8,7 @@ exports.up = function (next) {
       event custom_message_event UNIQUE NOT NULL,
       message TEXT NOT NULL,
       created TIMESTAMPTZ NOT NULL DEFAULT now()
-    )`
+    )`,
   ]
 
   db.multi(sql, next)

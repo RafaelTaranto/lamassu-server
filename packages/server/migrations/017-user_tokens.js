@@ -12,7 +12,7 @@ exports.up = function (next) {
       token text PRIMARY KEY,
       name text NOT NULL,
       created timestamptz NOT NULL default now()
-    )`
+    )`,
   ]
   db.multi(sql, next)
 }

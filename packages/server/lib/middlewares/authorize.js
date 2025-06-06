@@ -1,9 +1,8 @@
-const pairing = require('../pairing')
+const { getPairedMachineName } = require('../machine-loader')
 const logger = require('../logger')
 
 const authorize = function (req, res, next) {
-  return pairing
-    .isPaired(req.deviceId)
+  return getPairedMachineName(req.deviceId)
     .then(deviceName => {
       if (deviceName) {
         req.deviceName = deviceName

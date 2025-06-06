@@ -7,7 +7,7 @@ exports.up = function (next) {
       event_type text NOT NULL,
       created timestamptz NOT NULL default now()
     )`,
-    'CREATE INDEX ON server_events (created)'
+    'CREATE INDEX ON server_events (created)',
   ]
   db.multi(sql, next)
 }

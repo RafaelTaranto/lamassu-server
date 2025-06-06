@@ -7,7 +7,7 @@ exports.up = function (next) {
     'alter table dispenses alter created type timestamptz',
     'alter table machine_events alter created type timestamptz',
     'alter table pairing_tokens alter created type timestamptz',
-    'alter table pending_transactions alter updated type timestamptz'
+    'alter table pending_transactions alter updated type timestamptz',
   ]
   db.multi(sql, next)
 }

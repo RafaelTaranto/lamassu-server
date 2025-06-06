@@ -6,7 +6,7 @@ const db = require('./db')
 exports.up = function (next) {
   const sql = [
     'alter table devices add column name text',
-    'alter table devices alter column name set not null'
+    'alter table devices alter column name set not null',
   ]
 
   return db.multi(sql, next)

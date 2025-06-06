@@ -7,7 +7,7 @@ exports.up = function (next) {
     )`,
     `INSERT INTO blacklist_temp (address) SELECT DISTINCT address FROM blacklist`,
     `DROP TABLE blacklist`,
-    `ALTER TABLE blacklist_temp RENAME TO blacklist`
+    `ALTER TABLE blacklist_temp RENAME TO blacklist`,
   ]
 
   db.multi(sql, next)

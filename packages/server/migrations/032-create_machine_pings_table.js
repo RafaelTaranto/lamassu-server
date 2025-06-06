@@ -19,7 +19,7 @@ exports.up = function (next) {
     lag_median_ms integer not null,
     day date not null)`,
     'alter table machine_events drop column device_time',
-    'alter table machine_events add column device_time timestamptz'
+    'alter table machine_events add column device_time timestamptz',
   ]
   db.multi(sql, next)
 }

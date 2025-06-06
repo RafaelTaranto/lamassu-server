@@ -9,7 +9,7 @@ exports.up = function (next) {
       created TIMESTAMPTZ DEFAULT now(),
       last_used TIMESTAMPTZ DEFAULT now(),
       data JSONB NOT NULL
-    )`
+    )`,
   ]
 
   db.multi(sql, next)

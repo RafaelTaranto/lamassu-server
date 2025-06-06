@@ -7,7 +7,12 @@ exports.up = function (next) {
   try {
     // NODE_ENV defaults to undefined on some environments, best to check the existence of the production environment file
     migrateEnv([
-      ['NODE_ENV', fs.existsSync(path.resolve('/etc', 'lamassu', '.env')) ? 'production' : 'development']
+      [
+        'NODE_ENV',
+        fs.existsSync(path.resolve('/etc', 'lamassu', '.env'))
+          ? 'production'
+          : 'development',
+      ],
     ])
   } finally {
     next()

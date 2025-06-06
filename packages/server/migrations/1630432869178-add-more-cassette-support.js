@@ -1,6 +1,9 @@
 var db = require('./db')
 const _ = require('lodash/fp')
-const { migrationSaveConfig, loadLatestConfig } = require('../lib/new-settings-loader')
+const {
+  migrationSaveConfig,
+  loadLatestConfig,
+} = require('../lib/new-settings-loader')
 const { getMachineIds } = require('../lib/machine-loader')
 
 exports.up = function (next) {
@@ -22,27 +25,33 @@ exports.up = function (next) {
       ADD COLUMN provisioned_3 INTEGER,
       ADD COLUMN provisioned_4 INTEGER,
       ADD COLUMN denomination_3 INTEGER,
-      ADD COLUMN denomination_4 INTEGER`
+      ADD COLUMN denomination_4 INTEGER`,
   ]
 
-  return Promise.all([loadLatestConfig(), getMachineIds()])
-    .then(([config, machineIds]) => {
-      const newConfig = _.reduce((acc, value) => {
-        const deviceId = value.device_id
-        if (_.includes(`cashOut_${deviceId}_top`, _.keys(config))) {
-          acc[`cashOut_${deviceId}_cassette1`] = config[`cashOut_${deviceId}_top`]
-        }
+  return Promise.all([loadLatestConfig(), getMachineIds()]).then(
+    ([config, machineIds]) => {
+      const newConfig = _.reduce(
+        (acc, value) => {
+          const deviceId = value.device_id
+          if (_.includes(`cashOut_${deviceId}_top`, _.keys(config))) {
+            acc[`cashOut_${deviceId}_cassette1`] =
+              config[`cashOut_${deviceId}_top`]
+          }
 
-        if (_.includes(`cashOut_${deviceId}_bottom`, _.keys(config))) {
-          acc[`cashOut_${deviceId}_cassette2`] = config[`cashOut_${deviceId}_bottom`]
-        }
+          if (_.includes(`cashOut_${deviceId}_bottom`, _.keys(config))) {
+            acc[`cashOut_${deviceId}_cassette2`] =
+              config[`cashOut_${deviceId}_bottom`]
+          }
 
-        return acc
-      }, {}, machineIds)
+          return acc
+        },
+        {},
+        machineIds,
+      )
 
-      return migrationSaveConfig(newConfig)
-        .then(() => db.multi(sql, next))
-    })
+      return migrationSaveConfig(newConfig).then(() => db.multi(sql, next))
+    },
+  )
 }
 
 exports.down = function (next) {

@@ -79,7 +79,7 @@ exports.up = function (next) {
       ALTER TYPE cash_unit_operation_type RENAME VALUE 'cash-stacker-3r-empty' TO 'cash-recycler-6-empty';
       ALTER TYPE cash_unit_operation_type RENAME VALUE 'cash-stacker-3r-count-change' TO 'cash-recycler-6-count-change';
     `,
-    `UPDATE devices SET number_of_recyclers = number_of_recyclers * 2;`
+    `UPDATE devices SET number_of_recyclers = number_of_recyclers * 2;`,
   ]
 
   db.multi(sql, next)

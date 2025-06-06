@@ -3,7 +3,6 @@ const SETTINGS_CACHE_REFRESH = 3600
 
 module.exports = (function () {
   return {
-    oldVersionId: 'unset',
     needsSettingsReload: {},
     settingsCache: new NodeCache({
       stdTTL: SETTINGS_CACHE_REFRESH,

@@ -10,7 +10,7 @@ exports.up = function (next) {
     'alter table cash_out_txs add column denomination_2 integer',
     'alter table cash_out_txs add column dispense_error text',
     'alter table cash_out_txs add column dispense_time timestamptz',
-    'drop table dispenses'
+    'drop table dispenses',
   ]
   db.multi(sql, next)
 }

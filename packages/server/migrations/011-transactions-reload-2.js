@@ -1,12 +1,25 @@
 var db = require('./db')
 
-function singleQuotify (item) { return '\'' + item + '\'' }
+function singleQuotify(item) {
+  return "'" + item + "'"
+}
 
 exports.up = function (next) {
-  var actions = ['published', 'authorized', 'instant', 'confirmed', 'rejected',
-    'insufficientFunds', 'dispenseRequested', 'dispensed', 'notified',
-    'addedPhone', 'redeem']
-    .map(singleQuotify).join(',')
+  var actions = [
+    'published',
+    'authorized',
+    'instant',
+    'confirmed',
+    'rejected',
+    'insufficientFunds',
+    'dispenseRequested',
+    'dispensed',
+    'notified',
+    'addedPhone',
+    'redeem',
+  ]
+    .map(singleQuotify)
+    .join(',')
 
   var sql = [
     `create table cash_in_txs (
@@ -32,7 +45,7 @@ exports.up = function (next) {
       fiat numeric(14, 5) NOT NULL,
       currency_code text NOT NULL,
       tx_hash text,
-      status status_stage NOT NULL default \'notSeen\',
+      status status_stage NOT NULL default 'notSeen',
       dispensed boolean NOT NULL default false,
       notified boolean NOT NULL default false,
       redeem boolean NOT NULL default false,
@@ -49,7 +62,7 @@ exports.up = function (next) {
       created timestamptz NOT NULL default now()
     )`,
     `alter table dispenses add session_id uuid`,
-    `alter table dispenses drop constraint dispenses_transaction_id_fkey`
+    `alter table dispenses drop constraint dispenses_transaction_id_fkey`,
   ]
   db.multi(sql, next)
 }

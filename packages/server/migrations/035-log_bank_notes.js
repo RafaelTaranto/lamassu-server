@@ -16,7 +16,7 @@ exports.up = function (next) {
     device_id text not null,
     user_id integer not null,
     cash_box_count integer not null,
-    created timestamptz not null default now())`
+    created timestamptz not null default now())`,
   ]
   db.multi(sql, next)
 }

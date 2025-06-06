@@ -409,31 +409,6 @@ function plugins(settings, deviceId) {
       })
   }
 
-  function recordPing(deviceTime, version, model) {
-    const devices = {
-      version,
-      model,
-      last_online: deviceTime,
-    }
-
-    return Promise.all([
-      db.none(
-        `insert into machine_pings(device_id, device_time)
-         values ($1, $2)
-         ON CONFLICT (device_id) DO UPDATE SET device_time = $2,
-                                               updated = now()`,
-        [deviceId, deviceTime],
-      ),
-      db.none(
-        pgp.helpers.update(devices, null, 'devices') +
-          'WHERE device_id = ${deviceId}',
-        {
-          deviceId,
-        },
-      ),
-    ])
-  }
-
   function pruneMachinesHeartbeat() {
     const sql = `DELETE
                  FROM machine_network_heartbeat h
@@ -1062,7 +1037,6 @@ function plugins(settings, deviceId) {
 
   return {
     getRates,
-    recordPing,
     buildRates,
     getRawRates,
     buildRatesNoCommission,

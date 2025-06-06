@@ -1,7 +1,13 @@
-const plugins = require('../plugins')
+const { enqueueRecordPing } = require('../machine-loader')
 
-module.exports = (req, res, next) =>
-  plugins(req.settings, req.deviceId)
-    .recordPing(req.deviceTime, req.query.version, req.query.model)
-    .then(() => next())
-    .catch(() => next())
+const record = (req, res, next) => {
+  enqueueRecordPing({
+    deviceId: req.deviceId,
+    last_online: req.deviceTime,
+    model: req.query.model,
+    version: req.query.version,
+  })
+  next()
+}
+
+module.exports = record

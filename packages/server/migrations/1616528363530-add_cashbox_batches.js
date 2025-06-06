@@ -16,7 +16,7 @@ exports.up = function (next) {
     FOREIGN KEY (cashbox_batch_id)
     REFERENCES cashbox_batches (id)`,
 
-    `UPDATE bills SET legacy = 'true'`
+    `UPDATE bills SET legacy = 'true'`,
   ]
   db.multi(sqls, next)
 }

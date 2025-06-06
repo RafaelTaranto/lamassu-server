@@ -10,7 +10,7 @@ exports.up = function (next) {
       status integer NOT NULL,
       pending boolean NOT NULL,
       created timestamptz NOT NULL default now()
-    )`
+    )`,
   ]
   db.multi(sql, next)
 }

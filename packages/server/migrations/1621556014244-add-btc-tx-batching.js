@@ -13,7 +13,7 @@ exports.up = function (next) {
     )`,
     `ALTER TABLE cash_in_txs ADD COLUMN batch_id UUID REFERENCES transaction_batches(id)`,
     `ALTER TABLE cash_in_txs ADD COLUMN batched BOOLEAN NOT NULL DEFAULT false`,
-    `ALTER TABLE cash_in_txs ADD COLUMN batch_time TIMESTAMPTZ`
+    `ALTER TABLE cash_in_txs ADD COLUMN batch_time TIMESTAMPTZ`,
   ]
 
   db.multi(sql, next)

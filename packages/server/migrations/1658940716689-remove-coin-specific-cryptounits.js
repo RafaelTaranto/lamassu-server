@@ -1,5 +1,10 @@
-const { removeFromConfig, loadLatestConfig } = require('../lib/new-settings-loader')
-const { getCryptosFromWalletNamespace } = require('../lib/new-config-manager.js')
+const {
+  removeFromConfig,
+  loadLatestConfig,
+} = require('../lib/new-settings-loader')
+const {
+  getCryptosFromWalletNamespace,
+} = require('../lib/new-config-manager.js')
 const _ = require('lodash/fp')
 
 exports.up = function (next) {
@@ -8,7 +13,9 @@ exports.up = function (next) {
       const configuredCryptos = getCryptosFromWalletNamespace(config)
       if (!configuredCryptos.length) return Promise.resolve()
 
-      return removeFromConfig(_.map(it => `wallets_${it}_cryptoUnits`, configuredCryptos))
+      return removeFromConfig(
+        _.map(it => `wallets_${it}_cryptoUnits`, configuredCryptos),
+      )
     })
     .then(() => next())
     .catch(err => {
