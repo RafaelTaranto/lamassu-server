@@ -30,6 +30,7 @@ module.exports = {
   post,
   monitorPending,
   cancel,
+  doesTxReuseAddress,
   PENDING_INTERVAL,
   TRANSACTION_STATES,
 }
@@ -201,7 +202,7 @@ function postProcess(r, pi, isBlacklisted, addressReuse, walletScore) {
 // If the current customer is anon, we can still allow one other customer to use the address,
 // So we count distinct customers plus the current customer if they are not anonymous.
 // To prevent malicious blocking of address, we only check for txs with actual fiat
-function doesTxReuseAddress(tx) {
+function doesTxReuseAddress({ toAddress, customerId }) {
   const sql = `
     SELECT COUNT(*) > 1 as exists
     FROM (SELECT DISTINCT customer_id
@@ -214,7 +215,7 @@ function doesTxReuseAddress(tx) {
           WHERE $2 != $3) t;
   `
   return db
-    .one(sql, [tx.toAddress, tx.customerId, constants.anonymousCustomer.uuid])
+    .one(sql, [toAddress, customerId, constants.anonymousCustomer.uuid])
     .then(({ exists }) => exists)
 }
 

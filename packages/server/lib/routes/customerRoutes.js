@@ -25,6 +25,7 @@ const Tx = require('../tx')
 const loyalty = require('../loyalty')
 const logger = require('../logger')
 const externalCompliance = require('../compliance-external')
+const { doesTxReuseAddress } = require('../cash-in/cash-in-tx')
 
 function updateCustomerCustomInfoRequest(customerId, patch) {
   const promise = _.isNil(patch.data)
@@ -363,6 +364,18 @@ function addOrUpdateCustomer(
         .then(lastUsedAddress => {
           return { ...customer, lastUsedAddress }
         })
+    })
+    .then(customer => {
+      const { rejectAddressReuse } = configManager.getCompliance(config)
+      if (!rejectAddressReuse || !customer.lastUsedAddress) return customer
+
+      return doesTxReuseAddress({
+        toAddress: customer.lastUsedAddress,
+        customerId: customer.id,
+      }).then(isReused => {
+        const newAddress = isReused ? null : customer.lastUsedAddress
+        return { ...customer, lastUsedAddress: newAddress }
+      })
     })
 }
 
