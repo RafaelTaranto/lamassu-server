@@ -13,7 +13,6 @@ const logger = require('./logger')
 const logs = require('./logs')
 const T = require('./time')
 const configManager = require('./new-config-manager')
-const settingsLoader = require('./new-settings-loader')
 const ticker = require('./ticker')
 const wallet = require('./wallet')
 const walletScoring = require('./wallet-scoring')
@@ -349,7 +348,6 @@ function plugins(settings, deviceId) {
     return Promise.all([
       buildAvailableCassettes(),
       buildAvailableRecyclers(),
-      settingsLoader.fetchCurrentConfigVersion(),
       millisecondsToMinutes(getTimezoneOffset(localeConfig.timezone)),
       loyalty.getNumberOfAvailablePromoCodes(),
       Promise.all(supportsBatchingPromise),
@@ -360,7 +358,6 @@ function plugins(settings, deviceId) {
       ([
         cassettes,
         recyclers,
-        configVersion,
         timezone,
         numberOfAvailablePromoCodes,
         batchableCoins,
@@ -384,7 +381,6 @@ function plugins(settings, deviceId) {
           rates: buildRates(tickers),
           balances: buildBalances(balances),
           coins,
-          configVersion,
           areThereAvailablePromoCodes: numberOfAvailablePromoCodes > 0,
           timezone,
           screenOptions: machineScreenOpts,
