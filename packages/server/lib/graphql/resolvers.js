@@ -5,7 +5,6 @@ const nmd = require('nano-markdown')
 
 const plugins = require('../plugins')
 const configManager = require('../new-config-manager')
-const settingsLoader = require('../new-settings-loader')
 const {
   batchGetCustomInfoRequest,
   getCustomInfoRequests,
@@ -411,17 +410,13 @@ const terms = (parent, { currentConfigVersion, currentHash }, { settings }) => {
   const isHashNew = hash !== currentHash
   const text = isHashNew ? latestTerms.text : null
 
-  return settingsLoader
-    .fetchCurrentConfigVersion()
-    .catch(() => null)
-    .then(
-      configVersion =>
-        isHashNew ||
-        _.isNil(currentConfigVersion) ||
-        currentConfigVersion < configVersion,
-    )
-    .then(isVersionNew => (isVersionNew ? _.omit(['text'], latestTerms) : null))
-    .then(details => ({ hash, details, text }))
+  const isVersionNew =
+    isHashNew ||
+    _.isNil(currentConfigVersion) ||
+    currentConfigVersion < settings.version
+  const details = isVersionNew ? _.omit(['text'], latestTerms) : null
+
+  return { hash, details, text }
 }
 
 module.exports = {
