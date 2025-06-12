@@ -11,6 +11,7 @@ const configManager = require('./new-config-manager')
 const complianceTriggers = require('./compliance-triggers')
 const ofac = require('./ofac/index')
 const ofacUpdate = require('./ofac/update')
+const operator = require('./operator')
 
 const KEY_PATH = process.env.KEY_PATH
 const CERT_PATH = process.env.CERT_PATH
@@ -78,6 +79,7 @@ async function startServer() {
 
   const port = argv.port || 3000
 
+  await operator.getOperatorId('middleware').catch(logger.error)
   await new Promise(resolve => server.listen({ port }, resolve))
   logger.info(`lamassu-server listening on port ${port}`)
 }
