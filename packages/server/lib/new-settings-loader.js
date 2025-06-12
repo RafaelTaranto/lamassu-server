@@ -256,6 +256,7 @@ function load(versionId) {
     t.batch([loadConfig(t, versionId), _loadAccounts(t)]).then(
       ([config, accounts]) => ({
         config,
+        version: versionId,
         accounts,
       }),
     )
