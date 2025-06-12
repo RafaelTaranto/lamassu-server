@@ -32,7 +32,7 @@ const PRUNE_MACHINES_HEARTBEAT = 1 * T.day
 const TRANSACTION_BATCH_LIFECYCLE = 20 * T.minutes
 const TICKER_RATES_INTERVAL = 59 * T.seconds
 const FAILED_SCANS_INTERVAL = 1 * T.day
-const PENDING_PINGS_INTERVAL = 90 * T.seconds // lib/notifier/codes.js
+const PENDING_PINGS_INTERVAL = 10 * T.seconds // lib/notifier/codes.js
 
 const CHECK_NOTIFICATION_INTERVAL = 20 * T.seconds
 const PENDING_INTERVAL = 10 * T.seconds
