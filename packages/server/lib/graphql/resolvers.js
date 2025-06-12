@@ -124,9 +124,10 @@ const staticConfig = ({
   )
 
   const staticConf = _.flow(
-    _.pick(['coins', 'configVersion', 'timezone', 'screenOptions']),
+    _.pick(['coins', 'timezone', 'screenOptions']),
     _.update('coins', massageCoins),
     _.set('serverVersion', VERSION),
+    _.set('configVersion', settings.version),
   )(pq)
 
   return Promise.all([
