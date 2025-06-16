@@ -714,16 +714,9 @@ const enqueueRecordPing = ping => {
   pendingRecordPings.set(ping.deviceId, ping)
 }
 
-// from @sindresorhus/is-empty-iterable
-const isEmptyIterable = iter => {
-  for (const _ of iter) return false
-  return true
-}
-
 const batchRecordPendingPings = () => {
   const pings = pendingRecordPings.values()
   pendingRecordPings = new Map()
-  if (isEmptyIterable(pings)) return Promise.resolve()
 
   return db.task(async t => {
     for (const { deviceId, last_online, version, model } of pings) {
