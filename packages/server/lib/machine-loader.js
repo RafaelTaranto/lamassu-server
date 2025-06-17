@@ -692,7 +692,7 @@ const updateFailedQRScans = (deviceId, frames) => {
 function createPhoto(name, data, dir) {
   if (!data) {
     logger.error(`Diagnostics error: No data to save for ${name} photo`)
-    return Promise.resolve()
+    return Promise.reject()
   }
 
   const decodedImageData = Buffer.from(data, 'base64')
