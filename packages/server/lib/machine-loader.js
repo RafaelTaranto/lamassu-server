@@ -683,11 +683,10 @@ function updateDiagnostics(deviceId, images) {
 const updateFailedQRScans = (deviceId, frames) => {
   const timestamp = new Date().toISOString()
   const directory = `${OPERATOR_DATA_DIR}/failedQRScans/${deviceId}/`
-  const filenames = _.map(
-    no => `${timestamp}-${no}.jpg`,
-    _.range(0, _.size(frames)),
+  return updatePhotos(
+    directory,
+    frames.map((frame, no) => [`${timestamp}-${no}.jpg`, frame]),
   )
-  return updatePhotos(directory, _.zip(filenames, frames))
 }
 
 function createPhoto(name, data, dir) {
