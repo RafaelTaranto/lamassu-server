@@ -676,7 +676,7 @@ function updateDiagnostics(deviceId, images) {
     ['scan.jpg', scan],
     ['front.jpg', front],
   ])
-    .then(() => db.none(sql, [deviceId, !!scan, !!front]))
+    .then(([scan, front]) => db.none(sql, [deviceId, scan, front]))
     .catch(err => logger.error('while running machine diagnostics: ', err))
 }
 
