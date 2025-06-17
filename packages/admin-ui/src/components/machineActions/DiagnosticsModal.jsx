@@ -56,6 +56,7 @@ const createCsv = async ({ machineLogsCsv }) => {
 const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
   const [state, setState] = useState(STATES.INITIAL)
   const [timestamp, setTimestamp] = useState(null)
+  const [diagnosticTimestamps, setDiagnosticTimestamps] = useState({})
   const timeoutRef = useRef(null)
 
   const [fetchSummary, { loading }] = useLazyQuery(MACHINE_LOGS, {
@@ -81,6 +82,10 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
         timeoutRef.current = null
       }
       setTimestamp(data.machine.diagnostics.timestamp)
+      setDiagnosticTimestamps({
+        front: data.machine.diagnostics.frontTimestamp,
+        scan: data.machine.diagnostics.scanTimestamp,
+      })
       setState(STATES.FILLED)
       stopPolling()
     }
@@ -94,8 +99,6 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
       }
     }
   }, [])
-
-  const path = `/operator-data/diagnostics/${deviceId}/`
 
   const runDiagnostics = () => {
     setState(STATES.RUNNING)
@@ -115,6 +118,18 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
   }
 
   const messageClass = 'm-auto flex flex-col items-center justify-center'
+
+  const showPhoto = diagnosticName => {
+    console.log(diagnosticName, diagnosticTimestamps)
+    return diagnosticTimestamps[diagnosticName] ? (
+      <img
+        className="w-88"
+        src={`/operator-data/diagnostics/${deviceId}/${diagnosticName}.jpg?${Date.now()}`}
+      />
+    ) : (
+      <>Failed getting photo</>
+    )
+  }
 
   return (
     <Modal
@@ -152,23 +167,14 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
 
       {state === STATES.FILLED && (
         <div>
-          <div className="flex mt-6">
+          <div className="flex justify-around mt-6">
             <div>
               <H3>Scan</H3>
-              <img
-                className="w-88"
-                src={`${path}scan.jpg?${Date.now()}`}
-                alt="Failure getting photo"
-              />
+              {showPhoto('scan')}
             </div>
             <div>
               <H3>Front</H3>
-              <img
-                className="w-88"
-                src={`${path}front.jpg?${Date.now()}`}
-                alt="Failure getting photo"
-              />
-              <P></P>
+              {showPhoto('front')}
             </div>
           </div>
           <div>
