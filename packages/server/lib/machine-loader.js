@@ -703,9 +703,9 @@ function createPhoto(name, data, dir) {
 function updatePhotos(dir, photoPairs) {
   const dirname = path.join(dir)
   _.attempt(() => makeDir.sync(dirname))
-  return Promise.all(
+  return Promise.allSettled(
     photoPairs.map(([filename, data]) => createPhoto(filename, data, dirname)),
-  )
+  ).then(savedPhotos => savedPhotos.map(res => res.status === 'fulfilled'))
 }
 
 let pendingRecordPings = new Map()
