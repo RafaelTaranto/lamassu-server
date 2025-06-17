@@ -61,11 +61,11 @@ function toMachineObject(r) {
       timestamp: r.diagnostics_timestamp
         ? new Date(r.diagnostics_timestamp)
         : null,
-      scanTimestamp: r.diagnostics_scan_timestamp
-        ? new Date(r.diagnostics_scan_timestamp)
+      scanTimestamp: r.diagnostics_scan_updated_at
+        ? new Date(r.diagnostics_scan_updated_at)
         : null,
-      frontTimestamp: r.diagnostics_front_timestamp
-        ? new Date(r.diagnostics_front_timestamp)
+      frontTimestamp: r.diagnostics_front_updated_at
+        ? new Date(r.diagnostics_front_updated_at)
         : null,
     },
     pairedAt: new Date(r.created),
