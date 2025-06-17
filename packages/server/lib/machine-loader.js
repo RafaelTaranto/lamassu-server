@@ -61,11 +61,11 @@ function toMachineObject(r) {
       timestamp: r.diagnostics_timestamp
         ? new Date(r.diagnostics_timestamp)
         : null,
-      scanTimestamp: r.diagnostics_scan_timestamp
-        ? new Date(r.diagnostics_scan_timestamp)
+      scanTimestamp: r.diagnostics_scan_updated_at
+        ? new Date(r.diagnostics_scan_updated_at)
         : null,
-      frontTimestamp: r.diagnostics_front_timestamp
-        ? new Date(r.diagnostics_front_timestamp)
+      frontTimestamp: r.diagnostics_front_updated_at
+        ? new Date(r.diagnostics_front_updated_at)
         : null,
     },
     pairedAt: new Date(r.created),
@@ -676,24 +676,23 @@ function updateDiagnostics(deviceId, images) {
     ['scan.jpg', scan],
     ['front.jpg', front],
   ])
-    .then(() => db.none(sql, [deviceId, !!scan, !!front]))
+    .then(([scan, front]) => db.none(sql, [deviceId, scan, front]))
     .catch(err => logger.error('while running machine diagnostics: ', err))
 }
 
 const updateFailedQRScans = (deviceId, frames) => {
   const timestamp = new Date().toISOString()
   const directory = `${OPERATOR_DATA_DIR}/failedQRScans/${deviceId}/`
-  const filenames = _.map(
-    no => `${timestamp}-${no}.jpg`,
-    _.range(0, _.size(frames)),
+  return updatePhotos(
+    directory,
+    frames.map((frame, no) => [`${timestamp}-${no}.jpg`, frame]),
   )
-  return updatePhotos(directory, _.zip(filenames, frames))
 }
 
 function createPhoto(name, data, dir) {
   if (!data) {
     logger.error(`Diagnostics error: No data to save for ${name} photo`)
-    return Promise.resolve()
+    return Promise.reject()
   }
 
   const decodedImageData = Buffer.from(data, 'base64')
@@ -704,9 +703,9 @@ function createPhoto(name, data, dir) {
 function updatePhotos(dir, photoPairs) {
   const dirname = path.join(dir)
   _.attempt(() => makeDir.sync(dirname))
-  return Promise.all(
+  return Promise.allSettled(
     photoPairs.map(([filename, data]) => createPhoto(filename, data, dirname)),
-  )
+  ).then(savedPhotos => savedPhotos.map(res => res.status === 'fulfilled'))
 }
 
 let pendingRecordPings = new Map()
