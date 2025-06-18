@@ -171,7 +171,7 @@ function migrationSaveConfig(config) {
 const loadLatest = schemaVersion =>
   db
     .task(t =>
-      t.batch([
+      Promise.all([
         loadLatestConfigOrNoneReturningVersion(t, schemaVersion),
         _loadAccounts(t, schemaVersion),
       ]),
@@ -252,15 +252,13 @@ function loadConfig(db, versionId) {
 function load(versionId) {
   if (!versionId) Promise.reject('versionId is required')
 
-  return db.task(t => {
-    t.batch([loadConfig(t, versionId), _loadAccounts(t)]).then(
-      ([config, accounts]) => ({
-        config,
-        version: versionId,
-        accounts,
-      }),
-    )
-  })
+  return db
+    .task(t => Promise.all([loadConfig(t, versionId), _loadAccounts(t)]))
+    .then(([config, accounts]) => ({
+      config,
+      version: versionId,
+      accounts,
+    }))
 }
 
 const fetchCurrentConfigVersion = () => {
