@@ -59,7 +59,7 @@ const GET_INFO = gql`
 `
 
 const MachineRoute = () => {
-  const [location, navigate] = useLocation()
+  const [, navigate] = useLocation()
   const [loading, setLoading] = useState(true)
   const { id: deviceId } = useParams()
 
@@ -78,15 +78,7 @@ const MachineRoute = () => {
     },
   })
 
-  const reload = () => {
-    return navigate(location)
-  }
-
-  return (
-    !loading && (
-      <Machines data={data} refetch={refetch} reload={reload}></Machines>
-    )
-  )
+  return !loading && <Machines data={data} refetch={refetch}></Machines>
 }
 
 const Machines = ({ data, refetch }) => {
