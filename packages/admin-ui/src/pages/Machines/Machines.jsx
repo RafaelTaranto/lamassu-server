@@ -59,7 +59,7 @@ const GET_INFO = gql`
 `
 
 const MachineRoute = () => {
-  const [location, navigate] = useLocation()
+  const [, navigate] = useLocation()
   const [loading, setLoading] = useState(true)
   const { id: deviceId } = useParams()
 
@@ -78,18 +78,10 @@ const MachineRoute = () => {
     },
   })
 
-  const reload = () => {
-    return navigate(location)
-  }
-
-  return (
-    !loading && (
-      <Machines data={data} refetch={refetch} reload={reload}></Machines>
-    )
-  )
+  return !loading && <Machines data={data} refetch={refetch}></Machines>
 }
 
-const Machines = ({ data, refetch, reload }) => {
+const Machines = ({ data, refetch }) => {
   const timezone = R.path(['config', 'locale_timezone'], data) ?? {}
 
   const machine = R.path(['machine'])(data) ?? {}
@@ -112,7 +104,7 @@ const Machines = ({ data, refetch, reload }) => {
             {machineName}
           </TL2>
         </Breadcrumbs>
-        <Overview data={machine} onActionSuccess={reload} />
+        <Overview data={machine} onActionSuccess={refetch} />
       </div>
       <div className="basis-3/4 max-w-3/4 flex flex-col mt-6">
         <div>
