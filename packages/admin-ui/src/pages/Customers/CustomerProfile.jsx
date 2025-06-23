@@ -296,6 +296,7 @@ const CustomerProfile = memo(() => {
     refetch: getCustomer,
     loading: customerLoading,
   } = useQuery(GET_CUSTOMER, {
+    notifyOnNetworkStatusChange: true,
     variables: { customerId },
     skip: !customerId,
   })

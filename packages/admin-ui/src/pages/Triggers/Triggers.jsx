@@ -59,7 +59,11 @@ const GET_CUSTOM_REQUESTS = gql`
 
 const Triggers = () => {
   const [wizardType, setWizard] = useState(false)
-  const { data, loading: configLoading, refetch } = useQuery(GET_CONFIG)
+  const {
+    data,
+    loading: configLoading,
+    refetch,
+  } = useQuery(GET_CONFIG, { notifyOnNetworkStatusChange: true })
   const { data: customInfoReqData, loading: customInfoLoading } =
     useQuery(GET_CUSTOM_REQUESTS)
   const [error, setError] = useState(null)
