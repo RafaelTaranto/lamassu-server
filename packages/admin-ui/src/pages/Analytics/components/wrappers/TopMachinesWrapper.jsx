@@ -47,7 +47,7 @@ const TopMachinesBarGraphHeader = ({
         </div>
       </div>
       <Graph
-        representing={R.find(R.propEq('code', graphType), options)}
+        representing={R.find(R.propEq(graphType, 'code'), options)}
         period={period}
         data={data}
         timezone={timezone}
