@@ -139,10 +139,9 @@ const CashCassettes = () => {
 
   const timezone = R.path(['config', 'locale_timezone'], data)
 
-  const bills = R.groupBy(bill => bill.deviceId)(R.path(['bills'])(data) ?? [])
-  const deviceIds = R.uniq(
-    R.map(R.prop('deviceId'))(R.path(['bills'])(data) ?? []),
-  )
+  const bills = data?.bills ?? []
+  const billsByDeviceID = R.groupBy(bill => bill.deviceId)(bills)
+  const deviceIds = R.keys(billsByDeviceID)
   const cashout = data?.config && fromNamespace('cashOut')(data.config)
   const locale = data?.config && fromNamespace('locale')(data.config)
   const fiatCurrency = locale?.fiatCurrency
@@ -195,7 +194,7 @@ const CashCassettes = () => {
   const InnerCashUnitDetails = ({ it }) => (
     <CashUnitDetails
       machine={it}
-      bills={bills[it.id] ?? []}
+      bills={billsByDeviceID[it.id] ?? []}
       currency={fiatCurrency}
       config={config}
     />
@@ -291,7 +290,7 @@ const CashCassettes = () => {
           currencyCode={fiatCurrency}
           machines={machines}
           config={config}
-          bills={R.path(['bills'])(data)}
+          bills={bills}
           deviceIds={deviceIds}
         />
         {wizard && (
