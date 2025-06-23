@@ -51,7 +51,7 @@ const getBills = filters => {
 
   return Promise.all([db.any(cashboxBills), db.any(recyclerBills)]).then(
     ([cashboxBills, recyclerBills]) =>
-      _.map(_.mapKeys(_.camelCase), _.concat(cashboxBills, recyclerBills)),
+      [].concat(cashboxBills, recyclerBills).map(_.mapKeys(_.camelCase)),
   )
 }
 
