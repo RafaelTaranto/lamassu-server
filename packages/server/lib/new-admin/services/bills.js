@@ -3,8 +3,6 @@ const pgp = require('pg-promise')()
 
 const db = require('../../db')
 
-const WHERE = conds => (conds ? 'WHERE ' + conds : '')
-
 const AND = (...clauses) => clauses.filter(clause => !!clause).join(' AND ')
 
 const getBatchIDCondition = filter => {
@@ -31,14 +29,25 @@ const getBills = filters => {
   LEFT OUTER JOIN (
     SELECT id, device_id
     FROM cash_in_txs
-    WHERE ${AND(deviceIDCondition)}
+    WHERE ${AND(
+      deviceIDCondition,
+      'device_id NOT IN (SELECT device_id FROM unpaired_devices)',
+    )}
   ) AS cit
   ON cit.id = b.cash_in_txs_id
-  WHERE ${AND(batchIDCondition, "b.destination_unit = 'cashbox'")}`
+  WHERE ${AND(
+    batchIDCondition,
+    "b.destination_unit = 'cashbox'",
+    'cit.device_id IS NOT NULL',
+  )}`
 
   const sql2 = `SELECT b.id, b.fiat, b.fiat_code, b.created, b.cashbox_batch_id, b.device_id
   FROM empty_unit_bills b
-  ${WHERE(AND(deviceIDCondition, batchIDCondition))}`
+  WHERE ${AND(
+    deviceIDCondition,
+    batchIDCondition,
+    'b.device_id NOT IN (SELECT device_id FROM unpaired_devices)',
+  )}`
 
   return Promise.all([db.any(sql), db.any(sql2)]).then(
     ([bills, operationalBills]) =>
