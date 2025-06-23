@@ -12,7 +12,7 @@ const SupportLinkButton = ({ link, label }) => {
       rel="noopener noreferrer"
       href={link}>
       <ActionButton
-        className="mb-8"
+        className="mb-8 leading-none"
         color="primary"
         Icon={LinkIcon}
         InverseIcon={InverseLinkIcon}>
