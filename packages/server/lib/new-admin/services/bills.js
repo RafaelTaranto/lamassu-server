@@ -24,7 +24,7 @@ const getBills = filters => {
     : ''
   const batchIDCondition = getBatchIDCondition(filters.batch)
 
-  const sql = `SELECT b.id, b.fiat, b.fiat_code, b.created, b.cashbox_batch_id, cit.device_id AS device_id
+  const cashboxBills = `SELECT b.id, b.fiat, b.fiat_code, b.created, b.cashbox_batch_id, cit.device_id AS device_id
   FROM bills b
   LEFT OUTER JOIN (
     SELECT id, device_id
@@ -41,7 +41,7 @@ const getBills = filters => {
     'cit.device_id IS NOT NULL',
   )}`
 
-  const sql2 = `SELECT b.id, b.fiat, b.fiat_code, b.created, b.cashbox_batch_id, b.device_id
+  const recyclerBills = `SELECT b.id, b.fiat, b.fiat_code, b.created, b.cashbox_batch_id, b.device_id
   FROM empty_unit_bills b
   WHERE ${AND(
     deviceIDCondition,
@@ -49,9 +49,9 @@ const getBills = filters => {
     'b.device_id NOT IN (SELECT device_id FROM unpaired_devices)',
   )}`
 
-  return Promise.all([db.any(sql), db.any(sql2)]).then(
-    ([bills, operationalBills]) =>
-      _.map(_.mapKeys(_.camelCase), _.concat(bills, operationalBills)),
+  return Promise.all([db.any(cashboxBills), db.any(recyclerBills)]).then(
+    ([cashboxBills, recyclerBills]) =>
+      _.map(_.mapKeys(_.camelCase), _.concat(cashboxBills, recyclerBills)),
   )
 }
 
