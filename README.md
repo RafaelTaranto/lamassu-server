@@ -1,6 +1,6 @@
 # lamassu-server
 
-Lamassu remote server
+Lamassu remote server.
 
 ## Pull Requests
 
