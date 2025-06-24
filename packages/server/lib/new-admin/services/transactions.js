@@ -36,37 +36,32 @@ function batch({
   simplified,
 }) {
   const isCsvExport = _.isBoolean(simplified)
-  return (
-    Promise.all([
-      getTransactionList(
-        {
-          from,
-          until,
-          cryptoCode,
-          txClass,
-          deviceId,
-          toAddress,
-          customerId,
-          swept,
-          status,
-          excludeTestingCustomers,
-        },
-        { limit, offset },
-      ),
-    ])
-      // Promise.all(promises)
-      .then(it => addProfits(it[0]))
-      .then(res =>
-        !isCsvExport
-          ? res
-          : // GQL transactions and transactionsCsv both use this function and
-            // if we don't check for the correct simplified value, the Transactions page polling
-            // will continuously build a csv in the background
-            simplified
-            ? simplifiedBatch(res)
-            : advancedBatch(res),
-      )
+  return getTransactionList(
+    {
+      from,
+      until,
+      cryptoCode,
+      txClass,
+      deviceId,
+      toAddress,
+      customerId,
+      swept,
+      status,
+      excludeTestingCustomers,
+    },
+    { limit, offset },
   )
+    .then(addProfits)
+    .then(res =>
+      !isCsvExport
+        ? res
+        : // GQL transactions and transactionsCsv both use this function and
+          // if we don't check for the correct simplified value, the Transactions page polling
+          // will continuously build a csv in the background
+          simplified
+          ? simplifiedBatch(res)
+          : advancedBatch(res),
+    )
 }
 
 function advancedBatch(data) {
