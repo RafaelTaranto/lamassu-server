@@ -190,11 +190,11 @@ function searchCustomers(searchTerm: string, limit: number = 20): Promise<any> {
           'cst.id',
           'cst.phone',
           'cst.email',
-          sql`CONCAT(
+          sql`TRIM(CONCAT(
             COALESCE(${selectNewestIdCardData(eb)}->>'firstName', ''),
             ' ',
             COALESCE(${selectNewestIdCardData(eb)}->>'lastName', '')
-          )`.as('customerName'),
+          ))`.as('customerName'),
         ])
         .where('cst.id', '!=', ANON_ID)
         .as('customers_with_names'),
