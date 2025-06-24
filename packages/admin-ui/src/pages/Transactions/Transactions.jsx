@@ -365,10 +365,7 @@ const Transactions = () => {
     manualFiltering: true,
     manualPagination: true,
     enableSorting: false,
-    onPaginationChange: it => {
-      console.log('PAGINATION', it)
-      updateField('pagination', it)
-    },
+    onPaginationChange: it => updateField('pagination', it),
     muiFilterTextFieldProps: {
       size: 'small',
     },
