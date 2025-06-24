@@ -25,24 +25,21 @@ const typeDef = gql`
     sendPending: Boolean
     fixedFee: String
     minimumTx: Float
-    customerId: ID
     isAnonymous: Boolean
     txVersion: Int!
     termsAccepted: Boolean
     commissionPercentage: String
     rawTickerPrice: String
     isPaperWallet: Boolean
-    customerPhone: String
-    customerEmail: String
-    customerIdCardDataNumber: String
-    customerIdCardDataExpiration: DateTimeISO
-    customerIdCardData: JSONObject
-    customerName: String
-    customerFrontCameraPath: String
-    customerIdCardPhotoPath: String
     expired: Boolean
     machineName: String
     discount: Int
+    customerId: ID
+    customerPhone: String
+    customerEmail: String
+    customerIdCardData: JSONObject
+    customerFrontCameraPath: String
+    customerIdCardPhotoPath: String
     txCustomerPhotoPath: String
     txCustomerPhotoAt: DateTimeISO
     batched: Boolean
@@ -51,6 +48,12 @@ const typeDef = gql`
     walletScore: Int
     profit: String
     swept: Boolean
+    status: String
+    paginationStats: PaginationStats
+  }
+
+  type PaginationStats {
+    totalCount: Int
   }
 
   type Filter {
@@ -68,6 +71,7 @@ const typeDef = gql`
       txClass: String
       deviceId: String
       customerName: String
+      customerId: ID
       fiatCode: String
       cryptoCode: String
       toAddress: String
@@ -83,6 +87,7 @@ const typeDef = gql`
       txClass: String
       deviceId: String
       customerName: String
+      customerId: ID
       fiatCode: String
       cryptoCode: String
       toAddress: String

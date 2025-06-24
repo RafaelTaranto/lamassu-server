@@ -1,4 +1,5 @@
 const defaultMaterialTableOpts = {
+  enableKeyboardShortcuts: false,
   enableGlobalFilter: false,
   paginationDisplayMode: 'pages',
   enableColumnActions: false,

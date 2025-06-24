@@ -34,6 +34,20 @@ import { getFormattedPhone, getName, formatPhotosData } from './helper'
 const GET_CUSTOMER = gql`
   query customer($customerId: ID!) {
     config
+    transactions(customerId: $customerId, limit: 20) {
+      txClass
+      id
+      fiat
+      fiatCode
+      cryptoAtoms
+      cryptoCode
+      created
+      machineName
+      errorMessage: error
+      error: errorCode
+      txCustomerPhotoAt
+      txCustomerPhotoPath
+    }
     customer(customerId: $customerId) {
       id
       authorizedOverride
@@ -80,20 +94,6 @@ const GET_CUSTOMER = gql`
         content
         created
         lastEditedAt
-      }
-      transactions {
-        txClass
-        id
-        fiat
-        fiatCode
-        cryptoAtoms
-        cryptoCode
-        created
-        machineName
-        errorMessage: error
-        error: errorCode
-        txCustomerPhotoAt
-        txCustomerPhotoPath
       }
       customInfoRequests {
         customerId
@@ -459,7 +459,7 @@ const CustomerProfile = memo(() => {
   const configData = R.path(['config'])(customerResponse) ?? []
   const locale = configData && fromNamespace(namespaces.LOCALE, configData)
   const customerData = R.path(['customer'])(customerResponse) ?? []
-  const rawTransactions = R.path(['transactions'])(customerData) ?? []
+  const rawTransactions = R.path(['transactions'])(customerResponse) ?? []
   const sortedTransactions = R.sort(R.descend(R.prop('cryptoAtoms')))(
     rawTransactions,
   )

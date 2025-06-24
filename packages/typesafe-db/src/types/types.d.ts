@@ -399,7 +399,7 @@ export interface Customers {
   frontCameraOverrideBy: string | null
   frontCameraPath: string | null
   id: string
-  idCardData: Json | null
+  idCardData: { firstName: string; lastName: string }
   idCardDataAt: Timestamp | null
   idCardDataExpiration: Timestamp | null
   idCardDataNumber: string | null
@@ -495,7 +495,7 @@ export interface EditedCustomerData {
   frontCameraAt: Timestamp | null
   frontCameraBy: string | null
   frontCameraPath: string | null
-  idCardData: Json | null
+  idCardData: { firstName: string; lastName: string }
   idCardDataAt: Timestamp | null
   idCardDataBy: string | null
   idCardPhotoAt: Timestamp | null

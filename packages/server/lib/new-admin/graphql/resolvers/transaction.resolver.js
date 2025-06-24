@@ -1,4 +1,3 @@
-const DataLoader = require('dataloader')
 const { parseAsync } = require('json2csv')
 
 const filters = require('../../filters')
@@ -8,15 +7,7 @@ const transactions = require('../../services/transactions')
 const anonymous = require('../../../constants').anonymousCustomer
 const logDateFormat = require('../../../logs').logDateFormat
 
-const transactionsLoader = new DataLoader(
-  ids => transactions.getCustomerTransactionsBatch(ids),
-  { cache: false },
-)
-
 const resolvers = {
-  Customer: {
-    transactions: parent => transactionsLoader.load(parent.id),
-  },
   Transaction: {
     isAnonymous: parent => parent.customerId === anonymous.uuid,
   },
@@ -32,6 +23,7 @@ const resolvers = {
           txClass,
           deviceId,
           customerName,
+          customerId,
           fiatCode,
           cryptoCode,
           toAddress,
@@ -41,7 +33,7 @@ const resolvers = {
         },
       ]
     ) =>
-      transactions.batch(
+      transactions.batch({
         from,
         until,
         limit,
@@ -49,13 +41,14 @@ const resolvers = {
         txClass,
         deviceId,
         customerName,
+        customerId,
         fiatCode,
         cryptoCode,
         toAddress,
         status,
         swept,
         excludeTestingCustomers,
-      ),
+      }),
     transactionsCsv: (
       ...[
         ,
@@ -67,6 +60,7 @@ const resolvers = {
           txClass,
           deviceId,
           customerName,
+          customerId,
           fiatCode,
           cryptoCode,
           toAddress,
@@ -79,7 +73,7 @@ const resolvers = {
       ]
     ) =>
       transactions
-        .batch(
+        .batch({
           from,
           until,
           limit,
@@ -87,6 +81,7 @@ const resolvers = {
           txClass,
           deviceId,
           customerName,
+          customerId,
           fiatCode,
           cryptoCode,
           toAddress,
@@ -94,7 +89,7 @@ const resolvers = {
           swept,
           excludeTestingCustomers,
           simplified,
-        )
+        })
         .then(data =>
           parseAsync(
             logDateFormat(timezone, data, [

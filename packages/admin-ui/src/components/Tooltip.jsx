@@ -41,7 +41,7 @@ const HelpTooltip = memo(({ children, width }) => {
         )}
         <button
           type="button"
-          className="border-0 bg-transparent outline-0 cursor-pointer mt-1"
+          className="flex justify-center align-center border-0 bg-transparent outline-0 cursor-pointer px-1"
           onMouseEnter={handler.openHelpPopper}>
           <HelpIcon />
         </button>

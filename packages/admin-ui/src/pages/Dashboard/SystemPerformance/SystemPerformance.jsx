@@ -32,8 +32,6 @@ const GET_DATA = gql`
     ) {
       fiatCode
       fiat
-      fixedFee
-      commissionPercentage
       created
       txClass
       error

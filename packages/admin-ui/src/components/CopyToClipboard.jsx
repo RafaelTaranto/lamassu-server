@@ -37,7 +37,7 @@ const CopyToClipboard = ({
   const text = value
     ? value
     : removeSpace
-      ? R.replace(/\s/g, '')(children)
+      ? R.replace(/\s/g, '')(children ?? '')
       : children
 
   return (

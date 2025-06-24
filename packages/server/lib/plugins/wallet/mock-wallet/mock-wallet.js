@@ -11,6 +11,7 @@ const PUBLISH_TIME = 3 * SECONDS
 const AUTHORIZE_TIME = PUBLISH_TIME + 5 * SECONDS
 const CONFIRM_TIME = AUTHORIZE_TIME + 10 * SECONDS
 const SUPPORTED_COINS = coinUtils.cryptoCurrencies()
+const SUPPORTS_BATCHING = true
 
 let t0
 
@@ -162,6 +163,7 @@ function checkBlockchainStatus(cryptoCode) {
 
 module.exports = {
   NAME,
+  SUPPORTS_BATCHING,
   balance,
   sendCoinsBatch,
   sendCoins,

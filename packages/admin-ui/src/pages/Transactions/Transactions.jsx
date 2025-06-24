@@ -1,14 +1,13 @@
-import { useQuery, gql } from '@apollo/client'
+import { useQuery, useLazyQuery, gql } from '@apollo/client'
+import { create } from 'zustand'
+import { immer } from 'zustand/middleware/immer'
 import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
 import BigNumber from 'bignumber.js'
 import * as R from 'ramda'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useLocation } from 'wouter'
 import LogsDowloaderPopover from '../../components/LogsDownloaderPopper'
-import SearchBox from '../../components/SearchBox'
-import SearchFilter from '../../components/SearchFilter'
 import { HelpTooltip } from '../../components/Tooltip'
-import DataTable from '../../components/tables/DataTable'
 import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
 import CustomerLinkIcon from '../../styling/icons/month arrows/right.svg?react'
@@ -20,14 +19,46 @@ import * as Customer from '../../utils/customer'
 import { formatDate } from '../../utils/timezones'
 
 import DetailsRow from './DetailsCard'
-import { getStatus } from './helper'
 import TitleSection from '../../components/layout/TitleSection.jsx'
+import { MaterialReactTable, useMaterialReactTable } from 'material-react-table'
+import {
+  alignRight,
+  defaultMaterialTableOpts,
+} from '../../utils/materialReactTableOpts.js'
+import { getStatusDetails } from './helper.js'
+import {
+  CustomerFilter,
+  MachineFilter,
+  DirectionFilter,
+  CryptoFilter,
+  StatusFilter,
+  SweptFilter,
+} from './Filters.jsx'
 
 const NUM_LOG_RESULTS = 1000
 
 const GET_DATA = gql`
   query getData {
     config
+    machines {
+      name
+      deviceId
+    }
+    cryptoCurrencies {
+      code
+      display
+    }
+  }
+`
+
+const SEARCH_CUSTOMERS = gql`
+  query searchCustomers($searchTerm: String!, $limit: Int) {
+    searchCustomers(searchTerm: $searchTerm, limit: $limit) {
+      id
+      name
+      phone
+      email
+    }
   }
 `
 
@@ -51,24 +82,16 @@ const GET_TRANSACTIONS_CSV = gql`
   }
 `
 
-const GET_TRANSACTION_FILTERS = gql`
-  query filters {
-    transactionFilters {
-      type
-      value
-      label
-    }
-  }
-`
-
 const GET_TRANSACTIONS = gql`
   query transactions(
     $limit: Int
+    $offset: Int
     $from: DateTimeISO
     $until: DateTimeISO
     $txClass: String
     $deviceId: String
     $customerName: String
+    $customerId: ID
     $fiatCode: String
     $cryptoCode: String
     $toAddress: String
@@ -77,17 +100,22 @@ const GET_TRANSACTIONS = gql`
   ) {
     transactions(
       limit: $limit
+      offset: $offset
       from: $from
       until: $until
       txClass: $txClass
       deviceId: $deviceId
       customerName: $customerName
+      customerId: $customerId
       fiatCode: $fiatCode
       cryptoCode: $cryptoCode
       toAddress: $toAddress
       status: $status
       swept: $swept
     ) {
+      paginationStats {
+        totalCount
+      }
       id
       txClass
       txHash
@@ -109,7 +137,6 @@ const GET_TRANSACTIONS = gql`
       cryptoCode
       toAddress
       created
-      customerName
       customerIdCardData
       customerIdCardPhotoPath
       customerFrontCameraPath
@@ -126,202 +153,290 @@ const GET_TRANSACTIONS = gql`
       walletScore
       profit
       swept
+      status
     }
   }
 `
 
-const getFiltersObj = filters =>
-  R.reduce((s, f) => ({ ...s, [f.type]: f.value }), {}, filters)
+const useTableStore = create(
+  immer(set => ({
+    variables: { limit: NUM_LOG_RESULTS },
+    columnFilters: [],
+    pagination: {
+      pageIndex: 0,
+      pageSize: 10,
+    },
+    previousData: [],
+
+    updateField: (field, updates) =>
+      set(state => {
+        if (typeof updates === 'function') {
+          state[field] = updates(state[field])
+        } else {
+          state[field] = updates
+        }
+      }),
+  })),
+)
 
 const Transactions = () => {
   const [, navigate] = useLocation()
+  const { variables, columnFilters, pagination, previousData, updateField } =
+    useTableStore()
 
-  const [filters, setFilters] = useState([])
-  const { data: filtersResponse, loading: filtersLoading } = useQuery(
-    GET_TRANSACTION_FILTERS,
-  )
-  const [variables, setVariables] = useState({ limit: NUM_LOG_RESULTS })
-  const {
-    data: txData,
-    loading: transactionsLoading,
-    refetch,
-    startPolling,
-    stopPolling,
-  } = useQuery(GET_TRANSACTIONS, { variables })
-
-  useEffect(() => {
-    startPolling(10000)
-    return stopPolling
+  const { data: configResponse } = useQuery(GET_DATA)
+  const { data, loading } = useQuery(GET_TRANSACTIONS, {
+    variables,
+    notifyOnNetworkStatusChange: true,
   })
 
-  const txList = txData?.transactions ?? []
+  const [searchCustomersQuery] = useLazyQuery(SEARCH_CUSTOMERS)
 
-  const { data: configResponse, configLoading } = useQuery(GET_DATA)
+  const displayData = useMemo(() => {
+    const formattedData = (data?.transactions ?? []).map(row => ({
+      ...row,
+      toAddress: formatCryptoAddress(row.cryptoCode, row.toAddress),
+    }))
+
+    return loading && previousData.length > 0 ? previousData : formattedData
+  }, [data])
+
+  useEffect(() => {
+    if (!loading && displayData && displayData.length > 0) {
+      updateField('previousData', displayData)
+    }
+  }, [displayData, loading])
+
+  useEffect(() => {
+    listFilterChange({
+      offset: pagination.pageIndex * pagination.pageSize,
+      limit: pagination.pageSize,
+    })
+  }, [pagination, columnFilters])
+
   const timezone = R.path(['config', 'locale_timezone'], configResponse)
+
+  const machines = configResponse?.machines || []
+  const cryptoCurrencies = configResponse?.cryptoCurrencies || []
+
+  const columns = useMemo(
+    () => [
+      {
+        header: 'Direction',
+        accessorKey: 'txClass',
+        Filter: DirectionFilter,
+        grow: false,
+        size: 50,
+        muiTableBodyCellProps: {
+          align: 'center',
+        },
+        Cell: ({ cell }) =>
+          cell.getValue() === 'cashOut' ? <TxOutIcon /> : <TxInIcon />,
+      },
+      {
+        accessorKey: 'id',
+        header: 'ID',
+        size: 315,
+      },
+      {
+        accessorKey: 'swept',
+        header: 'Swept',
+        Filter: SweptFilter,
+        size: 50,
+        Cell: ({ cell }) => (cell.getValue() ? 'Yes' : 'No'),
+      },
+      {
+        accessorKey: 'machineName',
+        header: 'Machine',
+        Filter: ({ column }) => (
+          <MachineFilter column={column} machines={machines} />
+        ),
+        size: 160,
+        maxSize: 160,
+      },
+      {
+        accessorKey: 'customerId',
+        header: 'Customer',
+        size: 202,
+        Filter: ({ column }) => (
+          <CustomerFilter column={column} onSearch={searchCustomers} />
+        ),
+        Cell: ({ row }) => (
+          <div className="flex items-center justify-between w-full">
+            <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+              {Customer.displayName(row.original)}
+            </div>
+            {!row.original.isAnonymous && (
+              <div
+                className="cursor-pointer flex"
+                data-cy="customer-link"
+                onClick={() => redirect(row.original.customerId)}>
+                {getStatusDetails(row.original) ? (
+                  <CustomerLinkWhiteIcon />
+                ) : (
+                  <CustomerLinkIcon />
+                )}
+              </div>
+            )}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'fiat',
+        header: 'Cash',
+        enableColumnFilter: false,
+        size: 144,
+        ...alignRight,
+        Cell: ({ cell, row }) =>
+          `${Number.parseFloat(cell.getValue())} ${row.original.fiatCode}`,
+      },
+      {
+        accessorKey: 'cryptoAtoms',
+        header: 'Crypto',
+        Filter: ({ column }) => (
+          <CryptoFilter column={column} cryptoCurrencies={cryptoCurrencies} />
+        ),
+        size: 150,
+        ...alignRight,
+        Cell: ({ cell, row }) =>
+          `${toUnit(new BigNumber(cell.getValue()), row.original.cryptoCode)} ${
+            row.original.cryptoCode
+          }`,
+      },
+      {
+        accessorKey: 'toAddress',
+        header: 'Address',
+        size: 140,
+        muiTableBodyCellProps: {
+          className: 'overflow-hidden whitespace-nowrap text-ellipsis',
+        },
+      },
+      {
+        accessorKey: 'created',
+        header: 'Date',
+        enableColumnFilter: false,
+        Cell: ({ cell }) =>
+          timezone && formatDate(cell.getValue(), timezone, 'yyyy-MM-dd HH:mm'),
+        ...alignRight,
+        size: 155,
+      },
+      {
+        accessorKey: 'status',
+        header: 'Status',
+        size: 80,
+        Filter: StatusFilter,
+        Cell: ({ cell }) => {
+          if (cell.getValue() === 'Pending')
+            return (
+              <div className="flex items-center justify-between w-full">
+                <div className="overflow-hidden whitespace-nowrap text-ellipsis">
+                  Pending
+                </div>
+                <HelpTooltip width={200}>
+                  <SupportLinkButton
+                    link="https://support.lamassu.is/hc/en-us/articles/115001210452-Cancelling-cash-out-transactions"
+                    label="Cancelling cash-out transactions"
+                    bottomSpace="0"
+                  />
+                </HelpTooltip>
+              </div>
+            )
+          else return cell.getValue()
+        },
+      },
+    ],
+    [machines, cryptoCurrencies, timezone],
+  )
+
+  const table = useMaterialReactTable({
+    enableColumnResizing: true,
+    ...defaultMaterialTableOpts,
+    initialState: {
+      ...defaultMaterialTableOpts.initialState,
+      columnVisibility: {
+        id: false,
+        swept: false,
+      },
+    },
+    columns: columns,
+    rowCount: displayData?.[0]?.paginationStats?.totalCount ?? 0,
+    getRowId: it => it.id,
+    data: displayData || [],
+    manualFiltering: true,
+    manualPagination: true,
+    enableSorting: false,
+    onPaginationChange: it => updateField('pagination', it),
+    muiFilterTextFieldProps: {
+      size: 'small',
+    },
+    muiFilterCheckboxProps: { size: 'small' },
+    onColumnFiltersChange: it => updateField('columnFilters', it),
+    enableExpandAll: false,
+    state: {
+      columnFilters,
+      pagination,
+      isLoading: loading,
+    },
+    muiTableBodyRowProps: ({ row }) => ({
+      sx: {
+        backgroundColor: getStatusDetails(row.original) ? '#ffeceb' : '',
+      },
+    }),
+    displayColumnDefOptions: {
+      'mrt-row-expand': {
+        header: '',
+      },
+    },
+    muiExpandButtonProps: ({ row, table }) => ({
+      onClick: () => table.setExpanded({ [row.id]: !row.getIsExpanded() }), //set only this row to be expanded
+    }),
+    renderDetailPanel: ({ row }) =>
+      row.original ? (
+        <DetailsRow it={row.original} timezone={timezone} />
+      ) : null,
+  })
+
+  const searchCustomers = async searchTerm => {
+    const { data } = await searchCustomersQuery({
+      variables: { searchTerm, limit: 20 },
+    })
+    return data?.searchCustomers || []
+  }
 
   const redirect = customerId => {
     return navigate(`/compliance/customer/${customerId}`)
   }
 
-  const elements = [
-    {
-      header: '',
-      width: 32,
-      size: 'sm',
-      view: it => (it.txClass === 'cashOut' ? <TxOutIcon /> : <TxInIcon />),
-    },
-    {
-      header: 'Machine',
-      name: 'machineName',
-      width: 160,
-      size: 'sm',
-      view: R.path(['machineName']),
-    },
-    {
-      header: 'Customer',
-      width: 202,
-      size: 'sm',
-      view: it => (
-        <div className="flex items-center justify-between mr-4">
-          <div className="overflow-hidden whitespace-nowrap text-ellipsis">
-            {Customer.displayName(it)}
-          </div>
-          {!it.isAnonymous && (
-            <div
-              data-cy="customer-link"
-              onClick={() => redirect(it.customerId)}>
-              {it.hasError || it.batchError ? (
-                <CustomerLinkWhiteIcon />
-              ) : (
-                <CustomerLinkIcon />
-              )}
-            </div>
-          )}
-        </div>
-      ),
-    },
-    {
-      header: 'Cash',
-      width: 144,
-      textAlign: 'right',
-      size: 'sm',
-      view: it => `${Number.parseFloat(it.fiat)} ${it.fiatCode}`,
-    },
-    {
-      header: 'Crypto',
-      width: 150,
-      textAlign: 'right',
-      size: 'sm',
-      view: it =>
-        `${toUnit(new BigNumber(it.cryptoAtoms), it.cryptoCode)} ${
-          it.cryptoCode
-        }`,
-    },
-    {
-      header: 'Address',
-      view: it => formatCryptoAddress(it.cryptoCode, it.toAddress),
-      className: 'overflow-hidden whitespace-nowrap text-ellipsis',
-      size: 'sm',
-      width: 140,
-    },
-    {
-      header: 'Date',
-      view: it =>
-        timezone && formatDate(it.created, timezone, 'yyyy-MM-dd HH:mm'),
-      textAlign: 'right',
-      size: 'sm',
-      width: 195,
-    },
-    {
-      header: 'Status',
-      view: it => {
-        if (getStatus(it) === 'Pending')
-          return (
-            <div className="flex items-center">
-              {'Pending'}
-              <HelpTooltip width={285}>
-                <SupportLinkButton
-                  link="https://support.lamassu.is/hc/en-us/articles/115001210452-Cancelling-cash-out-transactions"
-                  label="Cancelling cash-out transactions"
-                  bottomSpace="0"
-                />
-              </HelpTooltip>
-            </div>
-          )
-        else return getStatus(it)
-      },
-      textAlign: 'left',
-      size: 'sm',
-      width: 80,
-    },
-  ]
+  const mapColumnFiltersToVariables = filters => {
+    const filterMap = {
+      machineName: 'deviceId',
+      customerId: 'customerId',
+      cryptoAtoms: 'cryptoCode',
+      toAddress: 'toAddress',
+      status: 'status',
+      txClass: 'txClass',
+      swept: 'swept',
+    }
 
-  const onFilterChange = filters => {
-    const filtersObject = getFiltersObj(filters)
-
-    setFilters(filters)
-
-    setVariables({
-      limit: NUM_LOG_RESULTS,
-      txClass: filtersObject.type,
-      deviceId: filtersObject.machine,
-      customerName: filtersObject.customer,
-      fiatCode: filtersObject.fiat,
-      cryptoCode: filtersObject.crypto,
-      toAddress: filtersObject.address,
-      status: filtersObject.status,
-      swept: filtersObject.swept && filtersObject.swept === 'Swept',
-    })
-
-    refetch && refetch()
+    return filters.reduce((acc, filter) => {
+      const mappedKey = filterMap[filter.id] || filter.id
+      if (mappedKey && filter.value !== undefined && filter.value !== '') {
+        acc[mappedKey] = filter.value
+      }
+      return acc
+    }, {})
   }
 
-  const onFilterDelete = filter => {
-    const newFilters = R.filter(
-      f => !R.whereEq(R.pick(['type', 'value'], f), filter),
-    )(filters)
+  const listFilterChange = inputs => {
+    const { limit, offset } = inputs ?? {}
+    const mappedFilters = mapColumnFiltersToVariables(columnFilters)
 
-    setFilters(newFilters)
-
-    const filtersObject = getFiltersObj(newFilters)
-
-    setVariables({
-      limit: NUM_LOG_RESULTS,
-      txClass: filtersObject.type,
-      deviceId: filtersObject.machine,
-      customerName: filtersObject.customer,
-      fiatCode: filtersObject.fiat,
-      cryptoCode: filtersObject.crypto,
-      toAddress: filtersObject.address,
-      status: filtersObject.status,
-      swept: filtersObject.swept && filtersObject.swept === 'Swept',
+    updateField('variables', {
+      limit,
+      offset,
+      ...mappedFilters,
     })
-
-    refetch && refetch()
   }
-
-  const deleteAllFilters = () => {
-    setFilters([])
-    const filtersObject = getFiltersObj([])
-
-    setVariables({
-      limit: NUM_LOG_RESULTS,
-      txClass: filtersObject.type,
-      deviceId: filtersObject.machine,
-      customerName: filtersObject.customer,
-      fiatCode: filtersObject.fiat,
-      cryptoCode: filtersObject.crypto,
-      toAddress: filtersObject.address,
-      status: filtersObject.status,
-      swept: filtersObject.swept && filtersObject.swept === 'Swept',
-    })
-
-    refetch && refetch()
-  }
-
-  const filterOptions = R.path(['transactionFilters'])(filtersResponse)
-
-  const loading = transactionsLoading || filtersLoading || configLoading
 
   const errorLabel = (
     <svg width={12} height={12}>
@@ -340,14 +455,7 @@ const Transactions = () => {
         ]}
         appendix={
           <div className="flex ml-4 gap-4">
-            <SearchBox
-              loading={filtersLoading}
-              filters={filters}
-              options={filterOptions}
-              inputPlaceholder={'Search transactions'}
-              onChange={onFilterChange}
-            />
-            {txList && (
+            {
               <LogsDowloaderPopover
                 title="Download logs"
                 name="transactions"
@@ -357,28 +465,11 @@ const Transactions = () => {
                 timezone={timezone}
                 args={{ timezone }}
               />
-            )}
+            }
           </div>
         }
       />
-      {filters.length > 0 && (
-        <SearchFilter
-          entries={txList.length}
-          filters={filters}
-          onFilterDelete={onFilterDelete}
-          deleteAllFilters={deleteAllFilters}
-        />
-      )}
-      <DataTable
-        loading={loading}
-        emptyText="No transactions so far"
-        elements={elements}
-        data={txList}
-        Details={DetailsRow}
-        expandable
-        rowSize="sm"
-        timezone={timezone}
-      />
+      <MaterialReactTable table={table} />
     </>
   )
 }

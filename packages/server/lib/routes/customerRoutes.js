@@ -11,11 +11,13 @@ const compliance = require('../compliance')
 const complianceTriggers = require('../compliance-triggers')
 const configManager = require('../new-config-manager')
 const customers = require('../customers')
-const txs = require('../new-admin/services/transactions')
 const httpError = require('../route-helpers').httpError
 const notifier = require('../notifier')
 const respond = require('../respond')
-const { getTx } = require('../new-admin/services/transactions.js')
+const {
+  getTx,
+  updateTxCustomerPhoto: txsUpdateTxCustomerPhoto,
+} = require('../new-admin/services/transactions.js')
 const machineLoader = require('../machine-loader')
 const { loadLatestConfig } = require('../new-settings-loader')
 const customInfoRequestQueries = require('../new-admin/services/customInfoRequests')
@@ -207,13 +209,13 @@ function updateTxCustomerPhoto(req, res, next) {
   const tcPhotoData = req.body.tcPhotoData
   const direction = req.body.direction
 
-  Promise.all([customers.getById(customerId), txs.getTx(txId, direction)])
+  Promise.all([customers.getById(customerId), getTx(txId, direction)])
     .then(([customer, tx]) => {
       if (!customer || !tx) return
       return customers
         .updateTxCustomerPhoto(tcPhotoData)
         .then(newPatch =>
-          txs.updateTxCustomerPhoto(customerId, txId, direction, newPatch),
+          txsUpdateTxCustomerPhoto(customerId, txId, direction, newPatch),
         )
     })
     .then(() => respond(req, res, {}))

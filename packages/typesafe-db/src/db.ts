@@ -19,5 +19,5 @@ const dialect = new PostgresDialect({
 
 export default new Kysely<DB>({
   dialect,
-  plugins: [new CamelCasePlugin()],
+  plugins: [new CamelCasePlugin({ underscoreBeforeDigits: true })],
 })

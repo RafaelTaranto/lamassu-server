@@ -62,24 +62,14 @@ const GET_TRANSACTIONS = gql`
       until: $until
       excludeTestingCustomers: $excludeTestingCustomers
     ) {
-      id
       txClass
-      txHash
-      toAddress
-      commissionPercentage
       expired
-      machineName
-      operatorCompleted
       sendConfirmed
       dispense
       hasError: error
       deviceId
       fiat
-      fixedFee
       fiatCode
-      cryptoAtoms
-      cryptoCode
-      toAddress
       created
       profit
     }
