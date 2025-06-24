@@ -87,7 +87,7 @@ const typeDef = gql`
       txClass: String
       deviceId: String
       customerName: String
-      customerId: String
+      customerId: ID
       fiatCode: String
       cryptoCode: String
       toAddress: String
