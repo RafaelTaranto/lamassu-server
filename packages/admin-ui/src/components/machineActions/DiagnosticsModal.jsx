@@ -182,7 +182,7 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
           </div>
         </div>
       )}
-      <div className="flex flex-row mt-auto ml-auto mr-2 mb-0">
+      <div className="flex flex-row mt-auto ml-auto mb-8">
         <Button
           disabled={state !== STATES.FILLED || !timestamp}
           onClick={() => {
