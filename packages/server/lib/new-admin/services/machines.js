@@ -15,13 +15,13 @@ function machineAction({ deviceId, action, cashUnits, newName }, context) {
         throw new UserInputError(`machine:${deviceId} not found`, { deviceId })
       return machine
     })
-    .then(
+    .then(() =>
       machineLoader.setMachine(
         { deviceId, action, cashUnits, newName },
         operatorId,
       ),
     )
-    .then(getMachine(deviceId))
+    .then(() => getMachine(deviceId))
 }
 
 module.exports = { machineAction }
