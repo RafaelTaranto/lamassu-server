@@ -83,17 +83,12 @@ const SystemPerformance = () => {
     if (getLastTimePeriod) {
       const duration = rangeEnd - rangeStart
       return (
-        t.error === null &&
         createdTimestamp >= rangeStart - duration &&
         createdTimestamp < rangeStart
       )
     }
 
-    return (
-      t.error === null &&
-      createdTimestamp >= rangeStart &&
-      createdTimestamp <= rangeEnd
-    )
+    return createdTimestamp >= rangeStart && createdTimestamp <= rangeEnd
   }
 
   const convertFiatToLocale = item => {
