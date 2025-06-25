@@ -1,4 +1,5 @@
 import Autocomplete from './Autocomplete'
+import { AsyncAutocomplete } from './AsyncAutocomplete'
 import CashCassetteInput from './CashCassetteInput'
 import Checkbox from './Checkbox'
 import Dropdown from './Dropdown'
@@ -9,6 +10,7 @@ import TextInput from './TextInput'
 
 export {
   Autocomplete,
+  AsyncAutocomplete,
   Checkbox,
   TextInput,
   NumberInput,

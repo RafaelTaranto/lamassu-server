@@ -61,7 +61,7 @@ const MachineStatus = () => {
     data: machinesResponse,
     refetch,
     loading: machinesLoading,
-  } = useQuery(GET_MACHINES)
+  } = useQuery(GET_MACHINES, { notifyOnNetworkStatusChange: true })
   const { data: configResponse, configLoading } = useQuery(GET_DATA)
   const timezone = R.path(['config', 'locale_timezone'], configResponse)
 

@@ -488,7 +488,10 @@ function getSlimCustomerByIdBatch(ids) {
   const sql = `SELECT id, phone, id_card_data 
     FROM customers 
     WHERE id = ANY($1::uuid[])`
-  return db.any(sql, [ids]).then(customers => _.map(camelize, customers))
+  return db.any(sql, [ids]).then(customers => {
+    const customersById = _.keyBy('id', _.map(camelize, customers))
+    return ids.map(id => customersById[id] || null)
+  })
 }
 
 function getCustomersList() {

@@ -1,6 +1,6 @@
 import { Form, Formik, Field } from 'formik'
-import * as R from 'ramda'
 import React from 'react'
+import { useLazyQuery, gql } from '@apollo/client'
 import ErrorMessage from '../../components/ErrorMessage'
 import Modal from '../../components/Modal'
 import { HelpTooltip } from '../../components/Tooltip'
@@ -8,7 +8,18 @@ import { H1, H3, P } from '../../components/typography'
 import * as Yup from 'yup'
 
 import { Button } from '../../components/buttons'
-import { NumberInput, Autocomplete } from '../../components/inputs/formik'
+import { NumberInput, AsyncAutocomplete } from '../../components/inputs/formik'
+
+const SEARCH_CUSTOMERS = gql`
+  query searchCustomers($searchTerm: String!, $limit: Int) {
+    searchCustomers(searchTerm: $searchTerm, limit: $limit) {
+      id
+      name
+      phone
+      email
+    }
+  }
+`
 
 const initialValues = {
   customer: '',
@@ -39,8 +50,15 @@ const IndividualDiscountModal = ({
   onClose,
   creationError,
   addDiscount,
-  customers,
 }) => {
+  const [searchCustomersQuery] = useLazyQuery(SEARCH_CUSTOMERS)
+
+  const searchCustomers = async searchTerm => {
+    const { data } = await searchCustomersQuery({
+      variables: { searchTerm, limit: 20 },
+    })
+    return data?.searchCustomers || []
+  }
   const handleAddDiscount = (customer, discount) => {
     addDiscount({
       variables: {
@@ -77,18 +95,18 @@ const IndividualDiscountModal = ({
                   <Field
                     name="customer"
                     label="Select a customer"
-                    component={Autocomplete}
+                    component={AsyncAutocomplete}
                     fullWidth
-                    options={R.map(it => ({
-                      code: it.id,
-                      display: `${it?.idCardData?.firstName ?? ``}${
-                        it?.idCardData?.firstName && it?.idCardData?.lastName
-                          ? ` `
-                          : ``
-                      }${it?.idCardData?.lastName ?? ``} (${it.phone})`,
-                    }))(customers)}
-                    labelProp="display"
-                    valueProp="code"
+                    onSearch={searchCustomers}
+                    getOptionLabel={option => {
+                      const name = option.name
+                      const contact = option.phone || option.email
+                      return contact ? `${name} (${contact})` : name
+                    }}
+                    getOptionId={option => option.id}
+                    placeholder="Type to search customers..."
+                    noOptionsText="Type at least 3 characters to search"
+                    minSearchLength={2}
                   />
                 </div>
                 <div>

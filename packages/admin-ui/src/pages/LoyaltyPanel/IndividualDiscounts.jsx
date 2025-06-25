@@ -1,18 +1,20 @@
-import IconButton from '@mui/material/IconButton'
-import SvgIcon from '@mui/material/SvgIcon'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
+import {
+  MaterialReactTable,
+  MRT_ActionMenuItem,
+  useMaterialReactTable,
+} from 'material-react-table'
+import Delete from '@mui/icons-material/Delete'
 
 import { Link, Button } from '../../components/buttons'
 import { DeleteDialog } from '../../components/DeleteDialog'
-import DataTable from '../../components/tables/DataTable'
 import { Label3, TL1 } from '../../components/typography'
 import PhoneIdIcon from '../../styling/icons/ID/phone/zodiac.svg?react'
-import DeleteIcon from '../../styling/icons/action/delete/enabled.svg?react'
+import { defaultMaterialTableOpts } from '../../utils/materialReactTableOpts'
 
 import IndividualDiscountModal from './IndividualDiscountModal'
-import classnames from 'classnames'
 
 const GET_INDIVIDUAL_DISCOUNTS = gql`
   query individualDiscounts {
@@ -44,16 +46,6 @@ const CREATE_DISCOUNT = gql`
   }
 `
 
-const GET_CUSTOMERS = gql`
-  {
-    customers {
-      id
-      phone
-      idCardData
-    }
-  }
-`
-
 const IndividualDiscounts = () => {
   const [deleteDialog, setDeleteDialog] = useState(false)
   const [toBeDeleted, setToBeDeleted] = useState()
@@ -62,9 +54,11 @@ const IndividualDiscounts = () => {
   const [showModal, setShowModal] = useState(false)
   const toggleModal = () => setShowModal(!showModal)
 
-  const { data: discountResponse, loading } = useQuery(GET_INDIVIDUAL_DISCOUNTS)
-  const { data: customerData, loading: customerLoading } =
-    useQuery(GET_CUSTOMERS)
+  const { data: discountResponse, loading } = useQuery(
+    GET_INDIVIDUAL_DISCOUNTS,
+    { notifyOnNetworkStatusChange: true },
+  )
+  const discounts = discountResponse?.individualDiscounts || []
 
   const [createDiscount, { error: creationError }] = useMutation(
     CREATE_DISCOUNT,
@@ -82,88 +76,86 @@ const IndividualDiscounts = () => {
     refetchQueries: () => ['individualDiscounts'],
   })
 
-  const elements = [
-    {
-      header: 'Identification',
-      width: 312,
-      textAlign: 'left',
-      size: 'sm',
-      view: t => {
-        return (
+  const columns = useMemo(
+    () => [
+      {
+        id: 'identification',
+        header: 'Identification',
+        size: 312,
+        accessorFn: row => row.customer.phone,
+        Cell: ({ row }) => (
           <div className="flex items-center gap-2">
             <PhoneIdIcon />
-            <span>{t.customer.phone}</span>
+            <span>{row.original.customer.phone}</span>
           </div>
-        )
+        ),
       },
-    },
-    {
-      header: 'Name',
-      width: 300,
-      textAlign: 'left',
-      size: 'sm',
-      view: t => {
-        const customer = t.customer
-        if (R.isNil(customer.idCardData)) {
-          return <>{'-'}</>
-        }
-
-        return (
-          <>{`${customer.idCardData.firstName ?? ``}${
+      {
+        id: 'name',
+        header: 'Name',
+        size: 300,
+        accessorFn: row => {
+          const customer = row.customer
+          if (R.isNil(customer.idCardData)) {
+            return '-'
+          }
+          return `${customer.idCardData.firstName ?? ''}${
             customer.idCardData.firstName && customer.idCardData.lastName
-              ? ` `
-              : ``
-          }${customer.idCardData.lastName ?? ``}`}</>
-        )
+              ? ' '
+              : ''
+          }${customer.idCardData.lastName ?? ''}`
+        },
       },
+      {
+        id: 'discount',
+        header: 'Discount rate',
+        size: 220,
+        accessorKey: 'discount',
+        Cell: ({ cell }) => (
+          <>
+            <TL1 inline>{cell.getValue()}</TL1> %
+          </>
+        ),
+      },
+    ],
+    [],
+  )
+
+  const table = useMaterialReactTable({
+    ...defaultMaterialTableOpts,
+    columns,
+    data: discounts,
+    state: { isLoading: loading },
+    getRowId: row => row.id,
+    enableRowActions: true,
+    renderRowActionMenuItems: ({ row }) => [
+      <MRT_ActionMenuItem
+        icon={<Delete />}
+        key="delete"
+        label="Revoke"
+        onClick={() => {
+          setDeleteDialog(true)
+          setToBeDeleted({ variables: { discountId: row.original.id } })
+        }}
+        table={table}
+      />,
+    ],
+    initialState: {
+      ...defaultMaterialTableOpts.initialState,
+      columnPinning: { right: ['mrt-row-actions'] },
     },
-    {
-      header: 'Discount rate',
-      width: 220,
-      textAlign: 'left',
-      size: 'sm',
-      view: t => (
-        <>
-          <TL1 inline>{t.discount}</TL1> %
-        </>
-      ),
-    },
-    {
-      header: 'Revoke',
-      width: 100,
-      textAlign: 'center',
-      size: 'sm',
-      view: t => (
-        <IconButton
-          onClick={() => {
-            setDeleteDialog(true)
-            setToBeDeleted({ variables: { discountId: t.id } })
-          }}>
-          <SvgIcon>
-            <DeleteIcon />
-          </SvgIcon>
-        </IconButton>
-      ),
-    },
-  ]
+  })
 
   return (
     <>
-      {!loading && !R.isEmpty(discountResponse.individualDiscounts) && (
+      {!loading && !R.isEmpty(discounts) && (
         <>
           <div className="flex justify-end mb-8 -mt-14">
-            <Link
-              color="primary"
-              onClick={toggleModal}
-              className={classnames({ 'cursor-wait': customerLoading })}
-              disabled={customerLoading}>
+            <Link color="primary" onClick={toggleModal}>
               Add new code
             </Link>
           </div>
-          <DataTable
-            elements={elements}
-            data={R.path(['individualDiscounts'])(discountResponse)}
-          />
+          <MaterialReactTable table={table} />
           <DeleteDialog
             open={deleteDialog}
             onDismissed={() => {
@@ -178,7 +170,7 @@ const IndividualDiscounts = () => {
           />
         </>
       )}
-      {!loading && R.isEmpty(discountResponse.individualDiscounts) && (
+      {!loading && R.isEmpty(discounts) && (
         <div className="flex items-start flex-col">
           <Label3>
             It seems there are no active individual customer discounts on your
@@ -195,7 +187,6 @@ const IndividualDiscounts = () => {
         }}
         creationError={creationError}
         addDiscount={createDiscount}
-        customers={R.path(['customers'])(customerData)}
       />
     </>
   )
