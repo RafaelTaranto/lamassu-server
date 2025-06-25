@@ -62,6 +62,7 @@ const SystemPerformance = () => {
   })
   const fiatLocale = fromNamespace('locale')(data?.config).fiatCurrency
   const timezone = fromNamespace('locale')(data?.config).timezone
+  const allTransactions = data?.transactions ?? []
 
   const NOW = Date.now()
 
@@ -113,10 +114,10 @@ const SystemPerformance = () => {
   }
 
   const transactionsToShow = R.map(convertFiatToLocale)(
-    R.filter(isInRangeAndNoError(false), data?.transactions ?? []),
+    R.filter(isInRangeAndNoError(false), allTransactions),
   )
   const transactionsLastTimePeriod = R.map(convertFiatToLocale)(
-    R.filter(isInRangeAndNoError(true), data?.transactions ?? []),
+    R.filter(isInRangeAndNoError(true), allTransactions),
   )
 
   const getNumTransactions = () => {
@@ -182,16 +183,16 @@ const SystemPerformance = () => {
   return (
     <>
       <Nav
-        showPicker={!loading && !R.isEmpty(data.transactions)}
+        showPicker={!loading && !R.isEmpty(allTransactions)}
         handleSetRange={setSelectedRange}
       />
-      {!loading && R.isEmpty(data.transactions) && (
+      {!loading && R.isEmpty(allTransactions) && (
         <EmptyTable
           className="pt-10"
           message="No transactions during the last month"
         />
       )}
-      {!loading && !R.isEmpty(data.transactions) && (
+      {!loading && !R.isEmpty(allTransactions) && (
         <div className="flex flex-col gap-12">
           <div className="flex gap-16">
             <InfoWithLabel info={getNumTransactions()} label={'transactions'} />
