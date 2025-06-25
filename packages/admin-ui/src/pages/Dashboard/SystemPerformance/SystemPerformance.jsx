@@ -273,10 +273,7 @@ const SystemPerformance = () => {
                   </div>
                 </div>
               </div>
-              <PercentageChart
-                cashIn={getDirectionPercent().cashIn}
-                cashOut={getDirectionPercent().cashOut}
-              />
+              <PercentageChart {...getDirectionPercent()} />
             </div>
           </div>
         </div>
