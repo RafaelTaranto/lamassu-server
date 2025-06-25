@@ -22,7 +22,10 @@ import Nav from './Nav'
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_HALF_UP })
 
-const getFiats = R.map(R.prop('fiat'))
+const sumBNBy = by =>
+  R.reduce((acc, value) => acc.plus(by(value)), new BigNumber(0))
+
+const getProfit = sumBNBy(tx => tx.profit)
 
 const GET_DATA = gql`
   query getData($excludeTestingCustomers: Boolean, $from: DateTimeISO) {
@@ -95,16 +98,16 @@ const SystemPerformance = () => {
     if (item.fiatCode === fiatLocale)
       return {
         ...item,
-        fiat: parseFloat(item.fiat),
-        profit: parseFloat(item.profit),
+        fiat: new BigNumber(item.fiat),
+        profit: new BigNumber(item.profit),
       }
     const itemRate = R.find(R.propEq(item.fiatCode, 'code'))(data.fiatRates)
     const localeRate = R.find(R.propEq(fiatLocale, 'code'))(data.fiatRates)
     const multiplier = localeRate.rate / itemRate.rate
     return {
       ...item,
-      fiat: parseFloat(item.fiat) * multiplier,
-      profit: parseFloat(item.profit) * multiplier,
+      fiat: new BigNumber(item.fiat).times(multiplier),
+      profit: new BigNumber(item.profit).times(multiplier),
     }
   }
 
@@ -120,15 +123,7 @@ const SystemPerformance = () => {
   }
 
   const getFiatVolume = () =>
-    new BigNumber(R.sum(getFiats(transactionsToShow))).toFormat(2)
-
-  const getProfit = transactions => {
-    return R.reduce(
-      (acc, value) => acc.plus(value.profit),
-      new BigNumber(0),
-      transactions,
-    )
-  }
+    sumBNBy(tx => tx.fiat)(transactionsToShow).toFormat(2)
 
   const getPercentChange = () => {
     const thisTimePeriodProfit = getProfit(transactionsToShow)
@@ -251,7 +246,9 @@ const SystemPerformance = () => {
                 timeFrame={selectedRange}
                 data={transactionsToShow}
                 previousTimeData={transactionsLastTimePeriod}
-                previousProfit={getProfit(transactionsLastTimePeriod)}
+                previousProfit={getProfit(
+                  transactionsLastTimePeriod,
+                ).toNumber()}
               />
             </div>
             <div className="flex-1">
