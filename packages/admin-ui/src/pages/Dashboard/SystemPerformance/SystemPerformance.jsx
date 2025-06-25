@@ -111,12 +111,13 @@ const SystemPerformance = () => {
     }
   }
 
-  const transactionsToShow = R.map(convertFiatToLocale)(
-    R.filter(isInRangeAndNoError(false), allTransactions),
-  )
-  const transactionsLastTimePeriod = R.map(convertFiatToLocale)(
-    R.filter(isInRangeAndNoError(true), allTransactions),
-  )
+  const prepareTransactions = getLastTimePeriod =>
+    allTransactions
+      .filter(isInRangeAndNoError(getLastTimePeriod))
+      .map(convertFiatToLocale)
+
+  const transactionsToShow = prepareTransactions(false)
+  const transactionsLastTimePeriod = prepareTransactions(true)
 
   const getNumTransactions = () => {
     return R.length(transactionsToShow)
