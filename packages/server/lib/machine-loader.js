@@ -104,26 +104,35 @@ function getConfig(defaultConfig) {
   return defaultConfig ? Promise.resolve(defaultConfig) : loadLatestConfig()
 }
 
-const getStatus = (ping, stuck) => {
-  if (ping && ping.age) return unresponsiveStatus
+const getMachineStatuses = (pings, events, machine) => {
+  const lastPing = pings[machine.deviceId][0]
+  if (lastPing?.age) return [unresponsiveStatus]
 
-  if (stuck && stuck.age) return stuckStatus
+  const machineEvents = events
+    .filter(
+      ev =>
+        ev.device_id === machine.deviceId && ev.event_type === 'stateChange',
+    )
+    .map(ev =>
+      Object.assign({}, ev, {
+        age: Math.floor(ev.age),
+        note: JSON.parse(ev.note),
+      }),
+    )
+    .sort((e1, e2) => e2.age - e1.age)
 
-  return fullyFunctionalStatus
+  const stuckScreen = checkStuckScreen(machineEvents, machine)[0]
+  if (stuckScreen?.age) return [stuckStatus]
+
+  return [fullyFunctionalStatus]
 }
 
 function addName(pings, events, config) {
   return machine => {
     const cashOutConfig = configManager.getCashOut(machine.deviceId, config)
-
     const cashOut = !!cashOutConfig.active
 
-    const statuses = [
-      getStatus(
-        _.first(pings[machine.deviceId]),
-        _.first(checkStuckScreen(events, machine)),
-      ),
-    ]
+    const statuses = getMachineStatuses(pings, events, machine)
 
     return _.assign(machine, { cashOut, statuses })
   }
