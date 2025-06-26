@@ -185,7 +185,7 @@ const CashCassettes = () => {
 
   const elements = helper.getElements(
     config,
-    bills,
+    billsByDeviceID,
     setWizard,
     widths,
     setMachineId,
