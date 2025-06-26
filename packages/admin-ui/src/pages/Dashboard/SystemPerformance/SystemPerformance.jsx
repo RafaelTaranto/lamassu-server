@@ -22,7 +22,10 @@ import Nav from './Nav'
 
 BigNumber.config({ ROUNDING_MODE: BigNumber.ROUND_HALF_UP })
 
-const getFiats = R.map(R.prop('fiat'))
+const sumBNBy = by =>
+  R.reduce((acc, value) => acc.plus(by(value)), new BigNumber(0))
+
+const getProfit = sumBNBy(tx => tx.profit)
 
 const GET_DATA = gql`
   query getData($excludeTestingCustomers: Boolean, $from: DateTimeISO) {
@@ -62,6 +65,7 @@ const SystemPerformance = () => {
   })
   const fiatLocale = fromNamespace('locale')(data?.config).fiatCurrency
   const timezone = fromNamespace('locale')(data?.config).timezone
+  const allTransactions = data?.transactions ?? []
 
   const NOW = Date.now()
 
@@ -82,57 +86,45 @@ const SystemPerformance = () => {
     if (getLastTimePeriod) {
       const duration = rangeEnd - rangeStart
       return (
-        t.error === null &&
         createdTimestamp >= rangeStart - duration &&
         createdTimestamp < rangeStart
       )
     }
 
-    return (
-      t.error === null &&
-      createdTimestamp >= rangeStart &&
-      createdTimestamp <= rangeEnd
-    )
+    return createdTimestamp >= rangeStart && createdTimestamp <= rangeEnd
   }
 
   const convertFiatToLocale = item => {
     if (item.fiatCode === fiatLocale)
       return {
         ...item,
-        fiat: parseFloat(item.fiat),
-        profit: parseFloat(item.profit),
+        fiat: new BigNumber(item.fiat),
+        profit: new BigNumber(item.profit),
       }
     const itemRate = R.find(R.propEq(item.fiatCode, 'code'))(data.fiatRates)
     const localeRate = R.find(R.propEq(fiatLocale, 'code'))(data.fiatRates)
     const multiplier = localeRate.rate / itemRate.rate
     return {
       ...item,
-      fiat: parseFloat(item.fiat) * multiplier,
-      profit: parseFloat(item.profit) * multiplier,
+      fiat: new BigNumber(item.fiat).times(multiplier),
+      profit: new BigNumber(item.profit).times(multiplier),
     }
   }
 
-  const transactionsToShow = R.map(convertFiatToLocale)(
-    R.filter(isInRangeAndNoError(false), data?.transactions ?? []),
-  )
-  const transactionsLastTimePeriod = R.map(convertFiatToLocale)(
-    R.filter(isInRangeAndNoError(true), data?.transactions ?? []),
-  )
+  const prepareTransactions = getLastTimePeriod =>
+    allTransactions
+      .filter(isInRangeAndNoError(getLastTimePeriod))
+      .map(convertFiatToLocale)
+
+  const transactionsToShow = prepareTransactions(false)
+  const transactionsLastTimePeriod = prepareTransactions(true)
 
   const getNumTransactions = () => {
     return R.length(transactionsToShow)
   }
 
   const getFiatVolume = () =>
-    new BigNumber(R.sum(getFiats(transactionsToShow))).toFormat(2)
-
-  const getProfit = transactions => {
-    return R.reduce(
-      (acc, value) => acc.plus(value.profit),
-      new BigNumber(0),
-      transactions,
-    )
-  }
+    sumBNBy(tx => tx.fiat)(transactionsToShow).toFormat(2)
 
   const getPercentChange = () => {
     const thisTimePeriodProfit = getProfit(transactionsToShow)
@@ -182,16 +174,16 @@ const SystemPerformance = () => {
   return (
     <>
       <Nav
-        showPicker={!loading && !R.isEmpty(data.transactions)}
+        showPicker={!loading && !R.isEmpty(allTransactions)}
         handleSetRange={setSelectedRange}
       />
-      {!loading && R.isEmpty(data.transactions) && (
+      {!loading && R.isEmpty(allTransactions) && (
         <EmptyTable
           className="pt-10"
           message="No transactions during the last month"
         />
       )}
-      {!loading && !R.isEmpty(data.transactions) && (
+      {!loading && !R.isEmpty(allTransactions) && (
         <div className="flex flex-col gap-12">
           <div className="flex gap-16">
             <InfoWithLabel info={getNumTransactions()} label={'transactions'} />
@@ -255,7 +247,9 @@ const SystemPerformance = () => {
                 timeFrame={selectedRange}
                 data={transactionsToShow}
                 previousTimeData={transactionsLastTimePeriod}
-                previousProfit={getProfit(transactionsLastTimePeriod)}
+                previousProfit={getProfit(
+                  transactionsLastTimePeriod,
+                ).toNumber()}
               />
             </div>
             <div className="flex-1">
@@ -280,10 +274,7 @@ const SystemPerformance = () => {
                   </div>
                 </div>
               </div>
-              <PercentageChart
-                cashIn={getDirectionPercent().cashIn}
-                cashOut={getDirectionPercent().cashOut}
-              />
+              <PercentageChart {...getDirectionPercent()} />
             </div>
           </div>
         </div>

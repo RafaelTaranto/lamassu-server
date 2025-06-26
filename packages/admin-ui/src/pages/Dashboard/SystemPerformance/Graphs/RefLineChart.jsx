@@ -2,7 +2,7 @@ import * as d3 from 'd3'
 import * as R from 'ramda'
 import React, { useEffect, useRef, useCallback } from 'react'
 
-const transactionProfit = R.prop('profit')
+const transactionProfit = tx => tx.profit.toNumber()
 
 const mockPoint = (tx, offsetMs, profit) => {
   const date = new Date(new Date(tx.created).getTime() + offsetMs).toISOString()
