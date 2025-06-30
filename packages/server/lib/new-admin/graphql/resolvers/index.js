@@ -11,6 +11,7 @@ const funding = require('./funding.resolver')
 const log = require('./log.resolver')
 const loyalty = require('./loyalty.resolver')
 const machine = require('./machine.resolver')
+const machineGroups = require('./machineGroups.resolver')
 const market = require('./market.resolver')
 const notification = require('./notification.resolver')
 const pairing = require('./pairing.resolver')
@@ -36,6 +37,7 @@ const resolvers = [
   log,
   loyalty,
   machine,
+  machineGroups,
   market,
   notification,
   pairing,

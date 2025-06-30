@@ -61,6 +61,39 @@ class UserInputError extends GraphQLError {
   }
 }
 
+class ResourceNotFoundError extends GraphQLError {
+  constructor(details = {}) {
+    super('Resource not found', {
+      extensions: {
+        code: 'RESOURCE_NOT_FOUND',
+        ...details,
+      },
+    })
+  }
+}
+
+class ResourceAlreadyExistsError extends GraphQLError {
+  constructor(details = {}) {
+    super('Resource already exists', {
+      extensions: {
+        code: 'RESOURCE_ALREADY_EXISTS',
+        ...details,
+      },
+    })
+  }
+}
+
+class ResourceHasDependenciesError extends GraphQLError {
+  constructor(details = {}) {
+    super('Resource has dependencies', {
+      extensions: {
+        code: 'RESOURCE_HAS_DEPENDENCIES',
+        ...details,
+      },
+    })
+  }
+}
+
 module.exports = {
   AuthenticationError,
   InvalidCredentialsError,
@@ -68,4 +101,7 @@ module.exports = {
   InvalidTwoFactorError,
   InvalidUrlError,
   UserInputError,
+  ResourceNotFoundError,
+  ResourceAlreadyExistsError,
+  ResourceHasDependenciesError,
 }

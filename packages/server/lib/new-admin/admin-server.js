@@ -25,6 +25,7 @@ const exchange = require('../exchange')
 
 const { authDirectiveTransformer } = require('./graphql/directives')
 const { typeDefs, resolvers } = require('./graphql/schema')
+const { ResourceNotFoundError } = require('./graphql/errors')
 const findOperatorId = require('../middlewares/operatorId')
 const { USER_SESSIONS_CLEAR_INTERVAL } = require('../constants')
 const {
@@ -84,6 +85,12 @@ const loadRoutes = async () => {
     introspection: false,
     formatError: (formattedError, error) => {
       logger.error(error, JSON.stringify(error?.extensions || {}))
+
+      // Check by constructor name instead of instanceof due to ES module/CommonJS interop issues
+      if (error.originalError?.constructor?.name === 'NoResultError') {
+        return new ResourceNotFoundError()
+      }
+
       return formattedError
     },
     plugins: [
