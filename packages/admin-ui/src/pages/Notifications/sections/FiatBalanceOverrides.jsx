@@ -193,7 +193,7 @@ const FiatBalanceOverrides = ({ config, section }) => {
         enableDelete
         enableEdit
         enableCreate
-        save={it => save(section, validationSchema.cast(it))}
+        save={it => save(section, it)}
         initialValues={initialValues}
         validationSchema={validationSchema}
         forceDisable={isDisabled(NAME) || !machines}
