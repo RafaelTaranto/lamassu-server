@@ -1,15 +1,21 @@
+import Visibility from '@mui/icons-material/Visibility'
 import { useQuery, gql } from '@apollo/client'
 import { formatDistance } from 'date-fns'
 import * as R from 'ramda'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useLocation } from 'wouter'
+import {
+  MRT_ActionMenuItem,
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table'
+
 import { MainStatus } from '../../components/Status'
 import Title from '../../components/Title'
-import DataTable from '../../components/tables/DataTable'
 import { Label1 } from '../../components/typography/index.jsx'
-import MachineRedirectIcon from '../../styling/icons/month arrows/right.svg?react'
 import WarningIcon from '../../styling/icons/status/pumpkin.svg?react'
 import ErrorIcon from '../../styling/icons/status/tomato.svg?react'
+import { defaultMaterialTableOpts } from '../../utils/materialReactTableOpts.js'
 
 import MachineDetailsRow from './MachineDetailsCard'
 
@@ -63,64 +69,88 @@ const MachineStatus = () => {
     loading: machinesLoading,
   } = useQuery(GET_MACHINES, { notifyOnNetworkStatusChange: true })
   const { data: configResponse, configLoading } = useQuery(GET_DATA)
+
+  const columns = useMemo(
+    () => [
+      {
+        header: 'ID',
+        accessorKey: 'deviceId',
+      },
+      {
+        header: 'Machine name',
+        accessorKey: 'name',
+      },
+      {
+        header: 'Status',
+        enableColumnFilter: false,
+        accessorKey: 'statuses',
+        Cell: ({ cell }) => <MainStatus statuses={cell.getValue()} />,
+      },
+      {
+        header: 'Last ping',
+        accessorKey: 'lastPing',
+        enableColumnFilter: false,
+        Cell: ({ cell }) =>
+          cell.getValue()
+            ? formatDistance(new Date(cell.getValue()), new Date(), {
+                addSuffix: true,
+              })
+            : 'unknown',
+      },
+      {
+        header: 'Software version',
+        enableColumnFilter: false,
+        accessorKey: 'version',
+        Cell: ({ cell }) => cell.getValue() || 'unknown',
+      },
+    ],
+    [],
+  )
+
   const timezone = R.path(['config', 'locale_timezone'], configResponse)
 
-  const elements = [
-    {
-      header: 'Machine name',
-      width: 250,
-      size: 'sm',
-      textAlign: 'left',
-      view: m => (
-        <div className="flex items-center gap-2">
-          {m.name}
-          <div
-            onClick={() => {
-              navigate(`/machines/${m.deviceId}`)
-            }}>
-            <MachineRedirectIcon />
-          </div>
-        </div>
-      ),
+  const table = useMaterialReactTable({
+    ...defaultMaterialTableOpts,
+    initialState: {
+      ...defaultMaterialTableOpts.initialState,
+      columnVisibility: {
+        deviceId: false,
+      },
+      columnPinning: { right: ['mrt-row-actions'] },
+      expanded: addedMachineId ? { [addedMachineId]: true } : {},
     },
-    {
-      header: 'Status',
-      width: 350,
-      size: 'sm',
-      textAlign: 'left',
-      view: m => <MainStatus statuses={m.statuses} />,
+    columns: columns,
+    getRowId: it => it.deviceId,
+    data: machinesResponse?.machines ?? [],
+    enableSorting: false,
+    enableExpandAll: false,
+    enableRowActions: true,
+    state: {
+      isLoading: machinesLoading || configLoading,
     },
-    {
-      header: 'Last ping',
-      width: 200,
-      size: 'sm',
-      textAlign: 'left',
-      view: m =>
-        m.lastPing
-          ? formatDistance(new Date(m.lastPing), new Date(), {
-              addSuffix: true,
-            })
-          : 'unknown',
+    displayColumnDefOptions: {
+      'mrt-row-expand': {
+        header: '',
+      },
     },
-    {
-      header: 'Software version',
-      width: 200,
-      size: 'sm',
-      textAlign: 'left',
-      view: m => m.version || 'unknown',
-    },
-  ]
-
-  const machines = R.path(['machines'])(machinesResponse) ?? []
-  const expandedIndex = R.findIndex(R.propEq(addedMachineId, 'deviceId'))(
-    machines,
-  )
-
-  const InnerMachineDetailsRow = ({ it }) => (
-    <MachineDetailsRow it={it} onActionSuccess={refetch} timezone={timezone} />
-  )
-
-  const loading = machinesLoading || configLoading
+    renderRowActionMenuItems: ({ row }) => [
+      <MRT_ActionMenuItem //or just use a normal MUI MenuItem component
+        icon={<Visibility />}
+        key="view"
+        label="View"
+        onClick={() => navigate(`/machines/${row.original.deviceId}`)}
+        table={table}
+      />,
+    ],
+    renderDetailPanel: ({ row }) =>
+      row.original ? (
+        <MachineDetailsRow
+          it={row.original}
+          onActionSuccess={refetch}
+          timezone={timezone}
+        />
+      ) : null,
+  })
 
   return (
     <>
@@ -137,15 +167,7 @@ const MachineStatus = () => {
           </div>
         </div>
       </div>
-      <DataTable
-        loading={loading}
-        elements={elements}
-        data={machines}
-        Details={InnerMachineDetailsRow}
-        initialExpanded={expandedIndex}
-        emptyText="No machines so far"
-        expandable
-      />
+      <MaterialReactTable table={table} />
     </>
   )
 }
