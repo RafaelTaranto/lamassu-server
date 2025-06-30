@@ -149,73 +149,78 @@ const FiatBalance = ({ section, fieldWidth = 80 }) => {
               )}
             </div>
           </Form>
-          <Form>
-            <PromptWhenDirty />
-            <Header
-              title="Cash recycling"
-              editing={isEditing(RECYCLER_STACKER_KEY)}
-              disabled={isDisabled(RECYCLER_STACKER_KEY)}
-              setEditing={it => setEditing(RECYCLER_STACKER_KEY, it)}
-            />
-            <div className="flex flex-wrap gap-8">
-              {R.chain(
-                it => [
-                  <>
-                    <div className="flex w-50 gap-4">
-                      <Cashbox
-                        percent={
-                          values[
-                            `fillingPercentageRecycler${(it + 1) * 2 - 1}`
-                          ] ?? data[`recycler${(it + 1) * 2 - 1}`]
-                        }
-                        isLow={false}
-                        className="border-4 inline-block"
-                        omitInnerPercentage
-                        cashOut
-                      />
-                      <div className="w-30">
-                        <TL2 className="mt-0">Recycler {(it + 1) * 2 - 1}</TL2>
-                        <EditableNumber
-                          label="Alert me under"
-                          name={`fillingPercentageRecycler${(it + 1) * 2 - 1}`}
-                          editing={isEditing(RECYCLER_STACKER_KEY)}
-                          displayValue={x => (x === '' ? '-' : x)}
-                          decoration="%"
-                          width={fieldWidth}
+          {maxNumberOfRecyclers > 0 && (
+            <Form>
+              <PromptWhenDirty />
+              <Header
+                title="Cash recycling"
+                editing={isEditing(RECYCLER_STACKER_KEY)}
+                disabled={isDisabled(RECYCLER_STACKER_KEY)}
+                setEditing={it => setEditing(RECYCLER_STACKER_KEY, it)}
+              />
+              <div className="flex flex-wrap gap-8">
+                {R.chain(
+                  it => [
+                    <>
+                      <div className="flex w-50 gap-4">
+                        <Cashbox
+                          percent={
+                            values[
+                              `fillingPercentageRecycler${(it + 1) * 2 - 1}`
+                            ] ?? data[`recycler${(it + 1) * 2 - 1}`]
+                          }
+                          isLow={false}
+                          className="border-4 inline-block"
+                          omitInnerPercentage
+                          cashOut
                         />
+                        <div className="w-30">
+                          <TL2 className="mt-0">
+                            Recycler {(it + 1) * 2 - 1}
+                          </TL2>
+                          <EditableNumber
+                            label="Alert me under"
+                            name={`fillingPercentageRecycler${(it + 1) * 2 - 1}`}
+                            editing={isEditing(RECYCLER_STACKER_KEY)}
+                            displayValue={x => (x === '' ? '-' : x)}
+                            decoration="%"
+                            width={fieldWidth}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </>,
-                  <>
-                    <div className="flex w-50 gap-4">
-                      <Cashbox
-                        percent={
-                          values[`fillingPercentageRecycler${(it + 1) * 2}`] ??
-                          data[`recycler${(it + 1) * 2}`]
-                        }
-                        isLow={false}
-                        className="border-4 inline-block"
-                        omitInnerPercentage
-                        cashOut
-                      />
-                      <div className="w-30">
-                        <TL2 className="mt-0">Recycler {(it + 1) * 2}</TL2>
-                        <EditableNumber
-                          label="Alert me under"
-                          name={`fillingPercentageRecycler${(it + 1) * 2}`}
-                          editing={isEditing(RECYCLER_STACKER_KEY)}
-                          displayValue={x => (x === '' ? '-' : x)}
-                          decoration="%"
-                          width={fieldWidth}
+                    </>,
+                    <>
+                      <div className="flex w-50 gap-4">
+                        <Cashbox
+                          percent={
+                            values[
+                              `fillingPercentageRecycler${(it + 1) * 2}`
+                            ] ?? data[`recycler${(it + 1) * 2}`]
+                          }
+                          isLow={false}
+                          className="border-4 inline-block"
+                          omitInnerPercentage
+                          cashOut
                         />
+                        <div className="w-30">
+                          <TL2 className="mt-0">Recycler {(it + 1) * 2}</TL2>
+                          <EditableNumber
+                            label="Alert me under"
+                            name={`fillingPercentageRecycler${(it + 1) * 2}`}
+                            editing={isEditing(RECYCLER_STACKER_KEY)}
+                            displayValue={x => (x === '' ? '-' : x)}
+                            decoration="%"
+                            width={fieldWidth}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  </>,
-                ],
-                R.times(R.identity, maxNumberOfRecyclers / 2),
-              )}
-            </div>
-          </Form>
+                    </>,
+                  ],
+                  R.times(R.identity, maxNumberOfRecyclers / 2),
+                )}
+              </div>
+            </Form>
+          )}
         </div>
       )}
     </Formik>

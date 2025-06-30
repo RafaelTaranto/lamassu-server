@@ -185,22 +185,24 @@ const FiatBalanceOverrides = ({ config, section }) => {
   )
 
   return (
-    <EditableTable
-      name={NAME}
-      title="Overrides"
-      error={error?.message}
-      enableDelete
-      enableEdit
-      enableCreate
-      save={it => save(section, validationSchema.cast(it))}
-      initialValues={initialValues}
-      validationSchema={validationSchema}
-      forceDisable={isDisabled(NAME) || !machines}
-      data={setupValues}
-      elements={elements}
-      disableAdd={!suggestions?.length}
-      setEditing={innerSetEditing}
-    />
+    <div className="mt-4">
+      <EditableTable
+        name={NAME}
+        title="Overrides"
+        error={error?.message}
+        enableDelete
+        enableEdit
+        enableCreate
+        save={it => save(section, validationSchema.cast(it))}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        forceDisable={isDisabled(NAME) || !machines}
+        data={setupValues}
+        elements={elements}
+        disableAdd={!suggestions?.length}
+        setEditing={innerSetEditing}
+      />
+    </div>
   )
 }
 
