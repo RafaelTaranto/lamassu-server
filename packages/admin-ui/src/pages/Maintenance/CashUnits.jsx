@@ -16,7 +16,6 @@ import HistoryIcon from '../../styling/icons/circle buttons/history/zodiac.svg?r
 
 import { Button, SupportLinkButton } from '../../components/buttons'
 import { RadioGroup } from '../../components/inputs'
-import { EmptyTable } from '../../components/table'
 import { fromNamespace, toNamespace } from '../../utils/config'
 import { MANUAL, AUTOMATIC } from '../../utils/constants'
 import { onlyFirstToUpper } from '../../utils/string'
@@ -273,10 +272,6 @@ const CashCassettes = () => {
               expandable
               tableClassName="mb-20"
             />
-
-            {data && R.isEmpty(machines) && (
-              <EmptyTable message="No machines so far" />
-            )}
           </>
         )}
         {showHistory && (
