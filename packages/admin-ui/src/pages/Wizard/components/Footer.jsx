@@ -24,7 +24,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
           alignItems="baseline">
           <Grid
             item
-            xs={5}
+            size={5}
             container
             direction={open ? 'column' : 'row'}
             justifyContent="flex-start"
@@ -35,7 +35,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
           </Grid>
           <Grid
             item
-            xs={4}
+            size={4}
             container
             direction="column"
             justifyContent="flex-start"
@@ -56,7 +56,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
             alignItems="baseline">
             <Grid
               item
-              xs={5}
+              size={5}
               container
               direction="column"
               justifyContent="flex-start"
@@ -70,7 +70,7 @@ function Footer({ currentStep, steps, subtitle, text, exImage, open, start }) {
             </Grid>
             <Grid
               item
-              xs={4}
+              size={4}
               container
               direction="column"
               justifyContent="flex-start"
