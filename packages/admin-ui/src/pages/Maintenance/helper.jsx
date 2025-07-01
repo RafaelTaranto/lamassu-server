@@ -105,7 +105,7 @@ const getElements = (config, bills, setWizard, widths, setMachineId) => {
                     <span className="h-full w-[1px] bg-comet2" />
                   )}
                 </>
-              ))(R.range(1, m.numberOfRecyclers / 2 + 1))}
+              ))(R.range(1, Math.ceil(m.numberOfRecyclers / 2) + 1))}
             </div>
           </div>
         )
