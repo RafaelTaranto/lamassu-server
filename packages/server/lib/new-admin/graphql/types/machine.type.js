@@ -23,6 +23,7 @@ const typeDef = gql`
     downloadSpeed: String
     responseTime: String
     packetLoss: String
+    machineGroup: MachineGroup
   }
 
   type Diagnostics {
@@ -98,6 +99,7 @@ const typeDef = gql`
   }
 
   type Mutation {
+    assignMachinesToGroup(deviceIds: [ID!]!, groupId: ID!): [ID]
     machineAction(
       deviceId: ID!
       action: MachineAction!

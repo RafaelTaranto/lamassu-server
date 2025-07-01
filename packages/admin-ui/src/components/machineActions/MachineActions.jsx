@@ -1,4 +1,6 @@
 import { useMutation, useLazyQuery, gql } from '@apollo/client'
+import GroupAddIcon from '@mui/icons-material/GroupAdd'
+import GroupAddOutlinedIcon from '@mui/icons-material/GroupAddOutlined'
 import React, { memo, useState } from 'react'
 import { ConfirmDialog } from '../ConfirmDialog'
 import ActionButton from '../buttons/ActionButton'
@@ -13,6 +15,7 @@ import UnpairReversedIcon from '../../styling/icons/button/unpair/white.svg?reac
 import UnpairIcon from '../../styling/icons/button/unpair/zodiac.svg?react'
 
 import DiagnosticsModal from './DiagnosticsModal'
+import GroupModal from './GroupModal'
 
 const MACHINE_ACTION = gql`
   mutation MachineAction(
@@ -62,6 +65,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
   const [action, setAction] = useState({ command: null })
   const [preflightOptions, setPreflightOptions] = useState({})
   const [showModal, setShowModal] = useState(false)
+  const [showGroupModal, setShowGroupModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
 
   const warningMessage = (
@@ -221,7 +225,26 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
           }}>
           Diagnostics
         </ActionButton>
+        <ActionButton
+          color="primary"
+          Icon={GroupAddIcon}
+          InverseIcon={GroupAddOutlinedIcon}
+          disabled={loading}
+          onClick={() => {
+            setShowGroupModal(true)
+          }}>
+          Move to another group
+        </ActionButton>
       </div>
+      {showGroupModal && (
+        <GroupModal
+          deviceId={machine.deviceId}
+          onClose={() => {
+            setShowGroupModal(false)
+          }}
+          onSuccess={onActionSuccess}
+        />
+      )}
       {showModal && (
         <DiagnosticsModal
           sendAction={() =>
