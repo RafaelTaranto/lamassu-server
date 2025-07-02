@@ -24,7 +24,11 @@ const DETAIL_TEMPLATE = {
 }
 
 function parseEventNote(event) {
-  return _.set('note', JSON.parse(event.note), event)
+  return _.update(
+    'note',
+    note => (typeof note === 'string' ? JSON.parse(note) : note),
+    event,
+  )
 }
 
 function checkPing(device) {
