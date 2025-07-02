@@ -20,6 +20,7 @@ const logger = require('./logger')
 const fullyFunctionalStatus = { label: 'Fully functional', type: 'success' }
 const unresponsiveStatus = { label: 'Unresponsive', type: 'error' }
 const stuckStatus = { label: 'Stuck', type: 'error' }
+const bootingUpStatus = { label: 'Booting up', type: 'warning' }
 const OPERATOR_DATA_DIR = process.env.OPERATOR_DATA_DIR
 
 const MACHINE_WITH_CALCULATED_FIELD_SQL = `
@@ -104,6 +105,11 @@ function getConfig(defaultConfig) {
   return defaultConfig ? Promise.resolve(defaultConfig) : loadLatestConfig()
 }
 
+const isBootingState = state => ['booting', 'pendingIdle'].includes(state)
+
+const isBooting = machineEvents =>
+  isBootingState(machineEvents[machineEvents.length - 1]?.note?.state)
+
 const getMachineStatuses = (pings, events, machine) => {
   const lastPing = pings[machine.deviceId][0]
   if (lastPing?.age) return [unresponsiveStatus]
@@ -123,6 +129,8 @@ const getMachineStatuses = (pings, events, machine) => {
 
   const stuckScreen = checkStuckScreen(machineEvents, machine)[0]
   if (stuckScreen?.age) return [stuckStatus]
+
+  if (isBooting(machineEvents)) return [bootingUpStatus]
 
   return [fullyFunctionalStatus]
 }
