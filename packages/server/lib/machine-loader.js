@@ -16,9 +16,11 @@ const notifierQueries = require('./notifier/queries')
 const { GraphQLError } = require('graphql')
 const { loadLatestConfig } = require('./new-settings-loader')
 const logger = require('./logger')
+const T = require('./time')
 
 const fullyFunctionalStatus = { label: 'Fully functional', type: 'success' }
 const unresponsiveStatus = { label: 'Unresponsive', type: 'error' }
+const stuckOnBootStatus = { label: 'Stuck booting up', type: 'error' }
 const stuckStatus = { label: 'Stuck', type: 'error' }
 const bootingUpStatus = { label: 'Booting up', type: 'warning' }
 const OPERATOR_DATA_DIR = process.env.OPERATOR_DATA_DIR
@@ -107,6 +109,31 @@ function getConfig(defaultConfig) {
 
 const isBootingState = state => ['booting', 'pendingIdle'].includes(state)
 
+const isStuckOnBoot = machineEvents => {
+  // Consider the machine stuck on boot if it's been booting for at least 30s
+  const lowerLimit = 30 * T.seconds
+
+  // Heuristic to ignore older events (possibly from previous boots), obviously
+  // fallible
+  const higherLimit = 4 * lowerLimit
+
+  // machineEvents is sorted from oldest to newest
+  const newest = machineEvents[machineEvents.length - 1]
+
+  // Find the first event that makes a lowerLimit time interval with the
+  // newest, ignoring older events
+  const firstOverLimit = machineEvents.findLastIndex(ev => {
+    const ageDiff = ev.age - newest.age
+    return ageDiff >= lowerLimit && ageDiff <= higherLimit
+  })
+  if (firstOverLimit < 0) return false
+
+  // Check all the events are for a booting state
+  return machineEvents
+    .slice(firstOverLimit)
+    .every(ev => isBootingState(ev.note.state))
+}
+
 const isBooting = machineEvents =>
   isBootingState(machineEvents[machineEvents.length - 1]?.note?.state)
 
@@ -126,6 +153,8 @@ const getMachineStatuses = (pings, events, machine) => {
       }),
     )
     .sort((e1, e2) => e2.age - e1.age)
+
+  if (isStuckOnBoot(machineEvents)) return [stuckOnBootStatus]
 
   const stuckScreen = checkStuckScreen(machineEvents, machine)[0]
   if (stuckScreen?.age) return [stuckStatus]
