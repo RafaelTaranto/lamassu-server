@@ -144,7 +144,7 @@ const CashUnitDetails = ({
                 </div>
                 {it !== machine.numberOfRecyclers / 2 && <VerticalLine />}
               </>
-            ))(R.range(1, machine.numberOfRecyclers / 2 + 1))}
+            ))(R.range(1, Math.ceil(machine.numberOfRecyclers / 2) + 1))}
           </>
         )}
       </div>

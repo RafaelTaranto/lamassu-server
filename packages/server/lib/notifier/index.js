@@ -107,9 +107,7 @@ function buildAlerts(pings, balances, events, devices) {
 }
 
 function checkPings(devices) {
-  const deviceIds = _.map('deviceId', devices)
-  const pings = _.map(utils.checkPing, devices)
-  return _.zipObject(deviceIds)(pings)
+  return Object.fromEntries(devices.map(d => [d.deviceId, utils.checkPing(d)]))
 }
 
 function checkStuckScreen(deviceEvents, machine) {
