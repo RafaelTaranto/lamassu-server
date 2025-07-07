@@ -10,6 +10,7 @@ import CloseIcon from '../styling/icons/action/close/zodiac.svg?react'
 const Modal = ({
   width,
   height,
+  minHeight = 400,
   infoPanelHeight,
   title,
   small,
@@ -39,7 +40,7 @@ const Modal = ({
       {...props}>
       <>
         <Paper
-          style={{ width, height, minHeight: height ?? 400 }}
+          style={{ width, height, minHeight: height ?? minHeight }}
           className={classnames(
             'flex flex-col max-h-[90vh] rounded-lg outline-0',
             className,
