@@ -92,7 +92,7 @@ const Wizard = ({
         title="Manual data entry"
         handleClose={onClose}
         width={520}
-        height={520}
+        minHeight={520}
         open={true}>
         <Stepper steps={LAST_STEP} currentStep={step} className="my-4" />
         <Formik
