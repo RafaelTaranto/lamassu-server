@@ -1,11 +1,11 @@
 const _ = require('lodash/fp')
-const { loadLatest, saveAccounts } = require('../lib/new-settings-loader')
+const { loadAccounts, saveAccounts } = require('./settings')
 const { ACCOUNT_LIST } = require('../lib/new-admin/config/accounts')
 const { ALL } = require('../lib/plugins/common/ccxt')
 
 exports.up = function (next) {
-  return loadLatest()
-    .then(({ accounts }) => {
+  return loadAccounts()
+    .then(accounts => {
       const allExchanges = _.map(it => it.code)(
         _.filter(it => it.class === 'exchange', ACCOUNT_LIST),
       )

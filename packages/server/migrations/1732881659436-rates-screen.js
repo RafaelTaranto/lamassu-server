@@ -1,10 +1,10 @@
 const _ = require('lodash/fp')
-const { saveConfig, loadLatest } = require('../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('./settings')
 
 exports.up = function (next) {
   const newConfig = {}
-  return loadLatest()
-    .then(({ config }) => {
+  return loadConfig()
+    .then(config => {
       if (!_.isNil(config.machineScreens_rates_active)) return
       newConfig[`machineScreens_rates_active`] = true
       return saveConfig(newConfig)

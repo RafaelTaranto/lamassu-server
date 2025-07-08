@@ -1,12 +1,12 @@
 const _ = require('lodash/fp')
 var db = require('./db')
-const settingsLoader = require('../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('./settings')
 const configManager = require('../lib/new-config-manager')
 
 exports.up = function (next) {
   return db
     .tx(async t => {
-      const settingsPromise = settingsLoader.loadLatestConfig()
+      const settingsPromise = loadConfig()
       const machinesPromise = t.any('SELECT device_id FROM devices')
       const [config, machines] = await Promise.all([
         settingsPromise,
@@ -39,7 +39,7 @@ exports.up = function (next) {
         }
       })(deviceIds)
 
-      return settingsLoader.migrationSaveConfig(config)
+      return saveConfig(config)
     })
     .then(() => next())
     .catch(err => next(err))

@@ -1,9 +1,6 @@
 var db = require('./db')
 const _ = require('lodash/fp')
-const {
-  migrationSaveConfig,
-  loadLatestConfig,
-} = require('../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('./settings')
 const { getMachineIds } = require('../lib/machine-loader')
 
 exports.up = function (next) {
@@ -28,7 +25,7 @@ exports.up = function (next) {
       ADD COLUMN denomination_4 INTEGER`,
   ]
 
-  return Promise.all([loadLatestConfig(), getMachineIds()]).then(
+  return Promise.all([loadConfig(), getMachineIds()]).then(
     ([config, machineIds]) => {
       const newConfig = _.reduce(
         (acc, value) => {
@@ -49,7 +46,7 @@ exports.up = function (next) {
         machineIds,
       )
 
-      return migrationSaveConfig(newConfig).then(() => db.multi(sql, next))
+      return saveConfig(newConfig).then(() => db.runAll(sql, next))
     },
   )
 }

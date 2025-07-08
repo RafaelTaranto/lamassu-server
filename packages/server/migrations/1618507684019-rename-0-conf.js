@@ -1,9 +1,9 @@
 const _ = require('lodash/fp')
-const settingsLoader = require('../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('./settings')
 const configManager = require('../lib/new-config-manager')
 
 exports.up = async function () {
-  const config = await settingsLoader.loadLatestConfig()
+  const config = await loadConfig()
   const cryptoCodes = configManager.getCryptosFromWalletNamespace(config)
   _.forEach(cryptoCode => {
     const key = `wallets_${cryptoCode}_zeroConf`
@@ -13,7 +13,7 @@ exports.up = async function () {
       config[key] = 'none'
     }
   }, cryptoCodes)
-  return settingsLoader.migrationSaveConfig(config)
+  return saveConfig(config)
 }
 
 exports.down = function (next) {
