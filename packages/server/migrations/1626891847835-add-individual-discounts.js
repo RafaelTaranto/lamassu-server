@@ -14,7 +14,7 @@ exports.up = function (next) {
     `ALTER TABLE cash_out_txs ADD COLUMN discount_source discount_source`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

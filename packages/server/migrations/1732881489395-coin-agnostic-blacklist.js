@@ -10,7 +10,7 @@ exports.up = function (next) {
     `ALTER TABLE blacklist_temp RENAME TO blacklist`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

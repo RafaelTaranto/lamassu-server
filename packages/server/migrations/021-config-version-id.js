@@ -8,7 +8,7 @@ exports.up = function (next) {
     FOREIGN KEY (user_config_id)
     REFERENCES user_config (id)`,
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

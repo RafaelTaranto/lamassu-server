@@ -16,7 +16,7 @@ exports.up = function (next) {
     `ALTER TABLE blacklist ADD COLUMN blacklist_message_id UUID REFERENCES blacklist_messages(id) NOT NULL DEFAULT '${defaultMessageId}'`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

@@ -5,7 +5,7 @@ exports.up = function (next) {
     `ALTER TABLE customers ADD COLUMN is_test_customer BOOLEAN NOT NULL DEFAULT false`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

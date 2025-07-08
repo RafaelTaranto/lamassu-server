@@ -9,7 +9,7 @@ exports.up = function (next) {
     'alter table bills add column cash_in_fee_crypto bigint not null',
     'alter table bills add column crypto_atoms_after_fee bigint not null',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

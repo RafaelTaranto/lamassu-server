@@ -10,7 +10,7 @@ exports.up = function (next) {
     'CREATE INDEX ON bills (destination_unit)',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

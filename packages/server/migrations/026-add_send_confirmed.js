@@ -12,7 +12,7 @@ exports.up = function (next) {
     'alter table cash_out_txs add column device_time bigint not null',
     'alter table cash_out_txs add column timedout boolean not null default false',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

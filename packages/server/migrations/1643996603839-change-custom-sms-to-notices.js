@@ -11,7 +11,7 @@ exports.up = function (next) {
     `ALTER TABLE sms_notices ADD COLUMN allow_toggle BOOLEAN NOT NULL DEFAULT true`,
   ]
 
-  db.multi(sql, () =>
+  db.runAll(sql, () =>
     Promise.all([
       smsNotices.createSMSNotice(
         'sms_code',

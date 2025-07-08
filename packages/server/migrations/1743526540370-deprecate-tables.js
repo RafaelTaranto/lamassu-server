@@ -1,7 +1,7 @@
 const db = require('./db')
 
 exports.up = next =>
-  db.multi(
+  db.runAll(
     [
       'DROP TABLE aggregated_machine_pings;',
       'DROP TABLE cash_in_refills;',

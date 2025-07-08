@@ -5,7 +5,7 @@ exports.up = function (next) {
     'alter table transactions add phone text',
     'create index on transactions (phone)',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

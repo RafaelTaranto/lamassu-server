@@ -10,7 +10,7 @@ exports.up = function (next) {
     'alter table bills alter satoshis TYPE bigint',
   ]
 
-  db.multi(sqls, next)
+  db.runAll(sqls, next)
 }
 
 exports.down = function (next) {

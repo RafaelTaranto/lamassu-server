@@ -10,7 +10,7 @@ exports.up = function (next) {
   newConfig.notifications_notificationCenter_security = true
 
   return migrationSaveConfig(newConfig)
-    .then(() => db.multi(sql, next))
+    .then(() => db.runAll(sql, next))
     .catch(err => {
       return next(err)
     })

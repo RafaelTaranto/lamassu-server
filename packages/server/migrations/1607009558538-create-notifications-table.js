@@ -30,7 +30,7 @@ exports.up = function (next) {
     CREATE INDEX ON notifications (read);`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

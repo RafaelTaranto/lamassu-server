@@ -16,7 +16,7 @@ exports.up = function (next) {
     )`,
     'alter table pairing_tokens add column name text NOT NULL',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

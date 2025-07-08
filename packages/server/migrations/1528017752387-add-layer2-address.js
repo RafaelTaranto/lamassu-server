@@ -5,7 +5,7 @@ exports.up = function (next) {
     'alter table cash_out_txs add column layer_2_address text null',
     'alter table cash_out_actions add column layer_2_address text null',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

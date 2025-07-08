@@ -3,7 +3,7 @@
 var db = require('./db')
 
 exports.up = function (next) {
-  db.multi(
+  db.runAll(
     [
       'CREATE TABLE IF NOT EXISTS cached_responses ( ' +
         'id serial PRIMARY KEY, ' +

@@ -5,7 +5,7 @@ exports.up = function (next) {
     `UPDATE cash_out_txs SET error_code = 'walletScoringError' WHERE error_code = 'ciphertraceError'`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

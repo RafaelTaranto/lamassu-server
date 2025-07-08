@@ -17,7 +17,7 @@ exports.up = function (next) {
     `ALTER TABLE cashbox_batches ADD COLUMN bill_count_override SMALLINT`,
     `ALTER TABLE cashbox_batches ADD COLUMN performed_by VARCHAR(64)`,
   ]
-  db.multi(sqls, next)
+  db.runAll(sqls, next)
 }
 
 exports.down = function (next) {

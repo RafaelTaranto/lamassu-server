@@ -9,7 +9,7 @@ exports.up = function (next) {
     'alter table logs add column server_timestamp timestamptz not null default now() ',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

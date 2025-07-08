@@ -1,5 +1,5 @@
 const _ = require('lodash/fp')
-var db = require('../lib/db')
+var db = require('./db')
 const settingsLoader = require('../lib/new-settings-loader')
 const configManager = require('../lib/new-config-manager')
 
