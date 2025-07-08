@@ -1,14 +1,21 @@
 const crypto = require('crypto')
 
 const _ = require('lodash/fp')
-const db = require('./db')
+const {
+  db: { default: db },
+  userConfig,
+} = require('typesafe-db')
+
 const { getOperatorId } = require('./operator')
 const {
   getTermsConditions,
   setTermsConditions,
 } = require('./new-config-manager')
+const {
+  getAllComplianceTriggers,
+  saveComplianceTriggers,
+} = require('./compliance-triggers')
 
-const NEW_SETTINGS_LOADER_SCHEMA_VERSION = 2
 const PASSWORD_FILLED = 'PASSWORD_FILLED'
 const SECRET_FIELDS = [
   'bitgo.BTCWalletPassphrase',
@@ -52,62 +59,32 @@ const addTermsHash = configs => {
       )(terms)
 }
 
-const notifyReload = (dbOrTx, operatorId) =>
-  dbOrTx.none('NOTIFY $1:name, $2', ['reload', JSON.stringify({ operatorId })])
+const loadAccounts = schemaVersion => userConfig.loadAccounts(db, schemaVersion)
 
 function saveAccounts(accounts) {
   if (!accounts) {
     return Promise.resolve()
   }
 
-  const accountsSql = `UPDATE user_config SET data = $1, valid = TRUE, schema_version = $2 WHERE type = 'accounts';
-  INSERT INTO user_config (type, data, valid, schema_version)
-  SELECT 'accounts', $1, TRUE, $2 WHERE 'accounts' NOT IN (SELECT type FROM user_config)`
+  const mergeAccounts = currentAccounts => {
+    const newAccounts = _.merge(currentAccounts, accounts)
 
-  return Promise.all([loadAccounts(), getOperatorId('middleware')]).then(
-    ([currentAccounts, operatorId]) => {
-      const newAccounts = _.merge(currentAccounts, accounts)
+    // Only allow one wallet scoring active at a time
+    if (accounts.elliptic?.enabled && newAccounts.scorechain) {
+      newAccounts.scorechain.enabled = false
+    }
 
-      // Only allow one wallet scoring active at a time
-      if (accounts.elliptic?.enabled && newAccounts.scorechain) {
-        newAccounts.scorechain.enabled = false
-      }
+    if (accounts.scorechain?.enabled && newAccounts.elliptic) {
+      newAccounts.elliptic.enabled = false
+    }
 
-      if (accounts.scorechain?.enabled && newAccounts.elliptic) {
-        newAccounts.elliptic.enabled = false
-      }
+    return newAccounts
+  }
 
-      return db
-        .tx(t =>
-          t
-            .none(accountsSql, [
-              { accounts: newAccounts },
-              NEW_SETTINGS_LOADER_SCHEMA_VERSION,
-            ])
-            .then(() => notifyReload(t, operatorId)),
-        )
-        .catch(console.error)
-    },
-  )
+  return getOperatorId('middleware')
+    .then(operatorId => userConfig.saveAccounts(db, mergeAccounts, operatorId))
+    .catch(console.error)
 }
-
-function _loadAccounts(db, schemaVersion) {
-  const sql = `SELECT data
-    FROM user_config
-    WHERE type = $1
-      AND schema_version = $2
-      AND valid
-    ORDER BY id DESC
-    LIMIT 1`
-
-  return db.oneOrNone(
-    sql,
-    ['accounts', schemaVersion || NEW_SETTINGS_LOADER_SCHEMA_VERSION],
-    row => row?.data?.accounts ?? {},
-  )
-}
-
-const loadAccounts = schemaVersion => _loadAccounts(db, schemaVersion)
 
 function hideSecretFields(accounts) {
   return _.flow(
@@ -123,163 +100,57 @@ function showAccounts(schemaVersion) {
   return loadAccounts(schemaVersion).then(hideSecretFields)
 }
 
-const insertConfigRow = (dbOrTx, data) =>
-  dbOrTx.none(
-    "INSERT INTO user_config (type, data, valid, schema_version) VALUES ('config', $1, TRUE, $2)",
-    [data, NEW_SETTINGS_LOADER_SCHEMA_VERSION],
-  )
+const renameKeys = keys => obj =>
+  Object.entries(keys).reduce((obj, [newKey, oldKey]) => {
+    if (!obj[newKey]) obj[newKey] = obj[oldKey]
+    delete obj[oldKey]
+    return obj
+  }, obj)
 
-function saveConfig(config) {
-  return Promise.all([
-    loadLatestConfigOrNone(),
-    getOperatorId('middleware'),
-  ]).then(([currentConfig, operatorId]) => {
-    const newConfig = addTermsHash(_.assign(currentConfig, config))
-    return db
-      .tx(t =>
-        insertConfigRow(t, { config: newConfig }).then(() =>
-          notifyReload(t, operatorId),
-        ),
-      )
-      .catch(console.error)
-  })
+const saveConfig = config =>
+  getOperatorId('middleware')
+    .then(operatorId =>
+      db.transaction().execute(async tx => {
+        const currentConfig = await _loadConfigTx(tx)
+        const newConfig = addTermsHash(_.assign(currentConfig, config))
+        const triggers = newConfig.triggers.map(
+          renameKeys({ requirementType: 'requirement' }),
+        )
+        delete newConfig.triggers
+        await saveComplianceTriggers(tx, triggers)
+        await userConfig.insertConfigRow(tx, { config: newConfig })
+        await userConfig.notifyReload(tx, operatorId)
+      }),
+    )
+    .catch(console.error)
+
+const _loadConfigTx = async (tx, schemaVersion) => {
+  const config = await userConfig.loadConfig(tx, schemaVersion)
+  const triggers = await getAllComplianceTriggers(tx)
+  return Object.assign(config, { triggers })
 }
 
-function removeFromConfig(fields) {
-  return Promise.all([
-    loadLatestConfigOrNone(),
-    getOperatorId('middleware'),
-  ]).then(([currentConfig, operatorId]) => {
-    const newConfig = _.omit(fields, currentConfig)
-    return db
-      .tx(t =>
-        insertConfigRow(t, { config: newConfig }).then(() =>
-          notifyReload(t, operatorId),
-        ),
-      )
-      .catch(console.error)
-  })
-}
+const loadConfig = schemaVersion =>
+  db.transaction().execute(async tx => _loadConfigTx(tx, schemaVersion))
 
-function migrationSaveConfig(config) {
-  return loadLatestConfigOrNone().then(currentConfig => {
-    const newConfig = _.assign(currentConfig, config)
-    return insertConfigRow(db, { config: newConfig }).catch(console.error)
-  })
-}
-
-const loadLatest = schemaVersion =>
+const load = version =>
   db
-    .task(t =>
-      Promise.all([
-        loadLatestConfigOrNoneReturningVersion(t, schemaVersion),
-        _loadAccounts(t, schemaVersion),
-      ]),
-    )
-    .then(([configObj, accounts]) => ({
-      config: configObj.config,
-      accounts,
-      version: configObj.version,
-    }))
-
-function loadLatestConfig() {
-  const sql = `SELECT data
-    FROM user_config
-    WHERE type = 'config'
-      AND schema_version = $1
-      AND valid
-    ORDER BY id DESC
-    LIMIT 1`
-
-  return db
-    .oneOrNone(sql, [NEW_SETTINGS_LOADER_SCHEMA_VERSION])
-    .then(row => (row ? row.data.config : {}))
-    .catch(err => {
-      throw err
+    .transaction()
+    .execute(async tx => {
+      const settings = await userConfig.load(tx, version)
+      const triggers = await getAllComplianceTriggers(tx)
+      return [settings, triggers]
     })
-}
-
-function loadLatestConfigOrNoneReturningVersion(db, schemaVersion) {
-  const sql = `SELECT data, id
-    FROM user_config
-    WHERE type = 'config'
-      AND schema_version = $1
-      AND valid
-    ORDER BY id DESC
-    LIMIT 1`
-
-  return db
-    .oneOrNone(sql, [schemaVersion || NEW_SETTINGS_LOADER_SCHEMA_VERSION])
-    .then(row => (row ? { config: row.data.config, version: row.id } : {}))
-}
-
-function loadLatestConfigOrNone(schemaVersion) {
-  const sql = `SELECT data
-    FROM user_config
-    WHERE type = 'config'
-      AND schema_version = $1
-    ORDER BY id DESC
-    LIMIT 1`
-
-  return db
-    .oneOrNone(sql, [schemaVersion || NEW_SETTINGS_LOADER_SCHEMA_VERSION])
-    .then(row => (row ? row.data.config : {}))
-}
-
-function loadConfig(db, versionId) {
-  const sql = `SELECT data
-    FROM user_config
-    WHERE id = $1
-      AND type = 'config'
-      AND schema_version = $2
-      AND valid`
-
-  return db
-    .one(
-      sql,
-      [versionId, NEW_SETTINGS_LOADER_SCHEMA_VERSION],
-      ({ data: { config } }) => config,
-    )
-    .catch(err => {
-      if (err.name === 'QueryResultError') {
-        throw new Error('No such config version: ' + versionId)
-      }
-
-      throw err
+    .then(([settings, triggers]) => {
+      settings.config = Object.assign(settings.config, { triggers })
+      return settings
     })
-}
-
-function load(versionId) {
-  if (!versionId) Promise.reject('versionId is required')
-
-  return db
-    .task(t => Promise.all([loadConfig(t, versionId), _loadAccounts(t)]))
-    .then(([config, accounts]) => ({
-      config,
-      version: versionId,
-      accounts,
-    }))
-}
-
-const fetchCurrentConfigVersion = () => {
-  const sql = `SELECT id FROM user_config
-    WHERE type = 'config'
-      AND valid
-    ORDER BY id DESC
-    LIMIT 1`
-  return db.one(sql).then(row => row.id)
-}
 
 module.exports = {
   saveConfig,
-  migrationSaveConfig,
   saveAccounts,
   loadAccounts,
   showAccounts,
-  loadLatest,
-  loadLatestConfig,
-  loadLatestConfigOrNone,
+  loadConfig,
   load,
-  removeFromConfig,
-  fetchCurrentConfigVersion,
 }

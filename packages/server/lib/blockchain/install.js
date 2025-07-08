@@ -210,7 +210,7 @@ function plugin(crypto) {
 }
 
 function getBlockchainSyncStatus(cryptoList) {
-  return settingsLoader.loadLatest().then(settings => {
+  return settingsLoader.load().then(settings => {
     if (isDevMode()) return new Array(_.size(cryptoList)).fill('ready')
 
     const blockchainStatuses = _.reduce(

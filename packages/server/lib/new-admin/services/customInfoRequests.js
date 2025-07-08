@@ -2,10 +2,7 @@ const db = require('../../db')
 const uuid = require('uuid')
 const _ = require('lodash/fp')
 const pgp = require('pg-promise')()
-const {
-  loadLatestConfigOrNone,
-  saveConfig,
-} = require('../../../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('../../../lib/new-settings-loader')
 
 const getCustomInfoRequests = (onlyEnabled = false) => {
   const sql = onlyEnabled
@@ -28,7 +25,7 @@ const addCustomInfoRequest = customRequest => {
 }
 
 const removeCustomInfoRequest = id => {
-  return loadLatestConfigOrNone()
+  return loadConfig()
     .then(cfg =>
       saveConfig({
         triggers: _.remove(
