@@ -117,7 +117,7 @@ const getTypeText = (config, currency) => {
 }
 
 const getRequirementText = config => {
-  switch (config.requirement?.requirement) {
+  switch (config.requirement?.requirementType) {
     case 'email':
       return <>asked to enter code provided through email verification</>
     case 'sms':
@@ -222,8 +222,8 @@ const Wizard = ({
   const createErrorMessage = (errors, touched, values) => {
     const triggerType = values?.triggerType
     const containsType = R.includes(triggerType)
-    const isSuspend = values?.requirement?.requirement === 'suspend'
-    const isCustom = values?.requirement?.requirement === 'custom'
+    const isSuspend = values?.requirement?.requirementType === 'suspend'
+    const isCustom = values?.requirement?.requirementType === 'custom'
 
     const hasRequirementError = requirements().hasRequirementError(
       errors,

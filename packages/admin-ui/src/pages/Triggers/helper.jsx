@@ -750,7 +750,7 @@ const sortBy = [
 const fromServer = triggers => {
   return R.map(
     ({
-      requirement,
+      requirementType,
       suspensionDays,
       threshold,
       thresholdDays,
@@ -759,7 +759,7 @@ const fromServer = triggers => {
       ...rest
     }) => ({
       requirement: {
-        requirement,
+        requirement: requirementType,
         suspensionDays,
         customInfoRequestId,
         externalService,
@@ -775,7 +775,7 @@ const fromServer = triggers => {
 
 const toServer = triggers =>
   R.map(({ requirement, threshold, ...rest }) => ({
-    requirement: requirement.requirement,
+    requirementType: requirement.requirement,
     suspensionDays: requirement.suspensionDays,
     threshold: threshold.threshold,
     thresholdDays: threshold.thresholdDays,
