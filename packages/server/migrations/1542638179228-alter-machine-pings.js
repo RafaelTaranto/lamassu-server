@@ -9,7 +9,7 @@ exports.up = function (next) {
     'ALTER TABLE machine_pings ADD CONSTRAINT U_device_id UNIQUE(device_id)',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

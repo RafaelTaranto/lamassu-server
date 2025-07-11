@@ -8,7 +8,7 @@ exports.up = function (next) {
     'ALTER TABLE cash_out_txs ADD COLUMN commission_percentage numeric(14, 5) null DEFAULT null',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

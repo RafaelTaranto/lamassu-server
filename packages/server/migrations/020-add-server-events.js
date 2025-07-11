@@ -9,7 +9,7 @@ exports.up = function (next) {
     )`,
     'CREATE INDEX ON server_events (created)',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

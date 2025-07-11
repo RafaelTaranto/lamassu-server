@@ -82,7 +82,7 @@ exports.up = function (next) {
     `UPDATE devices SET number_of_recyclers = number_of_recyclers * 2;`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

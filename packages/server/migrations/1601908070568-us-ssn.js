@@ -9,7 +9,7 @@ exports.up = function (next) {
     'ALTER TABLE customers ADD COLUMN us_ssn_override_at timestamptz',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

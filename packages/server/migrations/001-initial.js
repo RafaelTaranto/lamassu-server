@@ -30,7 +30,7 @@ exports.up = function (next) {
       ')',
   ]
 
-  db.multi(sqls, next)
+  db.runAll(sqls, next)
 }
 
 exports.down = function (next) {

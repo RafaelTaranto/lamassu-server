@@ -34,7 +34,7 @@ exports.up = function (next) {
     'drop type old_compliance_type',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

@@ -28,7 +28,7 @@ exports.up = function (next) {
 
     'alter table machine_events rename device_fingerprint to device_id',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

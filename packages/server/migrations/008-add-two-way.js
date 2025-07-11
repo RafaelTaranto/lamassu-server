@@ -25,7 +25,7 @@ exports.up = function (next) {
     'alter table transactions add confirmation_time timestamptz',
     "alter table transactions add status status_stage NOT NULL DEFAULT 'notSeen'",
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

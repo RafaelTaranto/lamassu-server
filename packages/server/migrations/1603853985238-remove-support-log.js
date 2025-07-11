@@ -6,7 +6,7 @@ exports.up = function (next) {
     'drop table if exists server_support_logs',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

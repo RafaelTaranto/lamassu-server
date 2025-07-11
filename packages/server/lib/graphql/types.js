@@ -112,7 +112,8 @@ module.exports = gql`
   type Trigger {
     id: String!
     direction: String!
-    requirement: String!
+    requirement: String! @deprecated(reason: "use requirementType")
+    requirementType: String!
     triggerType: String!
 
     suspensionDays: Float

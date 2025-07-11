@@ -18,7 +18,7 @@ exports.up = function (next) {
     cash_box_count integer not null,
     created timestamptz not null default now())`,
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

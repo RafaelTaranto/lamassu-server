@@ -79,7 +79,6 @@
     "pg-promise": "^10.10.2",
     "pify": "^3.0.0",
     "pretty-ms": "^2.1.0",
-    "promise-sequential": "^1.1.1",
     "queue-promise": "^2.2.1",
     "request-promise": "^4.2.6",
     "semver": "^7.7.1",

@@ -33,7 +33,7 @@ exports.up = function (next) {
     'alter table cash_out_txs add column dispense_confirmed boolean default false',
     'alter table cash_out_txs rename column dispensed to dispense',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

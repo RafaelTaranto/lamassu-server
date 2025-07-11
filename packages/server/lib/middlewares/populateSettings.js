@@ -120,7 +120,7 @@ const populateSettings = function (req, res, next) {
           )
 
       return newSettingsLoader
-        .loadLatest()
+        .load()
         .then(settings => {
           const versionId = settings.version
           settingsCache.set(`${operatorId}-latest`, settings)

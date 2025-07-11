@@ -44,7 +44,7 @@ exports.up = function (next) {
       `INSERT INTO operator_ids (operator_id, service) VALUES ('${operatorId}','coinatmradar')`,
       `INSERT INTO operator_ids (operator_id, service) VALUES ('${operatorId}','authentication')`,
     ]
-    db.multi(sql, next)
+    db.runAll(sql, next)
   })
 }
 

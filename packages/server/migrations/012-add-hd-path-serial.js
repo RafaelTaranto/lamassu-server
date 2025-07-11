@@ -11,7 +11,7 @@ exports.up = function (next) {
       unique (crypto_code, hd_serial)
     )`,
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

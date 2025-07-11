@@ -1,11 +1,11 @@
-const { migrationSaveConfig } = require('../lib/new-settings-loader')
+const { saveConfig } = require('./settings')
 
 exports.up = function (next) {
   const triggersDefault = {
     triggersConfig_customerAuthentication: 'SMS',
   }
 
-  return migrationSaveConfig(triggersDefault)
+  return saveConfig(triggersDefault)
     .then(() => next())
     .catch(err => {
       console.log(err.message)

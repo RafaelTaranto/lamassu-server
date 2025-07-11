@@ -6,7 +6,7 @@ exports.up = function (next) {
     'alter table cash_out_txs drop column device_time',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

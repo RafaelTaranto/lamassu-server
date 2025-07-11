@@ -6,7 +6,7 @@ exports.up = function (next) {
     'alter table devices add column model text',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

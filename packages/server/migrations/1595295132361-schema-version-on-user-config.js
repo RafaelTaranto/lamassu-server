@@ -5,7 +5,7 @@ module.exports.up = function (next) {
     'alter table user_config add column schema_version smallint not null DEFAULT 1',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 module.exports.down = function (next) {

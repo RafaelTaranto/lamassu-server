@@ -74,28 +74,38 @@ const addMachineScreenOpts = smth =>
     _.flow(addSmthInfo('rates', ['active'])(smth.rates)),
   )
 
-/* TODO: Simplify this. */
 const buildTriggers = allTriggers => {
-  const normalTriggers = []
-  const customTriggers = _.filter(o => {
-    if (_.isEmpty(o.customInfoRequestId) || _.isNil(o.customInfoRequestId))
-      normalTriggers.push(o)
-    return !_.isNil(o.customInfoRequestId) && !_.isEmpty(o.customInfoRequestId)
-  }, allTriggers)
+  // BACKWARDS_COMPATIBILITY 11
+  // requirement was renamed to requirementType in v12
+  allTriggers = allTriggers.map(t =>
+    Object.assign(t, { requirement: t.requirementType }),
+  )
 
-  return _.flow(
-    _.map(_.get('customInfoRequestId')),
-    batchGetCustomInfoRequest,
-  )(customTriggers).then(res => {
-    res.forEach((details, index) => {
-      // make sure we aren't attaching the details to the wrong trigger
-      if (customTriggers[index].customInfoRequestId !== details.id) return
-      customTriggers[index] = {
-        ...customTriggers[index],
-        customInfoRequest: details,
-      }
-    })
-    return [...normalTriggers, ...customTriggers]
+  const isCustomTrigger = ({ requirementType, customInfoRequestId }) =>
+    requirementType === 'custom' &&
+    customInfoRequestId &&
+    typeof customInfoRequestId === 'string'
+
+  const [customTriggers, normalTriggers] = _.partition(
+    isCustomTrigger,
+    allTriggers,
+  )
+
+  const addCustomInfoRequestDetails = (customInfoRequest, idx) => {
+    const trigger = customTriggers[idx]
+    // make sure we aren't attaching the details to the wrong trigger
+    return trigger.customInfoRequestId === customInfoRequest.id
+      ? [Object.assign(trigger, { customInfoRequest })]
+      : []
+  }
+
+  return batchGetCustomInfoRequest(
+    customTriggers.map(({ customInfoRequestId }) => customInfoRequestId),
+  ).then(customInfoRequests => {
+    const customTriggersWithDetails = customInfoRequests.flatMap(
+      addCustomInfoRequestDetails,
+    )
+    return [...normalTriggers, ...customTriggersWithDetails]
   })
 }
 

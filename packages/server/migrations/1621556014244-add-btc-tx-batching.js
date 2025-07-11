@@ -16,7 +16,7 @@ exports.up = function (next) {
     `ALTER TABLE cash_in_txs ADD COLUMN batch_time TIMESTAMPTZ`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

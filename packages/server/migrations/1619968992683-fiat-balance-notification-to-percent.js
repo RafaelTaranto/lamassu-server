@@ -1,12 +1,9 @@
 const _ = require('lodash/fp')
-const {
-  migrationSaveConfig,
-  loadLatestConfig,
-} = require('../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('./settings')
 const CASSETTE_MAX_CAPACITY = 500
 
 exports.up = function (next) {
-  return loadLatestConfig()
+  return loadConfig()
     .then(config => {
       const fiatBalance1 = config.notifications_fiatBalanceCassette1
       const fiatBalance2 = config.notifications_fiatBalanceCassette2
@@ -76,7 +73,7 @@ exports.up = function (next) {
           return newOverride
         }, config.notifications_fiatBalanceOverrides)
       }
-      return migrationSaveConfig(newConfig).then(() => next())
+      return saveConfig(newConfig).then(() => next())
     })
     .catch(err => {
       console.log(err.message)

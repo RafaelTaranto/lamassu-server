@@ -80,7 +80,7 @@ exports.up = function (next) {
     'CREATE INDEX ON dispenses (device_fingerprint)',
   ]
 
-  db.multi(sqls, next)
+  db.runAll(sqls, next)
 }
 
 exports.down = function (next) {

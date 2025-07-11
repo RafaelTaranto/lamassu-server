@@ -1,7 +1,4 @@
-const {
-  migrationSaveConfig,
-  loadLatestConfig,
-} = require('../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('./settings')
 const {
   getCryptosFromWalletNamespace,
 } = require('../lib/new-config-manager.js')
@@ -9,7 +6,7 @@ const { utils: coinUtils } = require('@lamassu/coins')
 const _ = require('lodash/fp')
 
 exports.up = function (next) {
-  loadLatestConfig()
+  loadConfig()
     .then(config => {
       const newSettings = {}
       const activeCryptos = getCryptosFromWalletNamespace(config)
@@ -21,7 +18,7 @@ exports.up = function (next) {
         newSettings[`wallets_${crypto}_cryptoUnits`] = defaultUnit
         return newSettings
       }, activeCryptos)
-      return migrationSaveConfig(newSettings)
+      return saveConfig(newSettings)
     })
     .then(() => next())
     .catch(err => {

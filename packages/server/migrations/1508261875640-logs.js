@@ -10,7 +10,7 @@ exports.up = function (next) {
     message text)`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

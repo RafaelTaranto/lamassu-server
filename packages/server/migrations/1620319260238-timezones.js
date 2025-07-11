@@ -1,12 +1,11 @@
 const _ = require('lodash/fp')
-const settingsLoader = require('../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('./settings')
 
 exports.up = function (next) {
-  settingsLoader
-    .loadLatestConfig()
+  loadConfig()
     .then(config => {
       if (!_.isEmpty(config)) config.locale_timezone = '0:0'
-      return settingsLoader.migrationSaveConfig(config)
+      return saveConfig(config)
     })
     .then(() => next())
     .catch(err => next(err))

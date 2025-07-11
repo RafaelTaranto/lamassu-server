@@ -15,7 +15,7 @@ exports.up = function (next) {
     'drop table machine_configs',
     'drop table pending_transactions',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

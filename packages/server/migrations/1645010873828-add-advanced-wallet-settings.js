@@ -1,5 +1,5 @@
 const uuid = require('uuid')
-const { saveConfig } = require('../lib/new-settings-loader')
+const { saveConfig } = require('./settings')
 
 exports.up = function (next) {
   const newConfig = {

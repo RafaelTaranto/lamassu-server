@@ -5,7 +5,7 @@ const router = express.Router()
 const cashbox = require('../cashbox-batches')
 const notifier = require('../notifier')
 const { getMachine, getMachineName } = require('../machine-loader')
-const { loadLatestConfig } = require('../new-settings-loader')
+const { loadConfig } = require('../new-settings-loader')
 const { getCashInSettings } = require('../new-config-manager')
 const { AUTOMATIC } = require('../constants')
 const logger = require('../logger')
@@ -13,7 +13,7 @@ const logger = require('../logger')
 function cashboxRemoval(req, res, next) {
   notifier.cashboxNotify(req.deviceId).catch(logger.error)
 
-  return Promise.all([getMachine(req.deviceId), loadLatestConfig()])
+  return Promise.all([getMachine(req.deviceId), loadConfig()])
     .then(([machine, config]) => {
       const cashInSettings = getCashInSettings(config)
       if (cashInSettings.cashboxReset !== AUTOMATIC) {

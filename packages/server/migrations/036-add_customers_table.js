@@ -25,7 +25,7 @@ exports.up = function (next) {
     `alter table cash_out_txs add column customer_id uuid references customers (id) DEFAULT '${anonymous.uuid}'`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

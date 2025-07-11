@@ -7,7 +7,7 @@ exports.up = function (next) {
     'ALTER TABLE bills DROP COLUMN crypto_atoms_after_fee',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

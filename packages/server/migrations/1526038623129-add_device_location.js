@@ -5,7 +5,7 @@ exports.up = function (next) {
     'alter table devices add column last_online timestamptz not null default now()',
     "alter table devices add column location json not null default '{}'",
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

@@ -10,7 +10,7 @@ exports.up = function (next) {
     `CREATE UNIQUE INDEX uq_code ON coupons (code) WHERE NOT soft_deleted`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

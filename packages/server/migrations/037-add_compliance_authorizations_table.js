@@ -11,7 +11,7 @@ exports.up = function (next) {
     authorized_by text REFERENCES user_tokens (token) )`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

@@ -1,17 +1,19 @@
 const _ = require('lodash/fp')
 
+const { complianceTriggers } = require('typesafe-db')
+
 function getBackwardsCompatibleTriggers(triggers) {
   const filtered = _.filter(
     _.matches({ triggerType: 'txVolume', direction: 'both', thresholdDays: 1 }),
   )(triggers)
-  const grouped = _.groupBy(_.prop('requirement'))(filtered)
+  const grouped = _.groupBy(_.prop('requirementType'))(filtered)
   return _.mapValues(_.compose(_.get('threshold'), _.minBy('threshold')))(
     grouped,
   )
 }
 
 function hasSanctions(triggers) {
-  return _.some(_.matches({ requirement: 'sanctions' }))(triggers)
+  return _.some(_.matches({ requirementType: 'sanctions' }))(triggers)
 }
 
 function maxDaysThreshold(triggers) {
@@ -22,14 +24,14 @@ function getCashLimit(triggers) {
   const withFiat = _.filter(({ triggerType }) =>
     _.includes(triggerType, ['txVolume', 'txAmount']),
   )
-  const blocking = _.filter(({ requirement }) =>
-    _.includes(requirement, ['block', 'suspend']),
+  const blocking = _.filter(({ requirementType }) =>
+    _.includes(requirementType, ['block', 'suspend']),
   )
   return _.compose(_.minBy('threshold'), blocking, withFiat)(triggers)
 }
 
-const hasRequirement = requirement =>
-  _.compose(_.negate(_.isEmpty), _.find(_.matches({ requirement })))
+const hasRequirement = requirementType =>
+  _.compose(_.negate(_.isEmpty), _.find(_.matches({ requirementType })))
 
 const hasPhone = hasRequirement('sms')
 const hasFacephoto = hasRequirement('facephoto')
@@ -41,6 +43,8 @@ const AUTH_METHODS = {
 }
 
 module.exports = {
+  getAllComplianceTriggers: complianceTriggers.getAllComplianceTriggers,
+  saveComplianceTriggers: complianceTriggers.saveComplianceTriggers,
   getBackwardsCompatibleTriggers,
   hasSanctions,
   maxDaysThreshold,

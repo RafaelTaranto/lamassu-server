@@ -9,7 +9,7 @@ exports.up = function (next) {
     'alter table pairing_tokens alter created type timestamptz',
     'alter table pending_transactions alter updated type timestamptz',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

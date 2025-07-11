@@ -296,11 +296,11 @@ const requirementSchema = Yup.object()
       }),
       customInfoRequestId: Yup.string().when('requirement', {
         is: value => value !== 'custom',
-        then: schema => schema.nullable().transform(() => ''),
+        then: schema => schema.nullable().transform(() => null),
       }),
       externalService: Yup.string().when('requirement', {
         is: value => value !== 'external',
-        then: schema => schema.nullable().transform(() => ''),
+        then: schema => schema.nullable().transform(() => null),
       }),
     }).required(),
   })
@@ -533,8 +533,8 @@ const requirements = (
     requirement: {
       requirement: '',
       suspensionDays: '',
-      customInfoRequestId: '',
-      externalService: '',
+      customInfoRequestId: null,
+      externalService: null,
     },
   },
 })
@@ -553,7 +553,7 @@ const RequirementInput = ({ customInfoRequests = [] }) => {
   const { values } = useFormikContext()
   const requirement = values?.requirement?.requirement
   const customRequestId =
-    R.path(['requirement', 'customInfoRequestId'])(values) ?? ''
+    R.path(['requirement', 'customInfoRequestId'])(values) ?? null
   const isSuspend = requirement === 'suspend'
   const display = customRequestId
     ? (R.path(['customRequest', 'name'])(
@@ -750,7 +750,7 @@ const sortBy = [
 const fromServer = triggers => {
   return R.map(
     ({
-      requirement,
+      requirementType,
       suspensionDays,
       threshold,
       thresholdDays,
@@ -759,7 +759,7 @@ const fromServer = triggers => {
       ...rest
     }) => ({
       requirement: {
-        requirement,
+        requirement: requirementType,
         suspensionDays,
         customInfoRequestId,
         externalService,
@@ -775,7 +775,7 @@ const fromServer = triggers => {
 
 const toServer = triggers =>
   R.map(({ requirement, threshold, ...rest }) => ({
-    requirement: requirement.requirement,
+    requirementType: requirement.requirement,
     suspensionDays: requirement.suspensionDays,
     threshold: threshold.threshold,
     thresholdDays: threshold.thresholdDays,

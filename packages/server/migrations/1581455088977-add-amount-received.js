@@ -5,7 +5,7 @@ exports.up = function (next) {
     'ALTER TABLE cash_out_txs ADD COLUMN received_crypto_atoms numeric(30) null DEFAULT null',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {
