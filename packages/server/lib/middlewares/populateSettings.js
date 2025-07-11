@@ -33,37 +33,44 @@ function machineAction(type, value) {
       logger.debug(
         `Rebooting machine '${deviceId}' from operator ${operatorId}`,
       )
-      state.reboots[operatorId] = { [deviceId]: pid }
+      if (!state.reboots[operatorId]) state.reboots[operatorId] = {}
+      state.reboots[operatorId][deviceId] = pid
       break
     case 'shutdown':
       logger.debug(
         `Shutting down machine '${deviceId}' from operator ${operatorId}`,
       )
-      state.shutdowns[operatorId] = { [deviceId]: pid }
+      if (!state.shutdowns[operatorId]) state.shutdowns[operatorId] = {}
+      state.shutdowns[operatorId][deviceId] = pid
       break
     case 'restartServices':
       logger.debug(
         `Restarting services of machine '${deviceId}' from operator ${operatorId}`,
       )
-      state.restartServicesMap[operatorId] = { [deviceId]: pid }
+      if (!state.restartServicesMap[operatorId])
+        state.restartServicesMap[operatorId] = {}
+      state.restartServicesMap[operatorId][deviceId] = pid
       break
     case 'emptyUnit':
       logger.debug(
         `Emptying units from machine '${deviceId}' from operator ${operatorId}`,
       )
-      state.emptyUnit[operatorId] = { [deviceId]: pid }
+      if (!state.emptyUnit[operatorId]) state.emptyUnit[operatorId] = {}
+      state.emptyUnit[operatorId][deviceId] = pid
       break
     case 'refillUnit':
       logger.debug(
         `Refilling recyclers from machine '${deviceId}' from operator ${operatorId}`,
       )
-      state.refillUnit[operatorId] = { [deviceId]: pid }
+      if (!state.refillUnit[operatorId]) state.refillUnit[operatorId] = {}
+      state.refillUnit[operatorId][deviceId] = pid
       break
     case 'diagnostics':
       logger.debug(
         `Running diagnostics on machine '${deviceId}' from operator ${operatorId}`,
       )
-      state.diagnostics[operatorId] = { [deviceId]: pid }
+      if (!state.diagnostics[operatorId]) state.diagnostics[operatorId] = {}
+      state.diagnostics[operatorId][deviceId] = pid
       break
     default:
       break
