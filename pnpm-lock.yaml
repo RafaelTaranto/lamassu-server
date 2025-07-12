@@ -417,9 +417,6 @@ importers:
       pretty-ms:
         specifier: ^2.1.0
         version: 2.1.0
-      promise-sequential:
-        specifier: ^1.1.1
-        version: 1.1.1
       queue-promise:
         specifier: ^2.2.1
         version: 2.2.1
@@ -5654,9 +5651,6 @@ packages:
   process@0.11.10:
     resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
     engines: {node: '>= 0.6.0'}
-
-  promise-sequential@1.1.1:
-    resolution: {integrity: sha512-gpziThEJPnPEeaHNqjy9f4PE1JwXb07fX3dz+41nhALpIAaEI9VZU8Q89eyBBAa2xAhnz0KgUTDtCA7FZYbZQQ==}
 
   promisify-call@2.0.4:
     resolution: {integrity: sha512-ZX68J1+1Pe0I8NC0P6Ji3fDDcJceVfpoygfDLgdb1fp5vW9IRlwSpDaxe1T5HgwchyHV2DsL/pWzWikUiWEbLQ==}
@@ -13252,8 +13246,6 @@ snapshots:
   process-nextick-args@2.0.1: {}
 
   process@0.11.10: {}
-
-  promise-sequential@1.1.1: {}
 
   promisify-call@2.0.4:
     dependencies:
