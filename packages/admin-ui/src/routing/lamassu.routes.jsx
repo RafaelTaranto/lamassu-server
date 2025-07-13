@@ -19,6 +19,7 @@ import SessionManagement from '../pages/SessionManagement/SessionManagement'
 import Transactions from '../pages/Transactions/Transactions'
 import UserManagement from '../pages/UserManagement/UserManagement'
 import WalletSettings from '../pages/Wallet/Wallet'
+import MachineGroups from '../pages/MachineGroups'
 
 import Analytics from '../pages/Analytics'
 import Blacklist from '../pages/Blacklist'
@@ -142,6 +143,13 @@ const getLamassuRoutes = () => [
         route: '/settings/wallet-settings',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
         component: WalletSettings,
+      },
+      {
+        key: 'machine-groups',
+        label: 'Machine Groups',
+        route: '/settings/machine-groups',
+        allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
+        component: MachineGroups,
       },
       {
         key: namespaces.OPERATOR_INFO,

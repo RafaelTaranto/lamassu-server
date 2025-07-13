@@ -50,6 +50,10 @@ const GET_MACHINES = gql`
       downloadSpeed
       responseTime
       packetLoss
+      machineGroup {
+        id
+        name
+      }
     }
   }
 `
@@ -79,6 +83,11 @@ const MachineStatus = () => {
       {
         header: 'Machine name',
         accessorKey: 'name',
+      },
+      {
+        header: 'Group',
+        accessorKey: 'machineGroup.name',
+        Cell: ({ cell }) => cell.getValue() || 'default',
       },
       {
         header: 'Status',

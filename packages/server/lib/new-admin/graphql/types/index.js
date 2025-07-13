@@ -11,6 +11,7 @@ const funding = require('./funding.type')
 const log = require('./log.type')
 const loyalty = require('./loyalty.type')
 const machine = require('./machine.type')
+const machineGroups = require('./machineGroups.type')
 const market = require('./market.type')
 const notification = require('./notification.type')
 const pairing = require('./pairing.type')
@@ -36,6 +37,7 @@ const types = [
   log,
   loyalty,
   machine,
+  machineGroups,
   market,
   notification,
   pairing,

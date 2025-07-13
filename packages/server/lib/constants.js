@@ -13,6 +13,11 @@ const anonymousCustomer = {
   name: 'anonymous',
 }
 
+const defaultMachineGroup = {
+  uuid: '3b3c5f2e-8102-11e7-9079-8f13a7117867',
+  name: 'default',
+}
+
 const CASH_UNIT_CAPACITY = {
   default: {
     cashbox: 600,
@@ -74,6 +79,7 @@ const BALANCE_FETCH_SPEED_MULTIPLIER = {
 
 module.exports = {
   anonymousCustomer,
+  defaultMachineGroup,
   CASH_UNIT_CAPACITY,
   AUTHENTICATOR_ISSUER_ENTITY,
   AUTH_TOKEN_EXPIRATION_TIME,

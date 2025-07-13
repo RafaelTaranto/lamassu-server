@@ -23,6 +23,8 @@ const resolvers = {
     unpairedMachines: () => machineLoader.getUnpairedMachines(),
   },
   Mutation: {
+    assignMachinesToGroup: (...[, { deviceIds, groupId }]) =>
+      machineLoader.assignToGroup(deviceIds, groupId),
     machineAction: (...[, { deviceId, action, cashUnits, newName }, context]) =>
       machineAction({ deviceId, action, cashUnits, newName }, context),
   },

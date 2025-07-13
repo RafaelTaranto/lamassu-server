@@ -16,6 +16,9 @@ const notifierQueries = require('./notifier/queries')
 const { GraphQLError } = require('graphql')
 const { loadConfig } = require('./new-settings-loader')
 const logger = require('./logger')
+const {
+  machines: { assignMachinesToGroup },
+} = require('typesafe-db')
 const T = require('./time')
 
 const fullyFunctionalStatus = { label: 'Fully functional', type: 'success' }
@@ -26,7 +29,8 @@ const bootingUpStatus = { label: 'Booting up', type: 'warning' }
 const OPERATOR_DATA_DIR = process.env.OPERATOR_DATA_DIR
 
 const MACHINE_WITH_CALCULATED_FIELD_SQL = `
-select d.*, COALESCE(emptybills, 0) + COALESCE(regularbills, 0) as cashbox from devices d
+select d.*, mg.id as machine_group_id, mg.name as machine_group_name, COALESCE(emptybills, 0) + COALESCE(regularbills, 0) as cashbox from devices d
+    left join machine_groups mg on d.machine_group_id = mg.id
     left join (
       select count(*) as emptyBills, eub.device_id
         from empty_unit_bills eub
@@ -75,6 +79,10 @@ function toMachineObject(r) {
     lastPing: new Date(r.last_online),
     name: r.name,
     paired: r.paired,
+    machineGroup: {
+      id: r.machine_group_id,
+      name: r.machine_group_name,
+    },
     // TODO: we shall start using this JSON field at some point
     // location: r.location,
   }
@@ -786,6 +794,13 @@ const batchRecordPendingPings = () => {
   })
 }
 
+function assignToGroup(machineIds, groupId) {
+  if (!machineIds?.length) throw new Error('Machine ID is required')
+  if (!groupId) throw new Error('Group ID is required')
+
+  return assignMachinesToGroup(machineIds, groupId).then(() => machineIds)
+}
+
 module.exports = {
   getMachineName,
   getPairedMachineName,
@@ -806,4 +821,5 @@ module.exports = {
   batchDiagnostics,
   enqueueRecordPing,
   batchRecordPendingPings,
+  assignToGroup,
 }

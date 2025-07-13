@@ -506,6 +506,7 @@ export interface Devices {
   display: Generated<boolean>
   lastOnline: Generated<Timestamp>
   location: Generated<Json>
+  machineGroupId: Generated<string>
   model: string | null
   name: string
   numberOfCassettes: Generated<number>
@@ -585,6 +586,11 @@ export interface MachineEvents {
   eventType: string
   id: string
   note: string | null
+}
+
+export interface MachineGroups {
+  id: string
+  name: string
 }
 
 export interface MachineNetworkHeartbeat {
@@ -758,6 +764,7 @@ export interface DB {
   individualDiscounts: IndividualDiscounts
   logs: Logs
   machineEvents: MachineEvents
+  machineGroups: MachineGroups
   machineNetworkHeartbeat: MachineNetworkHeartbeat
   machineNetworkPerformance: MachineNetworkPerformance
   machinePings: MachinePings
