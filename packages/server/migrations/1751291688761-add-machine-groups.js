@@ -10,7 +10,7 @@ exports.up = function (next) {
     `insert into machine_groups (id, name) VALUES ('${defaultMachineGroup.uuid}','${defaultMachineGroup.name}')`,
     `alter table devices add column machine_group_id uuid references machine_groups (id) DEFAULT '${defaultMachineGroup.uuid}' NOT NULL`,
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {
