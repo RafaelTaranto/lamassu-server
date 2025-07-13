@@ -1,5 +1,8 @@
+export * as db from './db.js'
 export * as customers from './customers.js'
+export * as complianceTriggers from './compliance-triggers.js'
 export * as transactions from './transactions.js'
 export * as machineGroups from './machine-groups.js'
 export * as machines from './machines.js'
+export * as userConfig from './user-config.js'
 export { PG_ERROR_CODES } from './pg-error-codes.js'

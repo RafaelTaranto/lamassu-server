@@ -6,7 +6,7 @@ exports.up = function (next) {
     'ALTER TABLE customers ADD COLUMN email_at timestamptz',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

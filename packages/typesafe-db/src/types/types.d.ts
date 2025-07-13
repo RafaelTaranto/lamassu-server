@@ -54,6 +54,8 @@ export type CashUnitOperationType =
   | 'cash-recycler-6-empty'
   | 'cash-recycler-6-refill'
 
+export type ComplianceTriggerDirection = 'both' | 'cashIn' | 'cashOut'
+
 export type ComplianceType =
   | 'authorized'
   | 'front_camera'
@@ -106,6 +108,18 @@ export type NotificationType =
 
 export type Numeric = ColumnType<string, number | string, number | string>
 
+export type RequirementType =
+  | 'block'
+  | 'custom'
+  | 'external'
+  | 'facephoto'
+  | 'idCardData'
+  | 'idCardPhoto'
+  | 'sanctions'
+  | 'sms'
+  | 'suspend'
+  | 'usSsn'
+
 export type Role = 'superuser' | 'user'
 
 export type SmsNoticeEvent =
@@ -127,6 +141,12 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>
 export type TradeType = 'buy' | 'sell'
 
 export type TransactionBatchStatus = 'failed' | 'open' | 'ready' | 'sent'
+
+export type TriggerType =
+  | 'consecutiveDays'
+  | 'txAmount'
+  | 'txVelocity'
+  | 'txVolume'
 
 export type VerificationType = 'automatic' | 'blocked' | 'verified'
 
@@ -351,6 +371,18 @@ export interface ComplianceOverrides {
   overrideAt: Timestamp
   overrideBy: string | null
   verification: VerificationType
+}
+
+export interface ComplianceTriggers {
+  customInfoRequestId: string | null
+  direction: ComplianceTriggerDirection
+  externalService: string | null
+  id: string
+  requirementType: RequirementType
+  suspensionDays: Numeric | null
+  threshold: Numeric | null
+  thresholdDays: Numeric | null
+  triggerType: TriggerType
 }
 
 export interface Coupons {
@@ -716,6 +748,7 @@ export interface DB {
   cashoutTxTrades: CashoutTxTrades
   cashUnitOperation: CashUnitOperation
   complianceOverrides: ComplianceOverrides
+  complianceTriggers: ComplianceTriggers
   coupons: Coupons
   customerCustomFieldPairs: CustomerCustomFieldPairs
   customerExternalCompliance: CustomerExternalCompliance

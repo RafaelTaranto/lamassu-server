@@ -1,4 +1,4 @@
-const { saveConfig } = require('../lib/new-settings-loader')
+const { saveConfig } = require('./settings')
 
 exports.up = next =>
   saveConfig({ commissions_cashOutFixedFee: 0 }).then(next).catch(next)

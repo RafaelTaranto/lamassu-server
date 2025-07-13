@@ -1,7 +1,7 @@
 const db = require('./db')
 
 exports.up = next =>
-  db.multi(
+  db.runAll(
     [
       'ALTER TABLE public.blacklist DROP CONSTRAINT IF EXISTS blacklist_pkey;',
       'ALTER TABLE public.blacklist ADD PRIMARY KEY (address);',

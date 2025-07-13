@@ -529,7 +529,7 @@ const CustomerProfile = memo(() => {
       </Breadcrumbs>
       <div className="flex gap-20">
         <div className="w-55 flex flex-col gap-6">
-          {!loading && !customerData.isAnonymous && (
+          {!!customerData && !customerData.isAnonymous && (
             <>
               <CustomerSidebar
                 isSelected={code => code === clickedItem}

@@ -6,7 +6,7 @@ exports.up = function (next) {
     'alter table dispenses drop column count2',
     'alter table dispenses drop column refill',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

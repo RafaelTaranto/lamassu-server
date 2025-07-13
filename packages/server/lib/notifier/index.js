@@ -107,9 +107,7 @@ function buildAlerts(pings, balances, events, devices) {
 }
 
 function checkPings(devices) {
-  const deviceIds = _.map('deviceId', devices)
-  const pings = _.map(utils.checkPing, devices)
-  return _.zipObject(deviceIds)(pings)
+  return Object.fromEntries(devices.map(d => [d.deviceId, utils.checkPing(d)]))
 }
 
 function checkStuckScreen(deviceEvents, machine) {
@@ -135,7 +133,7 @@ function checkStuckScreen(deviceEvents, machine) {
 }
 
 function transactionNotify(tx, rec) {
-  return settingsLoader.loadLatestConfig().then(config => {
+  return settingsLoader.loadConfig().then(config => {
     const notifSettings = configManager.getGlobalNotifications(config)
     const highValueTx = tx.fiat.gt(
       notifSettings.highValueTransaction || Infinity,
@@ -280,7 +278,7 @@ function sendRedemptionMessage(txId, error) {
 }
 
 function sendTransactionMessage(rec, isHighValueTx) {
-  return settingsLoader.loadLatest().then(settings => {
+  return settingsLoader.load().then(settings => {
     const notifications = configManager.getGlobalNotifications(settings.config)
 
     const promises = []
@@ -310,7 +308,7 @@ function sendTransactionMessage(rec, isHighValueTx) {
 
 function cashboxNotify(deviceId) {
   return Promise.all([
-    settingsLoader.loadLatest(),
+    settingsLoader.load(),
     queries.getMachineName(deviceId),
   ]).then(([settings, machineName]) => {
     const notifications = configManager.getGlobalNotifications(settings.config)
@@ -353,7 +351,7 @@ function cashboxNotify(deviceId) {
 // for notification center, check if type of notification is active before calling the respective notify function
 const notifyIfActive = (type, fnName, ...args) => {
   return settingsLoader
-    .loadLatestConfig()
+    .loadConfig()
     .then(config => {
       const notificationSettings =
         configManager.getGlobalNotifications(config).notificationCenter

@@ -14,7 +14,7 @@ exports.up = function (next) {
       created timestamptz NOT NULL default now()
     )`,
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

@@ -1,7 +1,7 @@
-const { saveConfig, loadLatestConfig } = require('../lib/new-settings-loader')
+const { loadConfig, saveConfig } = require('./settings')
 
 exports.up = function (next) {
-  return loadLatestConfig()
+  return loadConfig()
     .then(config => {
       if (config.locale_timezone === '0:0') {
         const newConfig = { locale_timezone: 'GMT' }

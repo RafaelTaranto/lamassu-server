@@ -1,7 +1,7 @@
 var db = require('./db')
 
 exports.up = function (next) {
-  db.multi(
+  db.runAll(
     [
       'CREATE TABLE IF NOT EXISTS machine_events ( ' +
         'id uuid PRIMARY KEY, ' +

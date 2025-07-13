@@ -31,7 +31,7 @@ const getBills = filters => {
     FROM cash_in_txs
     WHERE ${AND(
       deviceIDCondition,
-      'device_id NOT IN (SELECT device_id FROM unpaired_devices)',
+      'device_id IN (SELECT device_id FROM devices WHERE paired)',
     )}
   ) AS cit
   ON cit.id = b.cash_in_txs_id
@@ -46,7 +46,7 @@ const getBills = filters => {
   WHERE ${AND(
     deviceIDCondition,
     batchIDCondition,
-    'b.device_id NOT IN (SELECT device_id FROM unpaired_devices)',
+    'b.device_id IN (SELECT device_id FROM devices WHERE paired)',
   )}`
 
   return Promise.all([db.any(cashboxBills), db.any(recyclerBills)]).then(

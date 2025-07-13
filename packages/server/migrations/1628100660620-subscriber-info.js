@@ -7,7 +7,7 @@ exports.up = function (next) {
     `ALTER TABLE customers ADD COLUMN subscriber_info_by UUID REFERENCES users(id)`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

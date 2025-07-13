@@ -19,7 +19,7 @@ const {
   updateTxCustomerPhoto: txsUpdateTxCustomerPhoto,
 } = require('../new-admin/services/transactions.js')
 const machineLoader = require('../machine-loader')
-const { loadLatestConfig } = require('../new-settings-loader')
+const { loadConfig } = require('../new-settings-loader')
 const customInfoRequestQueries = require('../new-admin/services/customInfoRequests')
 const T = require('../time')
 const plugins = require('../plugins')
@@ -223,49 +223,51 @@ function updateTxCustomerPhoto(req, res, next) {
 }
 
 function buildSms(data, receiptOptions) {
-  return Promise.all([
-    getTx(data.session, data.txClass),
-    loadLatestConfig(),
-  ]).then(([tx, config]) => {
-    return Promise.all([
-      customers.getCustomerById(tx.customer_id),
-      machineLoader.getMachine(tx.device_id, config),
-    ]).then(([customer, deviceConfig]) => {
-      const formattedTx = _.mapKeys(_.camelCase)(tx)
-      const localeConfig = configManager.getLocale(formattedTx.deviceId, config)
-      const timezone = localeConfig.timezone
+  return Promise.all([getTx(data.session, data.txClass), loadConfig()]).then(
+    ([tx, config]) => {
+      return Promise.all([
+        customers.getCustomerById(tx.customer_id),
+        machineLoader.getMachine(tx.device_id, config),
+      ]).then(([customer, deviceConfig]) => {
+        const formattedTx = _.mapKeys(_.camelCase)(tx)
+        const localeConfig = configManager.getLocale(
+          formattedTx.deviceId,
+          config,
+        )
+        const timezone = localeConfig.timezone
 
-      const cashInCommission = new BN(1).plus(
-        new BN(formattedTx.commissionPercentage),
-      )
+        const cashInCommission = new BN(1).plus(
+          new BN(formattedTx.commissionPercentage),
+        )
 
-      const rate = new BN(formattedTx.rawTickerPrice)
-        .multipliedBy(cashInCommission)
-        .decimalPlaces(2)
-      const date = utcToZonedTime(
-        timezone,
-        zonedTimeToUtc(process.env.TZ, new Date()),
-      )
-      const dateString = `${date.toISOString().replace('T', ' ').slice(0, 19)}`
+        const rate = new BN(formattedTx.rawTickerPrice)
+          .multipliedBy(cashInCommission)
+          .decimalPlaces(2)
+        const date = utcToZonedTime(
+          timezone,
+          zonedTimeToUtc(process.env.TZ, new Date()),
+        )
+        const dateString = `${date.toISOString().replace('T', ' ').slice(0, 19)}`
 
-      const data = {
-        operatorInfo: configManager.getOperatorInfo(config),
-        location: deviceConfig.machineLocation,
-        customerName: customer.name,
-        customerPhone: customer.phone,
-        session: formattedTx.id,
-        time: dateString,
-        direction: formattedTx.txClass === 'cashIn' ? 'Cash-in' : 'Cash-out',
-        fiat: `${formattedTx.fiat.toString()} ${formattedTx.fiatCode}`,
-        crypto: `${sms.toCryptoUnits(BN(formattedTx.cryptoAtoms), formattedTx.cryptoCode)} ${formattedTx.cryptoCode}`,
-        rate: `1 ${formattedTx.cryptoCode} = ${rate} ${formattedTx.fiatCode}`,
-        address: formattedTx.toAddress,
-        txId: formattedTx.txHash,
-      }
+        const data = {
+          operatorInfo: configManager.getOperatorInfo(config),
+          location: deviceConfig.machineLocation,
+          customerName: customer.name,
+          customerPhone: customer.phone,
+          session: formattedTx.id,
+          time: dateString,
+          direction: formattedTx.txClass === 'cashIn' ? 'Cash-in' : 'Cash-out',
+          fiat: `${formattedTx.fiat.toString()} ${formattedTx.fiatCode}`,
+          crypto: `${sms.toCryptoUnits(BN(formattedTx.cryptoAtoms), formattedTx.cryptoCode)} ${formattedTx.cryptoCode}`,
+          rate: `1 ${formattedTx.cryptoCode} = ${rate} ${formattedTx.fiatCode}`,
+          address: formattedTx.toAddress,
+          txId: formattedTx.txHash,
+        }
 
-      return sms.formatSmsReceipt(data, receiptOptions)
-    })
-  })
+        return sms.formatSmsReceipt(data, receiptOptions)
+      })
+    },
+  )
 }
 
 function sendSmsReceipt(req, res, next) {

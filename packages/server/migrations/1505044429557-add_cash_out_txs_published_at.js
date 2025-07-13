@@ -6,7 +6,7 @@ exports.up = function (next) {
     'alter table cash_out_txs rename column confirmation_time to confirmed_at',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

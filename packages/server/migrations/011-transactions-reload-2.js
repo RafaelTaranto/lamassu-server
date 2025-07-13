@@ -64,7 +64,7 @@ exports.up = function (next) {
     `alter table dispenses add session_id uuid`,
     `alter table dispenses drop constraint dispenses_transaction_id_fkey`,
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

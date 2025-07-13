@@ -7,7 +7,7 @@ exports.up = function (next) {
     'alter table devices add column diagnostics_front_updated_at timestamptz',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

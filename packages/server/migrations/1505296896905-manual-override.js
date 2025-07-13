@@ -47,7 +47,7 @@ exports.up = function (next) {
     'alter table compliance_overrides rename column authorized_by to override_by',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

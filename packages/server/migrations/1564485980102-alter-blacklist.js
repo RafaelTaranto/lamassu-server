@@ -5,7 +5,7 @@ exports.up = function (next) {
     "ALTER TABLE blacklist ADD COLUMN created_by_operator boolean not null default 't' ",
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

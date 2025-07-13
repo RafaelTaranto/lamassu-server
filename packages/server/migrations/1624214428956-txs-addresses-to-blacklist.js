@@ -10,7 +10,7 @@ exports.up = function (next) {
     `CREATE INDEX cash_in_txs_to_address_idx ON cash_in_txs(to_address)`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

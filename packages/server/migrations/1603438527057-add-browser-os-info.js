@@ -6,7 +6,7 @@ exports.up = function (next) {
     'ALTER TABLE user_tokens ADD COLUMN ip_address inet',
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

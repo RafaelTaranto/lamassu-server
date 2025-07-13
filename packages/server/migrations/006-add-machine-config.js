@@ -3,7 +3,7 @@
 var db = require('./db')
 
 exports.up = function (next) {
-  db.multi(
+  db.runAll(
     [
       'CREATE TABLE IF NOT EXISTS machine_configs ( ' +
         'id serial PRIMARY KEY, ' +

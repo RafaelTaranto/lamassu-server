@@ -9,10 +9,10 @@ exports.up = function (next) {
     'alter table devices alter column name set not null',
   ]
 
-  return db.multi(sql, next)
+  return db.runAll(sql, next)
 }
 
 exports.down = function (next) {
   const sql = ['alter table devices drop column name']
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }

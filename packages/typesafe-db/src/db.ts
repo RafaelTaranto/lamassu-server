@@ -17,7 +17,23 @@ const dialect = new PostgresDialect({
   }),
 })
 
+export type DBOrTx = Kysely<DB>
+
 export default new Kysely<DB>({
   dialect,
-  plugins: [new CamelCasePlugin({ underscoreBeforeDigits: true })],
+  plugins: [
+    new CamelCasePlugin({
+      maintainNestedObjectKeys: true,
+      underscoreBeforeDigits: true,
+    }),
+  ],
 })
+
+export function inTransaction<DB, T>(
+  dbOrTx: Kysely<DB>,
+  func: (tx: Kysely<DB>) => Promise<T>,
+): Promise<T> {
+  return dbOrTx.isTransaction
+    ? func(dbOrTx)
+    : dbOrTx.transaction().execute(func)
+}

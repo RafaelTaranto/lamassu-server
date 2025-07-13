@@ -21,7 +21,7 @@ exports.up = function (next) {
     'alter table machine_events drop column device_time',
     'alter table machine_events add column device_time timestamptz',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

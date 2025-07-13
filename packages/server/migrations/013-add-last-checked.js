@@ -6,7 +6,7 @@ exports.up = function (next) {
     'alter table cash_out_hds add confirmed boolean not null default false',
     'create index on cash_out_hds (confirmed, last_checked)',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

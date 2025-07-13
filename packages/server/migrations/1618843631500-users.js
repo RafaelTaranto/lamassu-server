@@ -89,7 +89,7 @@ exports.up = function (next) {
     `DROP TABLE IF EXISTS user_tokens`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

@@ -12,7 +12,7 @@ exports.up = function (next) {
     'alter table cash_out_txs add column dispense_time timestamptz',
     'drop table dispenses',
   ]
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {

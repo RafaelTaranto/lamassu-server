@@ -1,7 +1,7 @@
 const db = require('./db')
 
 exports.up = next =>
-  db.multi(
+  db.runAll(
     [
       'ALTER TABLE bills ADD CONSTRAINT cash_in_txs_id FOREIGN KEY (cash_in_txs_id) REFERENCES cash_in_txs(id);',
       'CREATE INDEX bills_cash_in_txs_id_idx ON bills USING btree (cash_in_txs_id);',

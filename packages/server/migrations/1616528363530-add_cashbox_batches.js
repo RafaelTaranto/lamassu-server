@@ -18,7 +18,7 @@ exports.up = function (next) {
 
     `UPDATE bills SET legacy = 'true'`,
   ]
-  db.multi(sqls, next)
+  db.runAll(sqls, next)
 }
 
 exports.down = function (next) {

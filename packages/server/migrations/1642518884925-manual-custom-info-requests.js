@@ -8,7 +8,7 @@ exports.up = function (next) {
     `ALTER TABLE customers_custom_info_requests ADD COLUMN override_at TIMESTAMPTZ`,
   ]
 
-  db.multi(sql, next)
+  db.runAll(sql, next)
 }
 
 exports.down = function (next) {
