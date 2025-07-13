@@ -110,6 +110,7 @@ const insertTriggers = config =>
   Promise.all(
     (config?.triggers ?? []).map(trigger => {
       trigger.externalService ||= null // saved as empty string in JSON...
+      trigger.customInfoRequestId ||= null // saved as empty string in JSON...
       return db.none(INSERT_TRIGGER, trigger)
     }),
   )
@@ -126,9 +127,5 @@ exports.up = next =>
     .then(insertTriggers)
     .then(() => removeFromConfig(['triggers']))
     .then(next)
-    .catch(err => {
-      console.log(err)
-      next(err)
-    })
 
 exports.down = next => next()
