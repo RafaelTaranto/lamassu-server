@@ -59,7 +59,7 @@ const ChoiceList = () => {
           return (
             <div className="flex flex-col">
               <H4 className="mb-0">Choices</H4>
-              <div className="flex flex-col max-h-60">
+              <div className="flex flex-col max-h-60 overflow-scroll">
                 {listChoices.map((choice, idx) => {
                   return (
                     <div ref={choiceListRef} key={idx}>
