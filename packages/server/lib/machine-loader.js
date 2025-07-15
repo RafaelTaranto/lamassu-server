@@ -29,7 +29,7 @@ const bootingUpStatus = { label: 'Booting up', type: 'warning' }
 const OPERATOR_DATA_DIR = process.env.OPERATOR_DATA_DIR
 
 const MACHINE_WITH_CALCULATED_FIELD_SQL = `
-select d.*, mg.id as machine_group_id, mg.name as machine_group_name, COALESCE(emptybills, 0) + COALESCE(regularbills, 0) as cashbox from devices d
+select d.*, mg.name as machine_group_name, COALESCE(emptybills, 0) + COALESCE(regularbills, 0) as cashbox from devices d
     left join machine_groups mg on d.machine_group_id = mg.id
     left join (
       select count(*) as emptyBills, eub.device_id

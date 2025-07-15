@@ -1,6 +1,6 @@
 import db from './db.js'
 
-export async function createMachineGroup(data: { id: string; name: string }) {
+export function createMachineGroup(data: { id: string; name: string }) {
   return db
     .insertInto('machineGroups')
     .values(data)
@@ -8,7 +8,7 @@ export async function createMachineGroup(data: { id: string; name: string }) {
     .executeTakeFirstOrThrow()
 }
 
-export async function deleteMachineGroup(id: string) {
+export function deleteMachineGroup(id: string) {
   return db
     .deleteFrom('machineGroups')
     .where('id', '=', id)
@@ -16,7 +16,7 @@ export async function deleteMachineGroup(id: string) {
     .executeTakeFirstOrThrow()
 }
 
-export async function getMachineGroupsWithDeviceCount() {
+export function getMachineGroupsWithDeviceCount() {
   return db
     .selectFrom('machineGroups as mg')
     .leftJoin('devices as d', 'd.machineGroupId', 'mg.id')
