@@ -157,7 +157,12 @@ const ContactInfo = ({ wizard }) => {
         articleUrl="https://support.lamassu.is/hc/en-us/articles/360033051732-Enabling-Operator-Info"
         tooltipText="For details on configuring this panel, please read the relevant knowledgebase article:"
       />
-      <SwitchRow checked={info.active} save={save} title="Info card enabled?" />
+      <SwitchRow
+        checked={info.active}
+        save={it => save({ active: it })}
+        title="Info card enabled?"
+      />
+
       <div>
         <div className="flex items-center gap-4">
           <H4>Info card</H4>
