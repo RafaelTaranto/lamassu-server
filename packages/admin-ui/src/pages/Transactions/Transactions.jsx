@@ -334,8 +334,8 @@ const Transactions = () => {
                 </div>
                 <HelpTooltip width={200}>
                   <SupportLinkButton
-                    link="https://support.lamassu.is/hc/en-us/articles/115001210452-Cancelling-cash-out-transactions"
-                    label="Cancelling cash-out transactions"
+                    link="https://support.lamassu.is/hc/en-us/articles/115001210452-Cancelling-transactions-Cash-ins-and-Cash-outs"
+                    label="Cancelling transactions"
                     bottomSpace="0"
                   />
                 </HelpTooltip>
