@@ -1,12 +1,16 @@
 import BigNumber from 'bignumber.js'
 import { formatDistance } from 'date-fns'
-import React from 'react'
+import React, { useState } from 'react'
+import { Button } from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Status } from '../../../components/Status'
 import MachineActions from '../../../components/machineActions/MachineActions'
 import { H3, Label1, P } from '../../../components/typography'
 import CopyToClipboard from '../../../components/CopyToClipboard.jsx'
 
 const Overview = ({ data, onActionSuccess }) => {
+  const [actionsMenuAnchor, setActionsMenuAnchor] = useState(null)
+
   return (
     <div className="flex flex-col gap-8">
       <H3>{data.name}</H3>
@@ -53,9 +57,20 @@ const Overview = ({ data, onActionSuccess }) => {
         </div>
       </div>
       <div>
+        <Button
+          variant="contained"
+          color="secondary"
+          endIcon={<ExpandMoreIcon />}
+          onClick={event => setActionsMenuAnchor(event.currentTarget)}>
+          Actions
+        </Button>
         <MachineActions
           machine={data}
-          onActionSuccess={onActionSuccess}></MachineActions>
+          onActionSuccess={onActionSuccess}
+          anchorEl={actionsMenuAnchor}
+          open={Boolean(actionsMenuAnchor)}
+          onClose={() => setActionsMenuAnchor(null)}
+        />
       </div>
     </div>
   )
