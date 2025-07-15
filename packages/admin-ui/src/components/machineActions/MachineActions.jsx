@@ -63,7 +63,6 @@ const getState = machineEventsLazy =>
 
 const MachineActions = memo(({ machine, onActionSuccess }) => {
   const [action, setAction] = useState({ command: null })
-  const [preflightOptions, setPreflightOptions] = useState({})
   const [showModal, setShowModal] = useState(false)
   const [showGroupModal, setShowGroupModal] = useState(false)
   const [errorMessage, setErrorMessage] = useState(null)
@@ -75,10 +74,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
     </span>
   )
 
-  const [fetchMachineEvents, { loading: loadingEvents }] = useLazyQuery(
-    MACHINE,
-    preflightOptions,
-  )
+  const [fetchMachineEvents, { loading: loadingEvents }] = useLazyQuery(MACHINE)
 
   const [simpleMachineAction] = useMutation(MACHINE_ACTION)
 
@@ -97,7 +93,7 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
   const disabled = !!(action?.command === 'restartServices' && loadingEvents)
 
   const machineStatusPreflight = actionToDo => {
-    setPreflightOptions({
+    fetchMachineEvents({
       variables: { deviceId: machine.deviceId },
       onCompleted: machineEventsLazy => {
         const message = !isStaticState(getState(machineEventsLazy))
@@ -106,7 +102,6 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
         setAction({ ...actionToDo, message })
       },
     })
-    fetchMachineEvents()
   }
 
   return (
