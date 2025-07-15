@@ -106,8 +106,12 @@ export {
   // colors
   white,
   zircon,
+  zodiac,
+  ghost,
   zircon2,
   comet,
+  comet2,
+  comet3,
   spring2,
   spring3,
   spring4,

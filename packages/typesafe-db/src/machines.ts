@@ -1,9 +1,6 @@
 import db from './db.js'
 
-export async function assignMachinesToGroup(
-  deviceIds: [string],
-  groupId: string,
-) {
+export function assignMachinesToGroup(deviceIds: [string], groupId: string) {
   return db
     .updateTable('devices as d')
     .set({ machineGroupId: groupId })

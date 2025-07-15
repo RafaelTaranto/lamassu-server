@@ -3,10 +3,28 @@ const defaultMaterialTableOpts = {
   enableGlobalFilter: false,
   paginationDisplayMode: 'pages',
   enableColumnActions: false,
+  positionToolbarAlertBanner: 'bottom',
   initialState: { density: 'compact' },
   mrtTheme: it => ({
     ...it,
     baseBackgroundColor: '#fff',
+  }),
+  muiBottomToolbarProps: ({ table }) => ({
+    sx: {
+      '& .MuiPaper-root': {
+        color: 'inherit',
+        backgroundColor:
+          table.getSelectedRowModel().flatRows.length > 0
+            ? 'var(--ghost) !important'
+            : 'var(--zodiac) !important',
+      },
+      '& .MuiButtonBase-root': {
+        color:
+          table.getSelectedRowModel().flatRows.length > 0
+            ? 'var(--zodiac)'
+            : '',
+      },
+    },
   }),
   muiTopToolbarProps: () => ({
     sx: {

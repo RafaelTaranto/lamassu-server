@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material/styles'
+import { createTheme, alpha } from '@mui/material/styles'
 
 import typographyStyles from '../components/typography/styles'
 
@@ -23,6 +23,8 @@ import {
   mistyRose,
   linen,
   pumpkin,
+  comet2,
+  white,
 } from './variables'
 
 const { p } = typographyStyles
@@ -40,9 +42,9 @@ let theme = createTheme({
       main: secondaryColor,
     },
     secondary: {
-      light: secondaryColor,
-      dark: secondaryColor,
-      main: secondaryColor,
+      light: comet2,
+      dark: comet2,
+      main: comet2,
     },
     background: {
       default: backgroundColor,
@@ -328,6 +330,16 @@ theme = createTheme(theme, {
           borderTopLeftRadius: 8,
           borderBottomRightRadius: 8,
           borderBottomLeftRadius: 8,
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-disabled': {
+            backgroundColor: alpha(white, 0.12),
+            color: alpha(white, 0.3),
+          },
         },
       },
     },
