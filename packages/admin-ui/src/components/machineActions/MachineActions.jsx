@@ -228,12 +228,12 @@ const MachineActions = memo(({ machine, onActionSuccess }) => {
           onClick={() => {
             setShowGroupModal(true)
           }}>
-          Move to another group
+          Change Group
         </ActionButton>
       </div>
       {showGroupModal && (
         <GroupModal
-          deviceId={machine.deviceId}
+          deviceIds={[machine.deviceId]}
           onClose={() => {
             setShowGroupModal(false)
           }}

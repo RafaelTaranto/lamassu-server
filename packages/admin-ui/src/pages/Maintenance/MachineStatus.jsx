@@ -1,8 +1,9 @@
 import Visibility from '@mui/icons-material/Visibility'
+import { Button as MuiButton } from '@mui/material'
 import { useQuery, gql } from '@apollo/client'
 import { formatDistance } from 'date-fns'
 import * as R from 'ramda'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useLocation } from 'wouter'
 import {
   MRT_ActionMenuItem,
@@ -16,6 +17,7 @@ import { Label1 } from '../../components/typography/index.jsx'
 import WarningIcon from '../../styling/icons/status/pumpkin.svg?react'
 import ErrorIcon from '../../styling/icons/status/tomato.svg?react'
 import { defaultMaterialTableOpts } from '../../utils/materialReactTableOpts.js'
+import GroupModal from '../../components/machineActions/GroupModal'
 
 import MachineDetailsRow from './MachineDetailsCard'
 
@@ -66,6 +68,7 @@ const GET_DATA = gql`
 
 const MachineStatus = () => {
   const [, navigate] = useLocation()
+  const [showGroupModal, setShowGroupModal] = useState(false)
   const addedMachineId = history.state?.id
   const {
     data: machinesResponse,
@@ -131,6 +134,7 @@ const MachineStatus = () => {
     columns: columns,
     getRowId: it => it.deviceId,
     data: machinesResponse?.machines ?? [],
+    enableRowSelection: true,
     enableSorting: false,
     enableExpandAll: false,
     enableRowActions: true,
@@ -159,6 +163,20 @@ const MachineStatus = () => {
           timezone={timezone}
         />
       ) : null,
+    renderTopToolbarCustomActions: ({ table }) => {
+      const selectedRows = table.getSelectedRowModel().flatRows
+
+      return (
+        <MuiButton
+          color="secondary"
+          size="small"
+          disabled={selectedRows.length === 0}
+          variant="contained"
+          onClick={() => setShowGroupModal(true)}>
+          Change Group
+        </MuiButton>
+      )
+    },
   })
 
   return (
@@ -177,6 +195,20 @@ const MachineStatus = () => {
         </div>
       </div>
       <MaterialReactTable table={table} />
+      {showGroupModal && (
+        <GroupModal
+          deviceIds={table
+            .getSelectedRowModel()
+            .flatRows.map(row => row.original.deviceId)}
+          onClose={() => {
+            setShowGroupModal(false)
+          }}
+          onSuccess={() => {
+            refetch()
+            table.resetRowSelection()
+          }}
+        />
+      )}
     </>
   )
 }

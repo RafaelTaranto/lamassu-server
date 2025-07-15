@@ -22,7 +22,7 @@ const CHANGE_GROUP = gql`
   }
 `
 
-const GroupModal = ({ onClose, deviceId, onSuccess }) => {
+const GroupModal = ({ onClose, deviceIds, onSuccess }) => {
   const { data, loading } = useQuery(MACHINE_GROUPS)
   const [selectedGroup, setSelectedGroup] = useState(null)
 
@@ -41,7 +41,7 @@ const GroupModal = ({ onClose, deviceId, onSuccess }) => {
     if (selectedGroup) {
       changeGroup({
         variables: {
-          deviceIds: [deviceId],
+          deviceIds: deviceIds,
           groupId: selectedGroup.id,
         },
       })
