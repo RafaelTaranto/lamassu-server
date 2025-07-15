@@ -112,6 +112,7 @@ function getCashOutTransactionList() {
         .on('ud.unpaired', '>=', eb => eb.ref('txOut.created'))
         .on('txOut.created', '>=', eb => eb.ref('ud.paired')),
     )
+    .leftJoin('coupons as cpn', 'cpn.id', 'txOut.couponId')
     .select(({ eb, val }) => [
       'txOut.id',
       val('cashOut').as('txClass'),
@@ -134,6 +135,7 @@ function getCashOutTransactionList() {
       isCashOutExpired(eb).as('expired'),
       getDeviceName(eb).as('machineName'),
       'txOut.discount',
+      'cpn.code as couponCode',
       cashOutTransactionStates(eb).as('status'),
       'txOut.customerId',
       ...customerData(eb),
@@ -199,6 +201,7 @@ function getCashInTransactionList() {
         .on('ud.unpaired', '>=', eb => eb.ref('txIn.created'))
         .on('txIn.created', '>=', eb => eb.ref('ud.paired')),
     )
+    .leftJoin('coupons as cpn', 'cpn.id', 'txIn.couponId')
     .select(({ eb, val }) => [
       'txIn.id',
       val('cashIn').as('txClass'),
@@ -221,6 +224,7 @@ function getCashInTransactionList() {
       isCashInExpired(eb).as('expired'),
       getDeviceName(eb).as('machineName'),
       'txIn.discount',
+      'cpn.code as couponCode',
       cashInTransactionStates(eb).as('status'),
       'txIn.customerId',
       ...customerData(eb),
