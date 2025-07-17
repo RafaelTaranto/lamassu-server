@@ -1,10 +1,7 @@
-const _ = require('lodash/fp')
-
 const { complianceTriggers } = require('typesafe-db')
 
-function maxDaysThreshold(triggers) {
-  return _.max(_.map('thresholdDays')(triggers))
-}
+const maxDaysThreshold = triggers =>
+  Math.max(...triggers.map(t => t.thresholdDays))
 
 const getCashLimit = triggers =>
   Math.min(
