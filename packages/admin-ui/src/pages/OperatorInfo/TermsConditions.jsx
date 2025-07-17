@@ -75,14 +75,14 @@ const GET_CONFIG = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfigWithTriggers(config: $config)
+    saveConfig(config: $config)
   }
 `
 
 const TermsConditions = () => {
   const [error, setError] = useState(null)
   const [editing, setEditing] = useState(false)
-  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
+  const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: () => {
       setError(null)
       setEditing(false)
@@ -101,7 +101,7 @@ const TermsConditions = () => {
   const tcPhoto = termsAndConditions?.tcPhoto ?? false
 
   const save = it =>
-    saveConfigWithTriggers({
+    saveConfig({
       variables: { config: toNamespace(namespaces.TERMS_CONDITIONS, it) },
     })
 

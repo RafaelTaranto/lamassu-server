@@ -9,7 +9,6 @@ const typeDef = gql`
   type Mutation {
     saveAccounts(accounts: JSONObject): JSONObject @auth
     saveConfig(config: JSONObject): JSONObject @auth
-    saveConfigWithTriggers(config: JSONObject): JSONObject @auth
   }
 `
 

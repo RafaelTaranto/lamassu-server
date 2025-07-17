@@ -16,7 +16,7 @@ import {
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfigWithTriggers(config: $config)
+    saveConfig(config: $config)
   }
 `
 const GET_INFO = gql`
@@ -38,7 +38,7 @@ const AdvancedWallet = () => {
   const [isEditingDefault, setEditingDefault] = useState(false)
   const [isEditingOverrides, setEditingOverrides] = useState(false)
 
-  const [saveConfigWithTriggers, { error }] = useMutation(SAVE_CONFIG, {
+  const [saveConfig, { error }] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
   })
 
@@ -46,12 +46,12 @@ const AdvancedWallet = () => {
     const config = toNamespace(SCREEN_KEY)(
       toNamespace(ADVANCED)(rawConfig.wallets[0]),
     )
-    return saveConfigWithTriggers({ variables: { config } })
+    return saveConfig({ variables: { config } })
   }
 
   const saveOverrides = rawConfig => {
     const config = toNamespace(SCREEN_KEY)(toNamespace(ADVANCED)(rawConfig))
-    return saveConfigWithTriggers({ variables: { config } })
+    return saveConfig({ variables: { config } })
   }
 
   const onEditingDefault = (it, editing) => setEditingDefault(editing)

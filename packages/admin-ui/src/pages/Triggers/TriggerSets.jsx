@@ -45,7 +45,7 @@ const GET_CONFIG = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfigWithTriggers(config: $config)
+    saveConfig(config: $config)
   }
 `
 
@@ -106,7 +106,7 @@ const TriggerSets = () => {
     },
   )
 
-  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
+  const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
     refetchQueries: () => ['getComplianceTriggerSets'],
     onError: errorMsg => setErrorMsg(errorMsg),
@@ -121,7 +121,7 @@ const TriggerSets = () => {
 
   const addressReuseSave = rawConfig => {
     const config = toNamespace('compliance')(rawConfig)
-    return saveConfigWithTriggers({ variables: { config } })
+    return saveConfig({ variables: { config } })
   }
 
   const titleSectionWidth = {
@@ -294,7 +294,7 @@ const TriggerSets = () => {
       {!loading && subMenu === 'advancedSettings' && (
         <AdvancedTriggers
           error={errorMsg}
-          save={saveConfigWithTriggers}
+          save={saveConfig}
           data={data}></AdvancedTriggers>
       )}
 

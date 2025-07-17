@@ -39,7 +39,7 @@ const GET_DATA = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfigWithTriggers(config: $config)
+    saveConfig(config: $config)
   }
 `
 
@@ -81,7 +81,7 @@ const CustomInfoRequests = ({
 
   const { data: configData, loading: configLoading } = useQuery(GET_DATA)
 
-  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
+  const [saveConfig] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
     onError: () => setHasError(true),
   })
@@ -140,7 +140,7 @@ const CustomInfoRequests = ({
         ),
       }
       const newConfig = toNamespace(namespaces.TRIGGERS)(cleanConfig)
-      saveConfigWithTriggers({ variables: { config: newConfig } })
+      saveConfig({ variables: { config: newConfig } })
     })
   }
 

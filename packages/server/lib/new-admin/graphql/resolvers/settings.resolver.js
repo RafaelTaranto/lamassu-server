@@ -9,8 +9,6 @@ const resolvers = {
     saveAccounts: (...[, { accounts }]) =>
       settingsLoader.saveAccounts(accounts),
     saveConfig: (source, { config }) => settingsLoader.saveConfig(config),
-    saveConfigWithTriggers: (source, { config }) =>
-      settingsLoader.saveConfigWithTriggers(config),
   },
 }
 

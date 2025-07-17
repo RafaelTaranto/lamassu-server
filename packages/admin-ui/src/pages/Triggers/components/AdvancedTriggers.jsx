@@ -17,7 +17,7 @@ import {
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfigWithTriggers(config: $config)
+    saveConfig(config: $config)
   }
 `
 
@@ -55,7 +55,7 @@ const AdvancedTriggersSettings = memo(() => {
 
   const loading = configLoading || customInfoLoading
 
-  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
+  const [saveConfig] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
     onError: error => setError(error),
   })
@@ -63,7 +63,7 @@ const AdvancedTriggersSettings = memo(() => {
   const saveDefaults = it => {
     const newConfig = toNamespace(SCREEN_KEY)(it.triggersConfig[0])
     setError(null)
-    return saveConfigWithTriggers({
+    return saveConfig({
       variables: { config: newConfig },
     })
   }
@@ -71,7 +71,7 @@ const AdvancedTriggersSettings = memo(() => {
   const saveOverrides = it => {
     const config = toNamespace(SCREEN_KEY)(it)
     setError(null)
-    return saveConfigWithTriggers({ variables: { config } })
+    return saveConfig({ variables: { config } })
   }
 
   const requirementsData =

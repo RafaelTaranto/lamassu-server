@@ -43,20 +43,20 @@ const GET_DATA = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfigWithTriggers(config: $config)
+    saveConfig(config: $config)
   }
 `
 
 function Locales({ isActive, doContinue }) {
   const { data } = useQuery(GET_DATA)
 
-  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
+  const [saveConfig] = useMutation(SAVE_CONFIG, {
     onCompleted: doContinue,
   })
 
   const save = it => {
     const config = toNamespace('locale')(it.locale[0])
-    return saveConfigWithTriggers({ variables: { config } })
+    return saveConfig({ variables: { config } })
   }
 
   const cryptoCurrencies = getConfiguredCoins(
