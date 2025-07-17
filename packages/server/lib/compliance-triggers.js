@@ -2,16 +2,6 @@ const _ = require('lodash/fp')
 
 const { complianceTriggers } = require('typesafe-db')
 
-function getBackwardsCompatibleTriggers(triggers) {
-  const filtered = _.filter(
-    _.matches({ triggerType: 'txVolume', direction: 'both', thresholdDays: 1 }),
-  )(triggers)
-  const grouped = _.groupBy(_.prop('requirementType'))(filtered)
-  return _.mapValues(_.compose(_.get('threshold'), _.minBy('threshold')))(
-    grouped,
-  )
-}
-
 function hasSanctions(triggers) {
   return _.some(_.matches({ requirementType: 'sanctions' }))(triggers)
 }
@@ -45,7 +35,6 @@ const AUTH_METHODS = {
 module.exports = {
   getAllComplianceTriggers: complianceTriggers.getAllComplianceTriggers,
   saveComplianceTriggers: complianceTriggers.saveComplianceTriggers,
-  getBackwardsCompatibleTriggers,
   hasSanctions,
   maxDaysThreshold,
   getCashLimit,
