@@ -29,14 +29,14 @@ const GET_INFO = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject, $accounts: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
     saveAccounts(accounts: $accounts)
   }
 `
 
 const AllSet = ({ data: currentData, doContinue }) => {
   const { data } = useQuery(GET_INFO)
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     onCompleted: doContinue,
   })
 
@@ -57,7 +57,7 @@ const AllSet = ({ data: currentData, doContinue }) => {
     const withCoin = toNamespace(coin, R.omit('coin', adjustedData))
     const config = toNamespace(namespaces.WALLETS)(withCoin)
     setError(false)
-    return saveConfig({ variables: { config } })
+    return saveConfigWithTriggers({ variables: { config } })
   }
 
   const presentableData = R.pipe(

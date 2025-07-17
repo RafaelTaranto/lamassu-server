@@ -15,19 +15,19 @@ const GET_CONFIG = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
 const CoinATMRadar = memo(({ wizard }) => {
   const { data } = useQuery(GET_CONFIG)
 
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     refetchQueries: ['getData'],
   })
 
   const save = it =>
-    saveConfig({
+    saveConfigWithTriggers({
       variables: { config: toNamespace(namespaces.COIN_ATM_RADAR, it) },
     })
 

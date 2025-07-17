@@ -16,19 +16,19 @@ const GET_CONFIG = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
 const ReceiptPrinting = memo(({ wizard }) => {
   const { data } = useQuery(GET_CONFIG)
 
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
   })
 
   const saveSwitch = object => {
-    return saveConfig({
+    return saveConfigWithTriggers({
       variables: {
         config: toNamespace(
           namespaces.RECEIPT,
@@ -39,7 +39,7 @@ const ReceiptPrinting = memo(({ wizard }) => {
   }
 
   const save = it =>
-    saveConfig({
+    saveConfigWithTriggers({
       variables: { config: toNamespace(namespaces.RECEIPT, it) },
     })
 

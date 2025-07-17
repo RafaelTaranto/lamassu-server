@@ -16,7 +16,7 @@ import { DenominationsSchema, getElements } from './helper'
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
@@ -49,14 +49,14 @@ const CashOut = ({ name: SCREEN_KEY }) => {
   const [wizard, setWizard] = useState(false)
   const { data, loading } = useQuery(GET_INFO)
 
-  const [saveConfig, { error }] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers, { error }] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
     refetchQueries: () => ['getData'],
   })
 
   const save = rawConfig => {
     const config = toNamespace(SCREEN_KEY)(rawConfig)
-    return saveConfig({ variables: { config } })
+    return saveConfigWithTriggers({ variables: { config } })
   }
 
   const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)

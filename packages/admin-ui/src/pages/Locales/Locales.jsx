@@ -59,7 +59,7 @@ const GET_DATA = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject, $accounts: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
     saveAccounts(accounts: $accounts)
   }
 `
@@ -110,7 +110,7 @@ const Locales = ({ name: SCREEN_KEY }) => {
   const { data: marketsData } = useQuery(GET_MARKETS)
   const schemas = _schemas(marketsData?.getMarkets)
 
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
     refetchQueries: () => ['getData'],
     onError: error => setError(error),
@@ -141,13 +141,13 @@ const Locales = ({ name: SCREEN_KEY }) => {
 
   const save = (config, accounts) => {
     setDataToSave(null)
-    return saveConfig({ variables: { config, accounts } })
+    return saveConfigWithTriggers({ variables: { config, accounts } })
   }
 
   const saveOverrides = it => {
     const config = toNamespace(SCREEN_KEY)(it)
     setError(null)
-    return saveConfig({ variables: { config } })
+    return saveConfigWithTriggers({ variables: { config } })
   }
 
   const onChangeCoin = (prev, curr, setValue) => {

@@ -15,20 +15,20 @@ const GET_DATA = gql`
 `
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
 function Commissions({ isActive, doContinue }) {
   const { data } = useQuery(GET_DATA)
 
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     onCompleted: doContinue,
   })
 
   const save = it => {
     const config = toNamespace('commissions')(it.commissions[0])
-    return saveConfig({ variables: { config } })
+    return saveConfigWithTriggers({ variables: { config } })
   }
 
   const currency = R.path(['fiatCurrency'])(

@@ -15,14 +15,14 @@ const GET_CONFIG = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
 const MachineScreens = memo(() => {
   const { data } = useQuery(GET_CONFIG)
 
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
   })
 
@@ -33,7 +33,7 @@ const MachineScreens = memo(() => {
       R.mergeRight(ratesScreenConfig),
     )
 
-    return saveConfig({
+    return saveConfigWithTriggers({
       variables: {
         config: formatConfig({ active: it }),
       },

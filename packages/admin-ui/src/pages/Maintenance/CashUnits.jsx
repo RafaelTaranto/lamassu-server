@@ -64,7 +64,7 @@ const GET_MACHINES_AND_CONFIG = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
@@ -131,7 +131,7 @@ const CashCassettes = () => {
   const [setCassetteBills, { error }] = useMutation(SET_CASSETTE_BILLS, {
     refetchQueries: () => ['getData'],
   })
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setEditingSchema(false),
     refetchQueries: () => ['getData'],
   })
@@ -162,7 +162,7 @@ const CashCassettes = () => {
 
   const cashboxResetSave = rawConfig => {
     const config = toNamespace('cashIn')(rawConfig)
-    return saveConfig({ variables: { config } })
+    return saveConfigWithTriggers({ variables: { config } })
   }
 
   const saveCashboxOption = selection => {

@@ -30,7 +30,7 @@ const SAVE_ACCOUNT = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
@@ -88,7 +88,7 @@ const Triggers = () => {
     data?.config && fromNamespace('compliance')(data.config)
   const rejectAddressReuse = complianceConfig?.rejectAddressReuse ?? false
 
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
     refetchQueries: () => ['getData'],
     onError: error => setError(error),
@@ -105,7 +105,7 @@ const Triggers = () => {
 
   const addressReuseSave = rawConfig => {
     const config = toNamespace('compliance')(rawConfig)
-    return saveConfig({ variables: { config } })
+    return saveConfigWithTriggers({ variables: { config } })
   }
 
   const titleSectionWidth = {
@@ -234,7 +234,7 @@ const Triggers = () => {
       {!loading && subMenu === 'advancedSettings' && (
         <AdvancedTriggers
           error={error}
-          save={saveConfig}
+          save={saveConfigWithTriggers}
           data={data}></AdvancedTriggers>
       )}
       {twilioSetupPopup && (

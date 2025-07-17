@@ -107,7 +107,7 @@ const renameKeys = keys => obj =>
     return obj
   }, obj)
 
-const saveConfig = config =>
+const saveConfigWithTriggers = config =>
   getOperatorId('middleware')
     .then(operatorId =>
       db.transaction().execute(async tx => {
@@ -147,7 +147,7 @@ const load = version =>
     })
 
 module.exports = {
-  saveConfig,
+  saveConfigWithTriggers,
   saveAccounts,
   loadAccounts,
   showAccounts,

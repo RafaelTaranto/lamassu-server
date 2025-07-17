@@ -27,13 +27,13 @@ const GET_DATA = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
 const Commissions = ({ name: SCREEN_KEY, id: deviceId }) => {
   const { data, loading } = useQuery(GET_DATA)
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     refetchQueries: () => ['getData'],
   })
 
@@ -44,7 +44,7 @@ const Commissions = ({ name: SCREEN_KEY, id: deviceId }) => {
 
   const saveOverrides = it => {
     const config = toNamespace(SCREEN_KEY)(it)
-    return saveConfig({ variables: { config } })
+    return saveConfigWithTriggers({ variables: { config } })
   }
 
   const getMachineCommissions = () => {

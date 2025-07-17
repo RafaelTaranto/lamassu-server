@@ -13,7 +13,7 @@ import { Schema, getElements, sortBy, toServer } from './helper'
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 
@@ -32,7 +32,7 @@ const TriggerView = ({
   )
   const [error, setError] = useState(null)
 
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG, {
     onCompleted: () => toggleWizard(true),
     refetchQueries: () => ['getData'],
     onError: error => setError(error),
@@ -40,7 +40,7 @@ const TriggerView = ({
 
   const save = config => {
     setError(null)
-    return saveConfig({
+    return saveConfigWithTriggers({
       variables: { config: { triggers: toServer(config.triggers) } },
     })
   }
@@ -49,7 +49,9 @@ const TriggerView = ({
     const toSave = R.concat([
       { id: uuidv4(), direction: 'both', ...rawConfig },
     ])(triggers)
-    return saveConfig({ variables: { config: { triggers: toServer(toSave) } } })
+    return saveConfigWithTriggers({
+      variables: { config: { triggers: toServer(toSave) } },
+    })
   }
 
   return (

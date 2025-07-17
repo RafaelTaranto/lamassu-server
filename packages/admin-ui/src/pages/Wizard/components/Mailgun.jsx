@@ -21,7 +21,7 @@ const GET_CONFIG = gql`
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
   }
 `
 const SAVE_ACCOUNTS = gql`
@@ -43,7 +43,7 @@ const options = [
 
 const Mailgun = () => {
   const { data } = useQuery(GET_CONFIG)
-  const [saveConfig] = useMutation(SAVE_CONFIG)
+  const [saveConfigWithTriggers] = useMutation(SAVE_CONFIG)
   const [saveAccounts] = useMutation(SAVE_ACCOUNTS)
   const [emailActive, setEmailActive] = useState(false)
   const accounts = data?.accounts ?? []
@@ -64,7 +64,7 @@ const Mailgun = () => {
 
   const save = active => {
     const config = toNamespace(`notifications_email`)({ active })
-    return saveConfig({ variables: { config } })
+    return saveConfigWithTriggers({ variables: { config } })
   }
 
   const saveAccount = mailgun => {

@@ -21,7 +21,7 @@ import { WalletSchema, getElements } from './helper'
 
 const SAVE_CONFIG = gql`
   mutation Save($config: JSONObject, $accounts: JSONObject) {
-    saveConfig(config: $config)
+    saveConfigWithTriggers(config: $config)
     saveAccounts(accounts: $accounts)
   }
 `
@@ -66,7 +66,7 @@ const Wallet = ({ name: SCREEN_KEY }) => {
   const [advancedSettings, setAdvancedSettings] = useState(false)
   const { data } = useQuery(GET_INFO)
 
-  const [saveConfig, { error }] = useMutation(SAVE_CONFIG, {
+  const [saveConfigWithTriggers, { error }] = useMutation(SAVE_CONFIG, {
     onCompleted: () => setWizard(false),
     refetchQueries: () => ['getData'],
   })
@@ -80,7 +80,7 @@ const Wallet = ({ name: SCREEN_KEY }) => {
 
   const save = (rawConfig, accounts) => {
     const config = toNamespace(SCREEN_KEY)(rawConfig)
-    return saveConfig({ variables: { config, accounts } })
+    return saveConfigWithTriggers({ variables: { config, accounts } })
   }
 
   const fiatCurrency =

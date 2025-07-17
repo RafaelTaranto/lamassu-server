@@ -8,7 +8,8 @@ const resolvers = {
   Mutation: {
     saveAccounts: (...[, { accounts }]) =>
       settingsLoader.saveAccounts(accounts),
-    saveConfig: (...[, { config }]) => settingsLoader.saveConfig(config),
+    saveConfigWithTriggers: (source, { config }) =>
+      settingsLoader.saveConfigWithTriggers(config),
   },
 }
 
