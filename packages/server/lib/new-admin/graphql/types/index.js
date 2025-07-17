@@ -24,6 +24,7 @@ const status = require('./status.type')
 const transaction = require('./transaction.type')
 const user = require('./users.type')
 const version = require('./version.type')
+const triggers = require('./triggers.type')
 
 const types = [
   bill,
@@ -50,6 +51,7 @@ const types = [
   transaction,
   user,
   version,
+  triggers,
 ]
 
 module.exports = mergeTypeDefs(types)

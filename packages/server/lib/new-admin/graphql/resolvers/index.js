@@ -24,6 +24,7 @@ const status = require('./status.resolver')
 const transaction = require('./transaction.resolver')
 const user = require('./users.resolver')
 const version = require('./version.resolver')
+const triggers = require('./triggers.resolver')
 
 const resolvers = [
   bill,
@@ -50,6 +51,7 @@ const resolvers = [
   transaction,
   user,
   version,
+  triggers,
 ]
 
 module.exports = mergeResolvers(resolvers)
