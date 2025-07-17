@@ -6,15 +6,14 @@ function maxDaysThreshold(triggers) {
   return _.max(_.map('thresholdDays')(triggers))
 }
 
-function getCashLimit(triggers) {
-  const withFiat = _.filter(({ triggerType }) =>
-    _.includes(triggerType, ['txVolume', 'txAmount']),
-  )
-  const blocking = _.filter(({ requirementType }) =>
-    _.includes(requirementType, ['block', 'suspend']),
-  )
-  return _.compose(_.minBy('threshold'), blocking, withFiat)(triggers)
-}
+const getCashLimit = triggers =>
+  Math.min(
+    ...triggers.flatMap(({ triggerType, requirementType, threshold }) => {
+      const withFiat = ['txVolume', 'txAmount'].includes(triggerType)
+      const blocking = ['block', 'suspend'].includes(requirementType)
+      return withFiat && blocking && threshold ? [threshold] : []
+    }),
+  ) || Infinity
 
 const hasRequirement = requirementType => triggers =>
   triggers.some(t => t.requirementType === requirementType)
