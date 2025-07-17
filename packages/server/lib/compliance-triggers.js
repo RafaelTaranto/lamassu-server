@@ -16,8 +16,8 @@ function getCashLimit(triggers) {
   return _.compose(_.minBy('threshold'), blocking, withFiat)(triggers)
 }
 
-const hasRequirement = requirementType =>
-  _.compose(_.negate(_.isEmpty), _.find(_.matches({ requirementType })))
+const hasRequirement = requirementType => triggers =>
+  triggers.some(t => t.requirementType === requirementType)
 
 const hasPhone = hasRequirement('sms')
 const hasFacephoto = hasRequirement('facephoto')
