@@ -13,16 +13,6 @@ export function getAllComplianceTriggers(dbOrTx: DBOrTx) {
   return dbOrTx.selectFrom('complianceTriggers').selectAll().execute()
 }
 
-export function saveAllComplianceTriggers(
-  dbOrTx: DBOrTx,
-  triggers: ComplianceTriggerInsert[],
-) {
-  return inTransaction(dbOrTx, async tx => {
-    await tx.deleteFrom('complianceTriggers').execute()
-    return await tx.insertInto('complianceTriggers').values(triggers).execute()
-  })
-}
-
 /*
  * Compliance trigger sets API
  */
@@ -87,4 +77,14 @@ export function createComplianceTrigger(
 
 export function deleteComplianceTrigger(dbOrTx: DBOrTx, id: string) {
   return dbOrTx.deleteFrom('complianceTriggers').where('id', '=', id).execute()
+}
+
+export function deleteComplianceTriggersByCustomInfoRequestId(
+  dbOrTx: DBOrTx,
+  customInfoRequestId: string,
+) {
+  return dbOrTx
+    .deleteFrom('complianceTriggers')
+    .where('customInfoRequestId', '=', customInfoRequestId)
+    .execute()
 }

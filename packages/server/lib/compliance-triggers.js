@@ -54,9 +54,14 @@ const createComplianceTrigger = (complianceTriggerSetId, trigger) =>
 const deleteComplianceTrigger = id =>
   complianceTriggers.deleteComplianceTrigger(db, id)
 
+const deleteComplianceTriggersByCustomInfoRequestId = customInfoRequestId =>
+  complianceTriggers.deleteComplianceTriggersByCustomInfoRequestId(
+    db,
+    customInfoRequestId,
+  )
+
 module.exports = {
   getAllComplianceTriggers: complianceTriggers.getAllComplianceTriggers,
-  saveAllComplianceTriggers: complianceTriggers.saveAllComplianceTriggers,
   hasSanctions,
   maxDaysThreshold,
   getCashLimit,
@@ -72,4 +77,5 @@ module.exports = {
   deleteComplianceTriggerSet,
   createComplianceTrigger,
   deleteComplianceTrigger,
+  deleteComplianceTriggersByCustomInfoRequestId,
 }
