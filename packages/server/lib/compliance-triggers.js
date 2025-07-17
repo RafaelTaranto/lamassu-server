@@ -2,10 +2,6 @@ const _ = require('lodash/fp')
 
 const { complianceTriggers } = require('typesafe-db')
 
-function hasSanctions(triggers) {
-  return _.some(_.matches({ requirementType: 'sanctions' }))(triggers)
-}
-
 function maxDaysThreshold(triggers) {
   return _.max(_.map('thresholdDays')(triggers))
 }
@@ -26,6 +22,7 @@ const hasRequirement = requirementType =>
 const hasPhone = hasRequirement('sms')
 const hasFacephoto = hasRequirement('facephoto')
 const hasIdScan = hasRequirement('idCardData')
+const hasSanctions = hasRequirement('sanctions')
 
 const AUTH_METHODS = {
   SMS: 'SMS',
