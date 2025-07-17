@@ -2,7 +2,7 @@ const crypto = require('crypto')
 
 const _ = require('lodash/fp')
 const {
-  db: { default: db },
+  db: { default: db, inTransaction },
   userConfig,
 } = require('typesafe-db')
 
@@ -107,6 +107,17 @@ const renameKeys = keys => obj =>
     return obj
   }, obj)
 
+const _saveConfig = (dbOrTx, config, operatorId) =>
+  inTransaction(dbOrTx, async tx => {
+    await userConfig.insertConfigRow(tx, { config })
+    await userConfig.notifyReload(tx, operatorId)
+  })
+
+const saveConfig = config =>
+  getOperatorId('middleware').then(operatorId =>
+    _saveConfig(db, config, operatorId),
+  )
+
 const saveConfigWithTriggers = config =>
   getOperatorId('middleware')
     .then(operatorId =>
@@ -118,8 +129,7 @@ const saveConfigWithTriggers = config =>
         )
         delete newConfig.triggers
         await saveAllComplianceTriggers(tx, triggers)
-        await userConfig.insertConfigRow(tx, { config: newConfig })
-        await userConfig.notifyReload(tx, operatorId)
+        await _saveConfig(tx, newConfig, operatorId)
       }),
     )
     .catch(console.error)
@@ -148,6 +158,7 @@ const load = version =>
 
 module.exports = {
   saveConfigWithTriggers,
+  saveConfig,
   saveAccounts,
   loadAccounts,
   showAccounts,
