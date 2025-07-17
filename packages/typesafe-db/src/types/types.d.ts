@@ -374,6 +374,7 @@ export interface ComplianceOverrides {
 }
 
 export interface ComplianceTriggers {
+  complianceTriggerSetId: string
   customInfoRequestId: string | null
   direction: ComplianceTriggerDirection
   externalService: string | null
@@ -383,6 +384,11 @@ export interface ComplianceTriggers {
   threshold: Numeric | null
   thresholdDays: Numeric | null
   triggerType: TriggerType
+}
+
+export interface ComplianceTriggerSets {
+  id: string
+  name: string
 }
 
 export interface Coupons {
@@ -749,6 +755,7 @@ export interface DB {
   cashUnitOperation: CashUnitOperation
   complianceOverrides: ComplianceOverrides
   complianceTriggers: ComplianceTriggers
+  complianceTriggerSets: ComplianceTriggerSets
   coupons: Coupons
   customerCustomFieldPairs: CustomerCustomFieldPairs
   customerExternalCompliance: CustomerExternalCompliance
