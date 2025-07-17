@@ -34,7 +34,7 @@ const AUTH_METHODS = {
 
 module.exports = {
   getAllComplianceTriggers: complianceTriggers.getAllComplianceTriggers,
-  saveComplianceTriggers: complianceTriggers.saveComplianceTriggers,
+  saveAllComplianceTriggers: complianceTriggers.saveAllComplianceTriggers,
   hasSanctions,
   maxDaysThreshold,
   getCashLimit,

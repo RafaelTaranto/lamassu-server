@@ -13,7 +13,7 @@ const {
 } = require('./new-config-manager')
 const {
   getAllComplianceTriggers,
-  saveComplianceTriggers,
+  saveAllComplianceTriggers,
 } = require('./compliance-triggers')
 
 const PASSWORD_FILLED = 'PASSWORD_FILLED'
@@ -117,7 +117,7 @@ const saveConfig = config =>
           renameKeys({ requirementType: 'requirement' }),
         )
         delete newConfig.triggers
-        await saveComplianceTriggers(tx, triggers)
+        await saveAllComplianceTriggers(tx, triggers)
         await userConfig.insertConfigRow(tx, { config: newConfig })
         await userConfig.notifyReload(tx, operatorId)
       }),

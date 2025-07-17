@@ -9,7 +9,7 @@ export function getAllComplianceTriggers(dbOrTx: DBOrTx) {
   return dbOrTx.selectFrom('complianceTriggers').selectAll().execute()
 }
 
-export function saveComplianceTriggers(
+export function saveAllComplianceTriggers(
   dbOrTx: DBOrTx,
   triggers: ComplianceTriggerInsert[],
 ) {
