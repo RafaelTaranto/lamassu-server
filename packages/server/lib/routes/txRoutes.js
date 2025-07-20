@@ -64,7 +64,7 @@ function getTx(req, res, next) {
   return next(httpError('Not Found', 404))
 }
 
-function getPhoneTx(req, res, next) {
+function getPhoneOrEmailTx(req, res, next) {
   if (req.query.phone) {
     return helpers
       .fetchPhoneTx(req.query.phone)
@@ -72,10 +72,6 @@ function getPhoneTx(req, res, next) {
       .catch(next)
   }
 
-  return next(httpError('Not Found', 404))
-}
-
-function getEmailTx(req, res, next) {
   if (req.query.email) {
     return helpers
       .fetchEmailTx(req.query.email)
@@ -88,7 +84,6 @@ function getEmailTx(req, res, next) {
 
 router.post('/', postTx)
 router.get('/:id', getTx)
-router.get('/', getPhoneTx)
-router.get('/', getEmailTx)
+router.get('/', getPhoneOrEmailTx)
 
-module.exports = { postTx, getTx, getPhoneTx, getEmailTx, router }
+module.exports = { router }
