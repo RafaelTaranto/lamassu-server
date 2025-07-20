@@ -86,4 +86,4 @@ router.post('/', postTx)
 router.get('/:id', getTx)
 router.get('/', getPhoneOrEmailTx)
 
-module.exports = { router }
+module.exports = router
