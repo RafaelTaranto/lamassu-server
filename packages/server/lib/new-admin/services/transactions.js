@@ -120,6 +120,7 @@ function advancedBatch(data) {
     'rawTickerPrice',
     'receivedCryptoAtoms',
     'discount',
+    'couponCode',
     'txHash',
     'customerPhone',
     'customerEmail',
