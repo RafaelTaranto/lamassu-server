@@ -199,6 +199,7 @@ export interface CashInTxs {
   batchTime: Timestamp | null
   cashInFee: Numeric
   commissionPercentage: Generated<Numeric | null>
+  couponId: string | null
   created: Generated<Timestamp>
   cryptoAtoms: Numeric
   cryptoCode: string
@@ -295,6 +296,7 @@ export interface CashOutActions {
 export interface CashOutTxs {
   commissionPercentage: Generated<Numeric | null>
   confirmedAt: Timestamp | null
+  couponId: string | null
   created: Generated<Timestamp>
   cryptoAtoms: Numeric
   cryptoCode: string
