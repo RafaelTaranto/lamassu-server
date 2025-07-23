@@ -178,7 +178,7 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
             </div>
           </div>
           <div>
-            <P>Diagnostics executed at: {timestamp}</P>
+            <P>Diagnostics executed at: {new Date(timestamp).toDateString()}</P>
           </div>
         </div>
       )}
