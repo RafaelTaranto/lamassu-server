@@ -4,7 +4,7 @@ const nmd = require('nano-markdown')
 const router = express.Router()
 
 const configManager = require('../new-config-manager')
-const { loadWithAllTriggers } = require('../new-settings-loader')
+const { load } = require('../new-settings-loader')
 
 const createTerms = terms =>
   terms.active && terms.text
@@ -22,7 +22,7 @@ const createTerms = terms =>
 function getTermsConditions(req, res, next) {
   const { config } = req.settings
   const terms = configManager.getTermsConditions(config)
-  return loadWithAllTriggers()
+  return load()
     .then(({ version }) => res.json({ terms: createTerms(terms), version }))
     .catch(next)
 }

@@ -133,6 +133,8 @@ const loadWithAllTriggers = version =>
       return settings
     })
 
+const load = version => userConfig.load(db, version)
+
 module.exports = {
   saveConfig,
   saveAccounts,
@@ -140,4 +142,5 @@ module.exports = {
   showAccounts,
   loadConfig,
   loadWithAllTriggers,
+  load,
 }
