@@ -83,7 +83,7 @@ db.connect({ direct: true })
   .catch(console.error)
 
 function reload() {
-  return settingsLoader.load().then(settings => {
+  return settingsLoader.loadWithAllTriggers().then(settings => {
     const pi = plugins(settings)
     cachedVariables.set('public', { settings, pi, isReloading: false })
     logger.debug(`Settings for schema 'public' reloaded in poller`)
@@ -213,7 +213,7 @@ const cleanOldFailedQRScans = () => {
 
 function setup() {
   return settingsLoader
-    .load()
+    .loadWithAllTriggers()
     .then(settings => {
       const pi = plugins(settings)
       cachedVariables.set('public', { settings, pi, isReloading: false })

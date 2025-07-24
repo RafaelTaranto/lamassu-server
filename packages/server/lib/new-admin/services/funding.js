@@ -66,7 +66,7 @@ const reflect = p =>
   )
 
 function getFunding() {
-  return settingsLoader.load().then(settings => {
+  return settingsLoader.loadWithAllTriggers().then(settings => {
     const cryptoCodes = configManager.getAllCryptoCurrencies(settings.config)
     const fiatCode = configManager.getGlobalLocale(settings.config).fiatCurrency
     const pareCoins = c => _.includes(c.cryptoCode, cryptoCodes)

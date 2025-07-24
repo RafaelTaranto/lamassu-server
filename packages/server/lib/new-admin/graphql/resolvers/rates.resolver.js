@@ -5,7 +5,7 @@ const plugins = require('../../../plugins')
 const resolvers = {
   Query: {
     cryptoRates: () =>
-      settingsLoader.load().then(settings => {
+      settingsLoader.loadWithAllTriggers().then(settings => {
         const pi = plugins(settings)
         return pi.getRawRates().then(r => {
           return {

@@ -913,7 +913,7 @@ function updateLastAuthAttempt(customerId, deviceId) {
 
 function getExternalComplianceMachine(customer) {
   return settingsLoader
-    .load()
+    .loadWithAllTriggers()
     .then(settings => externalCompliance.getStatusMap(settings, customer.id))
     .then(statusMap => {
       return updateExternalComplianceByMap(customer.id, statusMap)

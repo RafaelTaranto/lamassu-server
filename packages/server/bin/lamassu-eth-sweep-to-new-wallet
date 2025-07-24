@@ -90,7 +90,7 @@ function defaultHdNodeAcc (account) {
 }
 
 function getAllBalance () {
-  return settingsLoader.load()
+  return settingsLoader.loadWithAllTriggers()
     .then(settings => walletI.balance(settings, 'ETH'))
     .then(r => r.balance)
 }
@@ -226,7 +226,7 @@ const mnemonic = generateNewMnemonic(seed)
 const mnemonicSeed = computeSeed(mnemonic)
 const newAddress = defaultAddress(mnemonicSeed)
 
-settingsLoader.load()
+settingsLoader.loadWithAllTriggers()
   .then(settings => Promise.all([isInfuraRunning(settings), isGethRunning(settings), settings]))
   .then(([infuraIsRunning, gethIsRunning, settings]) => {
     if (!infuraIsRunning && !gethIsRunning) {

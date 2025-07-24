@@ -33,7 +33,7 @@ function run() {
 
     const runner = () => {
       settingsLoader
-        .load()
+        .loadWithAllTriggers()
         .then(settings => {
           clearInterval(handler)
           return loadSanctions(settings).then(startServer).then(resolve)

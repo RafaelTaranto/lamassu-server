@@ -6,7 +6,7 @@ const settingsLoader = require('../new-settings-loader')
 
 function probe(req, res, next) {
   // TODO: why req.settings is undefined?
-  settingsLoader.load().then(settings => {
+  settingsLoader.loadWithAllTriggers().then(settings => {
     const pi = plugins(settings, req.deviceId)
     return pi
       .probeLN('LN', req.body.address)

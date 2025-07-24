@@ -278,7 +278,7 @@ function sendRedemptionMessage(txId, error) {
 }
 
 function sendTransactionMessage(rec, isHighValueTx) {
-  return settingsLoader.load().then(settings => {
+  return settingsLoader.loadWithAllTriggers().then(settings => {
     const notifications = configManager.getGlobalNotifications(settings.config)
 
     const promises = []
@@ -308,7 +308,7 @@ function sendTransactionMessage(rec, isHighValueTx) {
 
 function cashboxNotify(deviceId) {
   return Promise.all([
-    settingsLoader.load(),
+    settingsLoader.loadWithAllTriggers(),
     queries.getMachineName(deviceId),
   ]).then(([settings, machineName]) => {
     const notifications = configManager.getGlobalNotifications(settings.config)

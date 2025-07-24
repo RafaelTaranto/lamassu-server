@@ -40,7 +40,7 @@ if (!cryptoAtoms) {
 
 console.log('Loading ticker...')
 
-settingsLoader.load()
+settingsLoader.loadWithAllTriggers()
   .then(settings => {
     const fiatCode = configManager.getGlobalLocale(settings.config).fiatCurrency
 

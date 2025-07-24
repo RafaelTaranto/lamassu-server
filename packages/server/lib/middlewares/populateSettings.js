@@ -101,7 +101,7 @@ const populateSettings = function (req, res, next) {
       if (!cachedVersionedSettings) {
         logger.debug('Fetching a specific config version cached value')
         return newSettingsLoader
-          .load(versionId)
+          .loadWithAllTriggers(versionId)
           .then(settings => {
             settingsCache.set(`${operatorId}-v${versionId}`, settings)
             req.settings = settings
@@ -127,7 +127,7 @@ const populateSettings = function (req, res, next) {
           )
 
       return newSettingsLoader
-        .load()
+        .loadWithAllTriggers()
         .then(settings => {
           const versionId = settings.version
           settingsCache.set(`${operatorId}-latest`, settings)
