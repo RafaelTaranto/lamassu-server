@@ -597,6 +597,7 @@ export interface MachineEvents {
 }
 
 export interface MachineGroups {
+  complianceTriggerSetId: string | null
   id: string
   name: string
 }
