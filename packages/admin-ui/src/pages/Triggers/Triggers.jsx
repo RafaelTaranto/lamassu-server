@@ -1,26 +1,29 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
-import Switch from '@mui/material/Switch'
-import classnames from 'classnames'
+import Breadcrumbs from '@mui/material/Breadcrumbs'
+import NavigateNextIcon from '@mui/icons-material/NavigateNext'
 import * as R from 'ramda'
-import React, { useState } from 'react'
-import Modal from '../../components/Modal'
-import { HelpTooltip } from '../../components/Tooltip'
-import TitleSection from '../../components/layout/TitleSection'
-import { P, Label2 } from '../../components/typography'
-import FormRenderer from '../Services/FormRenderer'
-import ReverseCustomInfoIcon from '../../styling/icons/circle buttons/filter/white.svg?react'
-import CustomInfoIcon from '../../styling/icons/circle buttons/filter/zodiac.svg?react'
-import ReverseSettingsIcon from '../../styling/icons/circle buttons/settings/white.svg?react'
-import SettingsIcon from '../../styling/icons/circle buttons/settings/zodiac.svg?react'
+import React, { useMemo, useState } from 'react'
+import {
+  MRT_ActionMenuItem,
+  MaterialReactTable,
+  useMaterialReactTable,
+} from 'material-react-table'
+import DeleteIcon from '@mui/icons-material/Delete'
+import { v4 as uuidv4 } from 'uuid'
+import { useLocation, useParams } from 'wouter'
 
+import Modal from '../../components/Modal'
+import { DeleteDialog } from '../../components/DeleteDialog'
+import { Label1, Label2, P } from '../../components/typography'
+import Title from '../../components/Title'
+import FormRenderer from '../Services/FormRenderer'
+import { defaultMaterialTableOpts } from '../../utils/materialReactTableOpts.js'
 import { Link, SupportLinkButton } from '../../components/buttons'
 import twilioSchema from '../Services/schemas/twilio'
-import { fromNamespace, toNamespace } from '../../utils/config'
+import { fromNamespace, namespaces } from '../../utils/config'
 
-import CustomInfoRequests from './CustomInfoRequests'
-import TriggerView from './TriggerView'
-import AdvancedTriggers from './components/AdvancedTriggers'
-import { fromServer } from './helper'
+import Wizard from './Wizard'
+import { getElements } from './helper'
 
 const SAVE_ACCOUNT = gql`
   mutation Save($accounts: JSONObject) {
@@ -28,14 +31,8 @@ const SAVE_ACCOUNT = gql`
   }
 `
 
-const SAVE_CONFIG = gql`
-  mutation Save($config: JSONObject) {
-    saveConfig(config: $config)
-  }
-`
-
 const GET_CONFIG = gql`
-  query getData {
+  query getData($complianceTriggerSetId: ID!) {
     config
     accounts
     accountsConfig {
@@ -44,11 +41,24 @@ const GET_CONFIG = gql`
       class
       cryptos
     }
-  }
-`
 
-const GET_CUSTOM_REQUESTS = gql`
-  query customInfoRequests {
+    complianceTriggerSetById(id: $complianceTriggerSetId) {
+      name
+    }
+
+    complianceTriggers(complianceTriggerSetId: $complianceTriggerSetId) {
+      id
+      direction
+      triggerType
+      requirementType
+
+      suspensionDays
+      threshold
+      thresholdDays
+      customInfoRequestId
+      externalService
+    }
+
     customInfoRequests {
       id
       customRequest
@@ -57,42 +67,106 @@ const GET_CUSTOM_REQUESTS = gql`
   }
 `
 
+const CREATE_TRIGGER = gql`
+  mutation createTrigger(
+    $complianceTriggerSetId: ID!
+    $trigger: ComplianceTriggerInput!
+  ) {
+    createComplianceTrigger(
+      complianceTriggerSetId: $complianceTriggerSetId
+      trigger: $trigger
+    )
+  }
+`
+
+const DELETE_TRIGGER = gql`
+  mutation deleteComplianceTrigger($trigger: ID!) {
+    deleteComplianceTrigger(id: $trigger)
+  }
+`
+
+const TriggerTable = ({
+  triggers,
+  loading,
+  currency,
+  customInfoRequests,
+  onDeleteClick,
+}) => {
+  const columns = useMemo(
+    () => getElements(currency, customInfoRequests),
+    [currency, customInfoRequests],
+  )
+
+  const table = useMaterialReactTable({
+    ...defaultMaterialTableOpts,
+    columns,
+    data: triggers,
+    enableRowActions: true,
+    positionActionsColumn: 'last',
+    renderRowActionMenuItems: ({ row, table }) => [
+      <MRT_ActionMenuItem
+        key="delete"
+        icon={<DeleteIcon />}
+        label="Delete"
+        onClick={() => onDeleteClick(row)}
+        table={table}
+      />,
+    ],
+    state: {
+      isLoading: loading,
+    },
+  })
+
+  return <MaterialReactTable table={table} />
+}
+
 const Triggers = () => {
-  const [wizardType, setWizard] = useState(false)
-  const {
-    data,
-    loading: configLoading,
-    refetch,
-  } = useQuery(GET_CONFIG, { notifyOnNetworkStatusChange: true })
-  const { data: customInfoReqData, loading: customInfoLoading } =
-    useQuery(GET_CUSTOM_REQUESTS)
-  const [error, setError] = useState(null)
-  const [subMenu, setSubMenu] = useState(false)
+  const { complianceTriggerSetId } = useParams()
+  const [, navigate] = useLocation()
+
+  const [triggerToDelete, setTriggerToDelete] = useState(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [wizardType, setWizard] = useState(null)
+
+  const { data, loading } = useQuery(GET_CONFIG, {
+    notifyOnNetworkStatusChange: true,
+    variables: { complianceTriggerSetId },
+  })
+
+  const [createTrigger, { error: saveError }] = useMutation(CREATE_TRIGGER, {
+    refetchQueries: () => ['getData'],
+  })
+
+  const [deleteComplianceTrigger, { error: deleteError }] = useMutation(
+    DELETE_TRIGGER,
+    {
+      refetchQueries() {
+        return ['getData']
+      },
+      onCompleted() {
+        setTriggerToDelete(null)
+        setDeleteDialogOpen(false)
+        setWizard(null)
+      },
+    },
+  )
+
+  const error = saveError ?? deleteError ?? null
 
   const [twilioSetupPopup, setTwilioSetupPopup] = useState(false)
 
-  const enabledCustomInfoRequests = R.pipe(
-    R.path(['customInfoRequests']),
-    R.defaultTo([]),
-    R.filter(R.propEq(true, 'enabled')),
-  )(customInfoReqData)
+  const customInfoRequests = (data?.customInfoRequests ?? []).filter(
+    cir => cir?.enabled,
+  )
 
-  const emailAuth =
-    data?.config?.triggersConfig_customerAuthentication === 'EMAIL'
+  const config = data?.config ?? {}
+  const currency = fromNamespace(namespaces.LOCALE)(config)?.fiatCurrency
+  const emailAuth = config?.triggersConfig_customerAuthentication === 'EMAIL'
 
   const complianceServices = R.filter(R.propEq('compliance', 'class'))(
     data?.accountsConfig || [],
   )
-  const triggers = fromServer(data?.config?.triggers ?? [])
-  const complianceConfig =
-    data?.config && fromNamespace('compliance')(data.config)
-  const rejectAddressReuse = complianceConfig?.rejectAddressReuse ?? false
-
-  const [saveConfig] = useMutation(SAVE_CONFIG, {
-    onCompleted: () => setWizard(false),
-    refetchQueries: () => ['getData'],
-    onError: error => setError(error),
-  })
+  const triggers = data?.complianceTriggers ?? []
 
   const [saveAccount] = useMutation(SAVE_ACCOUNT, {
     onCompleted: () => {
@@ -100,17 +174,7 @@ const Triggers = () => {
       toggleWizard('newTrigger')()
     },
     refetchQueries: () => ['getData'],
-    onError: error => setError(error),
   })
-
-  const addressReuseSave = rawConfig => {
-    const config = toNamespace('compliance')(rawConfig)
-    return saveConfig({ variables: { config } })
-  }
-
-  const titleSectionWidth = {
-    'w-230': !subMenu === 'customInfoRequests',
-  }
 
   const setBlur = shouldBlur => {
     return shouldBlur
@@ -127,115 +191,83 @@ const Triggers = () => {
     return setWizard(wizardName)
   }
 
-  const loading = configLoading || customInfoLoading
+  const twilioSave = twilio =>
+    saveAccount({ variables: { accounts: { twilio } } })
 
-  const twilioSave = it => {
-    setError(null)
-    return saveAccount({
-      variables: { accounts: { twilio: it } },
-    })
-  }
-  const addNewTriger = () => {
+  const openNewTriggerWizard = () => {
     if (!R.has('twilio', data?.accounts || {})) setTwilioSetupPopup(true)
     else toggleWizard('newTrigger')()
   }
 
+  const saveNewTrigger = newTrigger => {
+    const trigger = Object.assign(
+      {
+        id: uuidv4(),
+        direction: 'both',
+        triggerType: newTrigger.triggerType,
+      },
+      newTrigger.threshold,
+      newTrigger.requirement,
+    )
+    toggleWizard('newTrigger')()
+    return createTrigger({
+      variables: { complianceTriggerSetId, trigger },
+    })
+  }
+
+  const deleteTrigger = () =>
+    deleteComplianceTrigger({
+      variables: { trigger: triggerToDelete.id },
+    })
+
   return (
     <>
-      <TitleSection
-        title="Compliance triggers"
-        buttons={[
-          {
-            text: 'Advanced settings',
-            icon: SettingsIcon,
-            inverseIcon: ReverseSettingsIcon,
-            forceDisable: !(subMenu === 'advancedSettings'),
-            toggle: show => {
-              refetch()
-              setSubMenu(show ? 'advancedSettings' : false)
-            },
-          },
-          {
-            text: 'Custom info requests',
-            icon: CustomInfoIcon,
-            inverseIcon: ReverseCustomInfoIcon,
-            forceDisable: !(subMenu === 'customInfoRequests'),
-            toggle: show => {
-              refetch()
-              setSubMenu(show ? 'customInfoRequests' : false)
-            },
-          },
-        ]}
-        className={classnames(titleSectionWidth)}>
-        {!subMenu && (
-          <div className="flex items-center">
-            <div className="flex items-center justify-end -mr-1">
-              <P>Reject reused addresses</P>
-              <Switch
-                checked={rejectAddressReuse}
-                onChange={event => {
-                  addressReuseSave({ rejectAddressReuse: event.target.checked })
-                }}
-                value={rejectAddressReuse}
-              />
-              <Label2 className="m-3 w-6">
-                {rejectAddressReuse ? 'On' : 'Off'}
-              </Label2>
-              <HelpTooltip width={304}>
-                <P>
-                  For details about rejecting address reuse, please read the
-                  relevant knowledgebase article:
-                </P>
-                <SupportLinkButton
-                  link="https://support.lamassu.is/hc/en-us/articles/360033622211-Reject-Address-Reuse"
-                  label="Reject Address Reuse"
-                />
-              </HelpTooltip>
-            </div>
-          </div>
-        )}
-        {subMenu === 'customInfoRequests' &&
-          !R.isEmpty(enabledCustomInfoRequests) && (
-            <div className="flex justify-end">
-              <Link
-                color="primary"
-                onClick={() => toggleWizard('newCustomRequest')()}>
-                + Add new custom info request
-              </Link>
-            </div>
-          )}
-        {!loading && !subMenu && !R.isEmpty(triggers) && (
-          <div className="flex justify-end">
-            <Link color="primary" onClick={addNewTriger}>
-              + Add new trigger
-            </Link>
-          </div>
-        )}
-      </TitleSection>
-      {!loading && subMenu === 'customInfoRequests' && (
-        <CustomInfoRequests
-          data={enabledCustomInfoRequests}
-          showWizard={wizardType === 'newCustomRequest'}
-          toggleWizard={toggleWizard('newCustomRequest')}
-        />
+      {!loading && (
+        <Breadcrumbs
+          className="my-5"
+          separator={<NavigateNextIcon fontSize="small" />}
+          aria-label="breadcrumb">
+          <Label1
+            noMargin
+            className="cursor-pointer text-comet"
+            onClick={() => navigate('/compliance/triggers')}>
+            Trigger sets
+          </Label1>
+          <Label2 noMargin className="cursor-pointer text-comet">
+            {data?.complianceTriggerSetById?.name}
+          </Label2>
+        </Breadcrumbs>
       )}
-      {!loading && !subMenu && (
-        <TriggerView
-          triggers={triggers}
-          showWizard={wizardType === 'newTrigger'}
-          config={data?.config ?? {}}
-          toggleWizard={toggleWizard('newTrigger')}
-          addNewTriger={addNewTriger}
-          emailAuth={emailAuth}
+      <Title>Compliance Triggers</Title>
+      {!loading && (
+        <div className="flex justify-end">
+          <Link color="primary" onClick={openNewTriggerWizard}>
+            + Add new trigger
+          </Link>
+        </div>
+      )}
+      <TriggerTable
+        triggers={triggers}
+        loading={loading}
+        currency={currency}
+        customInfoRequests={customInfoRequests}
+        onDeleteClick={row => {
+          setTriggerToDelete(row.original)
+          setDeleteDialogOpen(true)
+        }}
+      />
+      {!loading && wizardType === 'newTrigger' && (
+        <Wizard
+          currency={currency}
+          error={error?.message}
+          save={saveNewTrigger}
+          onClose={() => {
+            toggleWizard('newTrigger')()
+          }}
+          customInfoRequests={customInfoRequests}
           complianceServices={complianceServices}
-          customInfoRequests={enabledCustomInfoRequests}
+          emailAuth={emailAuth}
         />
-      )}
-      {!loading && subMenu === 'advancedSettings' && (
-        <AdvancedTriggers
-          error={error}
-          save={saveConfig}
-          data={data}></AdvancedTriggers>
       )}
       {twilioSetupPopup && (
         <Modal
@@ -258,6 +290,13 @@ const Triggers = () => {
           />
         </Modal>
       )}
+
+      <DeleteDialog
+        open={deleteDialogOpen}
+        onDismissed={() => setDeleteDialogOpen(false)}
+        onConfirmed={deleteTrigger}
+        errorMessage={error?.message}
+      />
     </>
   )
 }

@@ -2,7 +2,10 @@ const db = require('../../db')
 const uuid = require('uuid')
 const _ = require('lodash/fp')
 const pgp = require('pg-promise')()
-const { loadConfig, saveConfig } = require('../../../lib/new-settings-loader')
+
+const {
+  deleteComplianceTriggersByCustomInfoRequestId,
+} = require('../../compliance-triggers')
 
 const getCustomInfoRequests = (onlyEnabled = false) => {
   const sql = onlyEnabled
@@ -24,23 +27,15 @@ const addCustomInfoRequest = customRequest => {
   return db.none(sql, [id, customRequest]).then(() => ({ id }))
 }
 
-const removeCustomInfoRequest = id => {
-  return loadConfig()
-    .then(cfg =>
-      saveConfig({
-        triggers: _.remove(
-          x => x.customInfoRequestId === id,
-          cfg.triggers ?? [],
-        ),
-      }),
-    )
+// TODO: execute in a transaction
+const removeCustomInfoRequest = id =>
+  deleteComplianceTriggersByCustomInfoRequestId(id)
     .then(() =>
       db.none('UPDATE custom_info_requests SET enabled = false WHERE id = $1', [
         id,
       ]),
     )
     .then(() => ({ id }))
-}
 
 const editCustomInfoRequest = (id, customRequest) => {
   return db

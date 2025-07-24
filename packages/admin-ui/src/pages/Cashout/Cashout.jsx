@@ -54,9 +54,9 @@ const CashOut = ({ name: SCREEN_KEY }) => {
     refetchQueries: () => ['getData'],
   })
 
-  const save = (rawConfig, accounts) => {
+  const save = rawConfig => {
     const config = toNamespace(SCREEN_KEY)(rawConfig)
-    return saveConfig({ variables: { config, accounts } })
+    return saveConfig({ variables: { config } })
   }
 
   const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)

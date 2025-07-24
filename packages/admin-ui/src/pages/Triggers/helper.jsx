@@ -1,8 +1,8 @@
 import classnames from 'classnames'
 import { Field, useFormikContext } from 'formik'
 import * as R from 'ramda'
-import React, { memo } from 'react'
-import { H4, Label2, Label1, Info1, Info2 } from '../../components/typography'
+import React from 'react'
+import { H4, Info1 } from '../../components/typography'
 import * as Yup from 'yup'
 
 import {
@@ -13,82 +13,6 @@ import {
 import { transformNumber } from '../../utils/number'
 import { onlyFirstToUpper } from '../../utils/string'
 
-const triggerType = Yup.string().required()
-const threshold = Yup.object().shape({
-  threshold: Yup.number()
-    .nullable()
-    .transform(transformNumber)
-    .label('Invalid threshold'),
-  thresholdDays: Yup.number()
-    .transform(transformNumber)
-    .nullable()
-    .label('Invalid threshold days'),
-})
-
-const requirement = Yup.object().shape({
-  requirement: Yup.string().required(),
-  suspensionDays: Yup.number().transform(transformNumber).nullable(),
-})
-
-const Schema = Yup.object()
-  .shape({
-    triggerType,
-    requirement,
-    threshold,
-    // direction
-  })
-  .test(({ threshold, triggerType }, context) => {
-    const errorMessages = {
-      txAmount: () => 'Amount must be greater than or equal to 0',
-      txVolume: threshold => {
-        const thresholdMessage = 'Volume must be greater than or equal to 0'
-        const thresholdDaysMessage = 'Days must be greater than 0'
-        const message = []
-        if (threshold.threshold < 0) message.push(thresholdMessage)
-        if (threshold.thresholdDays <= 0) message.push(thresholdDaysMessage)
-        return message.join(', ')
-      },
-      txVelocity: threshold => {
-        const thresholdMessage = 'Transactions must be greater than 0'
-        const thresholdDaysMessage = 'Days must be greater than 0'
-        const message = []
-        if (threshold.threshold <= 0) message.push(thresholdMessage)
-        if (threshold.thresholdDays <= 0) message.push(thresholdDaysMessage)
-        return message.join(', ')
-      },
-      consecutiveDays: () => 'Days must be greater than 0',
-    }
-    const thresholdValidator = {
-      txAmount: threshold => threshold.threshold >= 0,
-      txVolume: threshold =>
-        threshold.threshold >= 0 && threshold.thresholdDays > 0,
-      txVelocity: threshold =>
-        threshold.threshold > 0 && threshold.thresholdDays > 0,
-      consecutiveDays: threshold => threshold.thresholdDays > 0,
-    }
-
-    if (triggerType && thresholdValidator[triggerType](threshold)) return
-
-    return context.createError({
-      path: 'threshold',
-      message: errorMessages[triggerType](threshold),
-    })
-  })
-  .test(({ requirement }, context) => {
-    const requirementValidator = requirement =>
-      requirement.requirement === 'suspend'
-        ? requirement.suspensionDays > 0
-        : true
-
-    if (requirement && requirementValidator(requirement)) return
-
-    return context.createError({
-      path: 'requirement',
-      message: 'Suspension days must be greater than 0',
-    })
-  })
-
-// TYPE
 const typeSchema = Yup.object()
   .shape({
     triggerType: Yup.string('The trigger type must be a string').required(
@@ -274,7 +198,7 @@ const Type = ({ ...props }) => {
   )
 }
 
-const type = currency => ({
+const typeStep = currency => ({
   schema: typeSchema,
   options: typeOptions,
   Component: Type,
@@ -288,17 +212,17 @@ const type = currency => ({
 const requirementSchema = Yup.object()
   .shape({
     requirement: Yup.object({
-      requirement: Yup.string().required(),
-      suspensionDays: Yup.number().when('requirement', {
+      requirementType: Yup.string().required(),
+      suspensionDays: Yup.number().when('requirementType', {
         is: value => value === 'suspend',
         then: schema => schema.nullable().transform(transformNumber),
         otherwise: schema => schema.nullable().transform(() => null),
       }),
-      customInfoRequestId: Yup.string().when('requirement', {
+      customInfoRequestId: Yup.string().when('requirementType', {
         is: value => value !== 'custom',
         then: schema => schema.nullable().transform(() => null),
       }),
-      externalService: Yup.string().when('requirement', {
+      externalService: Yup.string().when('requirementType', {
         is: value => value !== 'external',
         then: schema => schema.nullable().transform(() => null),
       }),
@@ -308,15 +232,15 @@ const requirementSchema = Yup.object()
     const requirementValidator = (requirement, type) => {
       switch (type) {
         case 'suspend':
-          return requirement.requirement === type
+          return requirement.requirementType === type
             ? requirement.suspensionDays > 0
             : true
         case 'custom':
-          return requirement.requirement === type
+          return requirement.requirementType === type
             ? !R.isNil(requirement.customInfoRequestId)
             : true
         case 'external':
-          return requirement.requirement === type
+          return requirement.requirementType === type
             ? !R.isNil(requirement.externalService)
             : true
         default:
@@ -395,13 +319,13 @@ const Requirement = ({
   const { touched, errors, values, handleChange, setTouched } =
     useFormikContext()
 
-  const isSuspend = values?.requirement?.requirement === 'suspend'
-  const isCustom = values?.requirement?.requirement === 'custom'
-  const isExternal = values?.requirement?.requirement === 'external'
+  const isSuspend = values?.requirement?.requirementType === 'suspend'
+  const isCustom = values?.requirement?.requirementType === 'custom'
+  const isExternal = values?.requirement?.requirementType === 'external'
 
   const customRequirementsInUse = R.reduce(
     (acc, value) => {
-      if (value.requirement.requirement === 'custom')
+      if (value.requirement.requirementType === 'custom')
         acc.push({
           triggerType: value.triggerType,
           id: value.requirement.customInfoRequestId,
@@ -458,7 +382,7 @@ const Requirement = ({
       </div>
       <Field
         component={RadioGroup}
-        name="requirement.requirement"
+        name="requirement.requirementType"
         options={options}
         labelClassName="h-10 p-0"
         radioClassName="p-1 m-1"
@@ -509,9 +433,8 @@ const Requirement = ({
   )
 }
 
-const requirements = (
+const requirementsStep = (
   config,
-  triggers,
   customInfoRequests,
   complianceServices,
   emailAuth,
@@ -521,7 +444,6 @@ const requirements = (
   Component: Requirement,
   props: {
     config,
-    triggers,
     customInfoRequests,
     emailAuth,
     complianceServices,
@@ -531,7 +453,7 @@ const requirements = (
   hasExternalRequirementError: hasExternalRequirementError,
   initialValues: {
     requirement: {
-      requirement: '',
+      requirementType: '',
       suspensionDays: '',
       customInfoRequestId: null,
       externalService: null,
@@ -549,193 +471,72 @@ const customReqIdMatches = customReqId => it => {
   return it.id === customReqId
 }
 
-const RequirementInput = ({ customInfoRequests = [] }) => {
-  const { values } = useFormikContext()
-  const requirement = values?.requirement?.requirement
-  const customRequestId =
-    R.path(['requirement', 'customInfoRequestId'])(values) ?? null
-  const isSuspend = requirement === 'suspend'
-  const display = customRequestId
-    ? (R.path(['customRequest', 'name'])(
-        R.find(customReqIdMatches(customRequestId))(customInfoRequests),
-      ) ?? '')
-    : getView(requirementOptions, 'display')(requirement)
+const triggerTypeRender = ({ cell }) =>
+  getView(typeOptions, 'display')(cell.getValue())
 
-  return (
-    <div className="flex items-baseline">
-      {`${display} ${isSuspend ? 'for' : ''}`}
-      {isSuspend && (
-        <Field
-          bold
-          className="w-8"
-          name="requirement.suspensionDays"
-          component={NumberInput}
-          textAlign="center"
-        />
-      )}
-      {isSuspend && 'days'}
-    </div>
-  )
-}
-
-const RequirementView = ({
-  requirement,
-  suspensionDays,
-  customInfoRequestId,
-  externalService,
-  customInfoRequests = [],
-}) => {
-  const display =
-    requirement === 'custom'
-      ? (R.path(['customRequest', 'name'])(
-          R.find(customReqIdMatches(customInfoRequestId))(customInfoRequests),
-        ) ?? '')
-      : requirement === 'external'
-        ? `External verification (${onlyFirstToUpper(externalService)})`
-        : getView(requirementOptions, 'display')(requirement)
-  const isSuspend = requirement === 'suspend'
-  return (
-    <div className="flex items-baseline">
-      {`${display} ${isSuspend ? 'for' : ''}`}
-      {isSuspend && (
-        <Info2 className="mx-2" noMargin>
-          {suspensionDays}
-        </Info2>
-      )}
-      {isSuspend && 'days'}
-    </div>
-  )
-}
-
-const DisplayThreshold = ({ config, currency, isEdit }) => {
-  const inputClasses = {
-    '-mt-1': true,
-    'w-13': config?.triggerType === 'txVelocity',
-    'w-15': config?.triggerType === 'consecutiveDays',
+const requirementTypeRender =
+  customInfoRequests =>
+  ({ row }) => {
+    const { requirementType, customInfoRequestId, externalService } =
+      row.original
+    switch (requirementType) {
+      case 'custom':
+        return (
+          customInfoRequests.find(customReqIdMatches(customInfoRequestId))
+            ?.customRequest?.name ?? ''
+        )
+      case 'external':
+        return `External verification (${onlyFirstToUpper(externalService)})`
+      default:
+        return getView(requirementOptions, 'display')(requirementType)
+    }
   }
 
-  const threshold = config?.threshold?.threshold
-  const thresholdDays = config?.threshold?.thresholdDays
+const DisplayThreshold =
+  currency =>
+  ({ cell, row }) => {
+    const [threshold, thresholdDays] = cell.getValue()
+    const { triggerType } = row.original
 
-  const Threshold = isEdit ? (
-    <Field
-      bold
-      className={classnames(inputClasses)}
-      name="threshold.threshold"
-      component={NumberInput}
-      textAlign="right"
-    />
-  ) : (
-    <Info2 noMargin>{threshold}</Info2>
-  )
-  const ThresholdDays = isEdit ? (
-    <Field
-      bold
-      className={classnames(inputClasses)}
-      name="threshold.thresholdDays"
-      component={NumberInput}
-      textAlign="right"
-    />
-  ) : (
-    <Info2 noMargin>{thresholdDays}</Info2>
-  )
-
-  switch (config?.triggerType) {
-    case 'txAmount':
-      return (
-        <div className="flex items-baseline justify-end">
-          {Threshold}
-          <Label2 noMargin className="ml-2">
-            {currency}
-          </Label2>
-        </div>
-      )
-    case 'txVolume':
-      return (
-        <div className="flex items-baseline justify-end">
-          {Threshold}
-          <Label2 noMargin className="ml-2">
-            {currency}
-          </Label2>
-          <Label1 noMargin className="mx-2">
-            in
-          </Label1>
-          {ThresholdDays}
-          <Label1 noMargin className="ml-2">
-            days
-          </Label1>
-        </div>
-      )
-    case 'txVelocity':
-      return (
-        <div className="flex items-baseline justify-end">
-          {Threshold}
-          <Label1 className="mx-2" noMargin>
-            transactions in
-          </Label1>
-          {ThresholdDays}
-          <Label1 className="ml-2" noMargin>
-            days
-          </Label1>
-        </div>
-      )
-    case 'consecutiveDays':
-      return (
-        <div className="flex items-baseline justify-end">
-          {ThresholdDays}
-          <Label1 className="mx-2" noMargin>
-            days
-          </Label1>
-        </div>
-      )
-    default:
-      return ''
+    switch (triggerType) {
+      case 'txAmount':
+        return `${threshold} ${currency}`
+      case 'txVolume':
+        return `${threshold} ${currency} in ${thresholdDays} days`
+      case 'txVelocity':
+        return `${threshold} transactions in ${thresholdDays} days`
+      case 'consecutiveDays':
+        return `${thresholdDays} days`
+    }
   }
-}
-
-const ThresholdInput = memo(({ currency }) => {
-  const { values } = useFormikContext()
-
-  return <DisplayThreshold isEdit={true} config={values} currency={currency} />
-})
-
-const ThresholdView = ({ config, currency }) => {
-  return <DisplayThreshold config={config} currency={currency} />
-}
 
 const getElements = (currency, customInfoRequests) => [
   {
-    name: 'triggerType',
-    size: 'sm',
-    width: 230,
-    input: ({ field: { value: name } }) => (
-      <>{getView(typeOptions, 'display')(name)}</>
-    ),
-    view: getView(typeOptions, 'display'),
-    inputProps: {
-      options: typeOptions,
-      valueProp: 'code',
-      labelProp: 'display',
-      optionsLimit: null,
+    header: 'Trigger type',
+    accessorKey: 'triggerType',
+    size: 200,
+    Cell: triggerTypeRender,
+  },
+  {
+    header: 'Requirement type',
+    accessorKey: 'requirementType',
+    size: 260,
+    Cell: requirementTypeRender(customInfoRequests),
+  },
+  {
+    header: 'Threshold',
+    accessorFn({ triggerType, threshold, thresholdDays }) {
+      return [
+        ['txAmount', 'txVolume', 'txVelocity'].includes(triggerType)
+          ? threshold
+          : null,
+        ['txVolume', 'txVelocity', 'consecutiveDays'].includes(triggerType)
+          ? thresholdDays
+          : null,
+      ]
     },
-  },
-  {
-    name: 'requirement',
-    size: 'sm',
-    width: 260,
-    bypassField: true,
-    input: () => <RequirementInput customInfoRequests={customInfoRequests} />,
-    view: it => (
-      <RequirementView {...it} customInfoRequests={customInfoRequests} />
-    ),
-  },
-  {
-    name: 'threshold',
-    size: 'sm',
-    width: 254,
-    textAlign: 'right',
-    input: () => <ThresholdInput currency={currency} />,
-    view: (it, config) => <ThresholdView config={config} currency={currency} />,
+    size: 254,
+    Cell: DisplayThreshold(currency),
   },
 ]
 
@@ -759,7 +560,7 @@ const fromServer = triggers => {
       ...rest
     }) => ({
       requirement: {
-        requirement: requirementType,
+        requirementType,
         suspensionDays,
         customInfoRequestId,
         externalService,
@@ -775,7 +576,7 @@ const fromServer = triggers => {
 
 const toServer = triggers =>
   R.map(({ requirement, threshold, ...rest }) => ({
-    requirementType: requirement.requirement,
+    requirementType: requirement.requirementType,
     suspensionDays: requirement.suspensionDays,
     threshold: threshold.threshold,
     thresholdDays: threshold.thresholdDays,
@@ -785,13 +586,12 @@ const toServer = triggers =>
   }))(triggers)
 
 export {
-  Schema,
-  getElements, // txDirection,
-  type,
-  requirements,
+  typeStep,
+  requirementsStep,
   sortBy,
   fromServer,
   toServer,
   getView,
   requirementOptions,
+  getElements,
 }

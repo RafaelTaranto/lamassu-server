@@ -2,7 +2,7 @@ const crypto = require('crypto')
 
 const _ = require('lodash/fp')
 const {
-  db: { default: db },
+  db: { default: db, inTransaction },
   userConfig,
 } = require('typesafe-db')
 
@@ -11,10 +11,7 @@ const {
   getTermsConditions,
   setTermsConditions,
 } = require('./new-config-manager')
-const {
-  getAllComplianceTriggers,
-  saveComplianceTriggers,
-} = require('./compliance-triggers')
+const { getAllComplianceTriggers } = require('./compliance-triggers')
 
 const PASSWORD_FILLED = 'PASSWORD_FILLED'
 const SECRET_FIELDS = [
@@ -100,24 +97,13 @@ function showAccounts(schemaVersion) {
   return loadAccounts(schemaVersion).then(hideSecretFields)
 }
 
-const renameKeys = keys => obj =>
-  Object.entries(keys).reduce((obj, [newKey, oldKey]) => {
-    if (!obj[newKey]) obj[newKey] = obj[oldKey]
-    delete obj[oldKey]
-    return obj
-  }, obj)
-
 const saveConfig = config =>
   getOperatorId('middleware')
     .then(operatorId =>
-      db.transaction().execute(async tx => {
+      inTransaction(db, async tx => {
         const currentConfig = await _loadConfigTx(tx)
         const newConfig = addTermsHash(_.assign(currentConfig, config))
-        const triggers = newConfig.triggers.map(
-          renameKeys({ requirementType: 'requirement' }),
-        )
         delete newConfig.triggers
-        await saveComplianceTriggers(tx, triggers)
         await userConfig.insertConfigRow(tx, { config: newConfig })
         await userConfig.notifyReload(tx, operatorId)
       }),

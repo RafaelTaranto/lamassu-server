@@ -76,7 +76,7 @@ function mapMachine(rates, settings, machineRow) {
   const status = machineRow.stale ? 'online' : 'offline'
   const showLimitsAndVerification = coinAtmRadar.limitsAndVerification
   const cashLimit = showLimitsAndVerification
-    ? _.get('threshold', complianceTriggers.getCashLimit(triggers)) || Infinity
+    ? complianceTriggers.getCashLimit(triggers)
     : null
   const cryptoCurrencies = locale.cryptoCurrencies
   const identification = mapIdentification(config)

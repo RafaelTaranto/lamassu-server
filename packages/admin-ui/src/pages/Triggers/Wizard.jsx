@@ -9,7 +9,7 @@ import { H5, Info3 } from '../../components/typography'
 import { Button } from '../../components/buttons'
 import { singularOrPlural } from '../../utils/string'
 
-import { type, requirements } from './helper'
+import { typeStep, requirementsStep } from './helper'
 
 const LAST_STEP = 2
 
@@ -19,17 +19,13 @@ const getStep = (
   customInfoRequests,
   complianceServices,
   emailAuth,
-  triggers,
 ) => {
   switch (step) {
-    // case 1:
-    //   return txDirection
     case 1:
-      return type(currency)
+      return typeStep(currency)
     case 2:
-      return requirements(
+      return requirementsStep(
         config,
-        triggers,
         customInfoRequests,
         complianceServices,
         emailAuth,
@@ -41,8 +37,6 @@ const getStep = (
 
 const getText = (step, config, currency) => {
   switch (step) {
-    // case 1:
-    //   return `In ${getDirectionText(config)} transactions`
     case 1:
       return <>If the user {getTypeText(config, currency)}</>
     case 2:
@@ -58,19 +52,6 @@ const orUnderline = value => {
   )
   return R.isEmpty(value) || R.isNil(value) ? blankSpaceEl : value
 }
-
-// const getDirectionText = config => {
-//   switch (config.direction) {
-//     case 'both':
-//       return 'both cash-in and cash-out'
-//     case 'cashIn':
-//       return 'cash-in'
-//     case 'cashOut':
-//       return 'cash-out'
-//     default:
-//       return orUnderline(null)
-//   }
-// }
 
 const getTypeText = (config, currency) => {
   switch (config.triggerType) {
@@ -189,7 +170,6 @@ const Wizard = ({
   customInfoRequests,
   complianceServices,
   emailAuth,
-  triggers,
 }) => {
   const [liveValues, setLiveValues] = useState({})
   const [{ step, config }, setState] = useState({
@@ -203,7 +183,6 @@ const Wizard = ({
     customInfoRequests,
     complianceServices,
     emailAuth,
-    triggers,
   )
 
   const onContinue = async it => {
@@ -225,16 +204,13 @@ const Wizard = ({
     const isSuspend = values?.requirement?.requirementType === 'suspend'
     const isCustom = values?.requirement?.requirementType === 'custom'
 
-    const hasRequirementError = requirements().hasRequirementError(
+    const hasRequirementError = requirementsStep().hasRequirementError(
       errors,
       touched,
       values,
     )
-    const hasCustomRequirementError = requirements().hasCustomRequirementError(
-      errors,
-      touched,
-      values,
-    )
+    const hasCustomRequirementError =
+      requirementsStep().hasCustomRequirementError(errors, touched, values)
 
     const hasAmountError =
       !!errors.threshold &&

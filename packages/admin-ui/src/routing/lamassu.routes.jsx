@@ -27,7 +27,8 @@ import Cashout from '../pages/Cashout'
 import Commissions from '../pages/Commissions'
 import { Customers, CustomerProfile } from '../pages/Customers'
 import Locales from '../pages/Locales'
-import Triggers from '../pages/Triggers'
+import TriggerSets from '../pages/Triggers/TriggerSets'
+import Triggers from '../pages/Triggers/Triggers'
 import { namespaces } from '../utils/config'
 
 import { ROLES } from './utils'
@@ -222,11 +223,11 @@ const getLamassuRoutes = () => [
     },
     children: [
       {
-        key: 'triggers',
-        label: 'Triggers',
+        key: 'complianceTriggerSets',
+        label: 'Trigger sets',
         route: '/compliance/triggers',
         allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
-        component: Triggers,
+        component: TriggerSets,
       },
       {
         key: 'customers',
@@ -272,6 +273,12 @@ const getLamassuRoutes = () => [
             component: PromoCodes,
           },
         ],
+      },
+      {
+        key: 'triggers',
+        route: '/compliance/triggers/:complianceTriggerSetId',
+        allowedRoles: [ROLES.USER, ROLES.SUPERUSER],
+        component: Triggers,
       },
       {
         key: 'customer',

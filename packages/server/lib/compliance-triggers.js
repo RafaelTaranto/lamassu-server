@@ -1,51 +1,67 @@
-const _ = require('lodash/fp')
+const uuid = require('uuid')
+const {
+  db: { default: db },
+  complianceTriggers,
+} = require('typesafe-db')
 
-const { complianceTriggers } = require('typesafe-db')
+const maxDaysThreshold = triggers =>
+  Math.max(...triggers.map(t => t.thresholdDays))
 
-function getBackwardsCompatibleTriggers(triggers) {
-  const filtered = _.filter(
-    _.matches({ triggerType: 'txVolume', direction: 'both', thresholdDays: 1 }),
-  )(triggers)
-  const grouped = _.groupBy(_.prop('requirementType'))(filtered)
-  return _.mapValues(_.compose(_.get('threshold'), _.minBy('threshold')))(
-    grouped,
-  )
-}
+const getCashLimit = triggers =>
+  Math.min(
+    ...triggers.flatMap(({ triggerType, requirementType, threshold }) => {
+      const withFiat = ['txVolume', 'txAmount'].includes(triggerType)
+      const blocking = ['block', 'suspend'].includes(requirementType)
+      return withFiat && blocking && threshold ? [threshold] : []
+    }),
+  ) || Infinity
 
-function hasSanctions(triggers) {
-  return _.some(_.matches({ requirementType: 'sanctions' }))(triggers)
-}
-
-function maxDaysThreshold(triggers) {
-  return _.max(_.map('thresholdDays')(triggers))
-}
-
-function getCashLimit(triggers) {
-  const withFiat = _.filter(({ triggerType }) =>
-    _.includes(triggerType, ['txVolume', 'txAmount']),
-  )
-  const blocking = _.filter(({ requirementType }) =>
-    _.includes(requirementType, ['block', 'suspend']),
-  )
-  return _.compose(_.minBy('threshold'), blocking, withFiat)(triggers)
-}
-
-const hasRequirement = requirementType =>
-  _.compose(_.negate(_.isEmpty), _.find(_.matches({ requirementType })))
+const hasRequirement = requirementType => triggers =>
+  triggers.some(t => t.requirementType === requirementType)
 
 const hasPhone = hasRequirement('sms')
 const hasFacephoto = hasRequirement('facephoto')
 const hasIdScan = hasRequirement('idCardData')
+const hasSanctions = hasRequirement('sanctions')
 
 const AUTH_METHODS = {
   SMS: 'SMS',
   EMAIL: 'EMAIL',
 }
 
+const getComplianceTriggerSets = () =>
+  complianceTriggers.getComplianceTriggerSets(db)
+
+const getComplianceTriggerSetById = id =>
+  complianceTriggers.getComplianceTriggerSetById(db, id)
+
+const getComplianceTriggers = complianceTriggerSetId =>
+  complianceTriggers.getComplianceTriggers(db, complianceTriggerSetId)
+
+const createComplianceTriggerSet = name =>
+  complianceTriggers.createComplianceTriggerSet(db, uuid.v4(), name)
+
+const deleteComplianceTriggerSet = id =>
+  complianceTriggers.deleteComplianceTriggerSet(db, id)
+
+const createComplianceTrigger = (complianceTriggerSetId, trigger) =>
+  complianceTriggers.createComplianceTrigger(
+    db,
+    complianceTriggerSetId,
+    trigger,
+  )
+
+const deleteComplianceTrigger = id =>
+  complianceTriggers.deleteComplianceTrigger(db, id)
+
+const deleteComplianceTriggersByCustomInfoRequestId = customInfoRequestId =>
+  complianceTriggers.deleteComplianceTriggersByCustomInfoRequestId(
+    db,
+    customInfoRequestId,
+  )
+
 module.exports = {
   getAllComplianceTriggers: complianceTriggers.getAllComplianceTriggers,
-  saveComplianceTriggers: complianceTriggers.saveComplianceTriggers,
-  getBackwardsCompatibleTriggers,
   hasSanctions,
   maxDaysThreshold,
   getCashLimit,
@@ -53,4 +69,13 @@ module.exports = {
   hasFacephoto,
   hasIdScan,
   AUTH_METHODS,
+
+  getComplianceTriggerSets,
+  getComplianceTriggerSetById,
+  getComplianceTriggers,
+  createComplianceTriggerSet,
+  deleteComplianceTriggerSet,
+  createComplianceTrigger,
+  deleteComplianceTrigger,
+  deleteComplianceTriggersByCustomInfoRequestId,
 }
