@@ -1,6 +1,10 @@
 import db from './db.js'
 
-export function createMachineGroup(data: { id: string; name: string }) {
+export function createMachineGroup(data: {
+  id: string
+  name: string
+  complianceTriggerSetId: string | null
+}) {
   return db
     .insertInto('machineGroups')
     .values(data)
@@ -23,6 +27,7 @@ export function getMachineGroupsWithDeviceCount() {
     .select([
       'mg.id',
       'mg.name',
+      'mg.complianceTriggerSetId',
       eb => eb.fn.count('d.deviceId').as('deviceCount'),
     ])
     .groupBy(['mg.id', 'mg.name'])
