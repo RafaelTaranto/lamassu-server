@@ -18,6 +18,7 @@ const GET_MACHINE_GROUPS = gql`
     machineGroups {
       id
       name
+      complianceTriggerSetId
       deviceCount
     }
   }
@@ -108,6 +109,12 @@ const MachineGroups = () => {
         accessorKey: 'deviceCount',
         size: 150,
         Cell: ({ cell }) => cell.getValue() || 0,
+      },
+      {
+        header: 'Compliance Trigger Set',
+        accessorKey: 'complianceTriggerSetId',
+        size: 150,
+        Cell: ({ cell }) => cell.getValue() || 'None',
       },
     ],
     [],
