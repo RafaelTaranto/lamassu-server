@@ -2,6 +2,11 @@ import type { Insertable } from 'kysely'
 
 import type { DBOrTx } from './db.js'
 import type { ComplianceTriggers, RequirementType } from './types/types.js'
+import { inTransaction } from './db.js'
+import {
+  notifyUpdatedComplianceTriggerSets,
+  notifyUpdatedComplianceTriggers,
+} from './notify.js'
 
 type ComplianceTriggerInsert = Insertable<ComplianceTriggers>
 
@@ -42,11 +47,15 @@ export function createComplianceTriggerSet(
 }
 
 export function deleteComplianceTriggerSet(dbOrTx: DBOrTx, id: string) {
-  return dbOrTx
-    .deleteFrom('complianceTriggerSets')
-    .where('id', '=', id)
-    .returningAll()
-    .executeTakeFirstOrThrow()
+  return inTransaction(async tx => {
+    const complianceTriggerSet = await tx
+      .deleteFrom('complianceTriggerSets')
+      .where('id', '=', id)
+      .returningAll()
+      .executeTakeFirstOrThrow()
+    await notifyUpdatedComplianceTriggerSets(tx)
+    return complianceTriggerSet
+  }, dbOrTx)
 }
 
 /*
@@ -69,24 +78,39 @@ export function createComplianceTrigger(
   complianceTriggerSetId: string,
   trigger: ComplianceTriggerInsert[],
 ) {
-  return dbOrTx
-    .insertInto('complianceTriggers')
-    .values(Object.assign({}, trigger, { complianceTriggerSetId }))
-    .execute()
+  return inTransaction(async tx => {
+    const complianceTrigger = await tx
+      .insertInto('complianceTriggers')
+      .values(Object.assign({}, trigger, { complianceTriggerSetId }))
+      .execute()
+    await notifyUpdatedComplianceTriggers(tx)
+    return complianceTrigger
+  }, dbOrTx)
 }
 
 export function deleteComplianceTrigger(dbOrTx: DBOrTx, id: string) {
-  return dbOrTx.deleteFrom('complianceTriggers').where('id', '=', id).execute()
+  return inTransaction(async tx => {
+    const complianceTrigger = await tx
+      .deleteFrom('complianceTriggers')
+      .where('id', '=', id)
+      .execute()
+    await notifyUpdatedComplianceTriggers(tx)
+    return complianceTrigger
+  }, dbOrTx)
 }
 
 export function deleteComplianceTriggersByCustomInfoRequestId(
   dbOrTx: DBOrTx,
   customInfoRequestId: string,
 ) {
-  return dbOrTx
-    .deleteFrom('complianceTriggers')
-    .where('customInfoRequestId', '=', customInfoRequestId)
-    .execute()
+  return inTransaction(async tx => {
+    const complianceTrigger = await tx
+      .deleteFrom('complianceTriggers')
+      .where('customInfoRequestId', '=', customInfoRequestId)
+      .execute()
+    await notifyUpdatedComplianceTriggers(tx)
+    return complianceTrigger
+  }, dbOrTx)
 }
 
 export function getAllComplianceTriggersByRequirementType(

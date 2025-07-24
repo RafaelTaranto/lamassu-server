@@ -10,3 +10,15 @@ function notify(dbOrTx: DBOrTx, channel: string) {
 export function notifyReload(dbOrTx: DBOrTx) {
   return notify(dbOrTx, 'reload')
 }
+
+export function notifyUpdatedMachineGroups(dbOrTx: DBOrTx) {
+  return notify(dbOrTx, 'updated_machine_groups')
+}
+
+export function notifyUpdatedComplianceTriggerSets(dbOrTx: DBOrTx) {
+  return notify(dbOrTx, 'updated_compliance_trigger_sets')
+}
+
+export function notifyUpdatedComplianceTriggers(dbOrTx: DBOrTx) {
+  return notify(dbOrTx, 'updated_compliance_triggers')
+}

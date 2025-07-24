@@ -1,9 +1,23 @@
-import db from './db.js'
+import type { DBOrTx } from './db.js'
+import db, { inTransaction } from './db.js'
+import { notifyUpdatedMachineGroups } from './notify.js'
+
+export function getMachinesGroups(dbOrTx: DBOrTx) {
+  return dbOrTx
+    .selectFrom('devices as d')
+    .select(['deviceId', 'machineGroupId'])
+    .where('paired', '=', true)
+    .execute()
+}
 
 export function assignMachinesToGroup(deviceIds: [string], groupId: string) {
-  return db
-    .updateTable('devices as d')
-    .set({ machineGroupId: groupId })
-    .where('d.deviceId', 'in', deviceIds)
-    .execute()
+  return inTransaction(async tx => {
+    const machines = await tx
+      .updateTable('devices as d')
+      .set({ machineGroupId: groupId })
+      .where('d.deviceId', 'in', deviceIds)
+      .execute()
+    await notifyUpdatedMachineGroups(tx)
+    return machines
+  }, db)
 }

@@ -1,4 +1,6 @@
-import db from './db.js'
+import type { DBOrTx } from './db.js'
+import db, { inTransaction } from './db.js'
+import { notifyUpdatedComplianceTriggerSets } from './notify.js'
 
 export function createMachineGroup(data: {
   id: string
@@ -42,10 +44,21 @@ export function setComplianceTriggerSetId(
   id: string,
   complianceTriggerSetId: string | null,
 ) {
-  return db
-    .updateTable('machineGroups')
-    .set({ complianceTriggerSetId })
-    .where('id', '=', id)
-    .returningAll()
-    .executeTakeFirstOrThrow()
+  return inTransaction(async tx => {
+    const machineGroup = await tx
+      .updateTable('machineGroups')
+      .set({ complianceTriggerSetId })
+      .where('id', '=', id)
+      .returningAll()
+      .executeTakeFirstOrThrow()
+    await notifyUpdatedComplianceTriggerSets(tx)
+    return machineGroup
+  }, db)
+}
+
+export function getMachineGroupsComplianceTriggerSets(dbOrTx: DBOrTx) {
+  return dbOrTx
+    .selectFrom('machineGroups')
+    .select(['id', 'complianceTriggerSetId'])
+    .execute()
 }
