@@ -4,6 +4,7 @@ const typeDef = gql`
   type MachineGroup {
     id: ID!
     name: String!
+    complianceTriggerSetId: ID
     deviceCount: Int
   }
 
