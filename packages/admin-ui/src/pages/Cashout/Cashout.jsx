@@ -1,10 +1,9 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
-import Switch from '@mui/material/Switch'
 import * as R from 'ramda'
 import React, { useState } from 'react'
 import { HelpTooltip } from '../../components/Tooltip'
 import TitleSection from '../../components/layout/TitleSection'
-import { P, Label2 } from '../../components/typography'
+import { P } from '../../components/typography'
 
 import { SupportLinkButton } from '../../components/buttons'
 import { NamespacedTable as EditableTable } from '../../components/editableTable'
@@ -61,7 +60,6 @@ const CashOut = ({ name: SCREEN_KEY }) => {
 
   const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)
 
-  const fudgeFactorActive = config?.fudgeFactorActive ?? false
   const locale = data?.config && fromNamespace('locale')(data.config)
   const machines = data?.machines ?? []
 
@@ -90,37 +88,8 @@ const CashOut = ({ name: SCREEN_KEY }) => {
                 bottomSpace="1"
               />
             </HelpTooltip>
-          }>
-          <div className="flex items-center">
-            <P>Transaction fudge factor</P>
-            <Switch
-              checked={fudgeFactorActive}
-              onChange={event => {
-                save({ fudgeFactorActive: event.target.checked })
-              }}
-              value={fudgeFactorActive}
-            />
-            <Label2 className="m-1 w-6">
-              {fudgeFactorActive ? 'On' : 'Off'}
-            </Label2>
-            <HelpTooltip width={304}>
-              <P>
-                Automatically accept customer deposits as complete if their
-                received amount is 100 crypto atoms or less.
-              </P>
-              <P>
-                (Crypto atoms are the smallest unit in each cryptocurrency.
-                E.g., satoshis in Bitcoin, or wei in Ethereum.)
-              </P>
-              <P>For details please read the relevant knowledgebase article:</P>
-              <SupportLinkButton
-                link="https://support.lamassu.is/hc/en-us/articles/360050838011-Automatically-accepting-undersent-deposits-with-Fudge-Factor-"
-                label="Lamassu Support Article"
-                bottomSpace="1"
-              />
-            </HelpTooltip>
-          </div>
-        </TitleSection>
+          }
+        />
         <EditableTable
           namespaces={R.map(R.path(['deviceId']))(machines)}
           data={config}

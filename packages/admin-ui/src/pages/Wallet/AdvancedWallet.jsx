@@ -58,6 +58,8 @@ const AdvancedWallet = () => {
   const onEditingOverrides = (it, editing) => setEditingOverrides(editing)
 
   const cryptoCurrencies = data?.cryptoCurrencies ?? []
+  const fiatCurrency =
+    data?.config && fromNamespace('locale')(data.config).fiatCurrency
 
   const AdvancedWalletSettings = fromNamespace(ADVANCED)(
     fromNamespace(SCREEN_KEY)(data?.config),
@@ -93,7 +95,7 @@ const AdvancedWallet = () => {
           stripeWhen={it => !AdvancedWalletSchema.isValidSync(it)}
           inialValues={R.of(Array, AdvancedWalletSettings)}
           validationSchema={AdvancedWalletSchema}
-          elements={getAdvancedWalletElements()}
+          elements={getAdvancedWalletElements(fiatCurrency)}
           setEditing={onEditingDefault}
           forceDisable={isEditingOverrides}
         />
