@@ -101,13 +101,13 @@ function showAccounts(schemaVersion) {
 const saveConfig = config =>
   getOperatorId('middleware')
     .then(operatorId =>
-      inTransaction(db, async tx => {
+      inTransaction(async tx => {
         const currentConfig = await _loadConfigTx(tx)
         const newConfig = addTermsHash(_.assign(currentConfig, config))
         delete newConfig.triggers
         await userConfig.insertConfigRow(tx, { config: newConfig })
         await notifyReload(tx, operatorId)
-      }),
+      }, db),
     )
     .catch(console.error)
 

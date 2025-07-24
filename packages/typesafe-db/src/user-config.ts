@@ -129,12 +129,12 @@ export function saveAccounts(
   mergeAccounts: (old: object) => Json,
   operatorId: string,
 ) {
-  return inTransaction(dbOrTx, async tx => {
+  return inTransaction(async tx => {
     const currentAccounts = await loadAccounts(tx)
     const newAccounts = mergeAccounts(currentAccounts)
     await updateAccounts(tx, newAccounts)
     await insertAccounts(tx, newAccounts)
     await notifyReload(tx, operatorId)
     return newAccounts
-  })
+  }, dbOrTx)
 }

@@ -20,7 +20,7 @@ const dialect = new PostgresDialect({
 
 export type DBOrTx = Kysely<DB>
 
-export default new Kysely<DB>({
+const db: Kysely<DB> = new Kysely<DB>({
   dialect,
   plugins: [
     new CamelCasePlugin({
@@ -30,9 +30,11 @@ export default new Kysely<DB>({
   ],
 })
 
+export default db
+
 export function inTransaction<DB, T>(
-  dbOrTx: Kysely<DB>,
   func: (tx: Kysely<DB>) => Promise<T>,
+  dbOrTx: Kysely<DB>, // TODO: default to `db`
 ): Promise<T> {
   return dbOrTx.isTransaction
     ? func(dbOrTx)
