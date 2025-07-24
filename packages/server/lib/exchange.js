@@ -1,6 +1,7 @@
 const _ = require('lodash/fp')
 const { ALL_CRYPTOS } = require('@lamassu/coins')
 
+const logger = require('./logger')
 const configManager = require('./new-config-manager')
 const ccxt = require('./plugins/exchange/ccxt')
 const mockExchange = require('./plugins/exchange/mock-exchange')
@@ -64,11 +65,14 @@ function getMarkets() {
     ccxt
       .getMarkets(exchange, ALL_CRYPTOS)
       .then(markets => ({ exchange, markets }))
-      .catch(error => ({
-        exchange,
-        markets: [],
-        error: error.message,
-      }))
+      .catch(error => {
+        logger.error(`Error fetching markets for ${exchange}:`, error)
+        return {
+          exchange,
+          markets: [],
+          error: error.message,
+        }
+      })
 
   const transformToObject = _.reduce(
     (acc, { exchange, markets }) => ({
