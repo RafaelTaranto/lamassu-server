@@ -15,6 +15,10 @@ const typeDef = gql`
   type Mutation {
     createMachineGroup(name: String!): MachineGroup! @auth
     deleteMachineGroup(id: ID!): MachineGroup @auth
+    assignComplianceTriggerSetToMachineGroup(
+      id: ID!
+      complianceTriggerSetId: ID
+    ): MachineGroup! @auth
   }
 `
 

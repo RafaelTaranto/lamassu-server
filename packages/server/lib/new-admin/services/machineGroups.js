@@ -44,8 +44,13 @@ async function deleteMachineGroup(id) {
   }
 }
 
+function assignComplianceTriggerSetToMachineGroup(id, complianceTriggerSetId) {
+  return machineGroups.setComplianceTriggerSetId(id, complianceTriggerSetId)
+}
+
 module.exports = {
   getAllMachineGroups,
   createMachineGroup,
   deleteMachineGroup,
+  assignComplianceTriggerSetToMachineGroup,
 }

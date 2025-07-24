@@ -37,3 +37,15 @@ export function getMachineGroupsWithDeviceCount() {
     .orderBy('mg.name', 'asc')
     .execute()
 }
+
+export function setComplianceTriggerSetId(
+  id: string,
+  complianceTriggerSetId: string | null,
+) {
+  return db
+    .updateTable('machineGroups')
+    .set({ complianceTriggerSetId })
+    .where('id', '=', id)
+    .returningAll()
+    .executeTakeFirstOrThrow()
+}

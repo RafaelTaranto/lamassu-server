@@ -2,6 +2,7 @@ const {
   getAllMachineGroups,
   createMachineGroup,
   deleteMachineGroup,
+  assignComplianceTriggerSetToMachineGroup,
 } = require('../../services/machineGroups')
 
 const resolvers = {
@@ -11,6 +12,10 @@ const resolvers = {
   Mutation: {
     createMachineGroup: (...[, { name }]) => createMachineGroup(name),
     deleteMachineGroup: (...[, { id }]) => deleteMachineGroup(id),
+    assignComplianceTriggerSetToMachineGroup: (
+      source,
+      { id, complianceTriggerSetId },
+    ) => assignComplianceTriggerSetToMachineGroup(id, complianceTriggerSetId),
   },
 }
 
