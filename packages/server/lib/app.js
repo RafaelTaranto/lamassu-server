@@ -6,8 +6,6 @@ require('./environment-helper')
 const { loadRoutes } = require('./routes')
 const logger = require('./logger')
 const poller = require('./poller')
-const settingsLoader = require('./new-settings-loader')
-const configManager = require('./new-config-manager')
 const complianceTriggers = require('./compliance-triggers')
 const ofac = require('./ofac/index')
 const ofacUpdate = require('./ofac/update')
@@ -32,11 +30,11 @@ function run() {
     }
 
     const runner = () => {
-      settingsLoader
-        .loadWithAllTriggers()
-        .then(settings => {
+      complianceTriggers
+        .getAllComplianceTriggers()
+        .then(triggers => {
           clearInterval(handler)
-          return loadSanctions(settings).then(startServer).then(resolve)
+          return loadSanctions(triggers).then(startServer).then(resolve)
         })
         .catch(errorHandler)
     }
@@ -46,9 +44,8 @@ function run() {
   })
 }
 
-function loadSanctions(settings) {
+function loadSanctions(triggers) {
   return Promise.resolve().then(() => {
-    const triggers = configManager.getTriggers(settings.config)
     const hasSanctions = complianceTriggers.hasSanctions(triggers)
 
     if (!hasSanctions) return

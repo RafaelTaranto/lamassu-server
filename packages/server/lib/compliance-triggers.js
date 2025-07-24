@@ -60,8 +60,11 @@ const deleteComplianceTriggersByCustomInfoRequestId = customInfoRequestId =>
     customInfoRequestId,
   )
 
+const getAllComplianceTriggers = (dbOrTx = db) =>
+  complianceTriggers.getAllComplianceTriggers(dbOrTx)
+
 module.exports = {
-  getAllComplianceTriggers: complianceTriggers.getAllComplianceTriggers,
+  getAllComplianceTriggers,
   hasSanctions,
   maxDaysThreshold,
   getCashLimit,
