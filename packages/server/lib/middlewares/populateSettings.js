@@ -5,8 +5,8 @@ const logger = require('../logger')
 
 db.connect({ direct: true })
   .then(sco => {
-    sco.client.on('notification', reload)
-    return sco.none('LISTEN $1:name', 'reload')
+    sco.client.on('notification', () => reloadCache())
+    return sco.none('LISTEN reload')
   })
   .catch(console.error)
 
@@ -16,7 +16,7 @@ db.connect({ direct: true })
       const parsedData = JSON.parse(data.payload)
       return machineAction(parsedData.action, parsedData.value)
     })
-    return sco.none('LISTEN $1:name', 'machineAction')
+    return sco.none('LISTEN machineAction')
   })
   .catch(console.error)
 
@@ -54,71 +54,36 @@ function machineAction(type, value) {
   }
 }
 
-function reload() {
-  state.needsSettingsReload = true
+const updateCache = (versionId, settings) => {
+  const { settingsCache } = state
+  settingsCache.set(settings.version, settings)
+  if (!versionId) settingsCache.set('latest', settings)
+  return settings
 }
 
+const reloadCache = async versionId => {
+  const settings = await newSettingsLoader.load(versionId)
+  return updateCache(versionId, settings)
+}
+
+const getOrUpdateCached = async versionId =>
+  state.settingsCache.get(versionId || 'latest') ||
+  (await reloadCache(versionId))
+
 const populateSettings = function (req, res, next) {
-  const { settingsCache } = state
   const versionId = req.headers['config-version']
 
-  try {
-    // Priority of configs to retrieve
-    // 1. Machine is in the middle of a transaction and has the config-version header set, fetch that config from cache or database, depending on whether it exists in cache
-    // 2. The operator settings changed, so we must update the cache
-    // 3. There's a cached config, send the cached value
-    // 4. There's no cached config, cache and send the latest config
-
-    if (versionId) {
-      const cachedVersionedSettings = settingsCache.get(versionId)
-
-      if (!cachedVersionedSettings) {
-        logger.debug('Fetching a specific config version cached value')
-        return newSettingsLoader
-          .loadWithAllTriggers(versionId)
-          .then(settings => {
-            settingsCache.set(versionId, settings)
-            req.settings = settings
-          })
-          .then(() => next())
-          .catch(next)
-      }
-
-      logger.debug('Fetching a cached specific config version')
-      req.settings = cachedVersionedSettings
-      return next()
-    }
-
-    const operatorSettings = settingsCache.get('latest')
-
-    if (state.needsSettingsReload || !operatorSettings) {
-      state.needsSettingsReload
-        ? logger.debug(
-            'Fetching and caching a new latest config value, as a reload was requested',
-          )
-        : logger.debug(
-            "Fetching the latest config version because there's no cached value",
-          )
-
-      return newSettingsLoader
-        .loadWithAllTriggers()
-        .then(settings => {
-          const versionId = settings.version
-          settingsCache.set('latest', settings)
-          settingsCache.set(versionId, settings)
-          state.needsSettingsReload = false
-          req.settings = settings
-        })
-        .then(() => next())
-        .catch(next)
-    }
-
-    logger.debug('Fetching the latest config value from cache')
-    req.settings = operatorSettings
-    return next()
-  } catch (e) {
-    logger.error(e)
-  }
+  // Priority of configs to retrieve
+  // 1. Machine is in the middle of a transaction and has the config-version header set, fetch that config from cache or database, depending on whether it exists in cache
+  // 2. The operator settings changed, so we must update the cache
+  // 3. There's a cached config, send the cached value
+  // 4. There's no cached config, cache and send the latest config
+  getOrUpdateCached(versionId)
+    .then(settings => {
+      req.settings = settings
+      next()
+    })
+    .catch(next)
 }
 
 module.exports = populateSettings
