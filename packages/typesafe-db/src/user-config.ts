@@ -127,14 +127,13 @@ function insertAccounts(dbOrTx: DBOrTx, accounts: Json) {
 export function saveAccounts(
   dbOrTx: DBOrTx,
   mergeAccounts: (old: object) => Json,
-  operatorId: string,
 ) {
   return inTransaction(async tx => {
     const currentAccounts = await loadAccounts(tx)
     const newAccounts = mergeAccounts(currentAccounts)
     await updateAccounts(tx, newAccounts)
     await insertAccounts(tx, newAccounts)
-    await notifyReload(tx, operatorId)
+    await notifyReload(tx)
     return newAccounts
   }, dbOrTx)
 }

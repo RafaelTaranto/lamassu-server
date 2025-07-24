@@ -7,7 +7,6 @@ const {
   userConfig,
 } = require('typesafe-db')
 
-const { getOperatorId } = require('./operator')
 const {
   getTermsConditions,
   setTermsConditions,
@@ -78,9 +77,7 @@ function saveAccounts(accounts) {
     return newAccounts
   }
 
-  return getOperatorId('middleware')
-    .then(operatorId => userConfig.saveAccounts(db, mergeAccounts, operatorId))
-    .catch(console.error)
+  return userConfig.saveAccounts(db, mergeAccounts).catch(console.error)
 }
 
 function hideSecretFields(accounts) {
@@ -98,16 +95,12 @@ function showAccounts(schemaVersion) {
 }
 
 const saveConfig = config =>
-  getOperatorId('middleware')
-    .then(operatorId =>
-      inTransaction(async tx => {
-        const currentConfig = await userConfig.loadConfig(tx)
-        const newConfig = addTermsHash(_.assign(currentConfig, config))
-        await userConfig.insertConfigRow(tx, { config: newConfig })
-        await notifyReload(tx, operatorId)
-      }, db),
-    )
-    .catch(console.error)
+  inTransaction(async tx => {
+    const currentConfig = await userConfig.loadConfig(tx)
+    const newConfig = addTermsHash(_.assign(currentConfig, config))
+    await userConfig.insertConfigRow(tx, { config: newConfig })
+    await notifyReload(tx)
+  }, db).catch(console.error)
 
 const loadConfig = schemaVersion => userConfig.loadConfig(db, schemaVersion)
 

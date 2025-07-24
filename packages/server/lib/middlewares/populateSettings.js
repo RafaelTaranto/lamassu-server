@@ -5,10 +5,7 @@ const logger = require('../logger')
 
 db.connect({ direct: true })
   .then(sco => {
-    sco.client.on('notification', data => {
-      const parsedData = JSON.parse(data.payload)
-      return reload(parsedData.operatorId)
-    })
+    sco.client.on('notification', reload)
     return sco.none('LISTEN $1:name', 'reload')
   })
   .catch(console.error)
@@ -25,65 +22,44 @@ db.connect({ direct: true })
 
 function machineAction(type, value) {
   const deviceId = value.deviceId
-  const operatorId = value.operatorId
-  const pid = state.pids?.[operatorId]?.[deviceId]?.pid
+  const pid = state.pids?.[deviceId]?.pid
 
   switch (type) {
     case 'reboot':
-      logger.debug(
-        `Rebooting machine '${deviceId}' from operator ${operatorId}`,
-      )
-      if (!state.reboots[operatorId]) state.reboots[operatorId] = {}
-      state.reboots[operatorId][deviceId] = pid
+      logger.debug(`Rebooting machine '${deviceId}'`)
+      state.reboots[deviceId] = pid
       break
     case 'shutdown':
-      logger.debug(
-        `Shutting down machine '${deviceId}' from operator ${operatorId}`,
-      )
-      if (!state.shutdowns[operatorId]) state.shutdowns[operatorId] = {}
-      state.shutdowns[operatorId][deviceId] = pid
+      logger.debug(`Shutting down machine '${deviceId}'`)
+      state.shutdowns[deviceId] = pid
       break
     case 'restartServices':
-      logger.debug(
-        `Restarting services of machine '${deviceId}' from operator ${operatorId}`,
-      )
-      if (!state.restartServicesMap[operatorId])
-        state.restartServicesMap[operatorId] = {}
-      state.restartServicesMap[operatorId][deviceId] = pid
+      logger.debug(`Restarting services of machine '${deviceId}'`)
+      state.restartServicesMap[deviceId] = pid
       break
     case 'emptyUnit':
-      logger.debug(
-        `Emptying units from machine '${deviceId}' from operator ${operatorId}`,
-      )
-      if (!state.emptyUnit[operatorId]) state.emptyUnit[operatorId] = {}
-      state.emptyUnit[operatorId][deviceId] = pid
+      logger.debug(`Emptying units from machine '${deviceId}'`)
+      state.emptyUnit[deviceId] = pid
       break
     case 'refillUnit':
-      logger.debug(
-        `Refilling recyclers from machine '${deviceId}' from operator ${operatorId}`,
-      )
-      if (!state.refillUnit[operatorId]) state.refillUnit[operatorId] = {}
-      state.refillUnit[operatorId][deviceId] = pid
+      logger.debug(`Refilling recyclers from machine '${deviceId}'`)
+      state.refillUnit[deviceId] = pid
       break
     case 'diagnostics':
-      logger.debug(
-        `Running diagnostics on machine '${deviceId}' from operator ${operatorId}`,
-      )
-      if (!state.diagnostics[operatorId]) state.diagnostics[operatorId] = {}
-      state.diagnostics[operatorId][deviceId] = pid
+      logger.debug(`Running diagnostics on machine '${deviceId}'`)
+      state.diagnostics[deviceId] = pid
       break
     default:
       break
   }
 }
 
-function reload(operatorId) {
-  state.needsSettingsReload[operatorId] = true
+function reload() {
+  state.needsSettingsReload = true
 }
 
 const populateSettings = function (req, res, next) {
-  const { needsSettingsReload, settingsCache } = state
-  const operatorId = res.locals.operatorId
+  const { settingsCache } = state
   const versionId = req.headers['config-version']
 
   try {
@@ -94,16 +70,14 @@ const populateSettings = function (req, res, next) {
     // 4. There's no cached config, cache and send the latest config
 
     if (versionId) {
-      const cachedVersionedSettings = settingsCache.get(
-        `${operatorId}-v${versionId}`,
-      )
+      const cachedVersionedSettings = settingsCache.get(versionId)
 
       if (!cachedVersionedSettings) {
         logger.debug('Fetching a specific config version cached value')
         return newSettingsLoader
           .loadWithAllTriggers(versionId)
           .then(settings => {
-            settingsCache.set(`${operatorId}-v${versionId}`, settings)
+            settingsCache.set(versionId, settings)
             req.settings = settings
           })
           .then(() => next())
@@ -115,10 +89,10 @@ const populateSettings = function (req, res, next) {
       return next()
     }
 
-    const operatorSettings = settingsCache.get(`${operatorId}-latest`)
+    const operatorSettings = settingsCache.get('latest')
 
-    if (needsSettingsReload[operatorId] || !operatorSettings) {
-      needsSettingsReload[operatorId]
+    if (state.needsSettingsReload || !operatorSettings) {
+      state.needsSettingsReload
         ? logger.debug(
             'Fetching and caching a new latest config value, as a reload was requested',
           )
@@ -130,9 +104,9 @@ const populateSettings = function (req, res, next) {
         .loadWithAllTriggers()
         .then(settings => {
           const versionId = settings.version
-          settingsCache.set(`${operatorId}-latest`, settings)
-          settingsCache.set(`${operatorId}-v${versionId}`, settings)
-          delete needsSettingsReload[operatorId]
+          settingsCache.set('latest', settings)
+          settingsCache.set(versionId, settings)
+          state.needsSettingsReload = false
           req.settings = settings
         })
         .then(() => next())
