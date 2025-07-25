@@ -58,7 +58,7 @@ const addReceiptInfo = receiptInfo => ret => {
   const defaults = _.fromPairs(_.map(field => [field, false], fields))
 
   receiptInfo = _.flow(
-    o => _.set('paper', o.active, o),
+    o => _.set('paper', !!o.active, o),
     _.assign(defaults),
     _.pick(fields),
   )(receiptInfo)
