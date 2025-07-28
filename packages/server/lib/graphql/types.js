@@ -165,6 +165,12 @@ module.exports = gql`
 
     triggersAutomation: TriggersAutomation!
     triggers: [Trigger!]!
+      @deprecated(reason: "moved to machineSettings.complianceTriggers")
+  }
+
+  type MachineSettings {
+    settingsVersion: String!
+    complianceTriggers: [Trigger!]!
   }
 
   type DynamicCoinValues {
@@ -231,6 +237,7 @@ module.exports = gql`
 
   type Query {
     configs(currentConfigVersion: Int): Configs!
+    machineSettings(currentSettingsVersion: String): MachineSettings
     terms(currentHash: String, currentConfigVersion: Int): Terms
   }
 `

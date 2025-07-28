@@ -115,6 +115,7 @@ const staticConfig = ({
   deviceName,
   pq,
   settings,
+  machineSettings,
 }) => {
   const massageCoins = _.map(
     _.pick([
@@ -146,7 +147,7 @@ const staticConfig = ({
       getCustomInfoRequests(true),
       settings.config,
     ),
-    buildTriggers(configManager.getTriggers(settings.config)),
+    buildTriggers(machineSettings.complianceTriggers),
     configManager.getWalletSettings('BTC', settings.config).layer2 !==
       'no-layer2',
     configManager.getLocale(deviceId, settings.config),
@@ -346,7 +347,7 @@ const dynamicConfig = ({ deviceId, operatorId, pid, pq, settings }) => {
 const configs = (
   parent,
   { currentConfigVersion },
-  { deviceId, deviceName, operatorId, pid, settings },
+  { deviceId, deviceName, operatorId, pid, settings, machineSettings },
 ) =>
   plugins(settings, deviceId)
     .pollQueries()
@@ -357,6 +358,7 @@ const configs = (
         deviceName,
         pq,
         settings,
+        machineSettings,
       }),
       dynamic: dynamicConfig({
         deviceId,
@@ -366,6 +368,26 @@ const configs = (
         settings,
       }),
     }))
+
+const machineSettings = (
+  parent,
+  { currentSettingsVersion },
+  { deviceId, machineSettings },
+) => {
+  if (!machineSettings)
+    throw new Error(`No cached settings found for machine ${deviceId}`)
+
+  currentSettingsVersion = parseInt(currentSettingsVersion, 10)
+  if (
+    !isNaN(currentSettingsVersion) &&
+    currentSettingsVersion >= machineSettings.settingsVersion
+  )
+    return null // The machine is up to date
+
+  return Object.assign({}, machineSettings, {
+    complianceTriggers: buildTriggers(machineSettings.complianceTriggers),
+  })
+}
 
 const massageTerms = terms =>
   terms.active && terms.text
@@ -433,6 +455,7 @@ const terms = (parent, { currentConfigVersion, currentHash }, { settings }) => {
 module.exports = {
   Query: {
     configs,
+    machineSettings,
     terms,
   },
 }
