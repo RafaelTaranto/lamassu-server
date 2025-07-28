@@ -18,7 +18,6 @@ const {
   updateTxCustomerPhoto: txsUpdateTxCustomerPhoto,
 } = require('../new-admin/services/transactions.js')
 const machineLoader = require('../machine-loader')
-const { loadConfigWithAllTriggers } = require('../new-settings-loader')
 const customInfoRequestQueries = require('../new-admin/services/customInfoRequests')
 const T = require('../time')
 const plugins = require('../plugins')
@@ -222,11 +221,8 @@ function updateTxCustomerPhoto(req, res, next) {
     .catch(next)
 }
 
-function buildSms(data, receiptOptions) {
-  return Promise.all([
-    getTx(data.session, data.txClass),
-    loadConfigWithAllTriggers(),
-  ]).then(([tx, config]) => {
+function buildSms(config, data, receiptOptions) {
+  return getTx(data.session, data.txClass).then(tx => {
     return Promise.all([
       customers.getCustomerById(tx.customer_id),
       machineLoader.getMachine(tx.device_id, config),
@@ -273,12 +269,14 @@ function sendSmsReceipt(req, res, next) {
     ['active', 'sms'],
     configManager.getReceipt(req.settings.config),
   )
-  buildSms(req.body.data, receiptOptions).then(smsRequest => {
-    sms
-      .sendMessage(req.settings, smsRequest)
-      .then(() => respond(req, res, {}))
-      .catch(next)
-  })
+  buildSms(req.settings.config, req.body.data, receiptOptions).then(
+    smsRequest => {
+      sms
+        .sendMessage(req.settings, smsRequest)
+        .then(() => respond(req, res, {}))
+        .catch(next)
+    },
+  )
 }
 
 function getExternalComplianceLink(req, res, next) {
