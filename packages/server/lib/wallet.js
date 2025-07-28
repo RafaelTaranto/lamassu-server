@@ -195,7 +195,7 @@ function getWalletStatus(settings, tx) {
   const isValidFudgeFactor =
     fudgeFactorInCA &&
     !fudgeFactorInCA.isNaN() &&
-    fudgeFactorInCA.gt(tx.cryptoAtoms)
+    fudgeFactorInCA.lt(tx.cryptoAtoms)
 
   let requested = isValidFudgeFactor
     ? tx.cryptoAtoms.minus(fudgeFactorInCA)
