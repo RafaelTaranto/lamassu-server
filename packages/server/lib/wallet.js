@@ -14,6 +14,7 @@ const logger = require('./logger')
 const { getOpenBatchCryptoValue } = require('./tx-batching')
 const BN = require('./bn')
 const { BALANCE_FETCH_SPEED_MULTIPLIER } = require('./constants')
+const commissionMath = require('./commission-math')
 
 const FETCH_INTERVAL = 5000
 const INSUFFICIENT_FUNDS_CODE = 570
@@ -180,11 +181,25 @@ function mergeStatusMode(a, b) {
 }
 
 function getWalletStatus(settings, tx) {
-  const fudgeFactorEnabled = configManager.getGlobalCashOut(
+  const walletSettings = configManager.getWalletSettings(
+    tx.cryptoCode,
     settings.config,
-  ).fudgeFactorActive
-  const fudgeFactor = fudgeFactorEnabled ? 100 : 0
-  const requested = tx.cryptoAtoms.minus(fudgeFactor)
+  )
+
+  const fudgeFactorInCA = commissionMath.convertFiatToCryptoAtoms(
+    walletSettings.fudgeFactor ?? 0,
+    tx.rawTickerPrice,
+    tx.cryptoCode,
+  )
+
+  const isValidFudgeFactor =
+    fudgeFactorInCA &&
+    !fudgeFactorInCA.isNaN() &&
+    fudgeFactorInCA.lt(tx.cryptoAtoms)
+
+  let requested = isValidFudgeFactor
+    ? tx.cryptoAtoms.minus(fudgeFactorInCA)
+    : tx.cryptoAtoms
 
   const walletStatusPromise = fetchWallet(settings, tx.cryptoCode).then(r =>
     r.wallet.getStatus(r.account, tx, requested, settings, r.operatorId),

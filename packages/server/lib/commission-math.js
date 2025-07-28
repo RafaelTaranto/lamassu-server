@@ -16,6 +16,14 @@ function truncateCrypto(cryptoAtoms, cryptoCode) {
     .times(scaleFactor)
 }
 
+function convertFiatToCryptoAtoms(fiatAmount, rate, cryptoCode) {
+  const unitScale = coinUtils.getCryptoCurrency(cryptoCode).unitScale
+  const unitScaleFactor = new BN(10).pow(unitScale)
+
+  const cryptoValue = new BN(fiatAmount).div(rate)
+  return cryptoValue.times(unitScaleFactor).integerValue(BN.ROUND_DOWN)
+}
+
 function fiatToCrypto(tx, rec, deviceId, config) {
   const usableFiat = rec.fiat - rec.cashInFee
 
@@ -47,4 +55,5 @@ function getDiscountRate(discount, commission) {
 module.exports = {
   fiatToCrypto,
   getDiscountRate,
+  convertFiatToCryptoAtoms,
 }

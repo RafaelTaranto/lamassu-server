@@ -37,6 +37,11 @@ const AdvancedWalletSchema = Yup.object().shape({
   feeMultiplier: Yup.string().required(),
   allowTransactionBatching: Yup.boolean(),
   enableLastUsedAddress: Yup.boolean(),
+  fudgeFactor: Yup.number('The fudge factor must be a number')
+    .min(0, 'The fudge factor must be a positive number')
+    .max(CURRENCY_MAX)
+    .nullable()
+    .transform((value, originalValue) => (originalValue === '' ? null : value)),
 })
 
 const OverridesSchema = Yup.object().shape({
@@ -89,13 +94,13 @@ const getCryptoUnitsOptions = it => {
   })(options)
 }
 
-const getAdvancedWalletElements = () => {
+const getAdvancedWalletElements = (fiatCurrency = null) => {
   return [
     {
       name: 'cryptoUnits',
       size: 'sm',
       stripe: true,
-      width: 190,
+      width: 150,
       input: Autocomplete,
       inputProps: {
         options: cryptoUnitsDefaultOptions,
@@ -105,10 +110,10 @@ const getAdvancedWalletElements = () => {
     },
     {
       name: 'allowTransactionBatching',
-      header: `Allow BTC transaction batching`,
+      header: `Allow tx batching (BTC)`,
       size: 'sm',
       stripe: true,
-      width: 260,
+      width: 210,
       view: (_, ite) => {
         return ite.allowTransactionBatching ? 'Yes' : `No`
       },
@@ -119,7 +124,7 @@ const getAdvancedWalletElements = () => {
       header: `BTC Miner's fee`,
       size: 'sm',
       stripe: true,
-      width: 250,
+      width: 200,
       view: viewFeeMultiplier,
       input: Autocomplete,
       inputProps: {
@@ -130,14 +135,28 @@ const getAdvancedWalletElements = () => {
     },
     {
       name: 'enableLastUsedAddress',
-      header: `Allow last used address prompt`,
+      header: `Allow last used address`,
       size: 'sm',
       stripe: true,
-      width: 260,
+      width: 200,
       view: (_, ite) => {
         return ite.enableLastUsedAddress ? 'Yes' : `No`
       },
       input: Checkbox,
+    },
+    {
+      name: 'fudgeFactor',
+      header: 'Fudge factor',
+      size: 'sm',
+      stripe: true,
+      width: 150,
+      view: it => it || 0,
+      input: NumberInput,
+      textAlign: 'right',
+      suffix: fiatCurrency,
+      inputProps: {
+        decimalPlaces: 2,
+      },
     },
   ]
 }
