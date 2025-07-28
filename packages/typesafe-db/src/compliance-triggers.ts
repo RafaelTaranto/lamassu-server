@@ -1,7 +1,6 @@
-import { Insertable } from 'kysely'
-
-import { inTransaction, DBOrTx } from './db.js'
-import { ComplianceTriggers } from './types/types.js'
+import type { Insertable } from 'kysely'
+import type { DBOrTx } from './db.js'
+import type { ComplianceTriggers } from './types/types.js'
 
 type ComplianceTriggerInsert = Insertable<ComplianceTriggers>
 

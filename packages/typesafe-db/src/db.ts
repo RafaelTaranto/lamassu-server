@@ -1,4 +1,5 @@
-import { DB } from './types/types.js'
+import type { DB } from './types/types.js'
+
 import { Pool } from 'pg'
 import { Kysely, PostgresDialect, CamelCasePlugin } from 'kysely'
 
