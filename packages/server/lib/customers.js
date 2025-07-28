@@ -916,14 +916,14 @@ function updateLastAuthAttempt(customerId, deviceId) {
 function getExternalComplianceMachine(customer) {
   return inTransaction(
     async tx => [
-      await userConfig.load(tx),
+      await userConfig.loadAccounts(tx),
       await getAllComplianceTriggersByRequirementType(tx, 'external'),
     ],
     kdb,
   )
-    .then(([settings, externalComplianceTriggers]) =>
+    .then(([accounts, externalComplianceTriggers]) =>
       externalCompliance.getStatusMap(
-        settings,
+        accounts,
         externalComplianceTriggers,
         customer.id,
       ),

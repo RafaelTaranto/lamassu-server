@@ -1,22 +1,17 @@
 const logger = require('./logger')
 const ph = require('./plugin-helper')
 
-const getPlugin = (settings, pluginCode) => {
-  const account = settings.accounts[pluginCode]
-  const plugin = ph.load(ph.COMPLIANCE, pluginCode)
-  if (pluginCode === 'mock-compliance') {
-    return {
-      plugin,
-      account: { applicantLevel: 'basic' },
-    }
-  }
+const getPlugin = (accounts, pluginCode) => ({
+  plugin: ph.load(ph.COMPLIANCE, pluginCode),
+  account:
+    pluginCode === 'mock-compliance'
+      ? { applicantLevel: 'basic' }
+      : accounts[pluginCode],
+})
 
-  return { plugin, account }
-}
-
-const getStatus = (settings, service, customerId) => {
+const getStatus = (accounts, service, customerId) => {
   try {
-    const { plugin, account } = getPlugin(settings, service)
+    const { plugin, account } = getPlugin(accounts, service)
 
     return plugin
       .getApplicantStatus(account, customerId)
@@ -31,23 +26,23 @@ const getStatus = (settings, service, customerId) => {
             error.message,
           )
         return {
-          service: service,
+          service,
           status: null,
         }
       })
   } catch (error) {
     logger.error(`Error loading plugin for service ${service}:`, error)
     return Promise.resolve({
-      service: service,
+      service,
       status: null,
     })
   }
 }
 
-const getStatusMap = (settings, externalComplianceTriggers, customerId) =>
+const getStatusMap = (accounts, externalComplianceTriggers, customerId) =>
   Promise.all(
     externalComplianceTriggers.map(({ externalService }) =>
-      getStatus(settings, externalService, customerId),
+      getStatus(accounts, externalService, customerId),
     ),
   ).then(applicantResults =>
     applicantResults.reduce((map, result) => {
@@ -56,14 +51,14 @@ const getStatusMap = (settings, externalComplianceTriggers, customerId) =>
     }, {}),
   )
 
-const createApplicant = (settings, externalService, customerId) => {
-  const { plugin, account } = getPlugin(settings, externalService)
+const createApplicant = (accounts, externalService, customerId) => {
+  const { plugin, account } = getPlugin(accounts, externalService)
 
   return plugin.createApplicant(account, customerId, account.applicantLevel)
 }
 
-const createLink = (settings, externalService, customerId) => {
-  const { plugin, account } = getPlugin(settings, externalService)
+const createLink = (accounts, externalService, customerId) => {
+  const { plugin, account } = getPlugin(accounts, externalService)
 
   return plugin.createLink(account, customerId, account.applicantLevel)
 }
