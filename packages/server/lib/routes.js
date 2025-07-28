@@ -13,6 +13,7 @@ const filterOldRequests = require('./middlewares/filterOldRequests')
 const findOperatorId = require('./middlewares/operatorId')
 const populateDeviceId = require('./middlewares/populateDeviceId')
 const populateSettings = require('./middlewares/populateSettings')
+const populateMachineSettings = require('./middlewares/populateMachineSettings')
 const recordPing = require('./middlewares/recordPing')
 
 const unitsRoutes = require('./routes/unitsRoutes')
@@ -83,6 +84,7 @@ const loadRoutes = async () => {
   app.use(filterOldRequests)
   app.use(findOperatorId)
   app.use(configRequiredRoutes, populateSettings)
+  app.use(configRequiredRoutes, populateMachineSettings)
 
   // other app routes
   app.use('/graphql', recordPing)
