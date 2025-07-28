@@ -14,7 +14,7 @@ const configManager = require('./new-config-manager')
 const notifierUtils = require('./notifier/utils')
 const notifierQueries = require('./notifier/queries')
 const { GraphQLError } = require('graphql')
-const { loadConfig } = require('./new-settings-loader')
+const { loadConfigWithAllTriggers } = require('./new-settings-loader')
 const logger = require('./logger')
 const {
   machines: { assignMachinesToGroup },
@@ -112,7 +112,9 @@ function getUnpairedMachines() {
 }
 
 function getConfig(defaultConfig) {
-  return defaultConfig ? Promise.resolve(defaultConfig) : loadConfig()
+  return defaultConfig
+    ? Promise.resolve(defaultConfig)
+    : loadConfigWithAllTriggers()
 }
 
 const isBootingState = state => ['booting', 'pendingIdle'].includes(state)
@@ -349,7 +351,7 @@ function setCassetteBills(rec) {
 }
 
 function emptyMachineUnits({ deviceId, newUnits, fiatCode }) {
-  return loadConfig()
+  return loadConfigWithAllTriggers()
     .then(config =>
       Promise.all([
         getMachine(deviceId),

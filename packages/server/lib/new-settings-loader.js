@@ -117,8 +117,8 @@ const _loadConfigTx = async (tx, schemaVersion) => {
   return Object.assign(config, { triggers })
 }
 
-const loadConfig = schemaVersion =>
-  db.transaction().execute(async tx => _loadConfigTx(tx, schemaVersion))
+const loadConfigWithAllTriggers = schemaVersion =>
+  inTransaction(async tx => _loadConfigTx(tx, schemaVersion), db)
 
 const load = version => userConfig.load(db, version)
 
@@ -127,6 +127,6 @@ module.exports = {
   saveAccounts,
   loadAccounts,
   showAccounts,
-  loadConfig,
+  loadConfigWithAllTriggers,
   load,
 }

@@ -41,7 +41,7 @@ function post(machineTx, pi) {
     const updatedTx = r.tx
     let addressReuse = false
 
-    const promises = [settingsLoader.loadConfig()]
+    const promises = [settingsLoader.loadConfigWithAllTriggers()]
 
     const isFirstPost = !r.tx.fiat || r.tx.fiat.isZero()
     if (isFirstPost) {
