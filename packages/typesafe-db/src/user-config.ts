@@ -1,14 +1,13 @@
-import { sql, Insertable } from 'kysely'
+import { sql } from 'kysely'
 
-import db, { inTransaction, DBOrTx } from './db.js'
-import { UserConfig } from './types/types.js'
-
-type UserConfigInsert = Insertable<UserConfig>
+import type { Json } from './types/types.js'
+import type { DBOrTx } from './db.js'
+import { inTransaction } from './db.js'
 
 const NEW_SETTINGS_LOADER_SCHEMA_VERSION = 2
 
 export async function notifyReload(dbOrTx: DBOrTx, operatorId: string) {
-  const notification = sql.literal(JSON.stringify({ operatorId }))
+  const notification = sql.lit(JSON.stringify({ operatorId }))
   await sql`NOTIFY reload, ${notification}`.execute(dbOrTx)
 }
 
@@ -37,7 +36,7 @@ function getRow(
   return query
 }
 
-export function insertConfigRow(dbOrTx: DBOrTx, config: {}) {
+export function insertConfigRow(dbOrTx: DBOrTx, config: object) {
   return dbOrTx
     .insertInto('userConfig')
     .values({
@@ -58,7 +57,7 @@ function _loadConfigWithVersion(
     .execute()
     .then(([row]) => ({
       config:
-        (row.data as { id: number; config: {} } | undefined)?.config ?? {},
+        (row.data as { id: number; config: object } | undefined)?.config ?? {},
       version: row?.id,
     }))
 }
@@ -68,7 +67,8 @@ export function loadAccounts(dbOrTx: DBOrTx, schemaVersion?: number) {
     .execute()
     .then(
       ([row]) =>
-        (row.data as { id: number; accounts: {} } | undefined)?.accounts ?? {},
+        (row.data as { id: number; accounts: object } | undefined)?.accounts ??
+        {},
     )
 }
 
@@ -92,7 +92,7 @@ export async function load(dbOrTx: DBOrTx, version?: number) {
   }
 }
 
-function updateAccounts(dbOrTx: DBOrTx, accounts: {}) {
+function updateAccounts(dbOrTx: DBOrTx, accounts: Json) {
   return dbOrTx
     .updateTable('userConfig')
     .set({
@@ -104,7 +104,7 @@ function updateAccounts(dbOrTx: DBOrTx, accounts: {}) {
     .execute()
 }
 
-function insertAccounts(dbOrTx: DBOrTx, accounts: {}) {
+function insertAccounts(dbOrTx: DBOrTx, accounts: Json) {
   return dbOrTx
     .insertInto('userConfig')
     .columns(['type', 'data', 'valid', 'schemaVersion'])
@@ -132,7 +132,7 @@ function insertAccounts(dbOrTx: DBOrTx, accounts: {}) {
 
 export function saveAccounts(
   dbOrTx: DBOrTx,
-  mergeAccounts: ({}) => {},
+  mergeAccounts: (old: object) => Json,
   operatorId: string,
 ) {
   return inTransaction(dbOrTx, async tx => {

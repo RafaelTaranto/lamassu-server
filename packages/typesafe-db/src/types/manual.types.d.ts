@@ -1,5 +1,5 @@
 import type { ExpressionBuilder } from 'kysely'
-import {
+import type {
   CashInTxs,
   Customers,
   DB,
@@ -8,7 +8,7 @@ import {
   TransactionBatches,
   UnpairedDevices,
 } from './types.js'
-import { Nullable } from 'kysely/dist/esm/index.js'
+import type { Nullable } from 'kysely/dist/esm/index.js'
 
 export type CustomerEB = ExpressionBuilder<DB & { cst: Customers }, 'cst'>
 export type CustomerWithEditedDataEB = ExpressionBuilder<

@@ -3,11 +3,12 @@ import globals from 'globals'
 import pluginReact from 'eslint-plugin-react'
 import json from '@eslint/json'
 import { defineConfig, globalIgnores } from 'eslint/config'
+import ts from 'typescript-eslint'
 import reactCompiler from 'eslint-plugin-react-compiler'
 import eslintConfigPrettier from 'eslint-config-prettier/flat'
 import vitest from 'eslint-plugin-vitest'
 
-export default defineConfig([
+const jsConfig = defineConfig([
   globalIgnores([
     '**/.lamassu',
     '**/build',
@@ -16,6 +17,7 @@ export default defineConfig([
     '**/currencies.json',
     '**/countries.json',
     '**/languages.json',
+    'packages/typesafe-db/lib/**/*.js'
   ]),
   {
     files: ['**/*.{js,mjs,cjs,jsx}'],
@@ -69,3 +71,15 @@ export default defineConfig([
     },
   },
 ])
+
+export default ts.config(
+  jsConfig,
+  {
+    files: ['packages/typesafe-db/src/**/*.ts'],
+    extends: [ts.configs.recommended],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "warn", // TODO: remove this line
+      "@typescript-eslint/consistent-type-imports": "error",
+    },
+  },
+)

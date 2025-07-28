@@ -186,7 +186,7 @@ function searchCustomers(searchTerm: string, limit: number = 20): Promise<any> {
       db
         .selectFrom('customers as cst')
         .leftJoin('editedCustomerData as cstED', 'cstED.customerId', 'cst.id')
-        .select(({ eb, fn }) => [
+        .select(({ eb }) => [
           'cst.id',
           'cst.phone',
           'cst.email',
