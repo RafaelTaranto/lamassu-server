@@ -133,7 +133,7 @@ function checkStuckScreen(deviceEvents, machine) {
 }
 
 function transactionNotify(tx, rec) {
-  return settingsLoader.loadConfigWithAllTriggers().then(config => {
+  return settingsLoader.loadConfig().then(config => {
     const notifSettings = configManager.getGlobalNotifications(config)
     const highValueTx = tx.fiat.gt(
       notifSettings.highValueTransaction || Infinity,
@@ -351,7 +351,7 @@ function cashboxNotify(deviceId) {
 // for notification center, check if type of notification is active before calling the respective notify function
 const notifyIfActive = (type, fnName, ...args) => {
   return settingsLoader
-    .loadConfigWithAllTriggers()
+    .loadConfig()
     .then(config => {
       const notificationSettings =
         configManager.getGlobalNotifications(config).notificationCenter

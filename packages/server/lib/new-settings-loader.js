@@ -120,6 +120,8 @@ const _loadConfigTx = async (tx, schemaVersion) => {
 const loadConfigWithAllTriggers = schemaVersion =>
   inTransaction(async tx => _loadConfigTx(tx, schemaVersion), db)
 
+const loadConfig = schemaVersion => userConfig.loadConfig(db, schemaVersion)
+
 const load = version => userConfig.load(db, version)
 
 module.exports = {
@@ -127,6 +129,7 @@ module.exports = {
   saveAccounts,
   loadAccounts,
   showAccounts,
+  loadConfig,
   loadConfigWithAllTriggers,
   load,
 }
