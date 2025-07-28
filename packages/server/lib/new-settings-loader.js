@@ -120,19 +120,6 @@ const _loadConfigTx = async (tx, schemaVersion) => {
 const loadConfig = schemaVersion =>
   db.transaction().execute(async tx => _loadConfigTx(tx, schemaVersion))
 
-const loadWithAllTriggers = version =>
-  db
-    .transaction()
-    .execute(async tx => {
-      const settings = await userConfig.load(tx, version)
-      const triggers = await getAllComplianceTriggers(tx)
-      return [settings, triggers]
-    })
-    .then(([settings, triggers]) => {
-      settings.config = Object.assign(settings.config, { triggers })
-      return settings
-    })
-
 const load = version => userConfig.load(db, version)
 
 module.exports = {
@@ -141,6 +128,5 @@ module.exports = {
   loadAccounts,
   showAccounts,
   loadConfig,
-  loadWithAllTriggers,
   load,
 }

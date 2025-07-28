@@ -1,7 +1,4 @@
-const _ = require('lodash/fp')
-
 const logger = require('./logger')
-const configManager = require('./new-config-manager')
 const ph = require('./plugin-helper')
 
 const getPlugin = (settings, pluginCode) => {
@@ -47,21 +44,17 @@ const getStatus = (settings, service, customerId) => {
   }
 }
 
-const getStatusMap = (settings, customerExternalCompliance) => {
-  const triggers = configManager.getTriggers(settings.config)
-  const services = _.flow(_.map('externalService'), _.compact, _.uniq)(triggers)
-
-  const applicantPromises = _.map(service => {
-    return getStatus(settings, service, customerExternalCompliance)
-  })(services)
-
-  return Promise.all(applicantPromises).then(applicantResults => {
-    return _.reduce((map, result) => {
+const getStatusMap = (settings, externalComplianceTriggers, customerId) =>
+  Promise.all(
+    externalComplianceTriggers.map(({ externalService }) =>
+      getStatus(settings, externalService, customerId),
+    ),
+  ).then(applicantResults =>
+    applicantResults.reduce((map, result) => {
       if (result.status) map[result.service] = result.status
       return map
-    }, {})(applicantResults)
-  })
-}
+    }, {}),
+  )
 
 const createApplicant = (settings, externalService, customerId) => {
   const { plugin, account } = getPlugin(settings, externalService)

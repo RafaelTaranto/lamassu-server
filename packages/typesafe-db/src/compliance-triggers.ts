@@ -1,6 +1,7 @@
 import type { Insertable } from 'kysely'
+
 import type { DBOrTx } from './db.js'
-import type { ComplianceTriggers } from './types/types.js'
+import type { ComplianceTriggers, RequirementType } from './types/types.js'
 
 type ComplianceTriggerInsert = Insertable<ComplianceTriggers>
 
@@ -85,5 +86,16 @@ export function deleteComplianceTriggersByCustomInfoRequestId(
   return dbOrTx
     .deleteFrom('complianceTriggers')
     .where('customInfoRequestId', '=', customInfoRequestId)
+    .execute()
+}
+
+export function getAllComplianceTriggersByRequirementType(
+  dbOrTx: DBOrTx,
+  requirementType: RequirementType,
+) {
+  return dbOrTx
+    .selectFrom('complianceTriggers')
+    .selectAll()
+    .where('requirementType', '=', requirementType)
     .execute()
 }
