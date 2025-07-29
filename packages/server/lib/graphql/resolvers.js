@@ -78,7 +78,7 @@ const buildTriggers = allTriggers => {
   // BACKWARDS_COMPATIBILITY 11
   // requirement was renamed to requirementType in v12
   allTriggers = allTriggers.map(t =>
-    Object.assign(t, { requirement: t.requirementType }),
+    Object.assign({}, t, { requirement: t.requirementType }),
   )
 
   const isCustomTrigger = ({ requirementType, customInfoRequestId }) =>
@@ -95,7 +95,7 @@ const buildTriggers = allTriggers => {
     const trigger = customTriggers[idx]
     // make sure we aren't attaching the details to the wrong trigger
     return trigger.customInfoRequestId === customInfoRequest.id
-      ? [Object.assign(trigger, { customInfoRequest })]
+      ? [Object.assign({}, trigger, { customInfoRequest })]
       : []
   }
 
