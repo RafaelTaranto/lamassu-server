@@ -10,6 +10,7 @@ const complianceTriggers = require('./compliance-triggers')
 const ofac = require('./ofac/index')
 const ofacUpdate = require('./ofac/update')
 const operator = require('./operator')
+const machineSettings = require('./machine-settings')
 
 const KEY_PATH = process.env.KEY_PATH
 const CERT_PATH = process.env.CERT_PATH
@@ -30,12 +31,15 @@ function run() {
     }
 
     const runner = () => {
-      complianceTriggers
-        .getAllComplianceTriggers()
-        .then(triggers => {
+      Promise.all([
+        complianceTriggers.getAllComplianceTriggers().then(loadSanctions),
+        machineSettings.reloadAll(),
+      ])
+        .then(() => {
           clearInterval(handler)
-          return loadSanctions(triggers).then(startServer).then(resolve)
+          startServer()
         })
+        .then(resolve)
         .catch(errorHandler)
     }
 
