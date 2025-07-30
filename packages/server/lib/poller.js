@@ -2,6 +2,11 @@ const fs = require('fs/promises')
 const path = require('path')
 const _ = require('lodash/fp')
 const Queue = require('queue-promise')
+const {
+  db: { default: kdb, inTransaction },
+  complianceTriggers: { getAllComplianceTriggersByRequirementType },
+  userConfig,
+} = require('typesafe-db')
 const plugins = require('./plugins')
 const notifier = require('./notifier')
 const T = require('./time')
@@ -11,9 +16,7 @@ const cashInTx = require('./cash-in/cash-in-tx')
 const sanctionsUpdater = require('./ofac/update')
 const sanctions = require('./ofac/index')
 const coinAtmRadar = require('./coinatmradar/coinatmradar')
-const configManager = require('./new-config-manager')
 const complianceTriggers = require('./compliance-triggers')
-const settingsLoader = require('./new-settings-loader')
 const machineLoader = require('./machine-loader')
 const NodeCache = require('node-cache')
 const db = require('./db')
@@ -82,10 +85,25 @@ db.connect({ direct: true })
   })
   .catch(console.error)
 
-function reload() {
-  return settingsLoader.loadWithAllTriggers().then(settings => {
+const loadFromDatabase = () =>
+  inTransaction(
+    async tx => [
+      await userConfig.load(tx),
+      await getAllComplianceTriggersByRequirementType(tx, 'sanctions'),
+    ],
+    kdb,
+  ).then(([settings, complianceTriggers]) => {
     const pi = plugins(settings)
-    cachedVariables.set('public', { settings, pi, isReloading: false })
+    cachedVariables.set('public', {
+      settings,
+      pi,
+      complianceTriggers,
+      isReloading: false,
+    })
+  })
+
+function reload() {
+  return loadFromDatabase().then(() => {
     logger.debug(`Settings for schema 'public' reloaded in poller`)
     return updateAndLoadSanctions()
   })
@@ -98,6 +116,9 @@ function settings() {
   return cachedVariables.get('public').settings
 }
 
+const getComplianceTriggers = () =>
+  cachedVariables.get('public').complianceTriggers
+
 function initialSanctionsDownload() {
   const structs = sanctions.getStructs()
   const isEmptyStructs =
@@ -109,8 +130,7 @@ function initialSanctionsDownload() {
 }
 
 function updateAndLoadSanctions() {
-  const triggers = configManager.getTriggers(settings().config)
-  const hasSanctions = complianceTriggers.hasSanctions(triggers)
+  const hasSanctions = complianceTriggers.hasSanctions(getComplianceTriggers())
 
   if (!hasSanctions) return Promise.resolve()
 
@@ -212,13 +232,8 @@ const cleanOldFailedQRScans = () => {
 }
 
 function setup() {
-  return settingsLoader
-    .loadWithAllTriggers()
-    .then(settings => {
-      const pi = plugins(settings)
-      cachedVariables.set('public', { settings, pi, isReloading: false })
-      return doPolling()
-    })
+  return loadFromDatabase()
+    .then(() => doPolling())
     .catch(console.error)
 }
 
