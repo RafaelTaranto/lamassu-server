@@ -91,7 +91,7 @@ const GroupModal = ({ onClose, deviceIds, onSuccess }) => {
             {error && (
               <ErrorMessage>
                 {error.graphQLErrors?.[0]?.extensions?.code ===
-                'GROUP_NOT_FOUND'
+                'RESOURCE_NOT_FOUND'
                   ? 'The selected group no longer exists'
                   : 'Failed to move machine to group'}
               </ErrorMessage>
