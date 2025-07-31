@@ -163,6 +163,11 @@ const TriggerSets = () => {
         accessorKey: 'name',
         size: 200,
       },
+      {
+        header: 'ID',
+        accessorKey: 'id',
+        size: 200,
+      },
     ],
     [],
   )
