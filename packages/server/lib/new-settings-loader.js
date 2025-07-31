@@ -3,6 +3,7 @@ const crypto = require('crypto')
 const _ = require('lodash/fp')
 const {
   db: { default: db, inTransaction },
+  notify: { notifyReload },
   userConfig,
 } = require('typesafe-db')
 
@@ -105,7 +106,7 @@ const saveConfig = config =>
         const newConfig = addTermsHash(_.assign(currentConfig, config))
         delete newConfig.triggers
         await userConfig.insertConfigRow(tx, { config: newConfig })
-        await userConfig.notifyReload(tx, operatorId)
+        await notifyReload(tx, operatorId)
       }),
     )
     .catch(console.error)
