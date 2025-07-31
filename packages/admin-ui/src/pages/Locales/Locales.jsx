@@ -25,7 +25,7 @@ import {
 
 const GET_DATA = gql`
   query getData {
-    configWithAllTriggers
+    config
     accounts
     accountsConfig {
       code
@@ -118,12 +118,8 @@ const Locales = ({ name: SCREEN_KEY }) => {
 
   const [dataToSave, setDataToSave] = useState(null)
 
-  const config =
-    data?.configWithAllTriggers &&
-    fromNamespace(SCREEN_KEY)(data.configWithAllTriggers)
-  const wallets =
-    data?.configWithAllTriggers &&
-    fromNamespace(namespaces.WALLETS)(data.configWithAllTriggers)
+  const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)
+  const wallets = data?.config && fromNamespace(namespaces.WALLETS)(data.config)
 
   const accountsConfig = data?.accountsConfig
   const accounts = data?.accounts ?? []
@@ -247,7 +243,7 @@ const Locales = ({ name: SCREEN_KEY }) => {
           save={wizardSave}
           error={error?.message}
           cryptoCurrencies={cryptoCurrencies}
-          userAccounts={data?.configWithAllTriggers?.accounts}
+          userAccounts={data?.config?.accounts}
           accounts={accounts}
           accountsConfig={accountsConfig}
         />

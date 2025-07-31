@@ -40,7 +40,7 @@ const GET_INFO = gql`
       numberOfCassettes
       numberOfRecyclers
     }
-    configWithAllTriggers
+    config
   }
 `
 
@@ -58,13 +58,9 @@ const CashOut = ({ name: SCREEN_KEY }) => {
     return saveConfig({ variables: { config } })
   }
 
-  const config =
-    data?.configWithAllTriggers &&
-    fromNamespace(SCREEN_KEY)(data.configWithAllTriggers)
+  const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)
 
-  const locale =
-    data?.configWithAllTriggers &&
-    fromNamespace('locale')(data.configWithAllTriggers)
+  const locale = data?.config && fromNamespace('locale')(data.config)
   const machines = data?.machines ?? []
 
   const onToggle = id => {

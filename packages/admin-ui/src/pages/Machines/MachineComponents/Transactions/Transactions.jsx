@@ -53,7 +53,7 @@ const GET_TRANSACTIONS = gql`
 
 const GET_DATA = gql`
   query getData {
-    configWithAllTriggers
+    config
   }
 `
 
@@ -72,10 +72,7 @@ const Transactions = ({ id }) => {
   )
 
   const { data: configData, loading: configLoading } = useQuery(GET_DATA)
-  const timezone = R.path(
-    ['configWithAllTriggers', 'locale_timezone'],
-    configData,
-  )
+  const timezone = R.path(['config', 'locale_timezone'], configData)
 
   const loading = txLoading || configLoading
 

@@ -17,7 +17,7 @@ const GET_DATA = gql`
       code
       display
     }
-    configWithAllTriggers
+    config
     accountsConfig {
       code
       display
@@ -31,7 +31,7 @@ const Footer = () => {
   const { data } = useQuery(GET_DATA)
 
   const withCommissions = R.path(['cryptoRates', 'withCommissions'])(data) ?? {}
-  const config = R.path(['configWithAllTriggers'])(data) ?? {}
+  const config = R.path(['config'])(data) ?? {}
   // const canExpand = R.keys(withCommissions).length > 4
 
   const wallets = fromNamespace('wallets')(config)

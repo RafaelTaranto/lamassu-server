@@ -15,7 +15,7 @@ import _schemas from './schemas'
 const GET_INFO = gql`
   query getData {
     accounts
-    configWithAllTriggers
+    config
   }
 `
 
@@ -58,7 +58,7 @@ const Services = () => {
 
   const updateSettings = element => {
     const settings = element.settings
-    const field = R.lensPath(['configWithAllTriggers', settings.field])
+    const field = R.lensPath(['config', settings.field])
     const isEnabled = R.isNil(settings.requirement)
       ? true
       : R.equals(R.view(field, data), settings.requirement)

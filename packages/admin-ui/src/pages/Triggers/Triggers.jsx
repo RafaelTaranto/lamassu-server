@@ -33,7 +33,7 @@ const SAVE_ACCOUNT = gql`
 
 const GET_CONFIG = gql`
   query getData($complianceTriggerSetId: ID!) {
-    configWithAllTriggers
+    config
     accounts
     accountsConfig {
       code
@@ -159,7 +159,7 @@ const Triggers = () => {
     cir => cir?.enabled,
   )
 
-  const config = data?.configWithAllTriggers ?? {}
+  const config = data?.config ?? {}
   const currency = fromNamespace(namespaces.LOCALE)(config)?.fiatCurrency
   const emailAuth = config?.triggersConfig_customerAuthentication === 'EMAIL'
 

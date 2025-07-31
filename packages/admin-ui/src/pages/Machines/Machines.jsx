@@ -54,7 +54,7 @@ const GET_INFO = gql`
       deviceId
       created
     }
-    configWithAllTriggers
+    config
   }
 `
 
@@ -82,7 +82,7 @@ const MachineRoute = () => {
 }
 
 const Machines = ({ data, refetch }) => {
-  const config = R.path(['configWithAllTriggers'])(data) ?? {}
+  const config = R.path(['config'])(data) ?? {}
   const timezone = R.path(['locale_timezone'], config) ?? {}
 
   const machine = R.path(['machine'])(data) ?? {}

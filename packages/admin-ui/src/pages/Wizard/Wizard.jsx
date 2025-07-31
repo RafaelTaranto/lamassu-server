@@ -12,7 +12,7 @@ import Footer from './components/Footer'
 
 const GET_DATA = gql`
   query getData {
-    configWithAllTriggers
+    config
     accounts
     cryptoCurrencies {
       code
@@ -35,10 +35,7 @@ const Wizard = () => {
     return <></>
   }
 
-  const wizardStep = getWizardStep(
-    data?.configWithAllTriggers,
-    data?.cryptoCurrencies,
-  )
+  const wizardStep = getWizardStep(data?.config, data?.cryptoCurrencies)
 
   if (wizardStep === 0) {
     setWizardTested(true)

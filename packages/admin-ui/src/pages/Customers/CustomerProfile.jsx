@@ -33,7 +33,7 @@ import { getFormattedPhone, getName, formatPhotosData } from './helper'
 
 const GET_CUSTOMER = gql`
   query customer($customerId: ID!) {
-    configWithAllTriggers
+    config
     transactions(customerId: $customerId, limit: 20) {
       txClass
       id
@@ -451,7 +451,7 @@ const CustomerProfile = memo(() => {
 
   const locale = fromNamespace(
     namespaces.LOCALE,
-    customerResponse?.configWithAllTriggers ?? {},
+    customerResponse?.config ?? {},
   )
   const customerData = R.path(['customer'])(customerResponse) ?? []
   const rawTransactions = R.path(['transactions'])(customerResponse) ?? []

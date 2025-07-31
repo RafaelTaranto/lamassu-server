@@ -47,7 +47,7 @@ const GET_DATA = gql`
       name
       rate
     }
-    configWithAllTriggers
+    config
   }
 `
 
@@ -63,9 +63,7 @@ const SystemPerformance = () => {
       from: twoMonthsAgo.toISOString(),
     },
   })
-  const { fiatCurrency, timezone } = fromNamespace('locale')(
-    data?.configWithAllTriggers,
-  )
+  const { fiatCurrency, timezone } = fromNamespace('locale')(data?.config)
   const allTransactions = data?.transactions ?? []
 
   const NOW = Date.now()

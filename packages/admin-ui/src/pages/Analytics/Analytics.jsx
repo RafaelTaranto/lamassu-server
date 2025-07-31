@@ -78,7 +78,7 @@ const GET_TRANSACTIONS = gql`
 
 const GET_DATA = gql`
   query getData {
-    configWithAllTriggers
+    config
     machines {
       name
       deviceId
@@ -145,7 +145,7 @@ const Analytics = () => {
 
   const transactions = R.path(['transactions'])(txResponse) ?? []
   const machines = R.path(['machines'])(configResponse) ?? []
-  const config = R.path(['configWithAllTriggers'])(configResponse) ?? []
+  const config = R.path(['config'])(configResponse) ?? []
   const rates = R.path(['fiatRates'])(configResponse) ?? []
   const fiatLocale = fromNamespace('locale')(config).fiatCurrency
 

@@ -23,7 +23,7 @@ const SAVE_CONFIG = gql`
 
 const GET_INFO = gql`
   query getData {
-    configWithAllTriggers
+    config
   }
 `
 
@@ -75,8 +75,7 @@ const AdvancedTriggersSettings = memo(() => {
   }
 
   const requirementsData =
-    data?.configWithAllTriggers &&
-    fromNamespace(SCREEN_KEY)(data?.configWithAllTriggers)
+    data?.config && fromNamespace(SCREEN_KEY)(data?.config)
   const requirementsDefaults =
     requirementsData && !R.isEmpty(requirementsData)
       ? requirementsData

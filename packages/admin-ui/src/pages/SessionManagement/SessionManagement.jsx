@@ -30,7 +30,7 @@ const DELETE_SESSION = gql`
 
 const GET_DATA = gql`
   query getData {
-    configWithAllTriggers
+    config
   }
 `
 
@@ -46,10 +46,7 @@ const SessionManagement = () => {
   })
 
   const { data: configResponse, loading: configLoading } = useQuery(GET_DATA)
-  const timezone = R.path(
-    ['configWithAllTriggers', 'locale_timezone'],
-    configResponse,
-  )
+  const timezone = R.path(['config', 'locale_timezone'], configResponse)
 
   const loading = sessionsLoading || configLoading
 

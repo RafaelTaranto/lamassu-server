@@ -92,7 +92,7 @@ const GET_MACHINES = gql`
 
 const GET_DATA = gql`
   query getData {
-    configWithAllTriggers
+    config
   }
 `
 
@@ -209,10 +209,7 @@ const MachineStatus = () => {
     [machineGroupsResponse],
   )
 
-  const timezone = R.path(
-    ['configWithAllTriggers', 'locale_timezone'],
-    configResponse,
-  )
+  const timezone = R.path(['config', 'locale_timezone'], configResponse)
 
   const table = useMaterialReactTable({
     ...defaultMaterialTableOpts,

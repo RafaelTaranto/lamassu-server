@@ -10,7 +10,7 @@ import SwitchRow from './components/SwitchRow.jsx'
 
 const GET_CONFIG = gql`
   query getData {
-    configWithAllTriggers
+    config
   }
 `
 
@@ -44,8 +44,7 @@ const ReceiptPrinting = memo(({ wizard }) => {
     })
 
   const receiptPrintingConfig =
-    data?.configWithAllTriggers &&
-    fromNamespace(namespaces.RECEIPT, data.configWithAllTriggers)
+    data?.config && fromNamespace(namespaces.RECEIPT, data.config)
   if (!receiptPrintingConfig) return null
 
   return (

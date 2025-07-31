@@ -21,7 +21,7 @@ const SAVE_CONFIG = gql`
 `
 const GET_INFO = gql`
   query getData {
-    configWithAllTriggers
+    config
     cryptoCurrencies {
       code
       display
@@ -59,11 +59,10 @@ const AdvancedWallet = () => {
 
   const cryptoCurrencies = data?.cryptoCurrencies ?? []
   const fiatCurrency =
-    data?.configWithAllTriggers &&
-    fromNamespace('locale')(data.configWithAllTriggers).fiatCurrency
+    data?.config && fromNamespace('locale')(data.config).fiatCurrency
 
   const AdvancedWalletSettings = fromNamespace(ADVANCED)(
-    fromNamespace(SCREEN_KEY)(data?.configWithAllTriggers),
+    fromNamespace(SCREEN_KEY)(data?.config),
   )
 
   const AdvancedWalletSettingsOverrides = AdvancedWalletSettings.overrides ?? []

@@ -30,7 +30,7 @@ import CustomInfoRequests from './CustomInfoRequests'
 
 const GET_CONFIG = gql`
   query getComplianceTriggerSets {
-    configWithAllTriggers
+    config
     complianceTriggerSets {
       id
       name
@@ -113,8 +113,7 @@ const TriggerSets = () => {
   })
 
   const rejectAddressReuse = (
-    data?.configWithAllTriggers &&
-    fromNamespace('compliance')(data.configWithAllTriggers)
+    data?.config && fromNamespace('compliance')(data.config)
   )?.rejectAddressReuse
   const enabledCustomInfoRequests = (data?.customInfoRequests ?? []).filter(
     cir => cir?.enabled,

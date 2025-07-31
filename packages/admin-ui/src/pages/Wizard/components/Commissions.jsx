@@ -9,7 +9,7 @@ import { fromNamespace, toNamespace, namespaces } from '../../../utils/config'
 
 const GET_DATA = gql`
   query getData {
-    configWithAllTriggers
+    config
   }
 `
 const SAVE_CONFIG = gql`
@@ -30,7 +30,7 @@ function Commissions({ isActive, doContinue }) {
     return saveConfig({ variables: { config } })
   }
 
-  const locale = fromNamespace(namespaces.LOCALE)(data?.configWithAllTriggers)
+  const locale = fromNamespace(namespaces.LOCALE)(data?.config)
   const fiatCurrency = locale?.fiatCurrency
 
   return (

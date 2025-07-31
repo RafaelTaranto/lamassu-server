@@ -12,7 +12,6 @@ const {
   getTermsConditions,
   setTermsConditions,
 } = require('./new-config-manager')
-const { getAllComplianceTriggers } = require('./compliance-triggers')
 
 const PASSWORD_FILLED = 'PASSWORD_FILLED'
 const SECRET_FIELDS = [
@@ -102,23 +101,13 @@ const saveConfig = config =>
   getOperatorId('middleware')
     .then(operatorId =>
       inTransaction(async tx => {
-        const currentConfig = await _loadConfigTx(tx)
+        const currentConfig = await userConfig.loadConfig(tx)
         const newConfig = addTermsHash(_.assign(currentConfig, config))
-        delete newConfig.triggers
         await userConfig.insertConfigRow(tx, { config: newConfig })
         await notifyReload(tx, operatorId)
       }, db),
     )
     .catch(console.error)
-
-const _loadConfigTx = async (tx, schemaVersion) => {
-  const config = await userConfig.loadConfig(tx, schemaVersion)
-  const triggers = await getAllComplianceTriggers(tx)
-  return Object.assign(config, { triggers })
-}
-
-const loadConfigWithAllTriggers = schemaVersion =>
-  inTransaction(async tx => _loadConfigTx(tx, schemaVersion), db)
 
 const loadConfig = schemaVersion => userConfig.loadConfig(db, schemaVersion)
 
@@ -130,6 +119,5 @@ module.exports = {
   loadAccounts,
   showAccounts,
   loadConfig,
-  loadConfigWithAllTriggers,
   load,
 }
