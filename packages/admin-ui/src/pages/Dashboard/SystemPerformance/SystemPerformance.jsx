@@ -63,10 +63,9 @@ const SystemPerformance = () => {
       from: twoMonthsAgo.toISOString(),
     },
   })
-  const fiatLocale = fromNamespace('locale')(
+  const { fiatCurrency, timezone } = fromNamespace('locale')(
     data?.configWithAllTriggers,
-  ).fiatCurrency
-  const timezone = fromNamespace('locale')(data?.configWithAllTriggers).timezone
+  )
   const allTransactions = data?.transactions ?? []
 
   const NOW = Date.now()
@@ -97,14 +96,14 @@ const SystemPerformance = () => {
   }
 
   const convertFiatToLocale = item => {
-    if (item.fiatCode === fiatLocale)
+    if (item.fiatCode === fiatCurrency)
       return {
         ...item,
         fiat: new BigNumber(item.fiat),
         profit: new BigNumber(item.profit),
       }
     const itemRate = R.find(R.propEq(item.fiatCode, 'code'))(data.fiatRates)
-    const localeRate = R.find(R.propEq(fiatLocale, 'code'))(data.fiatRates)
+    const localeRate = R.find(R.propEq(fiatCurrency, 'code'))(data.fiatRates)
     const multiplier = localeRate.rate / itemRate.rate
     return {
       ...item,
@@ -191,7 +190,7 @@ const SystemPerformance = () => {
             <InfoWithLabel info={getNumTransactions()} label={'transactions'} />
             <InfoWithLabel
               info={getFiatVolume()}
-              label={`${data?.configWithAllTriggers.locale_fiatCurrency} volume`}
+              label={`${fiatCurrency} volume`}
             />
           </div>
           <div className="h-62">
@@ -237,7 +236,7 @@ const SystemPerformance = () => {
               <div className="flex justify-between mt-6 mr-7 -mb-8 ml-4 relative">
                 <Info2 noMargin>
                   {`${getProfit(transactionsToShow).toFormat(2)} ${
-                    data?.configWithAllTriggers.locale_fiatCurrency
+                    fiatCurrency
                   }`}
                 </Info2>
                 <Info2 noMargin className={classnames(percentageClasses)}>
