@@ -1,5 +1,4 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
-import * as R from 'ramda'
 import React from 'react'
 import Section from '../../../components/layout/Section'
 import TitleSection from '../../../components/layout/TitleSection'
@@ -31,11 +30,8 @@ function Commissions({ isActive, doContinue }) {
     return saveConfig({ variables: { config } })
   }
 
-  const currency = R.path(['fiatCurrency'])(
-    fromNamespace(namespaces.LOCALE)(data?.configWithAllTriggers),
-  )
-
   const locale = fromNamespace(namespaces.LOCALE)(data?.configWithAllTriggers)
+  const fiatCurrency = locale?.fiatCurrency
 
   return (
     <div className="w-[1132px] h-full mx-auto flex-1 flex flex-col">
@@ -52,7 +48,7 @@ function Commissions({ isActive, doContinue }) {
           save={save}
           validationSchema={getSchema(locale)}
           data={[]}
-          elements={mainFields(currency)}
+          elements={mainFields(fiatCurrency)}
         />
       </Section>
     </div>
