@@ -248,12 +248,6 @@ const DISABLE_TEST_CUSTOMER = gql`
   }
 `
 
-const GET_DATA = gql`
-  query getData {
-    configWithAllTriggers
-  }
-`
-
 const SET_CUSTOM_ENTRY = gql`
   mutation addCustomField($customerId: ID!, $label: String!, $value: String!) {
     addCustomField(customerId: $customerId, label: $label, value: $value)
@@ -300,8 +294,6 @@ const CustomerProfile = memo(() => {
     variables: { customerId },
     skip: !customerId,
   })
-
-  const { data: configResponse, loading: configLoading } = useQuery(GET_DATA)
 
   const { data: activeCustomRequests } = useQuery(GET_ACTIVE_CUSTOM_REQUESTS, {
     variables: {
@@ -457,8 +449,10 @@ const CustomerProfile = memo(() => {
 
   const onClickSidebarItem = code => setClickedItem(code)
 
-  const configData = R.path(['configWithAllTriggers'])(customerResponse) ?? []
-  const locale = configData && fromNamespace(namespaces.LOCALE, configData)
+  const locale = fromNamespace(
+    namespaces.LOCALE,
+    customerResponse?.configWithAllTriggers ?? {},
+  )
   const customerData = R.path(['customer'])(customerResponse) ?? []
   const rawTransactions = R.path(['transactions'])(customerResponse) ?? []
   const sortedTransactions = R.sort(R.descend(R.prop('cryptoAtoms')))(
@@ -494,12 +488,9 @@ const CustomerProfile = memo(() => {
       ]
     : []
 
-  const loading = customerLoading || configLoading
+  const loading = customerLoading
 
-  const timezone = R.path(
-    ['configWithAllTriggers', 'locale_timezone'],
-    configResponse,
-  )
+  const timezone = locale.timezone
 
   const customInfoRequirementOptions =
     activeCustomRequests?.customInfoRequests?.map(it => ({
