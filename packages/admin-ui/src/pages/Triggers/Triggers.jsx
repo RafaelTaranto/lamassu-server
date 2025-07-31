@@ -167,6 +167,7 @@ const Triggers = () => {
     data?.accountsConfig || [],
   )
   const triggers = data?.complianceTriggers ?? []
+  const complianceTriggerSetName = data?.complianceTriggerSetById?.name
 
   const [saveAccount] = useMutation(SAVE_ACCOUNT, {
     onCompleted: () => {
@@ -234,11 +235,11 @@ const Triggers = () => {
             Trigger sets
           </Label1>
           <Label2 noMargin className="cursor-pointer text-comet">
-            {data?.complianceTriggerSetById?.name}
+            {complianceTriggerSetName}
           </Label2>
         </Breadcrumbs>
       )}
-      <Title>Compliance Triggers</Title>
+      <Title>“{complianceTriggerSetName}” Compliance Triggers</Title>
       {!loading && (
         <div className="flex justify-end">
           <Link color="primary" onClick={openNewTriggerWizard}>
