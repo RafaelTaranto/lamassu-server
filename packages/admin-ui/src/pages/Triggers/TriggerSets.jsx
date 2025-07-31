@@ -296,12 +296,7 @@ const TriggerSets = () => {
         />
       )}
 
-      {!loading && subMenu === 'advancedSettings' && (
-        <AdvancedTriggers
-          error={errorMsg}
-          save={saveConfig}
-          data={data}></AdvancedTriggers>
-      )}
+      {!loading && subMenu === 'advancedSettings' && <AdvancedTriggers />}
 
       <TriggerSetsModal
         showModal={createModalOpen}
