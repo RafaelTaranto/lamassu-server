@@ -177,6 +177,7 @@ const TriggerSets = () => {
     columns,
     data: complianceTriggerSets,
     enableRowActions: true,
+    enableSorting: false,
     positionActionsColumn: 'last',
     renderRowActionMenuItems: ({ row, table, closeMenu }) => [
       <MRT_ActionMenuItem //or just use a normal MUI MenuItem component

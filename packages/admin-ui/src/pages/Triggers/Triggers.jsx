@@ -102,6 +102,7 @@ const TriggerTable = ({
     columns,
     data: triggers,
     enableRowActions: true,
+    enableSorting: false,
     positionActionsColumn: 'last',
     renderRowActionMenuItems: ({ row, table }) => [
       <MRT_ActionMenuItem
