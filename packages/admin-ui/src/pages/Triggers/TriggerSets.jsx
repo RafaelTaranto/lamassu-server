@@ -191,7 +191,7 @@ const TriggerSets = () => {
           setTriggerSetToDelete(row.original)
           setDeleteDialogOpen(true)
           setErrorMsg('')
-          setActionMenuClose(() => closeMenu)
+          setActionMenuClose(closeMenu)
         }}
         table={table}
       />,
