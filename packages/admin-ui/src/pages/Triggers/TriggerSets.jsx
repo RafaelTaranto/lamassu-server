@@ -252,6 +252,18 @@ const TriggerSets = () => {
                   label="Reject Address Reuse"
                 />
               </HelpTooltip>
+
+              {!loading && (
+                <Link
+                  className="ml-6"
+                  color="primary"
+                  onClick={() => {
+                    resetCreateError()
+                    setCreateModalOpen(true)
+                  }}>
+                  Add new trigger set
+                </Link>
+              )}
             </div>
           </div>
         )}
@@ -267,21 +279,7 @@ const TriggerSets = () => {
           )}
       </TitleSection>
 
-      {!loading && !subMenu && (
-        <>
-          <div className="flex justify-end">
-            <Link
-              color="primary"
-              onClick={() => {
-                resetCreateError()
-                setCreateModalOpen(true)
-              }}>
-              Add new trigger set
-            </Link>
-          </div>
-          <MaterialReactTable table={table} />
-        </>
-      )}
+      {!loading && !subMenu && <MaterialReactTable table={table} />}
 
       {!loading && subMenu === 'customInfoRequests' && (
         <CustomInfoRequests
