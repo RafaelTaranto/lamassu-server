@@ -34,7 +34,7 @@ const SAVE_ACCOUNT = gql`
 
 const GET_INFO = gql`
   query getData {
-    config
+    configWithAllTriggers
     accounts
     accountsConfig {
       code
@@ -84,9 +84,12 @@ const Wallet = ({ name: SCREEN_KEY }) => {
   }
 
   const fiatCurrency =
-    data?.config && fromNamespace(LOCALE)(data.config).fiatCurrency
+    data?.configWithAllTriggers &&
+    fromNamespace(LOCALE)(data.configWithAllTriggers).fiatCurrency
 
-  const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)
+  const config =
+    data?.configWithAllTriggers &&
+    fromNamespace(SCREEN_KEY)(data.configWithAllTriggers)
   const accountsConfig = data?.accountsConfig
   const cryptoCurrencies = data?.cryptoCurrencies ?? []
   const accounts = data?.accounts ?? []
@@ -174,7 +177,7 @@ const Wallet = ({ name: SCREEN_KEY }) => {
               error={error?.message}
               cryptoCurrencies={cryptoCurrencies}
               fiatCurrency={fiatCurrency}
-              userAccounts={data?.config?.accounts}
+              userAccounts={data?.configWithAllTriggers?.accounts}
               accounts={accounts}
               accountsConfig={accountsConfig}
             />

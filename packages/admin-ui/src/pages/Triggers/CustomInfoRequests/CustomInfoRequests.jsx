@@ -33,7 +33,7 @@ const constraintTypeDisplay = {
 
 const GET_DATA = gql`
   query getData {
-    config
+    configWithAllTriggers
   }
 `
 
@@ -124,7 +124,7 @@ const CustomInfoRequests = ({
     refetchQueries: ['getData'].concat(refetchQueries),
   })
 
-  const config = R.path(['config'])(configData) ?? []
+  const config = R.path(['configWithAllTriggers'])(configData) ?? []
 
   const handleDelete = id => {
     removeEntry({

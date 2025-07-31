@@ -25,7 +25,7 @@ import TransactionAlerts from './sections/TransactionAlerts'
 
 const GET_INFO = gql`
   query getData {
-    config
+    configWithAllTriggers
     accountsConfig {
       code
       display
@@ -95,7 +95,7 @@ const Notifications = ({
     onError: error => setError(error),
   })
 
-  const config = fromNamespace(SCREEN_KEY)(data?.config)
+  const config = fromNamespace(SCREEN_KEY)(data?.configWithAllTriggers)
   const machines = data?.machines
   const accountsConfig = data?.accountsConfig
   const cryptoCurrencies = data?.cryptoCurrencies
@@ -103,7 +103,7 @@ const Notifications = ({
   const mailgunAvailable = R.has('mailgun', data?.accounts || {})
 
   const currency = R.path(['fiatCurrency'])(
-    fromNamespace(namespaces.LOCALE)(data?.config),
+    fromNamespace(namespaces.LOCALE)(data?.configWithAllTriggers),
   )
 
   const save = R.curry((section, rawConfig) => {
@@ -204,7 +204,9 @@ const Notifications = ({
               <FiatBalanceAlerts section="fiat" max={100} fieldWidth={50} />
               {displayOverrides && (
                 <FiatBalanceOverrides
-                  config={fromNamespace(namespaces.CASH_OUT)(data?.config)}
+                  config={fromNamespace(namespaces.CASH_OUT)(
+                    data?.configWithAllTriggers,
+                  )}
                   section="fiat"
                 />
               )}

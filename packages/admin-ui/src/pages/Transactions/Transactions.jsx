@@ -39,7 +39,7 @@ const NUM_LOG_RESULTS = 1000
 
 const GET_DATA = gql`
   query getData {
-    config
+    configWithAllTriggers
     machines {
       name
       deviceId
@@ -214,7 +214,10 @@ const Transactions = () => {
     })
   }, [pagination, columnFilters])
 
-  const timezone = R.path(['config', 'locale_timezone'], configResponse)
+  const timezone = R.path(
+    ['configWithAllTriggers', 'locale_timezone'],
+    configResponse,
+  )
 
   const machines = configResponse?.machines || []
   const cryptoCurrencies = configResponse?.cryptoCurrencies || []

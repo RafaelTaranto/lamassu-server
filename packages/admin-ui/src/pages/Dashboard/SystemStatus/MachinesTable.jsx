@@ -21,7 +21,7 @@ const PERCENTAGE_THRESHOLD = 20
 
 const GET_CONFIG = gql`
   query getConfig {
-    config
+    configWithAllTriggers
   }
 `
 
@@ -44,7 +44,7 @@ const MachinesTable = ({ machines = [], numToRender }) => {
   const { data } = useQuery(GET_CONFIG)
   const fillingPercentageSettings = fromNamespace(
     'notifications',
-    R.path(['config'], data) ?? {},
+    R.path(['configWithAllTriggers'], data) ?? {},
   )
 
   const getPercent = (notes, capacity = 500) => {

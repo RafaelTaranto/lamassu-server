@@ -9,7 +9,7 @@ import Header from './components/Header.jsx'
 
 const GET_CONFIG = gql`
   query getData {
-    config
+    configWithAllTriggers
   }
 `
 
@@ -32,7 +32,8 @@ const CoinATMRadar = memo(({ wizard }) => {
     })
 
   const coinAtmRadarConfig =
-    data?.config && fromNamespace(namespaces.COIN_ATM_RADAR, data.config)
+    data?.configWithAllTriggers &&
+    fromNamespace(namespaces.COIN_ATM_RADAR, data.configWithAllTriggers)
   if (!coinAtmRadarConfig) return null
 
   return (

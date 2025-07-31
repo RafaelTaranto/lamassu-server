@@ -49,7 +49,7 @@ const SAVE_CONFIG = gql`
 
 const GET_INFO = gql`
   query getData {
-    config
+    configWithAllTriggers
   }
 `
 
@@ -155,7 +155,8 @@ const Blacklist = () => {
   const blacklistData = R.path(['blacklist'])(blacklistResponse) ?? []
 
   const complianceConfig =
-    configData?.config && fromNamespace('compliance')(configData.config)
+    configData?.configWithAllTriggers &&
+    fromNamespace('compliance')(configData.configWithAllTriggers)
 
   const rejectAddressReuse = !!complianceConfig?.rejectAddressReuse
 

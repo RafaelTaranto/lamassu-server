@@ -15,7 +15,7 @@ import classes from './Twilio.module.css'
 
 const GET_CONFIG = gql`
   {
-    config
+    configWithAllTriggers
     accounts
   }
 `

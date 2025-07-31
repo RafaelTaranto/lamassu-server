@@ -28,7 +28,7 @@ const GET_SMS_NOTICES = gql`
       enabled
       allowToggle
     }
-    config
+    configWithAllTriggers
   }
 `
 
@@ -124,7 +124,9 @@ const SMSNotices = () => {
   const { data: messagesData, loading: messagesLoading } =
     useQuery(GET_SMS_NOTICES)
 
-  const timezone = R.path(['config', 'locale_timezone'])(messagesData)
+  const timezone = R.path(['configWithAllTriggers', 'locale_timezone'])(
+    messagesData,
+  )
 
   const [editMessage] = useMutation(EDIT_SMS_NOTICE, {
     onError: ({ msg }) => setErrorMsg(msg),

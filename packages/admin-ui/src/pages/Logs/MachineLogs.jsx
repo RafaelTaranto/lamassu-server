@@ -70,7 +70,7 @@ const GET_MACHINE_LOGS = gql`
 
 const GET_DATA = gql`
   query getData {
-    config
+    configWithAllTriggers
   }
 `
 
@@ -84,7 +84,10 @@ const Logs = () => {
     useQuery(GET_MACHINES)
 
   const { data: configResponse, loading: configLoading } = useQuery(GET_DATA)
-  const timezone = R.path(['config', 'locale_timezone'], configResponse)
+  const timezone = R.path(
+    ['configWithAllTriggers', 'locale_timezone'],
+    configResponse,
+  )
 
   const { data: logsResponse, loading: logsLoading } = useQuery(
     GET_MACHINE_LOGS,

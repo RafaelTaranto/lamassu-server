@@ -14,7 +14,7 @@ import { fromNamespace, toNamespace, namespaces } from '../../../utils/config'
 
 const GET_CONFIG = gql`
   {
-    config
+    configWithAllTriggers
     accounts
   }
 `
@@ -49,8 +49,10 @@ const Mailgun = () => {
   const accounts = data?.accounts ?? []
 
   const emailConfig =
-    data?.config &&
-    fromNamespace(namespaces.NOTIFICATIONS + '_email')(data.config)
+    data?.configWithAllTriggers &&
+    fromNamespace(namespaces.NOTIFICATIONS + '_email')(
+      data.configWithAllTriggers,
+    )
 
   useEffect(() => {
     if (emailActive) return

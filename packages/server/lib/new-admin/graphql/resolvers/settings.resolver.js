@@ -3,7 +3,8 @@ const settingsLoader = require('../../../new-settings-loader')
 const resolvers = {
   Query: {
     accounts: () => settingsLoader.showAccounts(),
-    config: () => settingsLoader.loadConfigWithAllTriggers(),
+    configWithAllTriggers: () => settingsLoader.loadConfigWithAllTriggers(),
+    config: () => settingsLoader.loadConfig(),
   },
   Mutation: {
     saveAccounts: (...[, { accounts }]) =>

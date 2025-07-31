@@ -47,7 +47,7 @@ const GET_DATA = gql`
       name
       rate
     }
-    config
+    configWithAllTriggers
   }
 `
 
@@ -63,8 +63,10 @@ const SystemPerformance = () => {
       from: twoMonthsAgo.toISOString(),
     },
   })
-  const fiatLocale = fromNamespace('locale')(data?.config).fiatCurrency
-  const timezone = fromNamespace('locale')(data?.config).timezone
+  const fiatLocale = fromNamespace('locale')(
+    data?.configWithAllTriggers,
+  ).fiatCurrency
+  const timezone = fromNamespace('locale')(data?.configWithAllTriggers).timezone
   const allTransactions = data?.transactions ?? []
 
   const NOW = Date.now()
@@ -189,7 +191,7 @@ const SystemPerformance = () => {
             <InfoWithLabel info={getNumTransactions()} label={'transactions'} />
             <InfoWithLabel
               info={getFiatVolume()}
-              label={`${data?.config.locale_fiatCurrency} volume`}
+              label={`${data?.configWithAllTriggers.locale_fiatCurrency} volume`}
             />
           </div>
           <div className="h-62">
@@ -235,7 +237,7 @@ const SystemPerformance = () => {
               <div className="flex justify-between mt-6 mr-7 -mb-8 ml-4 relative">
                 <Info2 noMargin>
                   {`${getProfit(transactionsToShow).toFormat(2)} ${
-                    data?.config.locale_fiatCurrency
+                    data?.configWithAllTriggers.locale_fiatCurrency
                   }`}
                 </Info2>
                 <Info2 noMargin className={classnames(percentageClasses)}>

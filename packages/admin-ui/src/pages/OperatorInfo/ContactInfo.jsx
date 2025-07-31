@@ -54,7 +54,7 @@ const Field = ({ editing, field, displayValue, ...props }) => {
 
 const GET_CONFIG = gql`
   query getData {
-    config
+    configWithAllTriggers
   }
 `
 
@@ -83,7 +83,8 @@ const ContactInfo = ({ wizard }) => {
   }
 
   const info =
-    data?.config && fromNamespace(namespaces.OPERATOR_INFO, data.config)
+    data?.configWithAllTriggers &&
+    fromNamespace(namespaces.OPERATOR_INFO, data.configWithAllTriggers)
 
   if (!info) return null
 

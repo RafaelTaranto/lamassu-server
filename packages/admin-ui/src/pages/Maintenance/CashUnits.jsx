@@ -52,7 +52,7 @@ const GET_MACHINES_AND_CONFIG = gql`
       id: deviceId
       name
     }
-    config
+    configWithAllTriggers
     bills(filters: $billFilters) {
       id
       fiat
@@ -127,7 +127,7 @@ const CashCassettes = () => {
 
   const machines = R.path(['machines'])(data) ?? []
   const unpairedMachines = R.path(['unpairedMachines'])(data) ?? []
-  const config = R.path(['config'])(data) ?? {}
+  const config = R.path(['configWithAllTriggers'])(data) ?? {}
   const [setCassetteBills, { error }] = useMutation(SET_CASSETTE_BILLS, {
     refetchQueries: () => ['getData'],
   })
@@ -136,13 +136,17 @@ const CashCassettes = () => {
     refetchQueries: () => ['getData'],
   })
 
-  const timezone = R.path(['config', 'locale_timezone'], data)
+  const timezone = R.path(['configWithAllTriggers', 'locale_timezone'], data)
 
   const bills = data?.bills ?? []
   const billsByDeviceID = R.groupBy(bill => bill.deviceId)(bills)
   const deviceIds = R.keys(billsByDeviceID)
-  const cashout = data?.config && fromNamespace('cashOut')(data.config)
-  const locale = data?.config && fromNamespace('locale')(data.config)
+  const cashout =
+    data?.configWithAllTriggers &&
+    fromNamespace('cashOut')(data.configWithAllTriggers)
+  const locale =
+    data?.configWithAllTriggers &&
+    fromNamespace('locale')(data.configWithAllTriggers)
   const fiatCurrency = locale?.fiatCurrency
 
   const getCashoutSettings = id => fromNamespace(id)(cashout)
@@ -158,7 +162,8 @@ const CashCassettes = () => {
   }
 
   const cashboxReset =
-    data?.config && fromNamespace('cashIn')(data.config).cashboxReset
+    data?.configWithAllTriggers &&
+    fromNamespace('cashIn')(data.configWithAllTriggers).cashboxReset
 
   const cashboxResetSave = rawConfig => {
     const config = toNamespace('cashIn')(rawConfig)

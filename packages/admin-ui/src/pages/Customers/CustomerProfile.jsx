@@ -33,7 +33,7 @@ import { getFormattedPhone, getName, formatPhotosData } from './helper'
 
 const GET_CUSTOMER = gql`
   query customer($customerId: ID!) {
-    config
+    configWithAllTriggers
     transactions(customerId: $customerId, limit: 20) {
       txClass
       id
@@ -250,7 +250,7 @@ const DISABLE_TEST_CUSTOMER = gql`
 
 const GET_DATA = gql`
   query getData {
-    config
+    configWithAllTriggers
   }
 `
 
@@ -457,7 +457,7 @@ const CustomerProfile = memo(() => {
 
   const onClickSidebarItem = code => setClickedItem(code)
 
-  const configData = R.path(['config'])(customerResponse) ?? []
+  const configData = R.path(['configWithAllTriggers'])(customerResponse) ?? []
   const locale = configData && fromNamespace(namespaces.LOCALE, configData)
   const customerData = R.path(['customer'])(customerResponse) ?? []
   const rawTransactions = R.path(['transactions'])(customerResponse) ?? []
@@ -496,7 +496,10 @@ const CustomerProfile = memo(() => {
 
   const loading = customerLoading || configLoading
 
-  const timezone = R.path(['config', 'locale_timezone'], configResponse)
+  const timezone = R.path(
+    ['configWithAllTriggers', 'locale_timezone'],
+    configResponse,
+  )
 
   const customInfoRequirementOptions =
     activeCustomRequests?.customInfoRequests?.map(it => ({

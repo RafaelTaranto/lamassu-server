@@ -12,7 +12,7 @@ import classes from './Shared.module.css'
 
 const GET_INFO = gql`
   query getData {
-    config
+    configWithAllTriggers
     accounts
     accountsConfig {
       code

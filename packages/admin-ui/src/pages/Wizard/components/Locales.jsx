@@ -16,7 +16,7 @@ import { getConfiguredCoins } from '../helper'
 
 const GET_DATA = gql`
   query getData {
-    config
+    configWithAllTriggers
     accounts
     currencies {
       code
@@ -60,7 +60,7 @@ function Locales({ isActive, doContinue }) {
   }
 
   const cryptoCurrencies = getConfiguredCoins(
-    data?.config || {},
+    data?.configWithAllTriggers || {},
     data?.cryptoCurrencies || [],
   )
 

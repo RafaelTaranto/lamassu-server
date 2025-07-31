@@ -17,7 +17,7 @@ import CommissionsList from './components/CommissionsList'
 
 const GET_DATA = gql`
   query getData {
-    config
+    configWithAllTriggers
     cryptoCurrencies {
       code
       display
@@ -48,9 +48,12 @@ const Commissions = ({ name: SCREEN_KEY }) => {
     onError: error => setError(error),
   })
 
-  const config = data?.config && fromNamespace(SCREEN_KEY)(data.config)
+  const config =
+    data?.configWithAllTriggers &&
+    fromNamespace(SCREEN_KEY)(data.configWithAllTriggers)
   const localeConfig =
-    data?.config && fromNamespace(namespaces.LOCALE)(data.config)
+    data?.configWithAllTriggers &&
+    fromNamespace(namespaces.LOCALE)(data.configWithAllTriggers)
 
   const currency = R.prop('fiatCurrency')(localeConfig)
   const overrides = R.prop('overrides')(config)

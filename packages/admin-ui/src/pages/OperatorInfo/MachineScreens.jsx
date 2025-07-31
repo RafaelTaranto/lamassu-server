@@ -9,7 +9,7 @@ import SwitchRow from './components/SwitchRow.jsx'
 
 const GET_CONFIG = gql`
   query getData {
-    config
+    configWithAllTriggers
   }
 `
 
@@ -41,14 +41,15 @@ const MachineScreens = memo(() => {
   }
 
   const machineScreensConfig =
-    data?.config && fromNamespace(namespaces.MACHINE_SCREENS, data.config)
+    data?.configWithAllTriggers &&
+    fromNamespace(namespaces.MACHINE_SCREENS, data.configWithAllTriggers)
 
   const ratesScreenConfig =
-    data?.config &&
+    data?.configWithAllTriggers &&
     R.compose(
       fromNamespace('rates'),
       fromNamespace(namespaces.MACHINE_SCREENS),
-    )(data.config)
+    )(data.configWithAllTriggers)
 
   if (!machineScreensConfig) return null
 

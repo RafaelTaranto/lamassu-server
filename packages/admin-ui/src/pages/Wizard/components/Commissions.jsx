@@ -10,7 +10,7 @@ import { fromNamespace, toNamespace, namespaces } from '../../../utils/config'
 
 const GET_DATA = gql`
   query getData {
-    config
+    configWithAllTriggers
   }
 `
 const SAVE_CONFIG = gql`
@@ -32,10 +32,10 @@ function Commissions({ isActive, doContinue }) {
   }
 
   const currency = R.path(['fiatCurrency'])(
-    fromNamespace(namespaces.LOCALE)(data?.config),
+    fromNamespace(namespaces.LOCALE)(data?.configWithAllTriggers),
   )
 
-  const locale = fromNamespace(namespaces.LOCALE)(data?.config)
+  const locale = fromNamespace(namespaces.LOCALE)(data?.configWithAllTriggers)
 
   return (
     <div className="w-[1132px] h-full mx-auto flex-1 flex flex-col">
