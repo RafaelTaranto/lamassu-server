@@ -82,11 +82,10 @@ const MachineRoute = () => {
 }
 
 const Machines = ({ data, refetch }) => {
-  const timezone =
-    R.path(['configWithAllTriggers', 'locale_timezone'], data) ?? {}
+  const config = R.path(['configWithAllTriggers'])(data) ?? {}
+  const timezone = R.path(['locale_timezone'], config) ?? {}
 
   const machine = R.path(['machine'])(data) ?? {}
-  const config = R.path(['configWithAllTriggers'])(data) ?? {}
   const bills = R.groupBy(bill => bill.deviceId)(R.path(['bills'])(data) ?? [])
 
   const machineName = R.path(['name'])(machine) ?? null
@@ -117,7 +116,7 @@ const Machines = ({ data, refetch }) => {
           <Cassettes
             refetchData={refetch}
             machine={machine}
-            config={config ?? false}
+            config={config}
             bills={bills}
           />
         </div>
