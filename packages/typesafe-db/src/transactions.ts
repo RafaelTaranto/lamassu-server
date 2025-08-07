@@ -295,6 +295,17 @@ interface FilterParams {
   excludeTestingCustomers?: boolean
 }
 
+async function getTransactionById(id: string) {
+  let query = db.selectFrom(() =>
+    getCashInTransactionList()
+      .unionAll(getCashOutTransactionList())
+      .as('transactions'),
+  )
+
+  query = query.selectAll('transactions').where('transactions.id', '=', id)
+  return query.executeTakeFirst()
+}
+
 async function getTransactionList(
   filters: FilterParams,
   pagination?: PaginationParams,
@@ -374,4 +385,5 @@ export {
   getTransactionList,
   getCashInTransactionList,
   getCashOutTransactionList,
+  getTransactionById,
 }

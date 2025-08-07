@@ -3,10 +3,8 @@ const _ = require('lodash/fp')
 const db = require('../../db')
 const BN = require('../../bn')
 const { utils: coinUtils } = require('@lamassu/coins')
-const cashInTx = require('../../cash-in/cash-in-tx')
-const { REDEEMABLE_AGE } = require('../../cash-out/cash-out-helper')
 const {
-  transactions: { getTransactionList },
+  transactions: { getTransactionById, getTransactionList },
 } = require('typesafe-db')
 
 function addProfits(txs) {
@@ -190,21 +188,8 @@ const getProfit = it => {
     : calcCashOutProfit(fiat, crypto, tickerPrice)
 }
 
-function getTx(txId, txClass) {
-  const cashInSql = `select 'cashIn' as tx_class, txs.*,
-  ((not txs.send_confirmed) and (txs.created <= now() - interval $1)) as expired
-  from cash_in_txs as txs
-  where txs.id=$2`
-
-  const cashOutSql = `select 'cashOut' as tx_class,
-  txs.*,
-  (extract(epoch from (now() - greatest(txs.created, txs.confirmed_at))) * 1000) >= $2 as expired
-  from cash_out_txs txs
-  where txs.id=$1`
-
-  return txClass === 'cashIn'
-    ? db.oneOrNone(cashInSql, [cashInTx.PENDING_INTERVAL, txId])
-    : db.oneOrNone(cashOutSql, [txId, REDEEMABLE_AGE])
+function getTx(txId) {
+  return getTransactionById(txId)
 }
 
 function getTxAssociatedData(txId, txClass) {
