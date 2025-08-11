@@ -15,7 +15,6 @@ const httpError = require('../route-helpers').httpError
 const notifier = require('../notifier')
 const respond = require('../respond')
 const {
-  getTx,
   updateTxCustomerPhoto: txsUpdateTxCustomerPhoto,
 } = require('../new-admin/services/transactions.js')
 const machineLoader = require('../machine-loader')
@@ -28,6 +27,7 @@ const loyalty = require('../loyalty')
 const logger = require('../logger')
 const externalCompliance = require('../compliance-external')
 const { doesTxReuseAddress } = require('../cash-in/cash-in-tx')
+const { getTx } = require('../tx')
 
 function updateCustomerCustomInfoRequest(customerId, patch) {
   const promise = _.isNil(patch.data)

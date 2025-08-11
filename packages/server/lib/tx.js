@@ -4,6 +4,7 @@ const BN = require('./bn')
 const CashInTx = require('./cash-in/cash-in-tx')
 const CashOutTx = require('./cash-out/cash-out-tx')
 const T = require('./time')
+const cashInTx = require('./cash-in/cash-in-tx')
 
 // FP operations on Postgres result in very big errors.
 // E.g.: 1853.013808 * 1000 = 1866149.494
@@ -83,4 +84,21 @@ function customerHistory(customerId, thresholdDays) {
   return db.any(sql, [customerId, `${days} days`, '60 minutes', REDEEMABLE_AGE])
 }
 
-module.exports = { post, customerHistory }
+function getTx(txId, txClass) {
+  const cashInSql = `select 'cashIn' as tx_class, txs.*,
+  ((not txs.send_confirmed) and (txs.created <= now() - interval $1)) as expired
+  from cash_in_txs as txs
+  where txs.id=$2`
+
+  const cashOutSql = `select 'cashOut' as tx_class,
+  txs.*,
+  (extract(epoch from (now() - greatest(txs.created, txs.confirmed_at))) * 1000) >= $2 as expired
+  from cash_out_txs txs
+  where txs.id=$1`
+
+  return txClass === 'cashIn'
+    ? db.oneOrNone(cashInSql, [cashInTx.PENDING_INTERVAL, txId])
+    : db.oneOrNone(cashOutSql, [txId, REDEEMABLE_AGE])
+}
+
+module.exports = { post, customerHistory, getTx }
