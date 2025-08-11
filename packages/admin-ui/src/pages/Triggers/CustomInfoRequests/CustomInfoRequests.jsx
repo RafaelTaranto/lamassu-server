@@ -73,6 +73,7 @@ const CustomInfoRequests = ({
   showWizard,
   toggleWizard,
   data: customRequests,
+  refetchQueries,
 }) => {
   const [toBeDeleted, setToBeDeleted] = useState()
   const [toBeEdited, setToBeEdited] = useState()
@@ -82,7 +83,7 @@ const CustomInfoRequests = ({
   const { data: configData, loading: configLoading } = useQuery(GET_DATA)
 
   const [saveConfig] = useMutation(SAVE_CONFIG, {
-    refetchQueries: () => ['getData'],
+    refetchQueries: ['getData'],
     onError: () => setHasError(true),
   })
 
@@ -95,7 +96,7 @@ const CustomInfoRequests = ({
       setHasError(false)
       toggleWizard()
     },
-    refetchQueries: () => ['customInfoRequests'],
+    refetchQueries,
   })
 
   const [editEntry] = useMutation(EDIT_ROW, {
@@ -108,7 +109,7 @@ const CustomInfoRequests = ({
       setToBeEdited(null)
       toggleWizard()
     },
-    refetchQueries: () => ['getData', 'customInfoRequests'],
+    refetchQueries: ['getData'].concat(refetchQueries),
   })
 
   const [removeEntry] = useMutation(REMOVE_ROW, {
@@ -120,7 +121,7 @@ const CustomInfoRequests = ({
       setDeleteDialog(false)
       setHasError(false)
     },
-    refetchQueries: () => ['getData', 'customInfoRequests'],
+    refetchQueries: ['getData'].concat(refetchQueries),
   })
 
   const config = R.path(['config'])(configData) ?? []

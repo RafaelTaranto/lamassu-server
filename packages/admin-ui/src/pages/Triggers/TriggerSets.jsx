@@ -288,6 +288,7 @@ const TriggerSets = () => {
           data={enabledCustomInfoRequests}
           showWizard={wizardType === 'newCustomRequest'}
           toggleWizard={toggleWizard('newCustomRequest')}
+          refetchQueries={['getComplianceTriggerSets']}
         />
       )}
 
