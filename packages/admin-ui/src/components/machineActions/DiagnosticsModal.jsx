@@ -131,6 +131,18 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
     )
   }
 
+  const date = new Date(timestamp)
+  const dateString = date.toLocaleString('en-US', {
+    weekday: 'short',
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  })
+
   return (
     <Modal
       closeOnBackdropClick={true}
@@ -178,7 +190,7 @@ const DiagnosticsModal = ({ onClose, deviceId, sendAction }) => {
             </div>
           </div>
           <div>
-            <P>Diagnostics executed at: {new Date(timestamp).toDateString()}</P>
+            <P>Diagnostics executed at: {dateString}</P>
           </div>
         </div>
       )}
