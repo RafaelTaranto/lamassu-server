@@ -46,7 +46,6 @@ const MachineGroups = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [groupToDelete, setGroupToDelete] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
-  const [actionMenuClose, setActionMenuClose] = useState(null)
 
   const { data, loading } = useQuery(GET_MACHINE_GROUPS)
 
@@ -81,11 +80,6 @@ const MachineGroups = () => {
     },
     onCompleted: () => {
       setDeleteDialogOpen(false)
-      // Close the action menu if it's open
-      if (actionMenuClose) {
-        actionMenuClose()
-        setActionMenuClose(null)
-      }
     },
   })
 
@@ -134,9 +128,11 @@ const MachineGroups = () => {
           setGroupToDelete(row.original)
           setDeleteDialogOpen(true)
           setErrorMsg('')
-          setActionMenuClose(() => closeMenu)
+          closeMenu()
         }}
-        // disabled={row.original.name === 'default'}
+        disabled={
+          row.original.name === 'default' || row.original.deviceCount > 0
+        }
         title={
           row.original.name === 'default' ? 'Cannot delete default group' : ''
         }
