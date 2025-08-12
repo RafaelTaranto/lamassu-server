@@ -13,11 +13,13 @@ const writeFile = util.promisify(fs.writeFile)
 const notifierQueries = require('./notifier/queries')
 const notifierUtils = require('./notifier/utils')
 const sms = require('./sms')
-const settingsLoader = require('./new-settings-loader')
 const logger = require('./logger')
 const externalCompliance = require('./compliance-external')
 const {
+  db: { default: kdb, inTransaction },
   customers: { getCustomerList },
+  complianceTriggers: { getAllComplianceTriggersByRequirementType },
+  userConfig,
 } = require('typesafe-db')
 
 const { APPROVED, RETRY } = require('./plugins/compliance/consts')
@@ -912,9 +914,20 @@ function updateLastAuthAttempt(customerId, deviceId) {
 }
 
 function getExternalComplianceMachine(customer) {
-  return settingsLoader
-    .load()
-    .then(settings => externalCompliance.getStatusMap(settings, customer.id))
+  return inTransaction(
+    async tx => [
+      await userConfig.loadAccounts(tx),
+      await getAllComplianceTriggersByRequirementType(tx, 'external'),
+    ],
+    kdb,
+  )
+    .then(([accounts, externalComplianceTriggers]) =>
+      externalCompliance.getStatusMap(
+        accounts,
+        externalComplianceTriggers,
+        customer.id,
+      ),
+    )
     .then(statusMap => {
       return updateExternalComplianceByMap(customer.id, statusMap)
         .then(() => (customer.externalCompliance = statusMap))

@@ -15,7 +15,7 @@ import { useLocation, useParams } from 'wouter'
 import Modal from '../../components/Modal'
 import { DeleteDialog } from '../../components/DeleteDialog'
 import { Label1, Label2, P } from '../../components/typography'
-import Title from '../../components/Title'
+import TitleSection from '../../components/layout/TitleSection'
 import FormRenderer from '../Services/FormRenderer'
 import { defaultMaterialTableOpts } from '../../utils/materialReactTableOpts.js'
 import { Link, SupportLinkButton } from '../../components/buttons'
@@ -102,6 +102,7 @@ const TriggerTable = ({
     columns,
     data: triggers,
     enableRowActions: true,
+    enableSorting: false,
     positionActionsColumn: 'last',
     renderRowActionMenuItems: ({ row, table }) => [
       <MRT_ActionMenuItem
@@ -167,6 +168,7 @@ const Triggers = () => {
     data?.accountsConfig || [],
   )
   const triggers = data?.complianceTriggers ?? []
+  const complianceTriggerSetName = data?.complianceTriggerSetById?.name
 
   const [saveAccount] = useMutation(SAVE_ACCOUNT, {
     onCompleted: () => {
@@ -234,18 +236,19 @@ const Triggers = () => {
             Trigger sets
           </Label1>
           <Label2 noMargin className="cursor-pointer text-comet">
-            {data?.complianceTriggerSetById?.name}
+            {complianceTriggerSetName}
           </Label2>
         </Breadcrumbs>
       )}
-      <Title>Compliance Triggers</Title>
-      {!loading && (
-        <div className="flex justify-end">
-          <Link color="primary" onClick={openNewTriggerWizard}>
-            + Add new trigger
-          </Link>
-        </div>
-      )}
+      <TitleSection title={`“${complianceTriggerSetName}” Compliance Triggers`}>
+        {!loading && (
+          <div className="flex justify-end">
+            <Link color="primary" onClick={openNewTriggerWizard}>
+              + Add new trigger
+            </Link>
+          </div>
+        )}
+      </TitleSection>
       <TriggerTable
         triggers={triggers}
         loading={loading}

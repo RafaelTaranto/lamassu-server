@@ -163,6 +163,11 @@ const TriggerSets = () => {
         accessorKey: 'name',
         size: 200,
       },
+      {
+        header: 'ID',
+        accessorKey: 'id',
+        size: 200,
+      },
     ],
     [],
   )
@@ -172,6 +177,7 @@ const TriggerSets = () => {
     columns,
     data: complianceTriggerSets,
     enableRowActions: true,
+    enableSorting: false,
     positionActionsColumn: 'last',
     renderRowActionMenuItems: ({ row, table, closeMenu }) => [
       <MRT_ActionMenuItem //or just use a normal MUI MenuItem component
@@ -191,7 +197,7 @@ const TriggerSets = () => {
           setTriggerSetToDelete(row.original)
           setDeleteDialogOpen(true)
           setErrorMsg('')
-          setActionMenuClose(() => closeMenu)
+          setActionMenuClose(closeMenu)
         }}
         table={table}
       />,
@@ -252,6 +258,18 @@ const TriggerSets = () => {
                   label="Reject Address Reuse"
                 />
               </HelpTooltip>
+
+              {!loading && (
+                <Link
+                  className="ml-6"
+                  color="primary"
+                  onClick={() => {
+                    resetCreateError()
+                    setCreateModalOpen(true)
+                  }}>
+                  Add new trigger set
+                </Link>
+              )}
             </div>
           </div>
         )}
@@ -267,21 +285,7 @@ const TriggerSets = () => {
           )}
       </TitleSection>
 
-      {!loading && !subMenu && (
-        <>
-          <div className="flex justify-end">
-            <Link
-              color="primary"
-              onClick={() => {
-                resetCreateError()
-                setCreateModalOpen(true)
-              }}>
-              Add new trigger set
-            </Link>
-          </div>
-          <MaterialReactTable table={table} />
-        </>
-      )}
+      {!loading && !subMenu && <MaterialReactTable table={table} />}
 
       {!loading && subMenu === 'customInfoRequests' && (
         <CustomInfoRequests
@@ -292,12 +296,7 @@ const TriggerSets = () => {
         />
       )}
 
-      {!loading && subMenu === 'advancedSettings' && (
-        <AdvancedTriggers
-          error={errorMsg}
-          save={saveConfig}
-          data={data}></AdvancedTriggers>
-      )}
+      {!loading && subMenu === 'advancedSettings' && <AdvancedTriggers />}
 
       <TriggerSetsModal
         showModal={createModalOpen}

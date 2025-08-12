@@ -96,7 +96,7 @@ const Customers = () => {
     refetchQueries: () => [GET_CUSTOMERS],
   })
 
-  const configData = R.path(['config'])(customersResponse) ?? []
+  const configData = R.path(['config'])(customersResponse) ?? {}
   const customRequirementsData =
     R.path(['customInfoRequests'], customersResponse) ?? []
   const locale = configData && fromNamespace(namespaces.LOCALE, configData)

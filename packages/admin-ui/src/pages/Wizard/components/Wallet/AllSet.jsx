@@ -12,8 +12,6 @@ import classes from './Shared.module.css'
 
 const GET_INFO = gql`
   query getData {
-    config
-    accounts
     accountsConfig {
       code
       display
@@ -28,9 +26,8 @@ const GET_INFO = gql`
 `
 
 const SAVE_CONFIG = gql`
-  mutation Save($config: JSONObject, $accounts: JSONObject) {
+  mutation Save($config: JSONObject) {
     saveConfig(config: $config)
-    saveAccounts(accounts: $accounts)
   }
 `
 

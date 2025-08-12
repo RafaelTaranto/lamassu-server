@@ -3,15 +3,14 @@ const crypto = require('crypto')
 const _ = require('lodash/fp')
 const {
   db: { default: db, inTransaction },
+  notify: { notifyReload },
   userConfig,
 } = require('typesafe-db')
 
-const { getOperatorId } = require('./operator')
 const {
   getTermsConditions,
   setTermsConditions,
 } = require('./new-config-manager')
-const { getAllComplianceTriggers } = require('./compliance-triggers')
 
 const PASSWORD_FILLED = 'PASSWORD_FILLED'
 const SECRET_FIELDS = [
@@ -78,9 +77,7 @@ function saveAccounts(accounts) {
     return newAccounts
   }
 
-  return getOperatorId('middleware')
-    .then(operatorId => userConfig.saveAccounts(db, mergeAccounts, operatorId))
-    .catch(console.error)
+  return userConfig.saveAccounts(db, mergeAccounts).catch(console.error)
 }
 
 function hideSecretFields(accounts) {
@@ -98,39 +95,16 @@ function showAccounts(schemaVersion) {
 }
 
 const saveConfig = config =>
-  getOperatorId('middleware')
-    .then(operatorId =>
-      inTransaction(db, async tx => {
-        const currentConfig = await _loadConfigTx(tx)
-        const newConfig = addTermsHash(_.assign(currentConfig, config))
-        delete newConfig.triggers
-        await userConfig.insertConfigRow(tx, { config: newConfig })
-        await userConfig.notifyReload(tx, operatorId)
-      }),
-    )
-    .catch(console.error)
+  inTransaction(async tx => {
+    const currentConfig = await userConfig.loadConfig(tx)
+    const newConfig = addTermsHash(_.assign(currentConfig, config))
+    await userConfig.insertConfigRow(tx, { config: newConfig })
+    await notifyReload(tx)
+  }, db).catch(console.error)
 
-const _loadConfigTx = async (tx, schemaVersion) => {
-  const config = await userConfig.loadConfig(tx, schemaVersion)
-  const triggers = await getAllComplianceTriggers(tx)
-  return Object.assign(config, { triggers })
-}
+const loadConfig = schemaVersion => userConfig.loadConfig(db, schemaVersion)
 
-const loadConfig = schemaVersion =>
-  db.transaction().execute(async tx => _loadConfigTx(tx, schemaVersion))
-
-const load = version =>
-  db
-    .transaction()
-    .execute(async tx => {
-      const settings = await userConfig.load(tx, version)
-      const triggers = await getAllComplianceTriggers(tx)
-      return [settings, triggers]
-    })
-    .then(([settings, triggers]) => {
-      settings.config = Object.assign(settings.config, { triggers })
-      return settings
-    })
+const load = version => userConfig.load(db, version)
 
 module.exports = {
   saveConfig,

@@ -1,4 +1,5 @@
 export * as db from './db.js'
+export * as notify from './notify.js'
 export * as customers from './customers.js'
 export * as complianceTriggers from './compliance-triggers.js'
 export * as transactions from './transactions.js'

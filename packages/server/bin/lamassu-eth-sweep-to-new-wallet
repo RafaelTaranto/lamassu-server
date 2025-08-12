@@ -89,8 +89,8 @@ function defaultHdNodeAcc (account) {
   return key.derivePath(defaultPrefixPath)
 }
 
-function getAllBalance () {
-  return settingsLoader.load()
+function getAllBalance (settings) {
+  return Promise.resolve(settings)
     .then(settings => walletI.balance(settings, 'ETH'))
     .then(r => r.balance)
 }
@@ -256,7 +256,7 @@ settingsLoader.load()
       connect(`http://localhost:${coins.utils.getCryptoCurrency('ETH').defaultPort}`)
     }
 
-    return Promise.all([getAllBalance(), settings, fetchWallet(settings, 'ETH')])
+    return Promise.all([getAllBalance(settings), settings, fetchWallet(settings, 'ETH')])
   })
   .then(([balance, settings, { account, operatorId }]) => {
     const tx = {

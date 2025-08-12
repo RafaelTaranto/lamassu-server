@@ -6,18 +6,21 @@ import {
   useMaterialReactTable,
 } from 'material-react-table'
 import DeleteIcon from '@mui/icons-material/Delete'
+import GroupAddIcon from '@mui/icons-material/GroupAdd'
 
 import Title from '../../components/Title'
 import { DeleteDialog } from '../../components/DeleteDialog'
 import { Link } from '../../components/buttons'
 import { defaultMaterialTableOpts } from '../../utils/materialReactTableOpts.js'
 import CreateMachineGroupModal from './CreateMachineGroupModal'
+import ComplianceTriggerSetModal from './ComplianceTriggerSetModal'
 
 const GET_MACHINE_GROUPS = gql`
   query getMachineGroups {
     machineGroups {
       id
       name
+      complianceTriggerSetId
       deviceCount
     }
   }
@@ -46,8 +49,13 @@ const MachineGroups = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [groupToDelete, setGroupToDelete] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
+  const [targetMachineGroup, setTargetMachineGroup] = useState(null)
+  const [showComplianceTriggerSetModal, setShowComplianceTriggerSetModal] =
+    useState(false)
 
-  const { data, loading } = useQuery(GET_MACHINE_GROUPS)
+  const { data, refetch, loading } = useQuery(GET_MACHINE_GROUPS, {
+    notifyOnNetworkStatusChange: true,
+  })
 
   const [createMachineGroup, { error: createError, reset: resetCreateError }] =
     useMutation(CREATE_MACHINE_GROUP, {
@@ -109,6 +117,12 @@ const MachineGroups = () => {
         size: 150,
         Cell: ({ cell }) => cell.getValue() || 0,
       },
+      {
+        header: 'Compliance Trigger Set',
+        accessorKey: 'complianceTriggerSetId',
+        size: 150,
+        Cell: ({ cell }) => cell.getValue() || 'None',
+      },
     ],
     [],
   )
@@ -138,6 +152,17 @@ const MachineGroups = () => {
         }
         table={table}
       />,
+
+      <MRT_ActionMenuItem
+        key="assignComplianceTriggerSet"
+        icon={<GroupAddIcon fontSize="small" />}
+        label="Change compliance trigger set"
+        onClick={() => {
+          setShowComplianceTriggerSetModal(true)
+          setTargetMachineGroup(row.original.id)
+        }}
+        table={table}
+      />,
     ],
     state: {
       isLoading: loading,
@@ -161,6 +186,16 @@ const MachineGroups = () => {
             </Link>
           </div>
           <MaterialReactTable table={table} />
+          {showComplianceTriggerSetModal && (
+            <ComplianceTriggerSetModal
+              machineGroupId={targetMachineGroup}
+              onClose={() => setShowComplianceTriggerSetModal(false)}
+              onSuccess={() => {
+                refetch()
+                setTargetMachineGroup(null)
+              }}
+            />
+          )}
         </>
       )}
 

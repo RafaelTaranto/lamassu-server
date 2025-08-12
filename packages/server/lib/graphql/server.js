@@ -10,6 +10,8 @@ const context = ({ req, res }) => ({
   operatorId: res.locals.operatorId /* lib/middlewares/operatorId.js */,
   pid: req.query.pid,
   settings: req.settings /* lib/middlewares/populateSettings.js */,
+  machineSettings:
+    req.machineSettings /* lib/middlewares/populateMachineSettings.js */,
 })
 
 const graphQLServer = new ApolloServer({

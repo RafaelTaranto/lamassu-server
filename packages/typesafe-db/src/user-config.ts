@@ -1,15 +1,9 @@
-import { sql } from 'kysely'
-
 import type { Json } from './types/types.js'
 import type { DBOrTx } from './db.js'
 import { inTransaction } from './db.js'
+import { notifyReload } from './notify.js'
 
 const NEW_SETTINGS_LOADER_SCHEMA_VERSION = 2
-
-export async function notifyReload(dbOrTx: DBOrTx, operatorId: string) {
-  const notification = sql.lit(JSON.stringify({ operatorId }))
-  await sql`NOTIFY reload, ${notification}`.execute(dbOrTx)
-}
 
 function getRow(
   dbOrTx: DBOrTx,
@@ -133,14 +127,13 @@ function insertAccounts(dbOrTx: DBOrTx, accounts: Json) {
 export function saveAccounts(
   dbOrTx: DBOrTx,
   mergeAccounts: (old: object) => Json,
-  operatorId: string,
 ) {
-  return inTransaction(dbOrTx, async tx => {
+  return inTransaction(async tx => {
     const currentAccounts = await loadAccounts(tx)
     const newAccounts = mergeAccounts(currentAccounts)
     await updateAccounts(tx, newAccounts)
     await insertAccounts(tx, newAccounts)
-    await notifyReload(tx, operatorId)
+    await notifyReload(tx)
     return newAccounts
-  })
+  }, dbOrTx)
 }
