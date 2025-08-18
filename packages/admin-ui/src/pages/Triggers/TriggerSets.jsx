@@ -73,7 +73,6 @@ const TriggerSets = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [setToDelete, setTriggerSetToDelete] = useState(null)
   const [errorMsg, setErrorMsg] = useState('')
-  const [actionMenuClose, setActionMenuClose] = useState(null)
   const [subMenu, setSubMenu] = useState(false)
 
   const { data, loading, refetch } = useQuery(GET_CONFIG, {
@@ -97,11 +96,6 @@ const TriggerSets = () => {
       onError: errorMsg => setErrorMsg(errorMsg),
       onCompleted: () => {
         setDeleteDialogOpen(false)
-        // Close the action menu if it's open
-        if (actionMenuClose) {
-          actionMenuClose()
-          setActionMenuClose(null)
-        }
       },
     },
   )
@@ -197,7 +191,7 @@ const TriggerSets = () => {
           setTriggerSetToDelete(row.original)
           setDeleteDialogOpen(true)
           setErrorMsg('')
-          setActionMenuClose(closeMenu)
+          closeMenu()
         }}
         table={table}
       />,
