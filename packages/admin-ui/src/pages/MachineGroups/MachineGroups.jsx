@@ -121,7 +121,7 @@ const MachineGroups = () => {
         header: 'Compliance Trigger Set',
         accessorKey: 'complianceTriggerSetId',
         size: 150,
-        Cell: ({ cell }) => cell.getValue() || 'None',
+        Cell: ({ cell }) => cell.getValue() || <i>None</i>,
       },
     ],
     [],
