@@ -5,7 +5,7 @@ const {
 } = require('typesafe-db')
 
 const maxDaysThreshold = triggers =>
-  Math.max(...triggers.map(t => t.thresholdDays))
+  Math.max(...[{ thresholdDays: 0 }].concat(triggers).map(t => t.thresholdDays))
 
 const getCashLimit = triggers =>
   Math.min(
