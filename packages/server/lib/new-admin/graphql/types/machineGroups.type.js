@@ -5,6 +5,7 @@ const typeDef = gql`
     id: ID!
     name: String!
     complianceTriggerSetId: ID
+    complianceTriggerSet: ComplianceTriggerSet
     deviceCount: Int
   }
 
