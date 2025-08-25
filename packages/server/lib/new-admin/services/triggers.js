@@ -28,6 +28,14 @@ const createComplianceTrigger = (complianceTriggerSetId, trigger) =>
 const deleteComplianceTrigger = id =>
   complianceTriggers.deleteComplianceTrigger(id)
 
+const getComplianceTriggerSetsByIdsBatch = ids =>
+  getComplianceTriggerSets().then(ctss => {
+    const ctsIdToName = Object.fromEntries(
+      ctss.map(({ id, name }) => [id, name]),
+    )
+    return ids.map(id => ({ id, name: ctsIdToName[id] }))
+  })
+
 module.exports = {
   getComplianceTriggerSets,
   getComplianceTriggerSetById,
@@ -36,4 +44,5 @@ module.exports = {
   deleteComplianceTriggerSet,
   createComplianceTrigger,
   deleteComplianceTrigger,
+  getComplianceTriggerSetsByIdsBatch,
 }
