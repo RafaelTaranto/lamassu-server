@@ -76,7 +76,7 @@ const getTriggersByMachine = (machines, machineGroups, complianceTriggers) => {
     machineGroups.map(({ id, complianceTriggerSetId }) => [
       id,
       // Machine groups with no compliance trigger set have no compliance triggers.
-      complianceTriggerSetId ? triggersBySet[complianceTriggerSetId] : [],
+      triggersBySet[complianceTriggerSetId] ?? [],
     ]),
   )
 
