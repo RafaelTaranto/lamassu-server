@@ -28,6 +28,15 @@ const speedtestFiles = [
   },
 ]
 
+const addDefaults = (dflts, obj) => {
+  if (!obj) return obj
+  const ret = Object.assign({}, obj)
+  Object.entries(dflts).forEach(([key, dflt]) => {
+    ret[key] = ret[key] ?? dflt
+  })
+  return ret
+}
+
 const addSmthInfo = (dstField, srcFields) => smth =>
   smth && smth.active ? _.set(dstField, _.pick(srcFields, smth)) : _.identity
 
@@ -195,7 +204,7 @@ const staticConfig = ({
               speedtestFiles,
               urlsToPing,
             }),
-            addOperatorInfo(operatorInfo),
+            addOperatorInfo(addDefaults({ phone: '' }, operatorInfo)),
             addReceiptInfo(receiptInfo),
             addMachineScreenOpts(machineScreenOpts),
           )(staticConf),

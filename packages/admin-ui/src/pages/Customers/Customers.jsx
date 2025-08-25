@@ -1,7 +1,6 @@
 import { useQuery, useMutation, gql } from '@apollo/client'
 import * as R from 'ramda'
 import React, { useState } from 'react'
-import { useLocation } from 'wouter'
 import TitleSection from '../../components/layout/TitleSection'
 import TxInIcon from '../../styling/icons/direction/cash-in.svg?react'
 import TxOutIcon from '../../styling/icons/direction/cash-out.svg?react'
@@ -81,11 +80,6 @@ const CREATE_CUSTOMER = gql`
 `
 
 const Customers = () => {
-  const [, navigate] = useLocation()
-
-  const handleCustomerClicked = customer =>
-    navigate(`/compliance/customer/${customer.id}`)
-
   const [showCreationModal, setShowCreationModal] = useState(false)
 
   const { data: customersResponse, loading: customersLoading } =
@@ -137,7 +131,6 @@ const Customers = () => {
       <CustomersList
         data={customersData}
         country={locale?.country}
-        onClick={handleCustomerClicked}
         loading={customersLoading}
       />
       <CreateCustomerModal
