@@ -17,7 +17,7 @@ import {
 
 import { getFormattedPhone, getName } from './helper'
 
-const CustomersList = ({ data, country, onClick, loading }) => {
+const CustomersList = ({ data, country, loading }) => {
   const columns = useMemo(
     () => [
       {
@@ -127,7 +127,9 @@ const CustomersList = ({ data, country, onClick, loading }) => {
         icon={<Visibility />}
         key="view"
         label="View"
-        onClick={() => onClick(row)}
+        onClick={() =>
+          window.open(`/compliance/customer/${row.original.id}`, '_blank')
+        }
         table={table}
       />,
     ],
