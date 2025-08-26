@@ -98,7 +98,7 @@ const saveConfig = config =>
     await notifyReload(tx)
   }, db).catch(console.error)
 
-const loadConfig = schemaVersion => userConfig.loadConfig(db, schemaVersion)
+const loadConfig = () => userConfig.loadConfig(db)
 
 const load = version => userConfig.load(db, version)
 
