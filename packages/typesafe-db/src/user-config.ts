@@ -50,8 +50,7 @@ function _loadConfigWithVersion(
   return getRow(dbOrTx, 'config', { schemaVersion, version })
     .executeTakeFirstOrThrow()
     .then(row => ({
-      config:
-        (row.data as { id: number; config: object } | undefined)?.config ?? {},
+      config: (row.data as { config: object } | undefined)?.config ?? {},
       version: row?.id,
     }))
 }
