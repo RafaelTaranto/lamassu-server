@@ -59,11 +59,7 @@ function _loadConfigWithVersion(
 export function loadAccounts(dbOrTx: DBOrTx, schemaVersion?: number) {
   return getRow(dbOrTx, 'accounts', { schemaVersion })
     .executeTakeFirstOrThrow()
-    .then(
-      row =>
-        (row.data as { id: number; accounts: object } | undefined)?.accounts ??
-        {},
-    )
+    .then(row => (row as { data: object } | undefined)?.data ?? {})
 }
 
 export function loadConfig(dbOrTx: DBOrTx, schemaVersion?: number) {
