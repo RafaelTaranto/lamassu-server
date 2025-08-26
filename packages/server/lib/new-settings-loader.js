@@ -55,8 +55,6 @@ const addTermsHash = configs => {
       )(terms)
 }
 
-const loadAccounts = schemaVersion => userConfig.loadAccounts(db, schemaVersion)
-
 function saveAccounts(accounts) {
   if (!accounts) {
     return Promise.resolve()
@@ -90,9 +88,7 @@ function hideSecretFields(accounts) {
   )(SECRET_FIELDS)
 }
 
-function showAccounts(schemaVersion) {
-  return loadAccounts(schemaVersion).then(hideSecretFields)
-}
+const showAccounts = () => userConfig.loadAccounts(db).then(hideSecretFields)
 
 const saveConfig = config =>
   inTransaction(async tx => {
@@ -109,7 +105,6 @@ const load = version => userConfig.load(db, version)
 module.exports = {
   saveConfig,
   saveAccounts,
-  loadAccounts,
   showAccounts,
   loadConfig,
   load,

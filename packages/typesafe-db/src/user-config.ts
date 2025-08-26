@@ -55,8 +55,8 @@ function _loadConfigWithVersion(
     }))
 }
 
-export function loadAccounts(dbOrTx: DBOrTx, schemaVersion?: number) {
-  return getRow(dbOrTx, 'accounts', { schemaVersion })
+export function loadAccounts(dbOrTx: DBOrTx) {
+  return getRow(dbOrTx, 'accounts')
     .executeTakeFirstOrThrow()
     .then(row => (row as { data: object } | undefined)?.data ?? {})
 }
