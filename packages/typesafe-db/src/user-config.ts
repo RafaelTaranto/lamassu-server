@@ -5,22 +5,12 @@ import { notifyReload } from './notify.js'
 
 const NEW_SETTINGS_LOADER_SCHEMA_VERSION = 2
 
-function getRow(
-  dbOrTx: DBOrTx,
-  type: 'accounts' | 'config',
-  options?: { schemaVersion?: number; version?: number },
-) {
-  const { schemaVersion, version } = options ?? {}
-
+function getRow(dbOrTx: DBOrTx, type: 'accounts' | 'config', version?: number) {
   let query = dbOrTx
     .selectFrom('userConfig as uc')
     .select(['uc.id', 'uc.data'])
     .where('uc.type', '=', type)
-    .where(
-      'uc.schemaVersion',
-      '=',
-      schemaVersion ?? NEW_SETTINGS_LOADER_SCHEMA_VERSION,
-    )
+    .where('uc.schemaVersion', '=', NEW_SETTINGS_LOADER_SCHEMA_VERSION)
     .where('uc.valid', '=', true)
     .orderBy('uc.id', 'desc')
     .limit(1)
@@ -42,42 +32,27 @@ export function insertConfigRow(dbOrTx: DBOrTx, config: object) {
     .execute()
 }
 
-function _loadConfigWithVersion(
-  dbOrTx: DBOrTx,
-  schemaVersion?: number,
-  version?: number,
-) {
-  return getRow(dbOrTx, 'config', { schemaVersion, version })
-    .execute()
-    .then(([row]) => ({
-      config:
-        (row.data as { id: number; config: object } | undefined)?.config ?? {},
+function _loadConfigWithVersion(dbOrTx: DBOrTx, version?: number) {
+  return getRow(dbOrTx, 'config', version)
+    .executeTakeFirstOrThrow()
+    .then(row => ({
+      config: (row.data as { config: object } | undefined)?.config ?? {},
       version: row?.id,
     }))
 }
 
-export function loadAccounts(dbOrTx: DBOrTx, schemaVersion?: number) {
-  return getRow(dbOrTx, 'accounts', { schemaVersion })
-    .execute()
-    .then(
-      ([row]) =>
-        (row.data as { id: number; accounts: object } | undefined)?.accounts ??
-        {},
-    )
+export function loadAccounts(dbOrTx: DBOrTx) {
+  return getRow(dbOrTx, 'accounts')
+    .executeTakeFirstOrThrow()
+    .then(row => (row as { data: object } | undefined)?.data ?? {})
 }
 
-export function loadConfig(dbOrTx: DBOrTx, schemaVersion?: number) {
-  return _loadConfigWithVersion(dbOrTx, schemaVersion).then(
-    ({ config }) => config,
-  )
+export function loadConfig(dbOrTx: DBOrTx) {
+  return _loadConfigWithVersion(dbOrTx).then(({ config }) => config)
 }
 
 export async function load(dbOrTx: DBOrTx, version?: number) {
-  const config = await _loadConfigWithVersion(
-    dbOrTx,
-    NEW_SETTINGS_LOADER_SCHEMA_VERSION,
-    version,
-  )
+  const config = await _loadConfigWithVersion(dbOrTx, version)
   const accounts = await loadAccounts(dbOrTx)
   return {
     config: config.config,
