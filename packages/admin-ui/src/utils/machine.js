@@ -1,4 +1,5 @@
 const modelPrettifier = {
+  douro: 'Douro',
   douro1: 'Douro',
   sintra: 'Sintra',
   gaia: 'Gaia',
