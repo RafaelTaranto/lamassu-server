@@ -82,7 +82,7 @@ const Subheader = ({ item, user }) => {
 
 const notNil = R.compose(R.not, R.isNil)
 
-const Header = memo(({ tree, user }) => {
+const Header = memo(({ tree, user, restrictionLevel }) => {
   const [open, setOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState(null)
   const [notifButtonCoords, setNotifButtonCoords] = useState({ x: 0, y: 0 })
@@ -103,6 +103,12 @@ const Header = memo(({ tree, user }) => {
   useEffect(() => {
     startPolling(60000)
     return stopPolling
+  })
+
+  const bannerClassnames = classnames({
+    [styles.smallBanner]: restrictionLevel === 1,
+    [styles.bigBanner]: restrictionLevel === 2,
+    ['bg-orange-400 w-full flex flex-col justify-center items-center text-white font-bold text-md']: true,
   })
 
   const onPaired = machine => {
@@ -224,6 +230,18 @@ const Header = memo(({ tree, user }) => {
         </div>
       </div>
       {active && active.children && <Subheader item={active} user={user} />}
+      {restrictionLevel && (
+        <div className={bannerClassnames}>
+          <p className="m-0">
+            The software you're running is out of license. Please contact us to
+            ensure your OSA payments are current.{' '}
+          </p>
+          <p className="m-0">
+            Future restrictions may be applied If this is in error, please get
+            in touch.
+          </p>
+        </div>
+      )}
       {open && <AddMachine close={() => setOpen(false)} onPaired={onPaired} />}
     </header>
   )
