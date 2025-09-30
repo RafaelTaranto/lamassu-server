@@ -6,6 +6,7 @@ const record = (req, res, next) => {
     last_online: req.deviceTime,
     model: req.query.model,
     version: req.query.version,
+    restrictionLevel: req.query.restrictionLevel || 0,
   })
   next()
 }

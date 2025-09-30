@@ -23,6 +23,7 @@ const GET_USER_DATA = gql`
       last_accessed_from
       last_accessed_address
     }
+    restrictionLevel
   }
 `
 
@@ -30,11 +31,15 @@ const Main = () => {
   const [location, navigate] = useLocation()
   const { wizardTested, userData, setUserData } = useContext(AppContext)
   const [loading, setLoading] = useState(true)
+  const [restrictionLevel, setRestrictionLevel] = useState(null)
 
   useQuery(GET_USER_DATA, {
     onCompleted: userResponse => {
       if (!userData && userResponse?.userData) {
         setUserData(userResponse.userData)
+      }
+      if (userResponse?.restrictionLevel !== undefined) {
+        setRestrictionLevel(userResponse.restrictionLevel)
       }
       setLoading(false)
     },
@@ -62,7 +67,13 @@ const Main = () => {
 
   return (
     <div className="flex flex-col w-full min-h-full">
-      {!is404 && wizardTested && <Header tree={tree} user={userData} />}
+      {!is404 && wizardTested && (
+        <Header
+          tree={tree}
+          user={userData}
+          restrictionLevel={restrictionLevel}
+        />
+      )}
       <main className="flex flex-1 flex-col my-0 mx-auto h-full w-[1200px]">
         {sidebar && !is404 && wizardTested && (
           <Slide direction="left" in={true} mountOnEnter unmountOnExit>

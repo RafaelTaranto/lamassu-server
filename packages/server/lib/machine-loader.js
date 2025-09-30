@@ -772,7 +772,13 @@ const batchRecordPendingPings = () => {
   pendingRecordPings = new Map()
 
   return db.task(async t => {
-    for (const { deviceId, last_online, version, model } of pings) {
+    for (const {
+      deviceId,
+      last_online,
+      version,
+      model,
+      restrictionLevel,
+    } of pings) {
       await t
         .none(
           `INSERT INTO machine_pings (device_id, device_time)
@@ -785,8 +791,16 @@ const batchRecordPendingPings = () => {
         .catch(err => logger.error(err))
       await t
         .none(
-          pgp.helpers.update({ last_online, version, model }, null, 'devices') +
-            'WHERE device_id = ${deviceId}',
+          pgp.helpers.update(
+            {
+              last_online,
+              version,
+              model,
+              restriction_level: restrictionLevel,
+            },
+            null,
+            'devices',
+          ) + ' WHERE device_id = ${deviceId}',
           { deviceId },
         )
         .catch(err => logger.error(err))

@@ -230,7 +230,7 @@ const Header = memo(({ tree, user, restrictionLevel }) => {
         </div>
       </div>
       {active && active.children && <Subheader item={active} user={user} />}
-      {restrictionLevel && (
+      {restrictionLevel > 0 && (
         <div className={bannerClassnames}>
           <p className="m-0">
             The software you're running is out of license. Please contact us to

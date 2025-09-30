@@ -21,3 +21,15 @@ export function assignMachinesToGroup(deviceIds: [string], groupId: string) {
     return machines
   }, db)
 }
+
+export async function getHighestRestrictionLevel(
+  dbOrTx: DBOrTx = db,
+): Promise<number> {
+  const result = await dbOrTx
+    .selectFrom('devices')
+    .select(db => db.fn.max('restrictionLevel').as('maxRestrictionLevel'))
+    .where('paired', '=', true)
+    .executeTakeFirst()
+
+  return result?.maxRestrictionLevel ?? 0
+}

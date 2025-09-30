@@ -9,6 +9,7 @@ const typeDef = gql`
 
   type Query {
     uptime: [ProcessStatus] @auth
+    restrictionLevel: Int @auth
   }
 `
 
