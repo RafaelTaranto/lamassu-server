@@ -526,6 +526,7 @@ export interface Devices {
   recycler4: Generated<number>
   recycler5: Generated<number>
   recycler6: Generated<number>
+  restrictionLevel: Generated<number>
   userConfigId: number | null
   version: string | null
 }

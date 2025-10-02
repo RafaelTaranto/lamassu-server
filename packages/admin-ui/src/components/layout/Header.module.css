@@ -173,3 +173,13 @@
 .popper {
   z-index: 1;
 }
+
+.smallBanner {
+  font-size: 14px;
+  height: 5vh;
+}
+
+.bigBanner {
+  font-size: 24px;
+  height: 40vh;
+}
