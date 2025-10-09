@@ -12,11 +12,8 @@ const createLink = (settings, userId, level) => {
 
 const getApplicantStatus = account => {
   return Promise.resolve({
-    service: CODE,
-    status: {
-      level: account.applicantLevel,
-      answer: APPROVED,
-    },
+    level: account.applicantLevel,
+    answer: APPROVED,
   })
 }
 
