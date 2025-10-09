@@ -293,12 +293,12 @@ function getExternalComplianceLink(req, res, next) {
 
   if (isRetry) {
     return externalCompliance
-      .createLink(settings, externalService, customerId)
+      .createLink(settings.accounts, externalService, customerId)
       .then(url => respond(req, res, { url }))
   }
 
   return externalCompliance
-    .createApplicant(settings, externalService, customerId)
+    .createApplicant(settings.accounts, externalService, customerId)
     .then(applicant =>
       customers.addExternalCompliance(
         customerId,
@@ -307,7 +307,11 @@ function getExternalComplianceLink(req, res, next) {
       ),
     )
     .then(() =>
-      externalCompliance.createLink(settings, externalService, customerId),
+      externalCompliance.createLink(
+        settings.accounts,
+        externalService,
+        customerId,
+      ),
     )
     .then(url => respond(req, res, { url }))
 }

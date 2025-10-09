@@ -65,7 +65,6 @@ const createLink = (accounts, externalService, customerId) => {
 
 module.exports = {
   getStatusMap,
-  getStatus,
   createApplicant,
   createLink,
 }
