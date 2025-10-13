@@ -45,7 +45,10 @@ const SEND_QUEUE = new PQueue({
   concurrency: 1,
 })
 
-const infuraCalls = {}
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+const QUEUE_EXECUTION_DELAY = 250
+
+const nodeCalls = {}
 
 const pify = _function => {
   if (_.isString(_function.call)) logInfuraCall(_function.call)
@@ -53,10 +56,9 @@ const pify = _function => {
 }
 
 const logInfuraCall = call => {
-  if (!_.includes('infura', web3.currentProvider.host)) return
-  _.isNil(infuraCalls[call]) ? (infuraCalls[call] = 1) : infuraCalls[call]++
+  _.isNil(nodeCalls[call]) ? (nodeCalls[call] = 1) : nodeCalls[call]++
   logger.info(
-    `Calling web3 method ${call} via Infura. Current count for this session: ${JSON.stringify(infuraCalls)}`,
+    `Calling web3 method ${call}. Current count for this session: ${JSON.stringify(nodeCalls)}`,
   )
 }
 
@@ -87,22 +89,31 @@ function sendCoins(account, tx) {
   const isErc20Token = coins.utils.isErc20Token(cryptoCode)
 
   return SEND_QUEUE.add(() =>
-    (isErc20Token ? generateErc20Tx : generateTx)(
-      toAddress,
-      defaultWallet(account),
-      cryptoAtoms,
-      false,
-      cryptoCode,
-    )
+    delay(QUEUE_EXECUTION_DELAY)
+      .then(() => {
+        return (isErc20Token ? generateErc20Tx : generateTx)(
+          toAddress,
+          defaultWallet(account),
+          cryptoAtoms,
+          false,
+          cryptoCode,
+        )
+      })
       .then(pify(web3.eth.sendSignedTransaction))
       .then(txid => {
         return pify(web3.eth.getTransaction)(txid).then(tx => {
-          if (!tx) return { txid }
+          if (!tx) {
+            logger.warn(`sendCoins: Transaction ${txid} not found on chain`)
+            return { txid }
+          }
 
           const fee = new BN(tx.gas).times(new BN(tx.gasPrice)).decimalPlaces(0)
-
           return { txid, fee }
         })
+      })
+      .catch(error => {
+        logger.error(`sendCoins: Error occurred - ${error.message}`, error)
+        throw error
       }),
   )
 }
@@ -194,6 +205,10 @@ function generateErc20Tx(_toAddress, wallet, amount, includesFee, cryptoCode) {
         .times(baseFeePerGas)
         .plus(maxPriorityFeePerGas)
 
+      logger.info(
+        `generateErc20Tx: Building transaction - nonce: ${txCount}, maxFeePerGas: ${maxFeePerGas.toString()}, gasLimit: ${gas.toString()}`,
+      )
+
       const rawTx = {
         chainId: 1,
         nonce: txCount,
@@ -212,6 +227,13 @@ function generateErc20Tx(_toAddress, wallet, amount, includesFee, cryptoCode) {
       const signedTx = tx.sign(privateKey)
 
       return '0x' + signedTx.serialize().toString('hex')
+    })
+    .catch(error => {
+      logger.error(
+        `generateErc20Tx: Error during transaction generation - ${error.message}`,
+        error,
+      )
+      throw error
     })
 }
 
@@ -270,6 +292,13 @@ function generateTx(_toAddress, wallet, amount, includesFee) {
 
       return '0x' + signedTx.serialize().toString('hex')
     })
+    .catch(error => {
+      logger.error(
+        `generateTx: Error during transaction generation - ${error.message}`,
+        error,
+      )
+      throw error
+    })
 }
 
 function defaultWallet(account) {
@@ -285,18 +314,20 @@ function sweep(account, txId, cryptoCode, hdIndex) {
   const fromAddress = wallet.getChecksumAddressString()
 
   return SWEEP_QUEUE.add(() =>
-    confirmedBalance(fromAddress, cryptoCode).then(r => {
-      if (r.eq(0)) return
+    delay(QUEUE_EXECUTION_DELAY)
+      .then(() => confirmedBalance(fromAddress, cryptoCode))
+      .then(r => {
+        if (r.eq(0)) return
 
-      return generateTx(
-        defaultAddress(account),
-        wallet,
-        r,
-        true,
-        cryptoCode,
-        txId,
-      ).then(signedTx => pify(web3.eth.sendSignedTransaction)(signedTx))
-    }),
+        return generateTx(
+          defaultAddress(account),
+          wallet,
+          r,
+          true,
+          cryptoCode,
+          txId,
+        ).then(signedTx => pify(web3.eth.sendSignedTransaction)(signedTx))
+      }),
   )
 }
 
