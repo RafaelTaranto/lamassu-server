@@ -234,11 +234,11 @@ const Header = memo(({ tree, user, restrictionLevel }) => {
         <div className={bannerClassnames}>
           <p className="m-0">
             The software you're running is out of license. Please contact us to
-            ensure your OSA payments are current.{' '}
+            ensure your OSA payments are current.
           </p>
           <p className="m-0">
-            Future restrictions may be applied If this is in error, please get
-            in touch.
+            Future restrictions may be applied. If this is in error, please get
+            in touch with support@lamassu.is.
           </p>
         </div>
       )}
