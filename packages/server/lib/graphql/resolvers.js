@@ -1,4 +1,4 @@
-const { skip2fa } = require('../environment-helper')
+const { skip2fa, getCustomTextEntries } = require('../environment-helper')
 
 const _ = require('lodash/fp')
 const nmd = require('nano-markdown')
@@ -80,7 +80,10 @@ const addReceiptInfo = receiptInfo => ret => {
 const addMachineScreenOpts = smth =>
   _.update(
     'screenOptions',
-    _.flow(addSmthInfo('rates', ['active'])(smth.rates)),
+    _.flow(
+      addSmthInfo('rates', ['active'])(smth.rates),
+      _.set('customText', getCustomTextEntries()),
+    ),
   )
 
 const buildTriggers = allTriggers => {

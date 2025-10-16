@@ -53,6 +53,7 @@ module.exports = gql`
 
   type MachineScreenOptions {
     rates: RateScreenOptions!
+    customText: [CustomText!]!
   }
 
   type RateScreenOptions {
@@ -107,6 +108,11 @@ module.exports = gql`
     id: String!
     enabled: Boolean!
     customRequest: CustomRequest!
+  }
+
+  type CustomText {
+    id: String!
+    text: String!
   }
 
   type Trigger {

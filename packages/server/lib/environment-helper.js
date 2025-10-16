@@ -15,10 +15,30 @@ function isRemoteWallet(crypto) {
 
 const skip2fa = process.env.SKIP_2FA === 'true'
 
+function getCustomTextEntries() {
+  const customTextEntries = []
+
+  Object.keys(process.env).forEach(key => {
+    if (key.startsWith('CUSTOM_TEXT_')) {
+      const id = key
+        .replace('CUSTOM_TEXT_', '')
+        .toLowerCase()
+        .replace(/_/g, '-')
+      const text = process.env[key]
+      if (text) {
+        customTextEntries.push({ id, text })
+      }
+    }
+  })
+
+  return customTextEntries
+}
+
 module.exports = {
   isDevMode,
   isProdMode,
   isRemoteNode,
   isRemoteWallet,
   skip2fa,
+  getCustomTextEntries,
 }
