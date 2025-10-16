@@ -113,7 +113,10 @@ const batchGetCustomInfoRequest = infoRequestIds => {
         return {
           id: item.id,
           enabled: item.enabled,
-          customRequest: item.custom_request,
+          customRequest: {
+            disablePermissionScreen: false,
+            ...item.custom_request,
+          },
         }
       })
     })

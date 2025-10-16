@@ -67,6 +67,7 @@ const formatValues = (values, isEditing) => {
 
   let resObj = {
     name: values.requirementName,
+    disablePermissionScreen: values.disablePermissionScreen,
     screen1: {
       text: values.screen1Text,
       title: values.screen1Title,
@@ -108,6 +109,7 @@ const makeEditingValues = ({ customRequest, id }) => {
   return {
     id,
     requirementName: customRequest.name,
+    disablePermissionScreen: customRequest.disablePermissionScreen,
     screen1Title: customRequest.screen1.title,
     screen1Text: customRequest.screen1.text,
     screen2Title: customRequest.screen2.title,
@@ -196,11 +198,11 @@ const Wizard = ({
           onSubmit={onContinue}
           initialValues={initialValues}
           validationSchema={stepOptions.validationSchema}>
-          {({ errors }) => (
+          {({ errors, values }) => (
             <Form
               className="h-full flex flex-col"
               id={'custom-requirement-form'}>
-              <stepOptions.Component />
+              <stepOptions.Component currentValues={values} />
               <div className="flex flex-row mt-auto mx-0 mb-4">
                 {(hasError || !R.isEmpty(errors)) && (
                   <ErrorMessage>
