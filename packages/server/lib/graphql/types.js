@@ -99,6 +99,7 @@ module.exports = gql`
   type CustomRequest {
     name: String!
     input: CustomInput!
+    disablePermissionScreen: Boolean!
     screen1: CustomScreen!
     screen2: CustomScreen!
   }

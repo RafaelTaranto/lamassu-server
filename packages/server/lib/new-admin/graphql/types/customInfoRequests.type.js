@@ -24,6 +24,7 @@ const typeDef = gql`
   input CustomRequestInput {
     name: String
     input: CustomRequestInputField
+    disablePermissionScreen: Boolean
     screen1: CustomRequestInputScreen
     screen2: CustomRequestInputScreen
   }
