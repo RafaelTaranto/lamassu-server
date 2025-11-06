@@ -710,7 +710,7 @@ export interface UnpairedDevices {
 
 export interface UserConfig {
   created: Generated<Timestamp>
-  data: Json
+  data: { accounts?: object; config?: object }
   id: Generated<number>
   schemaVersion: Generated<number>
   type: string
