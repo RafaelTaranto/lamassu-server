@@ -31,6 +31,7 @@
     "overrides": {
       "columns": {
         "customers.id_card_data": "{firstName:string, lastName:string}",
+        "user_config.data": "{accounts?:object,config?:object}",
         "edited_customer_data.id_card_data": "{firstName:string, lastName:string}"
       }
     }

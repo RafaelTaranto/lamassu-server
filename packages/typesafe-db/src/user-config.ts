@@ -25,7 +25,7 @@ export function insertConfigRow(dbOrTx: DBOrTx, config: object) {
     .insertInto('userConfig')
     .values({
       type: 'config',
-      data: JSON.stringify(config),
+      data: config,
       valid: true,
       schemaVersion: NEW_SETTINGS_LOADER_SCHEMA_VERSION,
     })
@@ -36,7 +36,7 @@ function _loadConfigWithVersion(dbOrTx: DBOrTx, version?: number) {
   return getRow(dbOrTx, 'config', version)
     .executeTakeFirstOrThrow()
     .then(row => ({
-      config: (row.data as { config: object } | undefined)?.config ?? {},
+      config: row?.data?.config ?? {},
       version: row?.id,
     }))
 }
@@ -44,7 +44,7 @@ function _loadConfigWithVersion(dbOrTx: DBOrTx, version?: number) {
 export function loadAccounts(dbOrTx: DBOrTx) {
   return getRow(dbOrTx, 'accounts')
     .executeTakeFirstOrThrow()
-    .then(row => (row as { data: object } | undefined)?.data ?? {})
+    .then(row => row?.data?.accounts ?? {})
 }
 
 export function loadConfig(dbOrTx: DBOrTx) {
@@ -61,7 +61,7 @@ export async function load(dbOrTx: DBOrTx, version?: number) {
   }
 }
 
-function updateAccounts(dbOrTx: DBOrTx, accounts: Json) {
+function updateAccounts(dbOrTx: DBOrTx, accounts: object) {
   return dbOrTx
     .updateTable('userConfig')
     .set({
@@ -106,8 +106,8 @@ export function saveAccounts(
   return inTransaction(async tx => {
     const currentAccounts = await loadAccounts(tx)
     const newAccounts = mergeAccounts(currentAccounts)
-    await updateAccounts(tx, newAccounts)
-    await insertAccounts(tx, newAccounts)
+    await updateAccounts(tx, { accounts: newAccounts })
+    await insertAccounts(tx, { accounts: newAccounts })
     await notifyReload(tx)
     return newAccounts
   }, dbOrTx)
