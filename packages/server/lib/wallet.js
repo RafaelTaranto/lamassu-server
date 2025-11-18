@@ -263,11 +263,11 @@ function getStatus(settings, tx) {
           ? 'authorized'
           : unauthorizedStatus
         const status =
-          BN(tx.cryptoAtoms).gt(0) && BN(tx.receivedCryptoAtoms).gt(0)
+          BN(tx.cryptoAtoms).gt(0) && BN(statusRec.receivedCryptoAtoms).gt(0)
             ? authorizedStatus
             : 'rejected'
         logger.info(
-          `[CASH-OUT] ${tx.id} - ${status}, requested: ${tx.cryptoAtoms}, received: ${tx.receivedCryptoAtoms}`,
+          `[CASH-OUT] ${tx.id} - ${status}, requested: ${tx.cryptoAtoms}, received: ${statusRec.receivedCryptoAtoms}`,
         )
 
         return { receivedCryptoAtoms: statusRec.receivedCryptoAtoms, status }
