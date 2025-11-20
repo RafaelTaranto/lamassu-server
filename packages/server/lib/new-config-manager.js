@@ -185,8 +185,6 @@ const getNotifications = (cryptoCurrency, machine, config) => {
 
 const getGlobalNotifications = config => getNotifications(null, null, config)
 
-const getTriggers = _.get('triggers')
-
 function getCustomerAuthenticationMethod(config) {
   return _.get('triggersConfig_customerAuthentication')(config)
 }
@@ -283,7 +281,6 @@ module.exports = {
   getCoinAtmRadar,
   getTermsConditions,
   getAllCryptoCurrencies,
-  getTriggers,
   getTriggersAutomation,
   getGlobalCashOut,
   getCashOut,
