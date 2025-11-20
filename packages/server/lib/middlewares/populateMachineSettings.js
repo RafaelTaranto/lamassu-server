@@ -16,8 +16,6 @@ const populateMachineSettings = (req, res, next) => {
         return next(
           new Error(`No cached settings found for machine ${deviceId}`),
         )
-      // TODO: replace all req.settings.config.triggers uses with req.machineSettings.complianceTriggers
-      req.settings.config.triggers = settings.complianceTriggers
       req.machineSettings = settings
       next()
     })
