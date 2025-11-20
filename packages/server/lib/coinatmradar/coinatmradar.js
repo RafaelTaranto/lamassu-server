@@ -7,6 +7,7 @@ const complianceTriggers = require('../compliance-triggers')
 const logger = require('../logger')
 const plugins = require('../plugins')
 const { getOperatorId } = require('../operator')
+const machineSettings = require('../machine-settings')
 
 const TIMEOUT = 10000
 const MAX_CONTENT_LENGTH = 2000
@@ -50,9 +51,7 @@ function mapCoin(rates, deviceId, settings, cryptoCode) {
   }
 }
 
-function mapIdentification(config) {
-  const triggers = configManager.getTriggers(config)
-
+function mapIdentification(triggers) {
   return {
     isPhone: complianceTriggers.hasPhone(triggers),
     isPalmVein: false,
@@ -62,12 +61,11 @@ function mapIdentification(config) {
   }
 }
 
-function mapMachine(rates, settings, machineRow) {
+function mapMachine(rates, settings, machineRow, triggers) {
   const deviceId = machineRow.device_id
   const config = settings.config
 
   const coinAtmRadar = configManager.getCoinAtmRadar(config)
-  const triggers = configManager.getTriggers(config)
   const locale = configManager.getLocale(deviceId, config)
   const cashOutConfig = configManager.getCashOut(deviceId, config)
   const cashOutEnabled = cashOutConfig.active ? cashOutConfig.active : false
@@ -79,7 +77,7 @@ function mapMachine(rates, settings, machineRow) {
     ? complianceTriggers.getCashLimit(triggers)
     : null
   const cryptoCurrencies = locale.cryptoCurrencies
-  const identification = mapIdentification(config)
+  const identification = mapIdentification(triggers)
   const coins = _.map(
     _.partial(mapCoin, [rates, deviceId, settings]),
     cryptoCurrencies,
@@ -120,7 +118,17 @@ function getMachines(rates, settings) {
   order by created`
   return db
     .any(sql, [STALE_INTERVAL])
-    .then(_.map(_.partial(mapMachine, [rates, settings])))
+    .then(machines =>
+      Promise.all(
+        machines.map(machine =>
+          machineSettings
+            .getOrUpdate(machine.device_id)
+            .then(({ complianceTriggers }) =>
+              mapMachine(rates, settings, machine, complianceTriggers),
+            ),
+        ),
+      ),
+    )
 }
 
 function sendRadar(data) {
