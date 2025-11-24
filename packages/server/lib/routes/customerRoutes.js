@@ -175,7 +175,7 @@ function triggerSuspend(req, res, next) {
   const triggerId = req.body.triggerId
   const settings = req.settings
 
-  const triggers = configManager.getTriggers(req.settings.config)
+  const triggers = req.machineSettings.complianceTriggers
   const getSuspendDays = _.compose(
     _.get('suspensionDays'),
     _.find(_.matches({ id: triggerId })),
@@ -287,7 +287,7 @@ function getExternalComplianceLink(req, res, next) {
     return next(httpError('Not Found', 404))
 
   const settings = req.settings
-  const triggers = configManager.getTriggers(settings.config)
+  const triggers = req.machineSettings.complianceTriggers
   const trigger = _.find(it => it.id === triggerId)(triggers)
   const externalService = trigger.externalService
 
@@ -316,14 +316,14 @@ function getExternalComplianceLink(req, res, next) {
     .then(url => respond(req, res, { url }))
 }
 
-function addOrUpdateCustomer(
+function addOrUpdateCustomer({
   customerData,
   deviceId,
   config,
   isEmailAuth,
   cryptoCode,
-) {
-  const triggers = configManager.getTriggers(config)
+  triggers,
+}) {
   const maxDaysThreshold = complianceTriggers.maxDaysThreshold(triggers)
 
   const customerKey = isEmailAuth ? customerData.email : customerData.phone
@@ -394,13 +394,14 @@ function getOrAddCustomerPhone(req, res, next) {
   return pi
     .getPhoneCode(phone)
     .then(code => {
-      return addOrUpdateCustomer(
+      return addOrUpdateCustomer({
         customerData,
         deviceId,
-        req.settings.config,
-        false,
+        config: req.settings.config,
+        isEmailAuth: false,
         cryptoCode,
-      ).then(customer => respond(req, res, { code, customer }))
+        triggers: req.machineSettings.complianceTriggers,
+      }).then(customer => respond(req, res, { code, customer }))
     })
     .catch(err => {
       if (err.name === 'BadNumberError') throw httpError('Bad number', 401)
@@ -420,13 +421,14 @@ function getOrAddCustomerEmail(req, res, next) {
   return pi
     .getEmailCode(email)
     .then(code => {
-      return addOrUpdateCustomer(
+      return addOrUpdateCustomer({
         customerData,
         deviceId,
-        req.settings.config,
-        true,
+        config: req.settings.config,
+        isEmailAuth: true,
         cryptoCode,
-      ).then(customer => respond(req, res, { code, customer }))
+        triggers: req.machineSettings.complianceTriggers,
+      }).then(customer => respond(req, res, { code, customer }))
     })
     .catch(err => {
       if (err.name === 'BadNumberError') throw httpError('Bad number', 401)
