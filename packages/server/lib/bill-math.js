@@ -124,7 +124,13 @@ const getSolution_old = (units, amount, mode) => {
 
 const getSolution = (units, amount) => {
   amount = amount.toNumber()
-  units = units.map(({ denomination, count }) => [denomination, count])
+  units = Object.entries(
+    units.reduce((avail, { denomination, count }) => {
+      avail[denomination] ??= 0
+      avail[denomination] += count
+      return avail
+    }, {}),
+  )
   const model = cc.model(units)
   return cc.solve(model, amount)
 }
