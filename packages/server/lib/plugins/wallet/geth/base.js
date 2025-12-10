@@ -269,10 +269,15 @@ function generateTx(_toAddress, wallet, amount, includesFee) {
 
       const maxPriorityFeePerGas = new BN(web3.utils.toWei('1.0', 'gwei')) // web3 default value
       const maxFeePerGas = baseFeePerGas.times(2).plus(maxPriorityFeePerGas)
+      const fee = maxFeePerGas.times(gas)
 
-      const toSend = includesFee
-        ? new BN(amount).minus(maxFeePerGas.times(gas))
-        : amount
+      const toSend = includesFee ? new BN(amount).minus(fee) : amount
+
+      if (toSend.lt(0)) {
+        throw new Error(
+          `Fees (${fee.toString()}) are greater than available balance (${amount.toString()}); nonce: ${txCount}, gasLimit: ${gas.toString()}, maxFeePerGas: ${maxFeePerGas.toString()}, baseFeePerGas: ${baseFeePerGas.toString()}`,
+        )
+      }
 
       const rawTx = {
         chainId: 1,
