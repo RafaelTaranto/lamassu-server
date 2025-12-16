@@ -41,7 +41,7 @@ const memo_set = (memo, target, denom, solution) => {
 }
 
 const check = (solution, target) =>
-  !solution ||
+  solution &&
   target ===
     solution.reduce((sum, [denom, provisioned]) => sum + denom * provisioned, 0)
 
