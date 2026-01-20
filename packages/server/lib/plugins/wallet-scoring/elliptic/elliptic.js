@@ -59,17 +59,26 @@ function rate(account, objectType, cryptoCode, objectId) {
         ? '/v2/wallet/synchronous'
         : '/v2/analysis/synchronous'
 
-    return aml.client.post(endpoint, requestBody).then(res => {
-      const resScore = res.data?.risk_score
+    return aml.client
+      .post(endpoint, requestBody)
+      .then(res => {
+        const resScore = res.data?.risk_score
 
-      // elliptic returns 0-1 score, but we're accepting 0-100 config
-      // normalize score to 0-10 where 0 is the lowest risk
-      // elliptic score can be null and contains decimals
-      return {
-        score: (resScore || 0) * 10,
-        isValid: (resScore || 0) * 100 < threshold,
-      }
-    })
+        // elliptic returns 0-1 score, but we're accepting 0-100 config
+        // normalize score to 0-10 where 0 is the lowest risk
+        // elliptic score can be null and contains decimals
+        return {
+          score: (resScore || 0) * 10,
+          isValid: (resScore || 0) * 100 < threshold,
+        }
+      })
+      .catch(err => {
+        // elliptic returns 404 if the address is not on the blockchain
+        if (err.response?.status === 404) {
+          return { score: 0, isValid: true }
+        }
+        throw err
+      })
   })
 }
 

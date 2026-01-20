@@ -139,11 +139,14 @@ function postProcess(r, pi, isBlacklisted, addressReuse, walletScore) {
   }
 
   if (!_.isNil(walletScore) && !walletScore.isValid) {
+    const isError = !_.isNil(walletScore.error)
     return Promise.resolve({
       walletScore: walletScore.score,
       operatorCompleted: true,
-      error: 'Chain analysis score is above defined threshold',
-      errorCode: 'scoreThresholdReached',
+      error: isError
+        ? walletScore.error
+        : 'Chain analysis score is above defined threshold',
+      errorCode: isError ? 'walletScoringError' : 'scoreThresholdReached',
     })
   }
 
@@ -222,7 +225,11 @@ function doesTxReuseAddress({ toAddress, customerId }) {
 function getWalletScore(tx, pi) {
   return pi.isWalletScoringEnabled(tx).then(isEnabled => {
     if (!isEnabled) return null
-    return pi.rateAddress(tx.cryptoCode, tx.toAddress)
+    return pi.rateAddress(tx.cryptoCode, tx.toAddress).catch(error => ({
+      score: 10,
+      isValid: false,
+      error: `Failure getting address score: ${error.message}`,
+    }))
   })
 }
 
