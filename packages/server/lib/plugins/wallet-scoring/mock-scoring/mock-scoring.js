@@ -1,6 +1,6 @@
 const NAME = 'FakeScoring'
 
-const { WALLET_SCORE_THRESHOLD } = require('../../../constants')
+const WALLET_SCORE_THRESHOLD = 9
 
 function rateAddress(account, cryptoCode, address) {
   return new Promise(resolve => {
