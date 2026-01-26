@@ -6,7 +6,7 @@ const logger = require('../logger')
 db.connect({ direct: true })
   .then(sco => {
     sco.client.on('notification', () => reloadCache())
-    return sco.none('LISTEN reload')
+    return sco.none('LISTEN "reload"')
   })
   .catch(console.error)
 
@@ -16,7 +16,7 @@ db.connect({ direct: true })
       const parsedData = JSON.parse(data.payload)
       return machineAction(parsedData.action, parsedData.value)
     })
-    return sco.none('LISTEN machineAction')
+    return sco.none('LISTEN "machineAction"')
   })
   .catch(console.error)
 
