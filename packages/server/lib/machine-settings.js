@@ -12,17 +12,17 @@ const logger = require('./logger')
 
 db.connect({ direct: true }).then(sco => {
   sco.client.on('notification', () => reloadAll())
-  return sco.none('LISTEN updated_machine_groups')
+  return sco.none('LISTEN "updated_machine_groups"')
 })
 
 db.connect({ direct: true }).then(sco => {
   sco.client.on('notification', () => reloadAll())
-  return sco.none('LISTEN updated_compliance_trigger_sets')
+  return sco.none('LISTEN "updated_compliance_trigger_sets"')
 })
 
 db.connect({ direct: true }).then(sco => {
   sco.client.on('notification', () => reloadAll())
-  return sco.none('LISTEN updated_compliance_triggers')
+  return sco.none('LISTEN "updated_compliance_triggers"')
 })
 
 // Make any given psudo real time clock strictly monotonic
