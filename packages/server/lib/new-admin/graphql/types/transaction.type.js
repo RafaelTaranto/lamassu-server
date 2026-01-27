@@ -33,6 +33,7 @@ const typeDef = gql`
     isPaperWallet: Boolean
     expired: Boolean
     machineName: String
+    machineGroupName: String
     discount: Int
     customerId: ID
     customerPhone: String
@@ -69,7 +70,8 @@ const typeDef = gql`
       limit: Int
       offset: Int
       txClass: String
-      deviceId: String
+      deviceIds: [String]
+      machineGroupId: ID
       customerName: String
       customerId: ID
       fiatCode: String
@@ -85,7 +87,8 @@ const typeDef = gql`
       limit: Int
       offset: Int
       txClass: String
-      deviceId: String
+      deviceIds: [String]
+      machineGroupId: ID
       customerName: String
       customerId: ID
       fiatCode: String

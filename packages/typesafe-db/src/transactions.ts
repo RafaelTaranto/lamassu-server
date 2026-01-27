@@ -106,6 +106,7 @@ function getCashOutTransactionList() {
         .on('txOutActions.action', '=', 'provisionAddress'),
     )
     .leftJoin('devices as d', 'd.deviceId', 'txOut.deviceId')
+    .leftJoin('machineGroups as mg', 'mg.id', 'd.machineGroupId')
     .leftJoin('unpairedDevices as ud', join =>
       join
         .onRef('txOut.deviceId', '=', 'ud.deviceId')
@@ -134,6 +135,8 @@ function getCashOutTransactionList() {
       'txOut.rawTickerPrice',
       isCashOutExpired(eb).as('expired'),
       getDeviceName(eb).as('machineName'),
+      'mg.id as machineGroupId',
+      'mg.name as machineGroupName',
       'txOut.discount',
       'cpn.code as couponCode',
       cashOutTransactionStates(eb).as('status'),
@@ -195,6 +198,7 @@ function getCashInTransactionList() {
     .leftJoin('editedCustomerData as cstED', 'cst.id', 'cstED.customerId')
     .leftJoin('transactionBatches as txInB', 'txInB.id', 'txIn.batchId')
     .leftJoin('devices as d', 'd.deviceId', 'txIn.deviceId')
+    .leftJoin('machineGroups as mg', 'mg.id', 'd.machineGroupId')
     .leftJoin('unpairedDevices as ud', join =>
       join
         .onRef('txIn.deviceId', '=', 'ud.deviceId')
@@ -223,6 +227,8 @@ function getCashInTransactionList() {
       'txIn.rawTickerPrice',
       isCashInExpired(eb).as('expired'),
       getDeviceName(eb).as('machineName'),
+      'mg.id as machineGroupId',
+      'mg.name as machineGroupName',
       'txIn.discount',
       'cpn.code as couponCode',
       cashInTransactionStates(eb).as('status'),
@@ -287,7 +293,8 @@ interface FilterParams {
   until?: Date
   toAddress?: string
   txClass?: string
-  deviceId?: string
+  deviceIds?: string[]
+  machineGroupId?: string
   customerId?: string
   cryptoCode?: string
   swept?: boolean
@@ -342,8 +349,16 @@ async function getTransactionList(
     query = query.where('transactions.created', '<=', filters.until)
   }
 
-  if (filters.deviceId) {
-    query = query.where('transactions.deviceId', '=', filters.deviceId)
+  if (filters.deviceIds && filters.deviceIds.length > 0) {
+    query = query.where('transactions.deviceId', 'in', filters.deviceIds)
+  }
+
+  if (filters.machineGroupId) {
+    query = query.where(
+      'transactions.machineGroupId',
+      '=',
+      filters.machineGroupId,
+    )
   }
 
   if (filters.txClass) {

@@ -1,6 +1,7 @@
 import React from 'react'
 import {
   AutocompleteFilter,
+  MultiAutocompleteFilter,
   SelectFilter,
   AsyncAutocompleteFilter,
 } from '../../components/TableFilters'
@@ -52,11 +53,26 @@ export const MachineFilter = ({ column, machines }) => {
   )
 
   return (
-    <AutocompleteFilter
+    <MultiAutocompleteFilter
       column={column}
       options={machineOptions}
       placeholder="Filter machines..."
       renderOption={renderOption}
+    />
+  )
+}
+
+export const MachineGroupFilter = ({ column, machineGroups }) => {
+  const options = machineGroups.map(group => ({
+    label: group.name,
+    value: group.id,
+  }))
+
+  return (
+    <AutocompleteFilter
+      column={column}
+      options={options}
+      placeholder="Filter groups..."
     />
   )
 }

@@ -1,4 +1,4 @@
-import { useQuery, useLazyQuery, gql } from '@apollo/client'
+import { useQuery, useLazyQuery, gql, NetworkStatus } from '@apollo/client'
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 import { toUnit, formatCryptoAddress } from '@lamassu/coins/lightUtils'
@@ -29,6 +29,7 @@ import { getStatusDetails } from './helper.js'
 import {
   CustomerFilter,
   MachineFilter,
+  MachineGroupFilter,
   DirectionFilter,
   CryptoFilter,
   StatusFilter,
@@ -43,6 +44,14 @@ const GET_DATA = gql`
     machines {
       name
       deviceId
+      machineGroup {
+        id
+        name
+      }
+    }
+    machineGroups {
+      id
+      name
     }
     cryptoCurrencies {
       code
@@ -89,7 +98,8 @@ const GET_TRANSACTIONS = gql`
     $from: DateTimeISO
     $until: DateTimeISO
     $txClass: String
-    $deviceId: String
+    $deviceIds: [String]
+    $machineGroupId: ID
     $customerName: String
     $customerId: ID
     $fiatCode: String
@@ -104,7 +114,8 @@ const GET_TRANSACTIONS = gql`
       from: $from
       until: $until
       txClass: $txClass
-      deviceId: $deviceId
+      deviceIds: $deviceIds
+      machineGroupId: $machineGroupId
       customerName: $customerName
       customerId: $customerId
       fiatCode: $fiatCode
@@ -123,6 +134,7 @@ const GET_TRANSACTIONS = gql`
       commissionPercentage
       expired
       machineName
+      machineGroupName
       operatorCompleted
       sendConfirmed
       dispense
@@ -185,9 +197,10 @@ const Transactions = () => {
     useTableStore()
 
   const { data: configResponse } = useQuery(GET_DATA)
-  const { data, loading } = useQuery(GET_TRANSACTIONS, {
+  const { data, loading, networkStatus } = useQuery(GET_TRANSACTIONS, {
     variables,
     notifyOnNetworkStatusChange: true,
+    pollInterval: 10000,
   })
 
   const [searchCustomersQuery] = useLazyQuery(SEARCH_CUSTOMERS)
@@ -217,6 +230,7 @@ const Transactions = () => {
   const timezone = R.path(['config', 'locale_timezone'], configResponse)
 
   const machines = configResponse?.machines || []
+  const machineGroups = configResponse?.machineGroups || []
   const cryptoCurrencies = configResponse?.cryptoCurrencies || []
 
   const columns = useMemo(
@@ -250,6 +264,15 @@ const Transactions = () => {
         header: 'Machine',
         Filter: ({ column }) => (
           <MachineFilter column={column} machines={machines} />
+        ),
+        size: 160,
+        maxSize: 160,
+      },
+      {
+        accessorKey: 'machineGroupName',
+        header: 'Machine Group',
+        Filter: ({ column }) => (
+          <MachineGroupFilter column={column} machineGroups={machineGroups} />
         ),
         size: 160,
         maxSize: 160,
@@ -345,7 +368,7 @@ const Transactions = () => {
         },
       },
     ],
-    [machines, cryptoCurrencies, timezone],
+    [machines, machineGroups, cryptoCurrencies, timezone],
   )
 
   const table = useMaterialReactTable({
@@ -356,6 +379,7 @@ const Transactions = () => {
       columnVisibility: {
         id: false,
         swept: false,
+        machineGroupName: false,
       },
     },
     columns: columns,
@@ -375,7 +399,7 @@ const Transactions = () => {
     state: {
       columnFilters,
       pagination,
-      isLoading: loading,
+      isLoading: loading && networkStatus !== NetworkStatus.poll,
     },
     muiTableBodyRowProps: ({ row }) => ({
       sx: {
@@ -409,7 +433,8 @@ const Transactions = () => {
 
   const mapColumnFiltersToVariables = filters => {
     const filterMap = {
-      machineName: 'deviceId',
+      machineName: 'deviceIds',
+      machineGroupName: 'machineGroupId',
       customerId: 'customerId',
       cryptoAtoms: 'cryptoCode',
       toAddress: 'toAddress',
