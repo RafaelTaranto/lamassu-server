@@ -92,6 +92,53 @@ export const TextFilter = ({ column, placeholder = 'Filter...' }) => {
   )
 }
 
+export const MultiAutocompleteFilter = ({
+  column,
+  options = [],
+  placeholder = 'Filter...',
+  renderOption,
+  getOptionLabel = option => option.label || '',
+}) => {
+  const columnFilterValue = column.getFilterValue()
+  const selectedOptions = Array.isArray(columnFilterValue)
+    ? options.filter(option => columnFilterValue.includes(option.value))
+    : []
+
+  return (
+    <Autocomplete
+      multiple
+      options={options}
+      value={selectedOptions}
+      onChange={(event, newValue) => {
+        const values = newValue.map(item => item.value)
+        column.setFilterValue(values.length > 0 ? values : undefined)
+      }}
+      getOptionLabel={getOptionLabel}
+      isOptionEqualToValue={(option, value) => option?.value === value?.value}
+      renderOption={renderOption}
+      renderInput={params => (
+        <TextField
+          {...params}
+          variant="standard"
+          placeholder={selectedOptions.length === 0 ? placeholder : ''}
+          size="small"
+          fullWidth
+        />
+      )}
+      size="small"
+      fullWidth
+      slotProps={{
+        listbox: {
+          style: { maxHeight: 200 },
+        },
+        popper: {
+          style: { width: 'auto' },
+        },
+      }}
+    />
+  )
+}
+
 export const AsyncAutocompleteFilter = ({ column, ...props }) => {
   const [selectedOption, setSelectedOption] = useState(null)
   const columnFilterValue = column.getFilterValue()
