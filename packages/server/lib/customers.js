@@ -709,9 +709,7 @@ function updatePhotos(imagesData, id, dir) {
  * @returns {Promise<Object>} new patch to be applied
  */
 function updateIdCardData(patch, id) {
-  /* TODO: fetch operator id */
-  const operatorId = 'id-operator'
-  const directory = `${OPERATOR_DATA_DIR}/${operatorId}/${id}/`
+  const directory = `${OPERATOR_DATA_DIR}/id-operator/${id}/`
 
   return Promise.resolve(patch).then(patch => {
     const imagesData = _.get('photos', patch)

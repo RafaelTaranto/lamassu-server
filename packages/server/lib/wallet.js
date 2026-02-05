@@ -30,13 +30,6 @@ function computeSeed(masterSeed) {
   })
 }
 
-function computeOperatorId(masterSeed) {
-  return hkdf(masterSeed, 16, {
-    salt: 'lamassu-server-salt',
-    info: 'operator-id',
-  }).toString('hex')
-}
-
 function fetchWallet(settings, cryptoCode) {
   return fs.readFile(MNEMONIC_PATH, 'utf8').then(mnemonic => {
     const masterSeed = mnemonicHelpers.toEntropyBuffer(mnemonic)
@@ -49,8 +42,7 @@ function fetchWallet(settings, cryptoCode) {
     const account = _.set('seed', computeSeed(masterSeed), rawAccount)
     const accountWithMnemonic = _.set('mnemonic', mnemonic, account)
     if (_.isFunction(wallet.run)) wallet.run(accountWithMnemonic)
-    const operatorId = computeOperatorId(masterSeed)
-    return { wallet, account: accountWithMnemonic, operatorId }
+    return { wallet, account: accountWithMnemonic }
   })
 }
 
@@ -58,7 +50,7 @@ const lastBalance = {}
 
 function _balance(settings, cryptoCode) {
   return fetchWallet(settings, cryptoCode)
-    .then(r => r.wallet.balance(r.account, cryptoCode, settings, r.operatorId))
+    .then(r => r.wallet.balance(r.account, cryptoCode, settings))
     .then(balance =>
       Promise.all([balance, getOpenBatchCryptoValue(cryptoCode)]),
     )
@@ -94,7 +86,7 @@ function sendCoins(settings, tx) {
         ).feeMultiplier,
       )
       return r.wallet
-        .sendCoins(r.account, tx, settings, r.operatorId, feeMultiplier)
+        .sendCoins(r.account, tx, settings, feeMultiplier)
         .then(res => {
           mem.clear(module.exports.balance)
           return res
@@ -135,7 +127,7 @@ function sendCoinsBatch(settings, txs, cryptoCode) {
 
 function newAddress(settings, info, tx) {
   const walletAddressPromise = fetchWallet(settings, info.cryptoCode).then(r =>
-    r.wallet.newAddress(r.account, info, tx, settings, r.operatorId),
+    r.wallet.newAddress(r.account, info, tx, settings),
   )
 
   return Promise.all([
@@ -152,7 +144,7 @@ function newFunding(settings, cryptoCode) {
     const wallet = r.wallet
     const account = r.account
 
-    return wallet.newFunding(account, cryptoCode, settings, r.operatorId)
+    return wallet.newFunding(account, cryptoCode, settings)
   })
 }
 
@@ -202,7 +194,7 @@ function getWalletStatus(settings, tx) {
     : tx.cryptoAtoms
 
   const walletStatusPromise = fetchWallet(settings, tx.cryptoCode).then(r =>
-    r.wallet.getStatus(r.account, tx, requested, settings, r.operatorId),
+    r.wallet.getStatus(r.account, tx, requested, settings),
   )
 
   return Promise.all([
@@ -280,14 +272,7 @@ function getStatus(settings, tx) {
 
 function sweep(settings, txId, cryptoCode, hdIndex) {
   return fetchWallet(settings, cryptoCode).then(r =>
-    r.wallet.sweep(
-      r.account,
-      txId,
-      cryptoCode,
-      hdIndex,
-      settings,
-      r.operatorId,
-    ),
+    r.wallet.sweep(r.account, txId, cryptoCode, hdIndex, settings),
   )
 }
 
@@ -303,7 +288,7 @@ function cryptoNetwork(settings, cryptoCode) {
   const account = settings.accounts[plugin]
   return fetchWallet(settings, cryptoCode).then(r => {
     if (!r.wallet.cryptoNetwork) return Promise.resolve(false)
-    return r.wallet.cryptoNetwork(account, cryptoCode, settings, r.operatorId)
+    return r.wallet.cryptoNetwork(account, cryptoCode, settings)
   })
 }
 
@@ -312,12 +297,7 @@ function isStrictAddress(settings, cryptoCode, toAddress) {
 
   return fetchWallet(settings, cryptoCode).then(r => {
     if (!r.wallet.isStrictAddress) return true
-    return r.wallet.isStrictAddress(
-      cryptoCode,
-      toAddress,
-      settings,
-      r.operatorId,
-    )
+    return r.wallet.isStrictAddress(cryptoCode, toAddress, settings)
   })
 }
 
