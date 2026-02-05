@@ -48,7 +48,7 @@ function shouldGetStatus(tx) {
 }
 
 // Override geth's getStatus function to allow for different polling timing
-function getStatus(account, tx, requested, settings, operatorId) {
+function getStatus(account, tx, requested, settings) {
   if (_.isNil(txsCache.get(tx.id))) {
     txsCache.set(tx.id, { lastReqTime: Date.now() })
   }
@@ -58,17 +58,15 @@ function getStatus(account, tx, requested, settings, operatorId) {
     return Promise.resolve(txsCache.get(tx.id).res)
   }
 
-  return base
-    .getStatus(account, tx, requested, settings, operatorId)
-    .then(res => {
-      if (res.status === 'confirmed') {
-        txsCache.del(tx.id) // Transaction reached final status, can trim it from the caching obj
-      } else {
-        txsCache.set(tx.id, { lastReqTime: Date.now(), res })
-        txsCache.ttl(tx.id, T.hour / 1000)
-      }
-      return res
-    })
+  return base.getStatus(account, tx, requested, settings).then(res => {
+    if (res.status === 'confirmed') {
+      txsCache.del(tx.id) // Transaction reached final status, can trim it from the caching obj
+    } else {
+      txsCache.set(tx.id, { lastReqTime: Date.now(), res })
+      txsCache.ttl(tx.id, T.hour / 1000)
+    }
+    return res
+  })
 }
 
 module.exports = _.merge(base, {

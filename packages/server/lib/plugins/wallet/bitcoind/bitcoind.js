@@ -93,7 +93,7 @@ function calculateFeeDiscount(feeMultiplier = 1, unitScale) {
   })
 }
 
-function sendCoins(account, tx, settings, operatorId, feeMultiplier) {
+function sendCoins(account, tx, settings, feeMultiplier) {
   const { toAddress, cryptoAtoms, cryptoCode } = tx
   const coins = cryptoAtoms.shiftedBy(-unitScale).toFixed(8)
 

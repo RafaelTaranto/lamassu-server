@@ -221,7 +221,7 @@ const setZeroConfLimit = config => coin =>
     coin,
   )
 
-const dynamicConfig = ({ deviceId, operatorId, pid, pq, settings }) => {
+const dynamicConfig = ({ deviceId, pid, pq, settings }) => {
   const massageCassettes = cassettes =>
     cassettes
       ? _.flow(
@@ -246,11 +246,7 @@ const dynamicConfig = ({ deviceId, operatorId, pid, pq, settings }) => {
         )(recyclers)
       : null
 
-  state.pids = _.update(
-    operatorId,
-    _.set(deviceId, { pid, ts: Date.now() }),
-    state.pids,
-  )
+  state.pids = _.set(deviceId, { pid, ts: Date.now() }, state.pids)
 
   const res = _.flow(
     _.pick([
@@ -317,40 +313,28 @@ const dynamicConfig = ({ deviceId, operatorId, pid, pq, settings }) => {
 
     _.update('coins', _.map(setZeroConfLimit(settings.config))),
     _.set('skip2fa', skip2fa),
-    _.set('reboot', !!pid && state.reboots?.[operatorId]?.[deviceId] === pid),
-    _.set(
-      'shutdown',
-      !!pid && state.shutdowns?.[operatorId]?.[deviceId] === pid,
-    ),
+    _.set('reboot', !!pid && state.reboots?.[deviceId] === pid),
+    _.set('shutdown', !!pid && state.shutdowns?.[deviceId] === pid),
     _.set(
       'restartServices',
-      !!pid && state.restartServicesMap?.[operatorId]?.[deviceId] === pid,
+      !!pid && state.restartServicesMap?.[deviceId] === pid,
     ),
-    _.set(
-      'emptyUnit',
-      !!pid && state.emptyUnit?.[operatorId]?.[deviceId] === pid,
-    ),
-    _.set(
-      'refillUnit',
-      !!pid && state.refillUnit?.[operatorId]?.[deviceId] === pid,
-    ),
-    _.set(
-      'diagnostics',
-      !!pid && state.diagnostics?.[operatorId]?.[deviceId] === pid,
-    ),
+    _.set('emptyUnit', !!pid && state.emptyUnit?.[deviceId] === pid),
+    _.set('refillUnit', !!pid && state.refillUnit?.[deviceId] === pid),
+    _.set('diagnostics', !!pid && state.diagnostics?.[deviceId] === pid),
   )(pq)
 
   // Clean up the state middleware and prevent commands from being issued more than once
-  if (!_.isNil(state.emptyUnit?.[operatorId]?.[deviceId])) {
-    delete state.emptyUnit?.[operatorId]?.[deviceId]
+  if (!_.isNil(state.emptyUnit?.[deviceId])) {
+    delete state.emptyUnit?.[deviceId]
   }
 
-  if (!_.isNil(state.refillUnit?.[operatorId]?.[deviceId])) {
-    delete state.refillUnit?.[operatorId]?.[deviceId]
+  if (!_.isNil(state.refillUnit?.[deviceId])) {
+    delete state.refillUnit?.[deviceId]
   }
 
-  if (!_.isNil(state.diagnostics?.[operatorId]?.[deviceId])) {
-    delete state.diagnostics?.[operatorId]?.[deviceId]
+  if (!_.isNil(state.diagnostics?.[deviceId])) {
+    delete state.diagnostics?.[deviceId]
   }
 
   return res
@@ -359,7 +343,7 @@ const dynamicConfig = ({ deviceId, operatorId, pid, pq, settings }) => {
 const configs = (
   parent,
   { currentConfigVersion },
-  { deviceId, deviceName, operatorId, pid, settings, machineSettings },
+  { deviceId, deviceName, pid, settings, machineSettings },
 ) =>
   plugins(settings, deviceId)
     .pollQueries()
@@ -374,7 +358,6 @@ const configs = (
       }),
       dynamic: dynamicConfig({
         deviceId,
-        operatorId,
         pid,
         pq,
         settings,

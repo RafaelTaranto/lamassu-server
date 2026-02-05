@@ -51,10 +51,6 @@ function computeSeed (seed) {
   return hkdf(masterSeed, 32, { salt: 'lamassu-server-salt', info: 'wallet-seed' })
 }
 
-function computeOperatorId (masterSeed) {
-  return hkdf(masterSeed, 16, { salt: 'lamassu-server-salt', info: 'operator-id' }).toString('hex')
-}
-
 function generateRandomSeed () {
   const seed = crypto
     .randomBytes(32)
@@ -118,7 +114,7 @@ function connect (url) {
   }
 }
 
-function sendCoins (account, tx, settings, operatorId, feeMultiplier, _opts) {
+function sendCoins (account, tx, _opts) {
   const { toAddress, cryptoAtoms, cryptoCode } = tx
   const opts = { ..._opts, includesFee: _.defaultTo(false, _opts?.includesFee) }
   return generateTx(toAddress, defaultWalletAcc(account), cryptoAtoms, cryptoCode, opts)
@@ -209,8 +205,7 @@ function fetchWallet (settings, cryptoCode) {
       const rawAccount = settings.accounts[plugin]
       const account = _.set('seed', computeSeed(masterSeed), rawAccount)
       if (_.isFunction(wallet.run)) wallet.run(account)
-      const operatorId = computeOperatorId(masterSeed)
-      return { wallet, account, operatorId }
+      return { wallet, account }
     })
 }
 
@@ -256,9 +251,9 @@ settingsLoader.load()
       connect(`http://localhost:${coins.utils.getCryptoCurrency('ETH').defaultPort}`)
     }
 
-    return Promise.all([getAllBalance(settings), settings, fetchWallet(settings, 'ETH')])
+    return Promise.all([getAllBalance(settings), fetchWallet(settings, 'ETH')])
   })
-  .then(([balance, settings, { account, operatorId }]) => {
+  .then(([balance, { account }]) => {
     const tx = {
       cryptoCode: 'ETH',
       toAddress: newAddress,
@@ -271,7 +266,7 @@ settingsLoader.load()
       includesFee: true
     }
 
-    return sendCoins(account, tx, settings, operatorId, null, opts)
+    return sendCoins(account, tx, opts)
   })
   .then(resTx => {
     console.log('Successfully moved funds from the old wallet to the new one.')

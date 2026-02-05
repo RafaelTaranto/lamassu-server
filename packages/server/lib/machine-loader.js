@@ -506,7 +506,7 @@ function reboot(rec) {
     'machineAction',
     JSON.stringify({
       action: 'reboot',
-      value: _.pick(['deviceId', 'operatorId', 'action'], rec),
+      value: _.pick(['deviceId', 'action'], rec),
     }),
   ])
 }
@@ -516,7 +516,7 @@ function shutdown(rec) {
     'machineAction',
     JSON.stringify({
       action: 'shutdown',
-      value: _.pick(['deviceId', 'operatorId', 'action'], rec),
+      value: _.pick(['deviceId', 'action'], rec),
     }),
   ])
 }
@@ -526,7 +526,7 @@ function restartServices(rec) {
     'machineAction',
     JSON.stringify({
       action: 'restartServices',
-      value: _.pick(['deviceId', 'operatorId', 'action'], rec),
+      value: _.pick(['deviceId', 'action'], rec),
     }),
   ])
 }
@@ -536,7 +536,7 @@ function emptyUnit(rec) {
     'machineAction',
     JSON.stringify({
       action: 'emptyUnit',
-      value: _.pick(['deviceId', 'operatorId', 'action'], rec),
+      value: _.pick(['deviceId', 'action'], rec),
     }),
   ])
 }
@@ -546,7 +546,7 @@ function refillUnit(rec) {
     'machineAction',
     JSON.stringify({
       action: 'refillUnit',
-      value: _.pick(['deviceId', 'operatorId', 'action'], rec),
+      value: _.pick(['deviceId', 'action'], rec),
     }),
   ])
 }
@@ -578,13 +578,13 @@ function diagnostics(rec) {
         'machineAction',
         JSON.stringify({
           action: 'diagnostics',
-          value: _.pick(['deviceId', 'operatorId', 'action'], rec),
+          value: _.pick(['deviceId', 'action'], rec),
         }),
       ]),
     )
 }
 
-function batchDiagnostics(deviceIds, operatorId) {
+function batchDiagnostics(deviceIds) {
   const diagnosticsDir = `${OPERATOR_DATA_DIR}/diagnostics/`
 
   const removeDir = fsPromises
@@ -609,7 +609,6 @@ function batchDiagnostics(deviceIds, operatorId) {
         action: 'diagnostics',
         value: {
           deviceId,
-          operatorId,
           action: 'diagnostics',
         },
       }),
@@ -621,8 +620,7 @@ function batchDiagnostics(deviceIds, operatorId) {
     .then(() => Promise.all(sendNotifications))
 }
 
-function setMachine(rec, operatorId) {
-  rec.operatorId = operatorId
+function setMachine(rec) {
   switch (rec.action) {
     case 'rename':
       return renameMachine(rec)

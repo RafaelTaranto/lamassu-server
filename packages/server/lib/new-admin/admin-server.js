@@ -26,7 +26,6 @@ const exchange = require('../exchange')
 const { authDirectiveTransformer } = require('./graphql/directives')
 const { typeDefs, resolvers } = require('./graphql/schema')
 const { ResourceNotFoundError } = require('./graphql/errors')
-const findOperatorId = require('../middlewares/operatorId')
 const { USER_SESSIONS_CLEAR_INTERVAL } = require('../constants')
 const {
   session,
@@ -60,7 +59,6 @@ const loadRoutes = async () => {
   app.use(express.urlencoded({ extended: true })) // support encoded bodies
   app.use(express.static(path.resolve(__dirname, '..', '..', 'public')))
   app.use(cleanUserSessions(USER_SESSIONS_CLEAR_INTERVAL))
-  app.use(findOperatorId)
   app.use(session)
 
   // Dynamic import for graphql-upload since it's not a CommonJS module

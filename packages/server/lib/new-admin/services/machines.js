@@ -7,8 +7,7 @@ function getMachine(machineId) {
     .then(machines => machines.find(({ deviceId }) => deviceId === machineId))
 }
 
-function machineAction({ deviceId, action, cashUnits, newName }, context) {
-  const operatorId = context.res.locals.operatorId
+function machineAction({ deviceId, action, cashUnits, newName }) {
   return getMachine(deviceId)
     .then(machine => {
       if (!machine)
@@ -16,10 +15,7 @@ function machineAction({ deviceId, action, cashUnits, newName }, context) {
       return machine
     })
     .then(() =>
-      machineLoader.setMachine(
-        { deviceId, action, cashUnits, newName },
-        operatorId,
-      ),
+      machineLoader.setMachine({ deviceId, action, cashUnits, newName }),
     )
     .then(() => getMachine(deviceId))
 }
